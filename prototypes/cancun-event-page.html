@@ -400,6 +400,65 @@ footer{
 }
 .pending b{color:var(--muted);font-weight:600}
 
+
+/* ============ FORMAT SUB-GROUPS + TEMPLATE SLOTS ============ */
+.fmt{display:flex;align-items:baseline;gap:11px;padding:14px var(--pad) 9px}
+.fmt .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.fmt .rule{flex:1;height:1px;background:var(--line-soft)}
+.fmt .n{font-size:9.5px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+
+.grid.reel .tile{aspect-ratio:9/16}
+.grid.carousel .tile{aspect-ratio:4/5}
+.grid.reel{grid-template-columns:repeat(2,1fr)}
+.grid.carousel{grid-template-columns:repeat(2,1fr)}
+@media (min-width:640px){.grid.reel,.grid.carousel{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:960px){.grid.reel{grid-template-columns:repeat(6,1fr)}.grid.carousel{grid-template-columns:repeat(5,1fr)}}
+
+.slides{
+  position:absolute;bottom:5px;right:6px;z-index:2;display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,.62);padding:2px 6px;
+  font-size:9px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.95);
+  font-variant-numeric:tabular-nums;
+}
+.playmark{
+  position:absolute;bottom:5px;left:6px;z-index:2;font-size:9px;color:rgba(255,255,255,.9);
+  text-shadow:0 1px 4px rgba(0,0,0,.9);
+}
+
+/* year block */
+.yearblock{border-top:1px solid var(--line);margin:0 var(--pad) 26px;padding-top:14px}
+.yearblock-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.yearblock-h .y{font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.yearblock-h .c{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+/* palette inside the moodboard */
+.pal-h{display:flex;align-items:baseline;gap:11px;padding:16px var(--pad) 9px}
+.pal-h .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pal-h .rule{flex:1;height:1px;background:var(--line-soft)}
+.pal-h .src{font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.pal{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:0 var(--pad) 4px}
+@media (min-width:640px){.pal{grid-template-columns:repeat(10,1fr)}}
+.pal .sw2{display:flex;flex-direction:column;gap:5px;text-align:left;padding:0}
+.pal .sw2 .c{aspect-ratio:1/1;width:100%;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.pal .sw2:hover .c{outline-color:var(--white)}
+.pal .sw2 .h{font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--muted);font-variant-numeric:tabular-nums}
+.pal .sw2.copied .h{color:var(--white)}
+
+/* template slots for inspo 2,3,4 */
+.slot{
+  margin:0 var(--pad) 10px;border:1px dashed var(--line);padding:16px 18px;
+  display:flex;flex-direction:column;gap:9px;
+}
+.slot-h{display:flex;align-items:baseline;gap:12px}
+.slot-name{font-weight:700;font-size:14px;letter-spacing:-.01em;text-transform:uppercase;color:var(--dim)}
+.slot-tag{margin-left:auto;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:3px 7px}
+.slot-shape{display:flex;flex-wrap:wrap;gap:5px}
+.slot-shape span{
+  font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line-soft);padding:4px 8px;
+}
+.slot p{margin:0;font-size:12.5px;line-height:1.6;color:var(--dim);max-width:62ch}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -522,42 +581,6 @@ function grad(seed){
 
 /* media_sections + media_items */
 const SECTIONS = [
-  { type:"moodboard", collection:"Nude Project Inspo", main:true,
-    group:"2k24", seq:true, folder:"2k24",
-    note:"",
-    items:[
-      {cap:"14 Mar 24", sel:false},
-      {cap:"02 May 24", sel:false},
-      {cap:"27 Jun 24", sel:true},
-      {cap:"09 Jul 24", sel:false},
-      {cap:"18 Aug 24", sel:false},
-      {cap:"30 Sep 24", sel:false},
-      {cap:"11 Nov 24", sel:false}
-    ]},
-  { type:"moodboard", collection:"Nude Project Inspo", main:true,
-    group:"2k25", seq:true, folder:"2k25",
-    note:"",
-    items:[
-      {cap:"21 Jan 25", sel:false},
-      {cap:"08 Mar 25", sel:true},
-      {cap:"19 Apr 25", sel:false},
-      {cap:"02 Jun 25", sel:true},
-      {cap:"25 Jun 25", sel:false},
-      {cap:"14 Jul 25", sel:true},
-      {cap:"03 Aug 25", sel:false},
-      {cap:"29 Sep 25", sel:false},
-      {cap:"17 Nov 25", sel:false}
-    ]},
-  { type:"moodboard", collection:"Nude Project Inspo", main:true,
-    group:"2k26", seq:true, folder:"2k26",
-    note:"",
-    items:[
-      {cap:"12 Feb 26", sel:false},
-      {cap:"04 Apr 26", sel:true},
-      {cap:"23 May 26", sel:false},
-      {cap:"16 Jun 26", sel:true},
-      {cap:"08 Aug 26", sel:false}
-    ]},
   { type:"environment", group:"Palapa Entrance", seq:false, note:"",
     items:[
       {cap:"Approach from the path", sel:true},
@@ -643,20 +666,24 @@ const DELIVERABLES = [
 ];
 
 /* ---------------- render ---------------- */
-function cellHtml(it, n, si, i){
-  /* Moodboard files are named by date, so the date IS the label.
-     Everywhere else the position is the label and the caption sits below. */
-  const dated = SECTIONS[si] && SECTIONS[si].type === "moodboard";
-  const label = dated ? it.cap : n;
-  return `<div class="cell ${it.sel?'sel':'opt'}">
-    <button class="tile" onclick="openLb('${si}:${i}')" aria-label="${it.cap}">
-      <span class="fill" style="background:${grad(si*7+i)}"></span>
-      ${it.sel?'<span class="selflag">Selected</span>':''}
-      ${it.ts?`<span class="tstamp">${it.ts}</span>`:''}
+/* One tile. Everything that draws a grid goes through this. */
+function tileHtml(o){
+  /* o: {key, label, cap, sel, seed, slides, isReel, showCap} */
+  return `<div class="cell ${o.sel?'sel':'opt'}">
+    <button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">
+      <span class="fill" style="background:${grad(o.seed)}"></span>
+      ${o.sel?'<span class="selflag">Selected</span>':''}
+      ${o.isReel?'<span class="playmark">&#9654;</span>':''}
+      ${o.slides?`<span class="slides">&#9635; ${o.slides}</span>`:''}
+      ${o.ts?`<span class="tstamp">${o.ts}</span>`:''}
     </button>
-    <div class="cap-line"><span class="num">[${label}]</span><span class="arrow">&rarr;</span></div>
-    ${dated ? '' : `<div class="cap-text">${it.cap}</div>`}
+    <div class="cap-line"><span class="num">[${o.label}]</span><span class="arrow">&rarr;</span></div>
+    ${o.showCap?`<div class="cap-text">${o.cap}</div>`:''}
   </div>`;
+}
+function cellHtml(it, n, si, i){
+  return tileHtml({key:"s:"+si+":"+i, label:n, cap:it.cap, sel:!!it.sel,
+                   seed:si*7+i, ts:it.ts, showCap:true});
 }
 /* Selected sorts to the front; the bracketed index stays bound to admin order. */
 function ordered(sec){
@@ -665,17 +692,6 @@ function ordered(sec){
 }
 
 
-/* one entry per inspiration source; the main one leads */
-const COLLECTIONS = {
-  "Nude Project Inspo": {
-    main: true,
-    driveFolder: "NUDE PROJECT — Ibiza Content Timeline",
-    note: "Main reference for Cancún. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
-    pending: true
-  }
-};
-const OTHER_INSPOS_EMPTY = "No other inspiration sources added yet. When one is added it appears here, under Nude Project.";
-
 const TYPE_META = {
   moodboard:{label:"Moodboard", sub:"A timeline, not a pile of options — read left to right to see how the tone moves year on year."},
   environment:{label:"Environment", sub:"How each station gets shot."},
@@ -683,48 +699,87 @@ const TYPE_META = {
   hero_flow_reference:{label:"Flow Reference", sub:"Pacing model for the edit."}
 };
 
+function paletteHtml(pal, label, src){
+  return `<div class="pal-h"><span class="t">${label}</span><span class="rule"></span>${src?`<span class="src">${src}</span>`:''}</div>
+    <div class="pal">${pal.map(([hex,role])=>`
+      <button class="sw2" onclick="copyHex(this,'${hex}')" title="${role}">
+        <span class="c" style="background:${hex}"></span>
+        <span class="h">${hex}</span>
+      </button>`).join("")}</div>`;
+}
+
+function renderMoodboard(){
+  let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} of ${MOODBOARD.length+INSPO_SLOTS.length} sources</div></div>
+    <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year.</div></div>`;
+
+  MOODBOARD.forEach((sp, spi) => {
+    const total = sp.years.reduce((n,y)=>n+y.reels.length+y.carousels.length, 0);
+    html += `<div class="coll">
+      <div class="coll-h">
+        <span class="coll-name">${sp.name}</span>
+        ${sp.main?'<span class="mainflag">Main</span>':''}
+        <span class="coll-src">${sp.years.length} years &middot; ${total} posts</span>
+      </div>
+      ${sp.note?`<div class="coll-note"><b>Direction</b><span>${sp.note}</span></div>`:''}
+    </div>`;
+
+    if (sp.pending){
+      html += `<div class="pending"><b>Placeholder dates and swatches.</b> Real ones load straight from <b>${sp.driveFolder}</b> &mdash; each year folder becomes a block, Reels and Carousels become the two rows inside it, and every file&rsquo;s date becomes its label, in order.</div>`;
+    }
+
+    html += paletteHtml(sp.palette, "Palette — whole source", sp.paletteNote);
+
+    sp.years.forEach((y, yi) => {
+      const cnt = y.reels.length + y.carousels.length;
+      html += `<div class="yearblock"><div class="yearblock-h">
+        <span class="y">${y.year}</span>
+        <span class="c">${y.reels.length} reels &middot; ${y.carousels.length} carousels</span>
+      </div></div>`;
+
+      if (y.reels.length){
+        html += `<div class="fmt"><span class="t">Reels</span><span class="rule"></span><span class="n">9:16</span></div>
+          <div class="grid seq reel">${y.reels.map((it,i)=>tileHtml({
+            key:`m:${spi}:${yi}:r:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
+            seed:spi*31+yi*11+i, isReel:true, showCap:false})).join("")}</div>`;
+      }
+      if (y.carousels.length){
+        html += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5</span></div>
+          <div class="grid seq carousel">${y.carousels.map((it,i)=>tileHtml({
+            key:`m:${spi}:${yi}:c:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
+            seed:spi*31+yi*11+i+5, slides:it.slides, showCap:false})).join("")}</div>`;
+      }
+      if (y.palette) html += paletteHtml(y.palette, `Palette — ${y.year}`, "");
+    });
+  });
+
+  /* the template, ready for sources 2-4 */
+  html += `<div class="coll"><div class="coll-h"><span class="coll-name">Other inspiration</span>
+      <span class="coll-src">${INSPO_SLOTS.length} slots open</span></div></div>`;
+  INSPO_SLOTS.forEach(n => {
+    html += `<div class="slot">
+      <div class="slot-h"><span class="slot-name">${n}</span><span class="slot-tag">Empty</span></div>
+      <p>Paste a Drive folder here and it fills itself in, using the same shape as Nude Project.</p>
+      <div class="slot-shape"><span>Year</span><span>Reels 9:16</span><span>Carousels 4:5</span><span>Palette</span><span>Direction note</span></div>
+    </div>`;
+  });
+  return html;
+}
+
 function renderVisuals(){
-  let html="", lastType=null, lastColl=null;
+  let html = renderMoodboard(), lastType=null;
   SECTIONS.forEach((sec,si)=>{
     if (sec.type!==lastType){
       const m=TYPE_META[sec.type];
-      const count=SECTIONS.filter(s=>s.type===sec.type).reduce((n,s)=>n+s.items.length,0);
+      const count=SECTIONS.filter(x=>x.type===sec.type).reduce((n,x)=>n+x.items.length,0);
       html+=`<div class="sec"><div class="sec-h"><h2>${m.label}</h2><div class="sec-right">01 &rarr; ${String(count).padStart(2,"0")}</div></div><div class="sub">${m.sub}</div></div>`;
-      lastType=sec.type; lastColl=null;
+      lastType=sec.type;
     }
-
-    /* collection header — only moodboard sections carry one */
-    if (sec.collection && sec.collection!==lastColl){
-      const c = COLLECTIONS[sec.collection] || {};
-      const groups = SECTIONS.filter(x=>x.collection===sec.collection);
-      const total  = groups.reduce((n,g)=>n+g.items.length,0);
-      html+=`<div class="coll">
-        <div class="coll-h">
-          <span class="coll-name">${sec.collection}</span>
-          ${c.main?'<span class="mainflag">Main</span>':''}
-          <span class="coll-src">${groups.length} years &middot; ${total} frames</span>
-        </div>
-        ${c.note?`<div class="coll-note"><b>Direction</b><span>${c.note}</span></div>`:''}
-      </div>`;
-      if (c.pending){
-        html+=`<div class="pending"><b>Placeholder dates.</b> Real filenames load straight from <b>${c.driveFolder}</b> &mdash; each year folder becomes the band below it, and every file&rsquo;s date becomes its label, in order.</div>`;
-      }
-      lastColl=sec.collection;
-    }
-
     const label = sec.schedule || sec.group;
     html+=`<div class="group">
       ${label?`<div class="yr"><span class="t">${label}</span><span class="rule"></span><span class="n">${sec.items.length} ${sec.items.length===1?'frame':'frames'}</span></div>`:''}
       ${sec.note?`<div class="dirnote"><b>Direction</b><span>${sec.note}</span></div>`:''}
       <div class="grid ${sec.seq?'seq':''}">${ordered(sec).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")}</div>
     </div>`;
-
-    /* after the last moodboard collection, show the empty slot for other inspos */
-    const next = SECTIONS[si+1];
-    if (sec.collection && (!next || next.collection!==sec.collection)){
-      html+=`<div class="coll"><div class="coll-h"><span class="coll-name">Other inspiration</span></div></div>
-             <div class="coll-empty">${OTHER_INSPOS_EMPTY}</div>`;
-    }
   });
   document.getElementById("visuals").innerHTML=html;
 }
@@ -791,27 +846,42 @@ function renderDlv(){
 
 /* ---------------- lightbox ---------------- */
 let lbList=[], lbPos=0;
+/* One flat list across the moodboard and every other grid, so
+   prev/next walks the whole board in the order it is displayed. */
 function buildFlat(){
   lbList=[];
-  SECTIONS.forEach((sec,si)=>sec.items.forEach((it,i)=>lbList.push({key:si+":"+i,it,si,i,n:i+1,sec})));
+  MOODBOARD.forEach((sp,spi)=>sp.years.forEach((y,yi)=>{
+    y.reels.forEach((it,i)=>lbList.push({
+      key:`m:${spi}:${yi}:r:${i}`, cap:it.d, sel:!!it.sel, port:true,
+      seed:spi*31+yi*11+i, meta:`${sp.name} · ${y.year} · Reel · ${it.sel?"Selected":"Option"}`}));
+    y.carousels.forEach((it,i)=>lbList.push({
+      key:`m:${spi}:${yi}:c:${i}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
+      seed:spi*31+yi*11+i+5,
+      meta:`${sp.name} · ${y.year} · Carousel, ${it.slides} slides · ${it.sel?"Selected":"Option"}`}));
+  }));
+  SECTIONS.forEach((sec,si)=>sec.items.forEach((it,i)=>lbList.push({
+    key:`s:${si}:${i}`, cap:it.cap, sel:!!it.sel, port:it.ratio==="port",
+    seed:si*7+i, meta:`${sec.group} · [${i+1}] · ${it.sel?"Selected":"Option"}`})));
 }
 function openLb(key){
   lbPos=lbList.findIndex(x=>x.key===key); if(lbPos<0) lbPos=0;
   paintLb(); document.getElementById("lb").hidden=false; document.body.style.overflow="hidden";
 }
 function paintLb(){
-  const e=lbList[lbPos], port = e.it.ratio==="port";
+  const e=lbList[lbPos];
+  const ratio = e.port ? "9/16" : e.sq ? "4/5" : "16/9";
+  const tall  = e.port || e.sq;
   document.getElementById("lbMedia").innerHTML =
-    `<div class="fill" style="aspect-ratio:${port?'9/16':'16/9'};background:${grad(e.si*7+e.i)};${port?'width:auto;height:70vh;':''}"></div>`;
-  document.getElementById("lbCap").textContent = e.it.cap;
-  document.getElementById("lbMeta").textContent =
-    `${e.sec.group} · [${e.n}] · ${e.it.sel?"Selected":"Option"} · true ${port?"portrait":"landscape"} ratio`;
+    `<div class="fill" style="aspect-ratio:${ratio};background:${grad(e.seed)};${tall?'width:auto;height:70vh;':''}"></div>`;
+  document.getElementById("lbCap").textContent = e.cap;
+  document.getElementById("lbMeta").textContent = e.meta;
 }
 function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
+function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
 function openHero(){
-  lbList.unshift({key:"hero", it:{cap:"Hero reel — Drive preview iframe renders here in the real app", sel:false}, si:1, i:2, n:0, sec:{group:"Hero"}});
-  openLb("hero"); lbList.shift();
+  pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
+            sel:false, port:false, seed:3, meta:"Cancún · Hero"});
 }
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
@@ -1013,15 +1083,13 @@ function attachSwipe(){
 }
 function openPieceLb(){
   const p = PIECES[cPos];
-  lbList.unshift({key:"piece", it:{cap:p.title+" — Drive / Mux player renders here in the real app",
-    ratio: p.aspect==="9:16" ? "port" : "land", sel:false}, si:p.seed, i:0, n:0, sec:{group:p.kind==="carousel"?"Carousel":"Reel"}});
-  openLb("piece"); lbList.shift();
+  pushTemp({key:"piece", cap:p.title, sel:false, port:p.aspect==="9:16", sq:p.aspect==="4:5",
+            seed:p.seed, meta:`${p.kind==="carousel"?"Carousel":"Reel"} · ${p.aspect} · ${p.owner}`});
 }
 function openShotLb(pi, si){
   const p = PIECES[pi], c = p.cuts[si];
-  lbList.unshift({key:"shot", it:{cap:c.cap, ratio: p.aspect==="9:16"?"port":"land", sel:c.sel},
-    si:p.seed, i:si*3, n:si+1, sec:{group:p.title+" — "+c.ts}});
-  openLb("shot"); lbList.shift();
+  pushTemp({key:"shot", cap:c.cap, sel:c.sel, port:p.aspect==="9:16",
+            seed:p.seed+si*3, meta:`${p.title} · ${c.ts} · ${c.sel?"Key beat":"Shot "+(si+1)}`});
 }
 
 document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
