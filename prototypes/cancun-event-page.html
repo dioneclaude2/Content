@@ -1,0 +1,951 @@
+<title>Cancún Run of Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap">
+
+<style>
+/* Committed single-world design: the UI is strictly black / white / grey.
+   Every bit of colour on the page comes from the media itself. */
+:root{
+  --black:#000000;
+  --surface:#0A0A0A;
+  --surface-2:#111111;
+  --line:#1F1F1F;
+  --line-soft:#161616;
+  --white:#FFFFFF;
+  --muted:#9B9B9B;
+  --dim:#5E5E5E;
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --pad:18px;
+}
+@media (min-width:900px){ :root{ --pad:34px; } }
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--black);color:var(--white);
+  font-family:var(--sans);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:1.5px solid var(--white);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-bottom:80px}
+
+/* ---------------- sticky bar ---------------- */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(0,0,0,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:0 var(--pad)}
+.back{
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;white-space:nowrap;padding:14px 0;
+}
+.back:hover{color:var(--white)}
+.bar-name{
+  font-weight:700;font-size:13px;letter-spacing:-.01em;text-transform:uppercase;
+  margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tabs{display:flex;gap:22px;flex:none}
+.tabs button{
+  font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);padding:15px 0 13px;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .16s ease,border-color .16s ease;
+}
+.tabs button[aria-selected="true"]{color:var(--white);border-bottom-color:var(--white)}
+.tabs button:hover:not([aria-selected="true"]){color:var(--muted)}
+
+/* ---------------- section heads ---------------- */
+.sec{padding-top:54px}
+.sec-h{display:flex;align-items:baseline;gap:16px;padding:0 var(--pad) 3px}
+h2,.sec-label{
+  font-weight:700;font-size:clamp(17px,4.6vw,22px);letter-spacing:-.015em;
+  text-transform:uppercase;line-height:1.1;margin:0;text-wrap:balance;
+}
+.sec-right{
+  margin-left:auto;font-size:10.5px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap;
+}
+.sub{
+  padding:0 var(--pad);font-style:italic;font-size:13.5px;color:var(--muted);
+  max-width:64ch;margin-bottom:20px;
+}
+details > summary{list-style:none;cursor:pointer}
+details > summary::-webkit-details-marker{display:none}
+.caret{margin-left:auto;font-size:11px;color:var(--dim);transition:transform .2s ease}
+details[open] > summary .caret{transform:rotate(90deg)}
+
+/* ---------------- hero ---------------- */
+.hero-head{display:flex;align-items:baseline;gap:16px;padding:34px var(--pad) 10px}
+.hero{position:relative;margin:0 var(--pad);aspect-ratio:16/9;overflow:hidden;background:var(--surface-2)}
+.hero-fill{position:absolute;inset:0;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
+.hero-grain{position:absolute;inset:0;opacity:.5;background:
+  radial-gradient(60% 90% at 18% 30%, rgba(255,255,255,.10), transparent 60%),
+  radial-gradient(50% 70% at 85% 80%, rgba(255,255,255,.06), transparent 60%)}
+.hero-title{
+  position:absolute;left:6%;top:50%;transform:translateY(-50%);
+  font-weight:700;font-size:clamp(26px,5.4vw,54px);line-height:1.02;letter-spacing:-.03em;
+  text-shadow:0 2px 24px rgba(0,0,0,.45);max-width:62%;
+}
+.hero-play{
+  position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,255,255,.5);padding:8px 14px;background:rgba(0,0,0,.35);
+  font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .16s ease,border-color .16s ease;
+}
+.hero-play:hover{background:rgba(255,255,255,.16);border-color:var(--white)}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px var(--pad) 0;
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+
+/* ---------------- pinned direction ---------------- */
+.pin{margin:34px var(--pad) 0;border-left:2px solid var(--white);padding:2px 0 2px 15px}
+.pin .k{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pin p{margin:6px 0 0;font-size:16px;line-height:1.42;font-weight:500;max-width:60ch}
+.pin a{
+  display:inline-block;margin-top:9px;font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;
+}
+.pin a:hover{color:var(--white);border-color:var(--muted)}
+
+/* ---------------- quick links ---------------- */
+.qlinks{display:flex;flex-wrap:wrap;gap:6px;padding:0 var(--pad)}
+.qlink{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  border:1px solid var(--line);padding:9px 13px;background:var(--surface);
+  font-size:12.5px;transition:border-color .16s ease,background .16s ease;
+}
+.qlink:hover{border-color:var(--muted);background:var(--surface-2)}
+.qlink i{font-style:normal;font-size:10px;color:var(--dim)}
+
+/* ---------------- run of show ---------------- */
+.ros{padding:0 var(--pad);max-width:880px}
+.crew{border:1px solid var(--line);margin-bottom:10px;background:var(--surface)}
+.crew-h{padding:15px 16px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.crew-name{font-weight:700;font-size:15px;letter-spacing:-.01em;text-transform:uppercase}
+.crew-roles{
+  display:flex;flex-wrap:wrap;gap:3px 18px;margin-top:8px;
+  font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+}
+.crew-roles b{color:var(--muted);font-weight:600}
+.crew-obj{margin-top:8px;font-style:italic;font-size:13px;color:var(--muted);line-height:1.45;max-width:60ch}
+
+.row{display:grid;grid-template-columns:70px 1fr;border-top:1px solid var(--line-soft)}
+.crew-body > .row:first-child{border-top:0}
+.row-time{
+  padding:14px 0 14px 16px;font-size:12px;font-weight:600;color:var(--muted);
+  font-variant-numeric:tabular-nums;line-height:1.4;letter-spacing:.01em;
+}
+.row-time span{display:block;color:var(--dim);font-weight:400}
+.row-main{padding:14px 16px 14px 2px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.row-act{font-size:16px;font-weight:600;line-height:1.28;letter-spacing:-.01em}
+.row-detail{font-size:13.5px;color:var(--muted);line-height:1.45;max-width:58ch}
+.row-note{font-size:13.5px;line-height:1.45;border-left:2px solid var(--white);padding-left:11px;max-width:58ch}
+.row-loc{font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+.row.live{background:#0C0C0C}
+.row.live .row-time{color:var(--white);box-shadow:inset 3px 0 0 var(--white)}
+.chip{
+  align-self:flex-start;font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;
+}
+.chip.now{background:var(--white);color:#000}
+.chip.next{border:1px solid var(--line);color:var(--dim);font-weight:600}
+
+details.refs summary{
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:7px 12px;
+  transition:border-color .16s ease,color .16s ease;
+}
+details.refs summary:hover{border-color:var(--muted);color:var(--white)}
+details.refs[open] summary{border-color:var(--white);color:var(--white)}
+.refstrip{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.refstrip .cell{width:158px;flex:none}
+.refstrip .cap-line .arrow{display:none}
+
+/* ---------------- grids ---------------- */
+.group{margin-bottom:34px}
+.group-label{
+  display:flex;align-items:baseline;gap:14px;padding:0 var(--pad) 12px;
+}
+.group-label .t{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.group-label .rule{flex:1;height:1px;background:var(--line)}
+.group-label .n{font-size:10.5px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+
+.dirnote{
+  margin:0 var(--pad) 16px;border-left:2px solid var(--white);padding:1px 0 1px 13px;max-width:62ch;
+}
+.dirnote b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.dirnote span{font-style:italic;font-size:13.5px;line-height:1.45}
+
+.grid{
+  display:grid;padding:0 var(--pad);
+  grid-template-columns:repeat(2,1fr);
+  column-gap:22px;row-gap:22px;
+}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:960px){.grid{grid-template-columns:repeat(4,1fr)}}
+
+.cell{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0}
+.tile{
+  display:block;width:100%;padding:0;position:relative;overflow:hidden;
+  aspect-ratio:16/9;background:var(--surface-2);
+  outline:1px solid var(--line);outline-offset:-1px;
+  transition:outline-color .16s ease,opacity .16s ease;
+}
+.tile .fill{position:absolute;inset:0;transition:opacity .16s ease}
+.cell.opt .tile .fill{opacity:.42}
+.cell.opt:hover .tile .fill{opacity:.85}
+.cell.sel .tile{outline:1.5px solid var(--white)}
+.tile:hover{outline-color:var(--muted)}
+.selflag{
+  position:absolute;top:0;left:0;z-index:2;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 7px;
+}
+.tstamp{
+  position:absolute;bottom:5px;right:6px;z-index:2;font-size:9.5px;font-weight:500;
+  color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.8);font-variant-numeric:tabular-nums;
+}
+.cap-line{position:relative;display:flex;justify-content:center;align-items:center;min-height:15px}
+.cap-line .num{font-size:10.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.cell.opt .cap-line .num{color:var(--dim)}
+.cap-line .arrow{position:absolute;right:-11px;transform:translateX(50%);font-size:11px;color:var(--dim)}
+.cap-text{text-align:center;font-size:11.5px;line-height:1.35;color:var(--dim);padding:0 2px}
+.cell.sel .cap-text{color:var(--muted)}
+
+/* hide the trailing arrow at the end of each visual row */
+.grid.seq .cell:nth-child(2n) .arrow{display:none}
+@media (min-width:640px){
+  .grid.seq .cell:nth-child(2n) .arrow{display:block}
+  .grid.seq .cell:nth-child(3n) .arrow{display:none}
+}
+@media (min-width:960px){
+  .grid.seq .cell:nth-child(3n) .arrow{display:block}
+  .grid.seq .cell:nth-child(4n) .arrow{display:none}
+}
+.grid.seq .cell:last-child .arrow{display:none}
+.grid:not(.seq) .arrow{display:none}
+
+/* ---------------- VO ---------------- */
+.vo{padding:0 var(--pad);max-width:800px}
+.voline{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:15px 0;border-top:1px solid var(--line-soft)}
+.voline:first-child{border-top:0}
+.vonum{font-size:10.5px;font-weight:500;color:var(--dim);padding-top:5px;font-variant-numeric:tabular-nums}
+.vospk{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+.vospk em{font-style:normal;font-weight:500;color:var(--dim)}
+.votext{font-size:17px;line-height:1.45;max-width:52ch;letter-spacing:-.005em}
+
+/* ---------------- deliverables ---------------- */
+.dlv{padding:0 var(--pad);max-width:880px}
+.dlv-group{margin-bottom:22px}
+.dlv-owner{
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.dlv-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.dlv-name{flex:1;font-size:14.5px;min-width:0}
+.bar{width:56px;height:2px;background:var(--line);flex:none}
+.bar i{display:block;height:100%;background:var(--muted)}
+.bar i.full{background:var(--white)}
+.dlv-count{font-size:12px;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dlv-count b{color:var(--white);font-weight:700}
+.dlv-link{font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--line);text-decoration:none;white-space:nowrap;width:56px;text-align:right}
+.dlv-link.on{color:var(--muted)}
+.dlv-link.on:hover{color:var(--white)}
+
+/* ---------------- lightbox ---------------- */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:22px}
+.lb[hidden]{display:none}
+.lb-media{max-width:min(94vw,1000px);max-height:70vh;width:100%;display:flex;align-items:center;justify-content:center}
+.lb-media .fill{max-height:70vh;width:100%;outline:1px solid var(--line);outline-offset:-1px}
+.lb-cap{text-align:center;display:flex;flex-direction:column;gap:7px;max-width:620px}
+.lb-cap .t{font-size:15px}
+.lb-cap .m{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.lb-nav{display:flex;gap:8px}
+.lb-nav button{border:1px solid var(--line);padding:9px 16px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lb-nav button:hover{color:var(--white);border-color:var(--muted)}
+.lb-close{position:absolute;top:16px;right:18px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lb-close:hover{color:var(--white)}
+
+.panel[hidden]{display:none}
+.legend{
+  margin:0 var(--pad);padding:11px 13px;border:1px solid var(--line);background:var(--surface);
+  font-size:11px;color:var(--dim);line-height:1.6;
+}
+.legend b{color:var(--muted);font-weight:600}
+footer{
+  margin-top:60px;padding:22px var(--pad) 0;border-top:1px solid var(--line);
+  font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);line-height:1.9;
+}
+
+/* ================= CONTENT PIECES ================= */
+.cbar{display:flex;align-items:center;gap:10px;padding:0 var(--pad) 16px}
+.cnav{
+  border:1px solid var(--line);width:36px;height:36px;flex:none;
+  display:grid;place-items:center;font-size:13px;color:var(--muted);
+  transition:border-color .16s ease,color .16s ease;
+}
+.cnav:hover:not([disabled]){border-color:var(--white);color:var(--white)}
+.cnav[disabled]{opacity:.28;cursor:default}
+.crail{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none}
+.crail::-webkit-scrollbar{display:none}
+.cpill{
+  border:1px solid var(--line);padding:9px 13px;white-space:nowrap;
+  font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  transition:border-color .16s ease,color .16s ease;
+}
+.cpill:hover{border-color:var(--muted);color:var(--muted)}
+.cpill[aria-current="true"]{background:var(--white);color:#000;border-color:var(--white)}
+.cidx{font-size:10.5px;font-weight:500;letter-spacing:.14em;color:var(--dim);flex:none;font-variant-numeric:tabular-nums}
+
+/* big screen */
+.screen{
+  position:relative;margin:0 var(--pad);overflow:hidden;background:#060606;
+  outline:1px solid var(--line);outline-offset:-1px;aspect-ratio:16/9;
+  touch-action:pan-y;
+}
+.screen .bg{position:absolute;inset:-10%;filter:blur(34px) saturate(.7);opacity:.55}
+.screen .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.screen .media{position:relative;height:100%;aspect-ratio:16/9;outline:1px solid rgba(255,255,255,.08);outline-offset:-1px}
+.screen .media.port{aspect-ratio:9/16}
+.screen .media.sq{aspect-ratio:4/5}
+.screen-play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.35);
+  padding:11px 20px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .16s ease,border-color .16s ease;
+}
+.screen-play:hover{background:rgba(255,255,255,.18);border-color:var(--white)}
+.screen-tag{
+  position:absolute;top:0;left:0;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;z-index:3;
+}
+.screen-count{
+  position:absolute;bottom:10px;right:12px;z-index:3;font-size:10px;font-weight:600;
+  letter-spacing:.14em;color:rgba(255,255,255,.9);font-variant-numeric:tabular-nums;
+  text-shadow:0 1px 6px rgba(0,0,0,.9);
+}
+.screen-dots{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:5px}
+.screen-dots i{width:5px;height:5px;background:rgba(255,255,255,.35);display:block}
+.screen-dots i.on{background:var(--white)}
+.sarrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:4;
+  width:38px;height:56px;display:grid;place-items:center;color:rgba(255,255,255,.75);
+  background:linear-gradient(90deg,rgba(0,0,0,.5),transparent);font-size:15px;
+}
+.sarrow.r{right:0;background:linear-gradient(270deg,rgba(0,0,0,.5),transparent)}
+.sarrow.l{left:0}
+.sarrow:hover{color:var(--white)}
+
+.cmeta{
+  display:flex;flex-wrap:wrap;gap:7px 20px;padding:12px var(--pad) 0;
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+.cmeta .status{color:var(--white);font-weight:600}
+.cmeta .status.wip{color:var(--muted)}
+.ctitle{
+  padding:16px var(--pad) 0;font-weight:700;font-size:clamp(20px,5vw,28px);
+  letter-spacing:-.02em;text-transform:uppercase;line-height:1.05;
+}
+
+/* auto shot breakdown */
+.autotag{
+  display:inline-flex;align-items:center;gap:7px;font-size:9.5px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#000;background:var(--white);padding:3px 8px;
+}
+.autotag.pending{background:none;color:var(--dim);border:1px solid var(--line);font-weight:600}
+.cell.shot .cap-line .num{font-weight:600}
+.shot-ts{
+  position:absolute;bottom:5px;left:6px;z-index:2;font-size:9.5px;font-weight:600;
+  color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.9);font-variant-numeric:tabular-nums;
+}
+.shot-note{
+  text-align:center;font-size:11.5px;line-height:1.35;font-style:italic;color:var(--muted);padding:0 2px;
+}
+.emptyshots{
+  margin:0 var(--pad);border:1px dashed var(--line);padding:22px 18px;text-align:center;
+  color:var(--dim);font-size:13px;line-height:1.6;
+}
+
+/* palette */
+.palette{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 var(--pad)}
+@media (min-width:640px){.palette{grid-template-columns:repeat(6,1fr)}}
+.sw{display:flex;flex-direction:column;gap:7px;text-align:left;padding:0}
+.sw .chipc{aspect-ratio:1/1;width:100%;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.sw:hover .chipc{outline-color:var(--white)}
+.sw .hex{font-size:11px;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.sw .role{font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:-4px}
+.sw.copied .hex::after{content:" copied";color:var(--dim);font-weight:500;letter-spacing:.1em;font-size:9px;text-transform:uppercase}
+.palette-src{padding:12px var(--pad) 0;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="#" onclick="return false">&larr; Events</a>
+    <div class="bar-name">Cancún Shot</div>
+    <div class="tabs" role="tablist" aria-label="View mode">
+      <button id="tab-action" role="tab" aria-selected="true" aria-controls="panel-action">Run of Show</button>
+      <button id="tab-content" role="tab" aria-selected="false" aria-controls="panel-content">Content</button>
+      <button id="tab-visual" role="tab" aria-selected="false" aria-controls="panel-visual">Visuals</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero-head">
+    <h2>Cancún Shot</h2>
+    <div class="sec-right">Hero Reel</div>
+  </div>
+  <div class="hero">
+    <div class="hero-fill"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-title">Cancún<br>Shot</div>
+    <button class="hero-play" onclick="openHero()">&#9654;&nbsp; Play</button>
+  </div>
+  <div class="hero-meta"><span>Date TBC</span><span>Cancún, MX</span><span>3 Crews</span><span>13 Items</span></div>
+
+  <div class="pin">
+    <div class="k">Locked direction</div>
+    <p>Warm film-grain comedy for every hero shot. Chaos register is BTS-only. Cinematic awe is reserved for drone and golden hour.</p>
+    <a href="#" onclick="return false">Full strategy board &rarr;</a>
+  </div>
+
+  <!-- ================= ACTION ================= -->
+  <div class="panel" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
+
+    <div class="sec">
+      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">5</div></div>
+      <div class="sub">Everything the sheet kept in its first four rows.</div>
+      <div class="qlinks">
+        <a class="qlink" href="#" onclick="return false">Marketing brief <i>&#8599;</i></a>
+        <a class="qlink" href="#" onclick="return false">Brand + creator guidelines <i>&#8599;</i></a>
+        <a class="qlink" href="#" onclick="return false">Moodboard deck <i>&#8599;</i></a>
+        <a class="qlink" href="#" onclick="return false">Cheat sheet <i>&#8599;</i></a>
+        <a class="qlink" href="#" onclick="return false">Strategy board &mdash; Cancún <i>&#8599;</i></a>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>Run of Show</h2><div class="sec-right" id="clockNote">Preview clock 10:42</div></div>
+      <div class="sub">Time-coded, owned, one row per action &mdash; references stay folded until you ask for them.</div>
+      <div class="ros" id="ros"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>Hero VO Script</h2><div class="sec-right">6 Lines</div></div>
+      <div class="sub">Read order for the highlight reel. Pacing references live under Visuals.</div>
+      <div class="vo" id="vo"></div>
+    </div>
+
+    <details class="sec">
+      <summary class="sec-h"><h2>Deliverables</h2><div class="caret">&#9656;</div></summary>
+      <div class="sub">Are we done? &mdash; expected against delivered.</div>
+      <div class="dlv" id="dlv"></div>
+    </details>
+
+  </div>
+
+
+  <!-- ================= CONTENT ================= -->
+  <div class="panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content" hidden>
+    <div class="sec" style="padding-top:30px">
+      <div class="sec-h"><h2>Content</h2><div class="sec-right" id="cIdx">01 / 04</div></div>
+      <div class="sub">One piece at a time &mdash; the cut on top, its shot breakdown under it, its palette below that. Swipe or use the arrows to move to the next piece.</div>
+      <div class="cbar">
+        <button class="cnav" id="cPrev" aria-label="Previous piece">&larr;</button>
+        <div class="crail" id="cRail"></div>
+        <button class="cnav" id="cNext" aria-label="Next piece">&rarr;</button>
+      </div>
+    </div>
+    <div id="cBody"></div>
+  </div>
+
+  <!-- ================= VISUALS ================= -->
+  <div class="panel" id="panel-visual" role="tabpanel" aria-labelledby="tab-visual" hidden>
+    <div class="sec" style="padding-top:30px">
+      <div class="legend">
+        <b>Selected</b> tiles sit at full brightness with a white rule and sort to the front. <b>Options</b> stay on the board, dimmed &mdash; tap to bring one up. The bracketed number never moves, so &ldquo;shot 04&rdquo; means the same thing to everyone.
+      </div>
+    </div>
+    <div id="visuals"></div>
+  </div>
+
+  <footer>
+    Crew reference &mdash; read only<br>
+    Placeholder tiles &mdash; real Drive assets pending connector re-auth
+  </footer>
+</div>
+
+<div class="lb" id="lb" hidden>
+  <button class="lb-close" onclick="closeLb()">Close &times;</button>
+  <div class="lb-media" id="lbMedia"></div>
+  <div class="lb-cap"><div class="t" id="lbCap"></div><div class="m" id="lbMeta"></div></div>
+  <div class="lb-nav"><button onclick="stepLb(-1)">&larr; Prev</button><button onclick="stepLb(1)">Next &rarr;</button></div>
+</div>
+
+<script>
+/* Data is shaped like the proposed Supabase rows, so the prototype
+   doubles as a check on the model. */
+const NOW = 10*60 + 42;   /* preview clock 10:42 */
+
+function grad(seed){
+  const p = [["#2E5C63","#7E4426"],["#3B6B5A","#141B1E"],["#7A4B2E","#231A14"],
+             ["#4E6E44","#161C16"],["#5C3F62","#1B1520"],["#33587A","#141920"],
+             ["#8A6C22","#221B0D"],["#2B4E4B","#0C1413"]][seed % 8];
+  return `linear-gradient(${(seed*41)%180}deg, ${p[0]}, ${p[1]})`;
+}
+
+/* media_sections + media_items */
+const SECTIONS = [
+  { type:"moodboard", group:"Beach & Water", seq:false,
+    note:"Locked: warm film comedy. Shoot wide, let the joke breathe. No slow motion.",
+    items:[
+      {cap:"Wide two-shot, waist up", sel:true},
+      {cap:"Reaction cut-in, handheld", sel:true},
+      {cap:"Chaos register — BTS only", sel:false},
+      {cap:"Drone pull-back", sel:false},
+      {cap:"Sand-level tracking", sel:false},
+      {cap:"Backlit silhouette", sel:false, ratio:"port"}
+    ]},
+  { type:"moodboard", group:"Cenote / Cold Plunge", seq:false,
+    note:"Cinematic awe is allowed here. Keep faces lit — no full silhouette.",
+    items:[
+      {cap:"Overhead, water surface", sel:true},
+      {cap:"Entry gasp, tight", sel:false, ratio:"port"},
+      {cap:"Half-submerged split", sel:false},
+      {cap:"Group huddle, warm towels", sel:false}
+    ]},
+  { type:"moodboard", group:"Long-Table Dinner", seq:false, note:"",
+    items:[
+      {cap:"Table length, low angle", sel:false},
+      {cap:"Candle bokeh detail", sel:false, ratio:"port"},
+      {cap:"Toast moment, 35mm", sel:true}
+    ]},
+  { type:"environment", group:"Palapa Entrance", seq:false, note:"",
+    items:[
+      {cap:"Approach from the path", sel:true},
+      {cap:"Shade line at 07:30", sel:false},
+      {cap:"Greeting mark — stand here", sel:false, ratio:"port"}
+    ]},
+  { type:"environment", group:"Breathwork Deck", seq:false, note:"",
+    items:[{cap:"Circle from above", sel:false},{cap:"Eye-level, over shoulder", sel:true, ratio:"port"}]},
+  { type:"environment", group:"Vertical Shots", seq:false,
+    note:"Every frame from this station is 9:16. Do not shoot horizontal here.",
+    items:[{cap:"Talent centred, headroom", sel:true, ratio:"port"},{cap:"Walk-in, phone height", sel:false, ratio:"port"}]},
+  { type:"b_roll", group:"Clean Shot @ Beach Club — 06:30–07:15", seq:true, note:"",
+    items:[
+      {cap:"Empty loungers", sel:false, ts:"00:12"},
+      {cap:"Towel stack detail", sel:false, ts:"00:31"},
+      {cap:"Bar prep hands", sel:true, ts:"01:04"},
+      {cap:"Flag in wind", sel:false, ts:"01:22"}
+    ]},
+  { type:"b_roll", group:"Golden Hour — 17:30–18:30", seq:true, note:"",
+    items:[
+      {cap:"Sun through palms", sel:true, ts:"00:08"},
+      {cap:"Footprints, receding", sel:false, ts:"00:24"},
+      {cap:"Silhouette walk-by", sel:false, ts:"00:47", ratio:"port"}
+    ]},
+  { type:"hero_flow_reference", group:"Hero Flow Reference", seq:true,
+    note:"Pacing model for the edit — cut on movement, no dip to black.",
+    items:[
+      {cap:"Open — 0:00–0:06", sel:true},
+      {cap:"Mid build", sel:false},
+      {cap:"Last beat", sel:false}
+    ]}
+];
+
+/* crew_teams + shot_list_items */
+const CREWS = [
+  { name:"Crew A — Hero Video", director:"[Director]", host:"[Host]",
+    objective:"Hero reel and Mini Mic series. Warm-film comedy register throughout.",
+    rows:[
+      {t:"06:30–07:15", act:"Clean venue b-roll", detail:"Empty beach club before any guests arrive.", note:"", loc:"Beach Club", refs:[6]},
+      {t:"07:15–08:00", act:"Guest arrivals + welcome ritual", detail:"Handheld, follow from the path.", note:"Do not stage the greeting — catch it once, live.", loc:"Palapa Entrance", refs:[3]},
+      {t:"08:00–09:00", act:"Mini Mic #1 — travel stories", detail:"Three guests, beach walk, roaming mic.", note:"", loc:"Shoreline", refs:[0]},
+      {t:"09:00–10:00", act:"Breathwork circle — hero coverage", detail:"Two cameras: one wide, one tight.", note:"", loc:"Breathwork Deck", refs:[4]},
+      {t:"10:15–11:00", act:"Cenote dip / cold plunge", detail:"Waterproof housing, entry reactions.", note:"Awe register approved for this block only.", loc:"Cenote", refs:[1]},
+      {t:"11:00–12:00", act:"Boat departure b-roll", detail:"Drone up as the boat clears the dock.", note:"", loc:"Marina", refs:[]},
+      {t:"17:30–18:30", act:"Golden hour hero shoot", detail:"The money shot — protect this window.", note:"If you are behind, cut the 16:00 block, not this one.", loc:"West Beach", refs:[7]},
+      {t:"18:30–19:15", act:"Long-table dinner coverage", detail:"Toast at 18:50 — be in position by 18:45.", note:"", loc:"Terrace", refs:[2]}
+    ]},
+  { name:"Crew B — Vertical / Social", director:"[Director]", host:"[Host]",
+    objective:"9:16 only. Same-day turnaround for four story drops.",
+    rows:[
+      {t:"07:30–08:30", act:"Arrival POV + room reveals", detail:"Phone height, walking.", note:"Vertical only — no horizontal frames from this crew.", loc:"Villas", refs:[5]},
+      {t:"10:15–11:00", act:"Plunge reactions, vertical", detail:"Mirror Crew A's block from the opposite bank.", note:"", loc:"Cenote", refs:[1]},
+      {t:"19:30–20:30", act:"Closing DJ set — chaos BTS", detail:"Fast, messy, unpolished on purpose.", note:"Chaos register lives here and nowhere else.", loc:"Beach Club", refs:[]}
+    ]},
+  { name:"Photographer", director:"—", host:"—",
+    objective:"Four photo carousels and twelve hero stills.",
+    rows:[
+      {t:"09:00–10:00", act:"Breathwork stills", detail:"Available light, no flash.", note:"", loc:"Breathwork Deck", refs:[4]},
+      {t:"17:30–18:30", act:"Golden hour portraits", detail:"Every guest, two frames minimum.", note:"", loc:"West Beach", refs:[7]}
+    ]}
+];
+
+const VO = [
+  {spk:"Host", role:"On camera", line:"We flew six hours to get cold on purpose."},
+  {spk:"Guest 1", role:"Voiceover", line:"I said yes before anyone told me what the schedule was."},
+  {spk:"Host", role:"On camera", line:"Nobody warned us about the 6am part."},
+  {spk:"Guest 2", role:"Voiceover", line:"By day two you stop checking your phone. That's the whole thing."},
+  {spk:"Facilitator", role:"On camera", line:"Breathe in for four. Hold. That's it, that's the job."},
+  {spk:"Host", role:"Closing", line:"Same time next year. Bring a towel."}
+];
+
+const DELIVERABLES = [
+  {owner:"Crew A — Hero Video", items:[
+    {name:"Hero highlight reel", exp:1, done:0},
+    {name:"Mini Mic Series", exp:5, done:2},
+    {name:"Long-form recap", exp:1, done:0}]},
+  {owner:"Crew B — Vertical / Social", items:[
+    {name:"Reels", exp:9, done:6},
+    {name:"Story drops, same day", exp:4, done:4}]},
+  {owner:"Photographer", items:[
+    {name:"Photo carousels", exp:4, done:1},
+    {name:"Hero stills", exp:12, done:12}]}
+];
+
+/* ---------------- render ---------------- */
+function cellHtml(it, n, si, i){
+  return `<div class="cell ${it.sel?'sel':'opt'}">
+    <button class="tile" onclick="openLb('${si}:${i}')" aria-label="${it.cap}">
+      <span class="fill" style="background:${grad(si*7+i)}"></span>
+      ${it.sel?'<span class="selflag">Selected</span>':''}
+      ${it.ts?`<span class="tstamp">${it.ts}</span>`:''}
+    </button>
+    <div class="cap-line"><span class="num">[${n}]</span><span class="arrow">&rarr;</span></div>
+    <div class="cap-text">${it.cap}</div>
+  </div>`;
+}
+/* Selected sorts to the front; the bracketed index stays bound to admin order. */
+function ordered(sec){
+  return sec.items.map((it,i)=>({it,n:i+1,i}))
+    .sort((a,b)=> sec.seq ? 0 : (b.it.sel?1:0)-(a.it.sel?1:0));
+}
+
+const TYPE_META = {
+  moodboard:{label:"Moodboard", sub:"Primary style reference, grouped the way the pose tab was."},
+  environment:{label:"Environment", sub:"How each station gets shot."},
+  b_roll:{label:"B-Roll", sub:"Grouped under its capture window and kept in capture order."},
+  hero_flow_reference:{label:"Flow Reference", sub:"Pacing model for the edit."}
+};
+
+function renderVisuals(){
+  let html="", last=null;
+  SECTIONS.forEach((sec,si)=>{
+    if (sec.type!==last){
+      const m=TYPE_META[sec.type];
+      const count=SECTIONS.filter(s=>s.type===sec.type).reduce((n,s)=>n+s.items.length,0);
+      html+=`<div class="sec"><div class="sec-h"><h2>${m.label}</h2><div class="sec-right">01 &rarr; ${String(count).padStart(2,"0")}</div></div><div class="sub">${m.sub}</div></div>`;
+      last=sec.type;
+    }
+    html+=`<div class="group">
+      <div class="group-label"><span class="t">${sec.group}</span><span class="rule"></span><span class="n">${sec.items.length} ${sec.items.length===1?'frame':'frames'}</span></div>
+      ${sec.note?`<div class="dirnote"><b>Direction</b><span>${sec.note}</span></div>`:''}
+      <div class="grid ${sec.seq?'seq':''}">${ordered(sec).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")}</div>
+    </div>`;
+  });
+  document.getElementById("visuals").innerHTML=html;
+}
+
+const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+
+function renderRos(){
+  let liveKey=null,nextKey=null,best=1e9;
+  CREWS.forEach((c,ci)=>c.rows.forEach((r,ri)=>{
+    const [a,b]=r.t.split("–").map(toMin);
+    if(NOW>=a&&NOW<b) liveKey=ci+":"+ri;
+    else if(a>NOW&&a<best){best=a;nextKey=ci+":"+ri;}
+  }));
+  document.getElementById("ros").innerHTML = CREWS.map((c,ci)=>`
+    <div class="crew">
+      <div class="crew-h">
+        <div class="crew-name">${c.name}</div>
+        <div class="crew-roles"><span><b>Director</b> ${c.director}</span><span><b>Host</b> ${c.host}</span></div>
+        <div class="crew-obj">${c.objective}</div>
+      </div>
+      <div class="crew-body">${c.rows.map((r,ri)=>{
+        const key=ci+":"+ri;
+        const state = key===liveKey?"live":key===nextKey?"next":"";
+        const [s,e]=r.t.split("–");
+        const strip = r.refs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+        const count = r.refs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
+        const from  = r.refs.map(si=>SECTIONS[si].group).join(" · ");
+        return `<div class="row ${state}">
+          <div class="row-time">${s}<span>${e}</span></div>
+          <div class="row-main">
+            ${state==="live"?'<span class="chip now">&#9679; Now</span>':state==="next"?'<span class="chip next">Next up</span>':''}
+            <div class="row-act">${r.act}</div>
+            ${r.detail?`<div class="row-detail">${r.detail}</div>`:''}
+            ${r.note?`<div class="row-note">${r.note}</div>`:''}
+            <div class="row-loc">${r.loc}</div>
+            ${count?`<details class="refs"><summary>${count} refs &mdash; ${from}</summary><div class="refstrip">${strip}</div></details>`:''}
+          </div>
+        </div>`;
+      }).join("")}</div>
+    </div>`).join("");
+}
+
+function renderVo(){
+  document.getElementById("vo").innerHTML = VO.map((v,i)=>`
+    <div class="voline">
+      <div class="vonum">[${i+1}]</div>
+      <div><div class="vospk">${v.spk} <em>&mdash; ${v.role}</em></div><div class="votext">${v.line}</div></div>
+    </div>`).join("");
+}
+
+function renderDlv(){
+  document.getElementById("dlv").innerHTML = DELIVERABLES.map(g=>`
+    <div class="dlv-group"><div class="dlv-owner">${g.owner}</div>
+    ${g.items.map(it=>{
+      const full=it.done>=it.exp, pct=Math.round(it.done/it.exp*100);
+      return `<div class="dlv-row">
+        <div class="dlv-name">${it.name}</div>
+        <div class="bar"><i class="${full?'full':''}" style="width:${pct}%"></i></div>
+        <div class="dlv-count"><b>${it.done}</b>/${it.exp}</div>
+        <a class="dlv-link ${full?'on':''}" href="#" onclick="return false">${full?'Open ↗':''}</a>
+      </div>`;}).join("")}
+    </div>`).join("");
+}
+
+/* ---------------- lightbox ---------------- */
+let lbList=[], lbPos=0;
+function buildFlat(){
+  lbList=[];
+  SECTIONS.forEach((sec,si)=>sec.items.forEach((it,i)=>lbList.push({key:si+":"+i,it,si,i,n:i+1,sec})));
+}
+function openLb(key){
+  lbPos=lbList.findIndex(x=>x.key===key); if(lbPos<0) lbPos=0;
+  paintLb(); document.getElementById("lb").hidden=false; document.body.style.overflow="hidden";
+}
+function paintLb(){
+  const e=lbList[lbPos], port = e.it.ratio==="port";
+  document.getElementById("lbMedia").innerHTML =
+    `<div class="fill" style="aspect-ratio:${port?'9/16':'16/9'};background:${grad(e.si*7+e.i)};${port?'width:auto;height:70vh;':''}"></div>`;
+  document.getElementById("lbCap").textContent = e.it.cap;
+  document.getElementById("lbMeta").textContent =
+    `${e.sec.group} · [${e.n}] · ${e.it.sel?"Selected":"Option"} · true ${port?"portrait":"landscape"} ratio`;
+}
+function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
+function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
+function openHero(){
+  lbList.unshift({key:"hero", it:{cap:"Hero reel — Drive preview iframe renders here in the real app", sel:false}, si:1, i:2, n:0, sec:{group:"Hero"}});
+  openLb("hero"); lbList.shift();
+}
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("lb").hidden) return;
+  if(e.key==="Escape") closeLb();
+  if(e.key==="ArrowRight") stepLb(1);
+  if(e.key==="ArrowLeft") stepLb(-1);
+});
+
+/* ---------------- tabs ---------------- */
+const MODES=["action","content","visual"];
+function setMode(m){
+  MODES.forEach(k=>{
+    document.getElementById("tab-"+k).setAttribute("aria-selected", k===m);
+    document.getElementById("panel-"+k).hidden = k!==m;
+  });
+  window.scrollTo(0,0);
+}
+MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
+
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv();
+
+/* ==================================================================
+   CONTENT PIECES  —  content_pieces / shots / palette_swatches
+================================================================== */
+const PIECES = [
+  { title:"Hero Highlight Reel", kind:"reel", aspect:"16:9", dur:"1:12",
+    owner:"Crew A", status:"In edit", statusWip:true, seed:0,
+    auto:true, cuts:[
+      {ts:"0:00", cap:"Cold open — empty beach", sel:true},
+      {ts:"0:04", cap:"Title card over drone push", sel:false},
+      {ts:"0:09", cap:"Arrivals, handheld follow", sel:false},
+      {ts:"0:14", cap:"Reaction — first laugh", sel:true, note:"This is the beat the whole cut hangs on."},
+      {ts:"0:21", cap:"Breathwork wide", sel:false},
+      {ts:"0:27", cap:"Facilitator, tight", sel:false},
+      {ts:"0:33", cap:"Plunge entry gasp", sel:true},
+      {ts:"0:39", cap:"Overhead water surface", sel:false},
+      {ts:"0:46", cap:"Towel huddle", sel:false, note:"Trim — runs long."},
+      {ts:"0:53", cap:"Golden hour walk", sel:true},
+      {ts:"1:02", cap:"Toast, 35mm", sel:false},
+      {ts:"1:08", cap:"Last beat — sun drop", sel:true}
+    ],
+    palette:[["#E8DCC8","Sand"],["#2E6E74","Water"],["#C4552F","Sun"],["#1B2A2E","Shadow"],["#D9A98C","Skin"],["#8FA36B","Palm"]],
+    paletteSrc:"Sampled from 12 detected frames"
+  },
+  { title:"Mini Mic #1 — Travel Stories", kind:"reel", aspect:"9:16", dur:"0:48",
+    owner:"Crew A", status:"Not started", statusWip:true, seed:2,
+    auto:false, cuts:[],
+    palette:[["#EFE6D6","Base"],["#3A7C86","Sea"],["#B8613A","Warm"],["#161C1E","Ground"]],
+    paletteSrc:"Carried from the Beach & Water board — no footage yet"
+  },
+  { title:"Golden Hour Carousel", kind:"carousel", aspect:"4:5", dur:"6 slides",
+    owner:"Photographer", status:"Delivered", statusWip:false, seed:6,
+    auto:false,
+    slides:["Wide, sun behind","Portrait, backlit","Detail — sand on skin","Two-shot, laughing","Silhouette pair","Closing wide"],
+    cuts:[],
+    palette:[["#F0C98B","Gold"],["#C9662F","Ember"],["#7A3B22","Deep"],["#241612","Shadow"],["#E7D3B8","Highlight"]],
+    paletteSrc:"Sampled from 6 slides"
+  },
+  { title:"Chaos BTS Reel", kind:"reel", aspect:"9:16", dur:"0:22",
+    owner:"Crew B", status:"In edit", statusWip:true, seed:4,
+    auto:true, cuts:[
+      {ts:"0:00", cap:"Hard cut in, no title", sel:true},
+      {ts:"0:03", cap:"Handheld sprint", sel:false},
+      {ts:"0:07", cap:"Crowd blur", sel:false},
+      {ts:"0:11", cap:"Flash frame", sel:true, note:"Keep the blown-out one."},
+      {ts:"0:16", cap:"DJ booth, low angle", sel:false},
+      {ts:"0:19", cap:"Cut to black mid-motion", sel:true}
+    ],
+    palette:[["#5C2E62","Neon"],["#20B2A0","Cyan"],["#E24B6A","Hot"],["#0D0D10","Ground"]],
+    paletteSrc:"Sampled from 6 detected frames"
+  }
+];
+
+let cPos = 0, cSlide = 0;
+
+function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5" ? "sq" : ""; }
+
+function renderRail(){
+  document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
+    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.title}</button>`).join("");
+  document.getElementById("cIdx").textContent =
+    String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0");
+  document.getElementById("cPrev").disabled = cPos===0;
+  document.getElementById("cNext").disabled = cPos===PIECES.length-1;
+  const pill = document.getElementById("cRail").children[cPos];
+  if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
+}
+
+function renderPiece(){
+  const p = PIECES[cPos];
+  const isCar = p.kind==="carousel";
+  const total = isCar ? p.slides.length : 0;
+  const g = grad(p.seed + (isCar ? cSlide : 0));
+
+  let screen = `<div class="screen" id="screen">
+      <div class="bg" style="background:${g}"></div>
+      <div class="stage"><div class="media ${pieceMediaClass(p)}" style="background:${g}"></div></div>
+      <span class="screen-tag">${isCar?"Carousel":"Reel"} &middot; ${p.aspect}</span>
+      ${isCar ? `
+        <button class="sarrow l" onclick="slide(-1)" aria-label="Previous slide">&larr;</button>
+        <button class="sarrow r" onclick="slide(1)" aria-label="Next slide">&rarr;</button>
+        <span class="screen-count">${cSlide+1} / ${total}</span>
+        <span class="screen-dots">${p.slides.map((_,i)=>`<i class="${i===cSlide?'on':''}"></i>`).join("")}</span>
+      ` : `<button class="screen-play" onclick="openPieceLb()">&#9654;&nbsp; Play</button>`}
+    </div>`;
+
+  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide]}</span></div>` : "";
+
+  /* --- tier 2: shot breakdown --- */
+  let breakdown;
+  if (p.auto && p.cuts.length){
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">Auto &middot; ${p.cuts.length} cuts</span></div></div>
+      <div class="sub">Frames pulled at each detected cut. Flag the beats that matter, add a note, and the editor sees the same thing weeks later.</div>
+      <div class="grid seq">${p.cuts.map((c,i)=>`
+        <div class="cell shot ${c.sel?'sel':'opt'}">
+          <button class="tile" onclick="openShotLb(${cPos},${i})" aria-label="${c.cap}">
+            <span class="fill" style="background:${grad(p.seed+i*3)}"></span>
+            ${c.sel?'<span class="selflag">Key beat</span>':''}
+            <span class="shot-ts">${c.ts}</span>
+          </button>
+          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
+          <div class="cap-text">${c.cap}</div>
+          ${c.note?`<div class="shot-note">${c.note}</div>`:''}
+        </div>`).join("")}</div>
+    </div>`;
+  } else if (isCar){
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Slide Breakdown</h2><div class="sec-right">01 &rarr; ${String(total).padStart(2,"0")}</div></div>
+      <div class="sub">Every frame in the carousel, in posting order.</div>
+      <div class="grid seq">${p.slides.map((sl,i)=>`
+        <div class="cell shot ${i===cSlide?'sel':'opt'}">
+          <button class="tile" onclick="goSlide(${i})" aria-label="${sl}">
+            <span class="fill" style="background:${grad(p.seed+i)}"></span>
+            ${i===cSlide?'<span class="selflag">Showing</span>':''}
+          </button>
+          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
+          <div class="cap-text">${sl}</div>
+        </div>`).join("")}</div>
+    </div>`;
+  } else {
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Awaiting footage</span></div></div>
+      <div class="emptyshots">Nothing to break down yet.<br>The breakdown builds itself the moment a cut is attached to this piece.</div>
+    </div>`;
+  }
+
+  /* --- tier 3: palette --- */
+  const palette = `<div class="sec">
+      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
+      <div class="sub">The grade to match. Tap a swatch to copy its hex.</div>
+      <div class="palette">${p.palette.map(([hex,role],i)=>`
+        <button class="sw" onclick="copyHex(this,'${hex}')">
+          <span class="chipc" style="background:${hex}"></span>
+          <span class="hex">${hex}</span>
+          <span class="role">${role}</span>
+        </button>`).join("")}</div>
+      <div class="palette-src">${p.paletteSrc}</div>
+    </div>`;
+
+  document.getElementById("cBody").innerHTML =
+    `<div class="ctitle">${p.title}</div>
+     <div class="cmeta">
+       <span>${p.owner}</span><span>${p.dur}</span><span>${p.aspect}</span>
+       <span class="status ${p.statusWip?'wip':''}">${p.status}</span>
+     </div>
+     <div style="height:16px"></div>
+     ${screen}${caption}${breakdown}${palette}`;
+
+  if (isCar) attachSwipe();
+}
+
+function goPiece(i){
+  cPos = Math.max(0, Math.min(PIECES.length-1, i));
+  cSlide = 0; renderRail(); renderPiece();
+  document.getElementById("panel-content").scrollIntoView({block:"start"});
+}
+function slide(d){
+  const p = PIECES[cPos]; if(!p.slides) return;
+  cSlide = (cSlide + d + p.slides.length) % p.slides.length;
+  renderPiece();
+}
+function goSlide(i){ cSlide = i; renderPiece(); }
+function copyHex(el, hex){
+  try{ navigator.clipboard.writeText(hex); }catch(e){}
+  el.classList.add("copied");
+  setTimeout(()=>el.classList.remove("copied"), 1200);
+}
+function attachSwipe(){
+  const el = document.getElementById("screen"); if(!el) return;
+  let x0=null;
+  el.addEventListener("touchstart", e=>{ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  el.addEventListener("touchend", e=>{
+    if(x0===null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45) slide(dx < 0 ? 1 : -1);
+    x0=null;
+  }, {passive:true});
+}
+function openPieceLb(){
+  const p = PIECES[cPos];
+  lbList.unshift({key:"piece", it:{cap:p.title+" — Drive / Mux player renders here in the real app",
+    ratio: p.aspect==="9:16" ? "port" : "land", sel:false}, si:p.seed, i:0, n:0, sec:{group:p.kind==="carousel"?"Carousel":"Reel"}});
+  openLb("piece"); lbList.shift();
+}
+function openShotLb(pi, si){
+  const p = PIECES[pi], c = p.cuts[si];
+  lbList.unshift({key:"shot", it:{cap:c.cap, ratio: p.aspect==="9:16"?"port":"land", sel:c.sel},
+    si:p.seed, i:si*3, n:si+1, sec:{group:p.title+" — "+c.ts}});
+  openLb("shot"); lbList.shift();
+}
+
+document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
+document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
+renderRail(); renderPiece();
+
+</script>
