@@ -6,6 +6,26 @@ blocking. Last updated 18 Aug 2026.
 
 ---
 
+## 0. Status at a glance
+
+| Piece | State |
+|---|---|
+| GitHub repo | **Done** — everything on `main` |
+| Vercel deployment | **Done** — live, auto-deploys on push to `main` |
+| Prototype design + structure | **Done** — settled, verified in a browser |
+| Moodboard template (source → year → format) | **Done** |
+| Palette blocks | **Done** — structure real, values placeholder |
+| **Supabase project** | **NOT DONE** — schema is written and committed, but no project exists and nothing has been run. See §9. |
+| Real Drive content | **NOT DONE** — blocked, see §7 |
+| Next.js app | **NOT STARTED** — prototype is still plain HTML |
+| Admin editor | **NOT STARTED** |
+| Run of Show rebuilt for 4 days / 2 tracks | **NOT STARTED** |
+
+Everything currently live is a **static prototype with placeholder content**.
+No database is connected to anything yet.
+
+---
+
 ## 1. What this is
 
 A dark, lookbook-style reference site for the production crew — videographers,
@@ -35,11 +55,19 @@ one is the call for a given shot.** So the site is a *decision layer*:
 | What | Where |
 |---|---|
 | Repo | `dioneclaude2/content` |
-| Working branch | `claude/context-file-brainstorm-epn8fv` |
+| Branch | `main` (the feature branch was fast-forwarded into it; both point at the same commit) |
 | Prototype (source of truth for design) | `public/index.html` |
-| Supabase schema, ready to run | `supabase/schema.sql` |
-| Live prototype | Vercel — see deployment section below |
+| Supabase schema, **not yet run** | `supabase/schema.sql` |
+| **Live site** | `https://content-nine-topaz.vercel.app` — auto-deploys on push to `main` |
 | Shared preview | Artifact: `https://claude.ai/code/artifact/9cd5e39f-4c3c-46c3-9438-5c5e021faac4` |
+
+> The Artifact preview **cannot load Drive images** — its sandbox blocks external
+> hosts. The Vercel URL can. Judge media there.
+
+> The Vercel site is **public and unauthenticated**. Fine while it holds
+> placeholder content. Before real guest names, call times or villa details go
+> in, either switch on Vercel password protection or move to an unlisted
+> address. See open question in §7.
 
 ### Google Drive references
 
@@ -178,10 +206,10 @@ deliverables. Placeholders are labelled as such on the page.
    owner copy it so fresh records are created.
    *Needed to replace placeholder dates, counts and palettes with real ones.*
 
-2. **Supabase project does not exist yet.** No Supabase tooling was available
-   in the session that wrote this. `supabase/schema.sql` is ready to paste into
-   the SQL editor of a new project. After that, set `SUPABASE_URL`,
-   `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` in Vercel.
+2. **Supabase has not been set up. Nothing has been run anywhere.**
+   No Supabase tooling existed in the session that wrote this, so the project
+   was never created. `supabase/schema.sql` is written and committed but has
+   never been executed against a database. Full steps in §9.
 
 3. **Open question — is the crew view really public?** Slugs like `/cancun` are
    guessable and the schedule carries guest counts and villa detail. Decide
@@ -196,7 +224,7 @@ deliverables. Placeholders are labelled as such on the page.
 
 1. Unblock the Drive folders; import `2k24` for real. One year proves the
    importer; the other two follow identically.
-2. Create the Supabase project and run `supabase/schema.sql`.
+2. Set up Supabase — see §9. Nothing downstream works until this is done.
 3. Scaffold Next.js + Tailwind and port `public/index.html` into components.
    The design is settled — this is a translation job, not a design job.
 4. Build the Drive folder importer and the link → embed utility:
@@ -212,3 +240,43 @@ deliverables. Placeholders are labelled as such on the page.
 Drive throttles `drive.google.com/thumbnail` under burst load, and with
 embed-only there is no mirror to fall back on. Lazy-load tiles and load one
 year at a time rather than all three at once.
+
+---
+
+## 9. Supabase — not done yet
+
+**Nothing in this project has touched a database.** The site currently reads
+hard-coded placeholder data inside `public/index.html`. `supabase/schema.sql`
+is a finished, reviewed schema that has never been run.
+
+### What the schema already handles
+
+- Multi-day events (`event_days`) — Cancún spans Sept 9–12 plus setup days.
+- Two tracks on one clock (`tracks`, `kind = 'guest' | 'crew'`) — the real
+  structure found in the Cancún sheet, not crew-vs-crew blocks.
+- The moodboard tree: `inspo_sources → inspo_years → inspo_posts → inspo_slides`,
+  matching Drive exactly (a file is a reel, a subfolder is a carousel).
+- `content_pieces` doubles as the deliverables checklist, so there is no second
+  list to keep in sync.
+- `palette_swatches` stores six hex strings per palette — text, never images.
+- Row Level Security: public read on every table, **no write policy at all**.
+  Writes go through the admin route using the service role key, which bypasses
+  RLS. Do not add a public write policy.
+
+### Steps when you get to it
+
+1. Create a Supabase project.
+2. SQL Editor → paste all of `supabase/schema.sql` → Run. It is idempotent
+   only on a fresh database; do not run it twice on the same project.
+3. Copy the Project URL and both API keys from Settings → API.
+4. Add to the Vercel project's environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` — server-side only, never expose to the browser
+5. Confirm RLS is on for every table (the script does this, but check).
+
+### Then, and only then
+
+The Next.js app can replace the static prototype and read real content. Until
+Supabase exists there is nothing for an admin editor to write to, which is why
+the admin build has not started.
