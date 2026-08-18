@@ -376,6 +376,30 @@ footer{
 .sw.copied .hex::after{content:" copied";color:var(--dim);font-weight:500;letter-spacing:.1em;font-size:9px;text-transform:uppercase}
 .palette-src{padding:12px var(--pad) 0;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 
+
+/* ============ MOODBOARD COLLECTIONS ============ */
+.coll{margin:0 var(--pad) 18px;border-top:1px solid var(--white);padding-top:14px}
+.coll-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.coll-name{font-weight:700;font-size:16px;letter-spacing:-.01em;text-transform:uppercase}
+.mainflag{background:var(--white);color:#000;font-size:8.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 7px}
+.coll-src{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.coll-note{margin-top:10px;border-left:2px solid var(--white);padding-left:13px;max-width:62ch}
+.coll-note b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.coll-note span{font-style:italic;font-size:13.5px;line-height:1.45}
+.coll-empty{
+  margin:0 var(--pad) 26px;border:1px dashed var(--line);padding:18px;
+  color:var(--dim);font-size:13px;line-height:1.6;
+}
+.yr{display:flex;align-items:baseline;gap:12px;padding:0 var(--pad) 10px}
+.yr .t{font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.yr .rule{flex:1;height:1px;background:var(--line)}
+.yr .n{font-size:10px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+.pending{
+  margin:0 var(--pad) 20px;border:1px solid var(--line);background:var(--surface);
+  padding:11px 13px;font-size:11.5px;line-height:1.6;color:var(--dim);
+}
+.pending b{color:var(--muted);font-weight:600}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -498,29 +522,41 @@ function grad(seed){
 
 /* media_sections + media_items */
 const SECTIONS = [
-  { type:"moodboard", group:"Beach & Water", seq:false,
-    note:"Locked: warm film comedy. Shoot wide, let the joke breathe. No slow motion.",
+  { type:"moodboard", collection:"Nude Project Inspo", main:true,
+    group:"2k24", seq:true, folder:"2k24",
+    note:"",
     items:[
-      {cap:"Wide two-shot, waist up", sel:true},
-      {cap:"Reaction cut-in, handheld", sel:true},
-      {cap:"Chaos register — BTS only", sel:false},
-      {cap:"Drone pull-back", sel:false},
-      {cap:"Sand-level tracking", sel:false},
-      {cap:"Backlit silhouette", sel:false, ratio:"port"}
+      {cap:"14 Mar 24", sel:false},
+      {cap:"02 May 24", sel:false},
+      {cap:"27 Jun 24", sel:true},
+      {cap:"09 Jul 24", sel:false},
+      {cap:"18 Aug 24", sel:false},
+      {cap:"30 Sep 24", sel:false},
+      {cap:"11 Nov 24", sel:false}
     ]},
-  { type:"moodboard", group:"Cenote / Cold Plunge", seq:false,
-    note:"Cinematic awe is allowed here. Keep faces lit — no full silhouette.",
+  { type:"moodboard", collection:"Nude Project Inspo", main:true,
+    group:"2k25", seq:true, folder:"2k25",
+    note:"",
     items:[
-      {cap:"Overhead, water surface", sel:true},
-      {cap:"Entry gasp, tight", sel:false, ratio:"port"},
-      {cap:"Half-submerged split", sel:false},
-      {cap:"Group huddle, warm towels", sel:false}
+      {cap:"21 Jan 25", sel:false},
+      {cap:"08 Mar 25", sel:true},
+      {cap:"19 Apr 25", sel:false},
+      {cap:"02 Jun 25", sel:true},
+      {cap:"25 Jun 25", sel:false},
+      {cap:"14 Jul 25", sel:true},
+      {cap:"03 Aug 25", sel:false},
+      {cap:"29 Sep 25", sel:false},
+      {cap:"17 Nov 25", sel:false}
     ]},
-  { type:"moodboard", group:"Long-Table Dinner", seq:false, note:"",
+  { type:"moodboard", collection:"Nude Project Inspo", main:true,
+    group:"2k26", seq:true, folder:"2k26",
+    note:"",
     items:[
-      {cap:"Table length, low angle", sel:false},
-      {cap:"Candle bokeh detail", sel:false, ratio:"port"},
-      {cap:"Toast moment, 35mm", sel:true}
+      {cap:"12 Feb 26", sel:false},
+      {cap:"04 Apr 26", sel:true},
+      {cap:"23 May 26", sel:false},
+      {cap:"16 Jun 26", sel:true},
+      {cap:"08 Aug 26", sel:false}
     ]},
   { type:"environment", group:"Palapa Entrance", seq:false, note:"",
     items:[
@@ -608,14 +644,18 @@ const DELIVERABLES = [
 
 /* ---------------- render ---------------- */
 function cellHtml(it, n, si, i){
+  /* Moodboard files are named by date, so the date IS the label.
+     Everywhere else the position is the label and the caption sits below. */
+  const dated = SECTIONS[si] && SECTIONS[si].type === "moodboard";
+  const label = dated ? it.cap : n;
   return `<div class="cell ${it.sel?'sel':'opt'}">
     <button class="tile" onclick="openLb('${si}:${i}')" aria-label="${it.cap}">
       <span class="fill" style="background:${grad(si*7+i)}"></span>
       ${it.sel?'<span class="selflag">Selected</span>':''}
       ${it.ts?`<span class="tstamp">${it.ts}</span>`:''}
     </button>
-    <div class="cap-line"><span class="num">[${n}]</span><span class="arrow">&rarr;</span></div>
-    <div class="cap-text">${it.cap}</div>
+    <div class="cap-line"><span class="num">[${label}]</span><span class="arrow">&rarr;</span></div>
+    ${dated ? '' : `<div class="cap-text">${it.cap}</div>`}
   </div>`;
 }
 /* Selected sorts to the front; the bracketed index stays bound to admin order. */
@@ -624,27 +664,67 @@ function ordered(sec){
     .sort((a,b)=> sec.seq ? 0 : (b.it.sel?1:0)-(a.it.sel?1:0));
 }
 
+
+/* one entry per inspiration source; the main one leads */
+const COLLECTIONS = {
+  "Nude Project Inspo": {
+    main: true,
+    driveFolder: "NUDE PROJECT — Ibiza Content Timeline",
+    note: "Main reference for Cancún. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
+    pending: true
+  }
+};
+const OTHER_INSPOS_EMPTY = "No other inspiration sources added yet. When one is added it appears here, under Nude Project.";
+
 const TYPE_META = {
-  moodboard:{label:"Moodboard", sub:"Primary style reference, grouped the way the pose tab was."},
+  moodboard:{label:"Moodboard", sub:"A timeline, not a pile of options — read left to right to see how the tone moves year on year."},
   environment:{label:"Environment", sub:"How each station gets shot."},
   b_roll:{label:"B-Roll", sub:"Grouped under its capture window and kept in capture order."},
   hero_flow_reference:{label:"Flow Reference", sub:"Pacing model for the edit."}
 };
 
 function renderVisuals(){
-  let html="", last=null;
+  let html="", lastType=null, lastColl=null;
   SECTIONS.forEach((sec,si)=>{
-    if (sec.type!==last){
+    if (sec.type!==lastType){
       const m=TYPE_META[sec.type];
       const count=SECTIONS.filter(s=>s.type===sec.type).reduce((n,s)=>n+s.items.length,0);
       html+=`<div class="sec"><div class="sec-h"><h2>${m.label}</h2><div class="sec-right">01 &rarr; ${String(count).padStart(2,"0")}</div></div><div class="sub">${m.sub}</div></div>`;
-      last=sec.type;
+      lastType=sec.type; lastColl=null;
     }
+
+    /* collection header — only moodboard sections carry one */
+    if (sec.collection && sec.collection!==lastColl){
+      const c = COLLECTIONS[sec.collection] || {};
+      const groups = SECTIONS.filter(x=>x.collection===sec.collection);
+      const total  = groups.reduce((n,g)=>n+g.items.length,0);
+      html+=`<div class="coll">
+        <div class="coll-h">
+          <span class="coll-name">${sec.collection}</span>
+          ${c.main?'<span class="mainflag">Main</span>':''}
+          <span class="coll-src">${groups.length} years &middot; ${total} frames</span>
+        </div>
+        ${c.note?`<div class="coll-note"><b>Direction</b><span>${c.note}</span></div>`:''}
+      </div>`;
+      if (c.pending){
+        html+=`<div class="pending"><b>Placeholder dates.</b> Real filenames load straight from <b>${c.driveFolder}</b> &mdash; each year folder becomes the band below it, and every file&rsquo;s date becomes its label, in order.</div>`;
+      }
+      lastColl=sec.collection;
+    }
+
+    const label = sec.schedule || sec.group;
     html+=`<div class="group">
-      <div class="group-label"><span class="t">${sec.group}</span><span class="rule"></span><span class="n">${sec.items.length} ${sec.items.length===1?'frame':'frames'}</span></div>
+      ${label?`<div class="yr"><span class="t">${label}</span><span class="rule"></span><span class="n">${sec.items.length} ${sec.items.length===1?'frame':'frames'}</span></div>`:''}
       ${sec.note?`<div class="dirnote"><b>Direction</b><span>${sec.note}</span></div>`:''}
       <div class="grid ${sec.seq?'seq':''}">${ordered(sec).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")}</div>
     </div>`;
+
+    /* after the last moodboard collection, show the empty slot for other inspos */
+    const next = SECTIONS[si+1];
+    if (sec.collection && (!next || next.collection!==sec.collection)){
+      html+=`<div class="coll"><div class="coll-h"><span class="coll-name">Other inspiration</span></div></div>
+             <div class="coll-empty">${OTHER_INSPOS_EMPTY}</div>`;
+    }
   });
   document.getElementById("visuals").innerHTML=html;
 }
