@@ -556,7 +556,7 @@ footer{
 
   <footer>
     Crew reference &mdash; read only<br>
-    Placeholder tiles &mdash; real Drive assets pending connector re-auth
+    Media stays in Google Drive &mdash; embedded, never copied
   </footer>
 </div>
 
@@ -587,6 +587,9 @@ const SECTIONS = [
       {cap:"Shade line at 07:30", sel:false},
       {cap:"Greeting mark — stand here", sel:false, ratio:"port"}
     ]},
+  { type:"environment", group:"Cenote", seq:false,
+    note:"Keep faces lit — no full silhouette, however tempting the light is.",
+    items:[{cap:"Overhead, water surface", sel:true},{cap:"Entry reaction, tight", sel:false, ratio:"port"},{cap:"Half-submerged split", sel:false}]},
   { type:"environment", group:"Breathwork Deck", seq:false, note:"",
     items:[{cap:"Circle from above", sel:false},{cap:"Eye-level, over shoulder", sel:true, ratio:"port"}]},
   { type:"environment", group:"Vertical Shots", seq:false,
@@ -619,27 +622,27 @@ const CREWS = [
   { name:"Crew A — Hero Video", director:"[Director]", host:"[Host]",
     objective:"Hero reel and Mini Mic series. Warm-film comedy register throughout.",
     rows:[
-      {t:"06:30–07:15", act:"Clean venue b-roll", detail:"Empty beach club before any guests arrive.", note:"", loc:"Beach Club", refs:[6]},
-      {t:"07:15–08:00", act:"Guest arrivals + welcome ritual", detail:"Handheld, follow from the path.", note:"Do not stage the greeting — catch it once, live.", loc:"Palapa Entrance", refs:[3]},
-      {t:"08:00–09:00", act:"Mini Mic #1 — travel stories", detail:"Three guests, beach walk, roaming mic.", note:"", loc:"Shoreline", refs:[0]},
-      {t:"09:00–10:00", act:"Breathwork circle — hero coverage", detail:"Two cameras: one wide, one tight.", note:"", loc:"Breathwork Deck", refs:[4]},
-      {t:"10:15–11:00", act:"Cenote dip / cold plunge", detail:"Waterproof housing, entry reactions.", note:"Awe register approved for this block only.", loc:"Cenote", refs:[1]},
+      {t:"06:30–07:15", act:"Clean venue b-roll", detail:"Empty beach club before any guests arrive.", note:"", loc:"Beach Club", refs:["Clean Shot @ Beach Club — 06:30–07:15"]},
+      {t:"07:15–08:00", act:"Guest arrivals + welcome ritual", detail:"Handheld, follow from the path.", note:"Do not stage the greeting — catch it once, live.", loc:"Palapa Entrance", refs:["Palapa Entrance"]},
+      {t:"08:00–09:00", act:"Mini Mic #1 — travel stories", detail:"Three guests, beach walk, roaming mic.", note:"", loc:"Shoreline", refs:[]},
+      {t:"09:00–10:00", act:"Breathwork circle — hero coverage", detail:"Two cameras: one wide, one tight.", note:"", loc:"Breathwork Deck", refs:["Breathwork Deck"]},
+      {t:"10:15–11:00", act:"Cenote dip / cold plunge", detail:"Waterproof housing, entry reactions.", note:"Awe register approved for this block only.", loc:"Cenote", refs:["Cenote"]},
       {t:"11:00–12:00", act:"Boat departure b-roll", detail:"Drone up as the boat clears the dock.", note:"", loc:"Marina", refs:[]},
-      {t:"17:30–18:30", act:"Golden hour hero shoot", detail:"The money shot — protect this window.", note:"If you are behind, cut the 16:00 block, not this one.", loc:"West Beach", refs:[7]},
-      {t:"18:30–19:15", act:"Long-table dinner coverage", detail:"Toast at 18:50 — be in position by 18:45.", note:"", loc:"Terrace", refs:[2]}
+      {t:"17:30–18:30", act:"Golden hour hero shoot", detail:"The money shot — protect this window.", note:"If you are behind, cut the 16:00 block, not this one.", loc:"West Beach", refs:["Golden Hour — 17:30–18:30"]},
+      {t:"18:30–19:15", act:"Long-table dinner coverage", detail:"Toast at 18:50 — be in position by 18:45.", note:"", loc:"Terrace", refs:[]}
     ]},
   { name:"Crew B — Vertical / Social", director:"[Director]", host:"[Host]",
     objective:"9:16 only. Same-day turnaround for four story drops.",
     rows:[
-      {t:"07:30–08:30", act:"Arrival POV + room reveals", detail:"Phone height, walking.", note:"Vertical only — no horizontal frames from this crew.", loc:"Villas", refs:[5]},
-      {t:"10:15–11:00", act:"Plunge reactions, vertical", detail:"Mirror Crew A's block from the opposite bank.", note:"", loc:"Cenote", refs:[1]},
+      {t:"07:30–08:30", act:"Arrival POV + room reveals", detail:"Phone height, walking.", note:"Vertical only — no horizontal frames from this crew.", loc:"Villas", refs:["Vertical Shots"]},
+      {t:"10:15–11:00", act:"Plunge reactions, vertical", detail:"Mirror Crew A's block from the opposite bank.", note:"", loc:"Cenote", refs:["Cenote"]},
       {t:"19:30–20:30", act:"Closing DJ set — chaos BTS", detail:"Fast, messy, unpolished on purpose.", note:"Chaos register lives here and nowhere else.", loc:"Beach Club", refs:[]}
     ]},
   { name:"Photographer", director:"—", host:"—",
     objective:"Four photo carousels and twelve hero stills.",
     rows:[
-      {t:"09:00–10:00", act:"Breathwork stills", detail:"Available light, no flash.", note:"", loc:"Breathwork Deck", refs:[4]},
-      {t:"17:30–18:30", act:"Golden hour portraits", detail:"Every guest, two frames minimum.", note:"", loc:"West Beach", refs:[7]}
+      {t:"09:00–10:00", act:"Breathwork stills", detail:"Available light, no flash.", note:"", loc:"Breathwork Deck", refs:["Breathwork Deck"]},
+      {t:"17:30–18:30", act:"Golden hour portraits", detail:"Every guest, two frames minimum.", note:"", loc:"West Beach", refs:["Golden Hour — 17:30–18:30"]}
     ]}
 ];
 
@@ -691,6 +694,45 @@ function ordered(sec){
     .sort((a,b)=> sec.seq ? 0 : (b.it.sel?1:0)-(a.it.sel?1:0));
 }
 
+
+
+/* ==================================================================
+   MOODBOARD  —  inspo source > year > format > items
+   Mirrors the Drive tree exactly. Inside a year folder a FILE is a
+   reel; a SUBFOLDER is a carousel and its files are the slides.
+================================================================== */
+const MOODBOARD = [
+  {
+    name:"Nude Project", main:true,
+    driveFolder:"NUDE PROJECT — Ibiza Content Timeline",
+    note:"Main reference for Cancún. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
+    pending:true,
+    palette:[["#E7DDD0","Cream"],["#C3452F","Red"],["#1C1A17","Ink"],["#8C7B66","Clay"],["#D9A05B","Tan"],["#5E6B4F","Olive"]],
+    paletteNote:"Placeholder — sampled from the Drive thumbnails on import.",
+    years:[
+      { year:"2k24", folderId:"1AfApNLo2Qa-xrilaqSt09sHyw5m6VYWE",
+        palette:[["#E9E0D4","Cream"],["#B84A34","Red"],["#211E1A","Ink"],["#9A8873","Clay"],["#CFA268","Tan"]],
+        reels:[
+          {d:"14 Mar 24"},{d:"02 May 24"},{d:"27 Jun 24", sel:true},
+          {d:"09 Jul 24"},{d:"18 Aug 24"},{d:"30 Sep 24"}
+        ],
+        carousels:[ {d:"21 Apr 24", slides:6}, {d:"11 Nov 24", slides:8} ]},
+      { year:"2k25", folderId:"1TiVRA9k67httRsh1DqpzFjMfRxUFwIN2",
+        palette:[["#EFE7DA","Cream"],["#C3452F","Red"],["#171512","Ink"],["#8C7B66","Clay"],["#D9A05B","Tan"]],
+        reels:[
+          {d:"21 Jan 25"},{d:"08 Mar 25", sel:true},{d:"19 Apr 25"},
+          {d:"02 Jun 25", sel:true},{d:"14 Jul 25", sel:true},{d:"03 Aug 25"},{d:"29 Sep 25"}
+        ],
+        carousels:[ {d:"25 Jun 25", slides:10}, {d:"17 Nov 25", slides:7, sel:true}, {d:"06 Dec 25", slides:5} ]},
+      { year:"2k26", folderId:"10uvMNbwMwmfrU-65QC5PvM6mxZb3vGvy",
+        palette:[["#F2ECE1","Cream"],["#CE5138","Red"],["#12100E","Ink"],["#7E6E5B","Clay"],["#E0AE6B","Tan"]],
+        reels:[ {d:"12 Feb 26"},{d:"04 Apr 26", sel:true},{d:"23 May 26"},{d:"16 Jun 26", sel:true} ],
+        carousels:[ {d:"08 Aug 26", slides:9} ]}
+    ]
+  }
+];
+/* Slots 2-4 are the template, ready to fill. */
+const INSPO_SLOTS = ["Inspo 02","Inspo 03","Inspo 04"];
 
 const TYPE_META = {
   moodboard:{label:"Moodboard", sub:"A timeline, not a pile of options — read left to right to see how the tone moves year on year."},
@@ -804,9 +846,12 @@ function renderRos(){
         const key=ci+":"+ri;
         const state = key===liveKey?"live":key===nextKey?"next":"";
         const [s,e]=r.t.split("–");
-        const strip = r.refs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
-        const count = r.refs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
-        const from  = r.refs.map(si=>SECTIONS[si].group).join(" · ");
+        /* Reference groups are looked up by name, so reordering SECTIONS
+           can never point a row at the wrong grid. */
+        const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
+        const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+        const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
+        const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
         return `<div class="row ${state}">
           <div class="row-time">${s}<span>${e}</span></div>
           <div class="row-main">
@@ -887,7 +932,7 @@ function closeLb(){ document.getElementById("lb").hidden=true; document.body.sty
 function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
 function openHero(){
   pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
-            sel:false, port:false, seed:3, meta:"Cancún · Hero"});
+            sel:false, port:false, seed:3, meta:"Cancún · Hero · embedded from Drive"});
 }
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
@@ -1000,8 +1045,8 @@ function renderPiece(){
   let breakdown;
   if (p.auto && p.cuts.length){
     breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">Auto &middot; ${p.cuts.length} cuts</span></div></div>
-      <div class="sub">Frames pulled at each detected cut. Flag the beats that matter, add a note, and the editor sees the same thing weeks later.</div>
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">${p.cuts.length} shots</span></div></div>
+      <div class="sub">Marked up by hand against the cut &mdash; scrub, note the timecode, flag the beats that matter. The editor sees the same thing weeks later.</div>
       <div class="grid seq">${p.cuts.map((c,i)=>`
         <div class="cell shot ${c.sel?'sel':'opt'}">
           <button class="tile" onclick="openShotLb(${cPos},${i})" aria-label="${c.cap}">
@@ -1031,14 +1076,14 @@ function renderPiece(){
   } else {
     breakdown = `<div class="sec">
       <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Awaiting footage</span></div></div>
-      <div class="emptyshots">Nothing to break down yet.<br>The breakdown builds itself the moment a cut is attached to this piece.</div>
+      <div class="emptyshots">Nothing to break down yet.<br>Once a cut is attached, add shots against it in the editor.</div>
     </div>`;
   }
 
   /* --- tier 3: palette --- */
   const palette = `<div class="sec">
       <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
-      <div class="sub">The grade to match. Tap a swatch to copy its hex.</div>
+      <div class="sub">The grade to match, read off the images themselves. Tap a swatch to copy its hex.</div>
       <div class="palette">${p.palette.map(([hex,role],i)=>`
         <button class="sw" onclick="copyHex(this,'${hex}')">
           <span class="chipc" style="background:${hex}"></span>
@@ -1090,7 +1135,7 @@ function attachSwipe(){
 function openPieceLb(){
   const p = PIECES[cPos];
   pushTemp({key:"piece", cap:p.title, sel:false, port:p.aspect==="9:16", sq:p.aspect==="4:5",
-            seed:p.seed, meta:`${p.kind==="carousel"?"Carousel":"Reel"} · ${p.aspect} · ${p.owner}`});
+            seed:p.seed, meta:`${p.kind==="carousel"?"Carousel":"Reel"} · ${p.aspect} · ${p.owner} · embedded from Drive`});
 }
 function openShotLb(pi, si){
   const p = PIECES[pi], c = p.cuts[si];
