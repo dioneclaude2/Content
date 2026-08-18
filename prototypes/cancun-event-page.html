@@ -710,7 +710,7 @@ function paletteHtml(pal, label, src){
 
 function renderMoodboard(){
   let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} of ${MOODBOARD.length+INSPO_SLOTS.length} sources</div></div>
-    <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year.</div></div>`;
+    <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year. Reels are single files; carousels open slide by slide.</div></div>`;
 
   MOODBOARD.forEach((sp, spi) => {
     const total = sp.years.reduce((n,y)=>n+y.reels.length+y.carousels.length, 0);
@@ -724,7 +724,7 @@ function renderMoodboard(){
     </div>`;
 
     if (sp.pending){
-      html += `<div class="pending"><b>Placeholder dates and swatches.</b> Real ones load straight from <b>${sp.driveFolder}</b> &mdash; each year folder becomes a block, Reels and Carousels become the two rows inside it, and every file&rsquo;s date becomes its label, in order.</div>`;
+      html += `<div class="pending"><b>Placeholder dates and swatches.</b> Real ones load straight from <b>${sp.driveFolder}</b>. Inside a year folder, a <b>file is a reel</b> and a <b>subfolder is a carousel</b> whose files are its slides, in order &mdash; so the folders decide the layout and nobody has to label anything.</div>`;
     }
 
     html += paletteHtml(sp.palette, "Palette — whole source", sp.paletteNote);
@@ -745,7 +745,7 @@ function renderMoodboard(){
       if (y.carousels.length){
         html += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5</span></div>
           <div class="grid seq carousel">${y.carousels.map((it,i)=>tileHtml({
-            key:`m:${spi}:${yi}:c:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
+            key:`m:${spi}:${yi}:c:${i}:0`, label:it.d, cap:it.d, sel:!!it.sel,
             seed:spi*31+yi*11+i+5, slides:it.slides, showCap:false})).join("")}</div>`;
       }
       if (y.palette) html += paletteHtml(y.palette, `Palette — ${y.year}`, "");
@@ -759,7 +759,7 @@ function renderMoodboard(){
     html += `<div class="slot">
       <div class="slot-h"><span class="slot-name">${n}</span><span class="slot-tag">Empty</span></div>
       <p>Paste a Drive folder here and it fills itself in, using the same shape as Nude Project.</p>
-      <div class="slot-shape"><span>Year</span><span>Reels 9:16</span><span>Carousels 4:5</span><span>Palette</span><span>Direction note</span></div>
+      <div class="slot-shape"><span>Year folder</span><span>File &rarr; reel</span><span>Subfolder &rarr; carousel</span><span>Palette</span><span>Direction note</span></div>
     </div>`;
   });
   return html;
@@ -854,10 +854,16 @@ function buildFlat(){
     y.reels.forEach((it,i)=>lbList.push({
       key:`m:${spi}:${yi}:r:${i}`, cap:it.d, sel:!!it.sel, port:true,
       seed:spi*31+yi*11+i, meta:`${sp.name} · ${y.year} · Reel · ${it.sel?"Selected":"Option"}`}));
-    y.carousels.forEach((it,i)=>lbList.push({
-      key:`m:${spi}:${yi}:c:${i}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
-      seed:spi*31+yi*11+i+5,
-      meta:`${sp.name} · ${y.year} · Carousel, ${it.slides} slides · ${it.sel?"Selected":"Option"}`}));
+    /* A carousel is a subfolder, so each slide gets its own entry and the
+       arrows walk 1..n before moving on to the next post. */
+    y.carousels.forEach((it,i)=>{
+      for(let sl=0; sl<it.slides; sl++){
+        lbList.push({
+          key:`m:${spi}:${yi}:c:${i}:${sl}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
+          seed:spi*31+yi*11+i+5+sl*3,
+          meta:`${sp.name} · ${y.year} · Carousel · slide ${sl+1} of ${it.slides} · ${it.sel?"Selected":"Option"}`});
+      }
+    });
   }));
   SECTIONS.forEach((sec,si)=>sec.items.forEach((it,i)=>lbList.push({
     key:`s:${si}:${i}`, cap:it.cap, sel:!!it.sel, port:it.ratio==="port",
