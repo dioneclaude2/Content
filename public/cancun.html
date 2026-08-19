@@ -535,12 +535,12 @@ footer{
       <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
       <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
     </div>
-    <div class="hero-meta"><span>9–12 Sept</span><span>Playa del Carmen, MX</span><span>4 Days</span><span>16 Rows</span></div>
+    <div class="hero-meta"><span>9–12 Sept</span><span>Playa del Carmen, MX</span><span>4 Days</span><span>Shot list TBD</span></div>
   </div>
 
   <div class="pin">
     <div class="k">Locked direction</div>
-    <p>Pleasure is wellness. No agenda, no notifications. Day 1 golden hour ~5:55pm, Day 3 is boat day — the two real shoot windows. Five hashtags only: #NancyOOO #OutOfOffice #PlayaDelCarmen #CreatorTrip #PleasureIsWellness.</p>
+    <p>Pleasure is wellness. No agenda, no notifications. Five hashtags only: #NancyOOO #OutOfOffice #PlayaDelCarmen #CreatorTrip #PleasureIsWellness.</p>
     <a href="https://nancy-outofoffice.vercel.app/" target="_blank" rel="noopener">Full guest itinerary site &rarr;</a>
   </div>
 
@@ -668,53 +668,18 @@ function driveVideoProxy(id){ return `/api/drive-video?id=${id}&v=2`; }
 
 /* media_sections + media_items */
 /* No per-location shot references exist for Playacar Vista Estate yet --
-   nobody's been there to shoot it. The real vibe reference is the Nude
-   Project moodboard (see MOODBOARD below); rows point at specific real
-   carousels there via refs, resolved by moodboardRefLookup(), not at
-   fictional environment stations. */
+   nobody's been there to shoot it. Stays empty until real shots exist. */
 const SECTIONS = [];
 
-/* crew_teams + shot_list_items — this is the actual guest-facing run of
-   show from nancy-outofoffice.vercel.app, one block per real day, not a
-   fictional crew split. Times, activities and locations are exactly what
-   guests were sent; nothing here is invented. refs point at the Nude
-   Project carousel that's the closest real vibe match for that block --
-   left empty where nothing in the moodboard actually matches (movie
-   night, the bonfire), rather than forcing a weak connection. */
-const CREWS = [
-  { name:"Day 1 — Tue 9 Sept — Arrivals & Welcome Dinner", director:"[Director]", host:"[Host]",
-    objective:"Land, settle in, first golden hour of the trip, welcome dinner on the beach, movie night in pyjamas.",
-    rows:[
-      {t:"All day–", act:"Arrivals", detail:"Land in Cancún, transfer to Playacar Vista Estate. Kitchen and bar open all day.", note:"", loc:"Playacar Vista Estate", refs:["Day 2 at the NUDE PROJECT MANSION, life's a trip 🌈"]},
-      {t:"15:00–19:00", act:"Meet, greet & chill with the DJ", detail:"Open bar, small bites, DJ on the terrace as everyone rolls in.", note:"Come as you are.", loc:"Main villa", refs:["guess whos back NUDE PROJECT IBIZA MANSION 2025 🗣️🤎⛳️"]},
-      {t:"16:30–18:00", act:"Golden hour — first shoot window", detail:"Best light around 5:55pm. Portraits for anyone who wants them.", note:"Bring a look.", loc:"Villa", refs:[]},
-      {t:"19:00–21:30", act:"Welcome dinner on the beach", detail:"Bonfire, s'mores, buffet dinner, DJ on the sand.", note:"", loc:"Beach", refs:[]},
-      {t:"21:30–23:30", act:"Movie night", detail:"Nancy pillows, plushies and a rom-com.", note:"Bring your own pyjamas — cute ones, this is going on camera.", loc:"Villa", refs:[]}
-    ]},
-  { name:"Day 2 — Wed 10 Sept — Nancy Workshops", director:"[Director]", host:"[Host]",
-    objective:"5.5 hours of free content time either side of the brunch and the artsy workshop. Learn the brand before the fun — keynote at dinner.",
-    rows:[
-      {t:"08:00–09:00", act:"Yoga or a run", detail:"Poolside yoga (mats + blocks provided), or a run with Britt and Rahul.", note:"Optional.", loc:"Villa", refs:[]},
-      {t:"09:00–12:00", act:"Free time & self content creation", detail:"Villa, pools and beach are all fair game — shoot whatever you like.", note:"3 hrs.", loc:"Villa / pools / beach", refs:["our pool has seen things","Nude Project Swimwear now live 🏝️🍹"]},
-      {t:"12:00–13:00", act:"Brunch with the doctors", detail:"Sharing session with Dr Jila and Dr Tara — 30 min talk, 10 min Q&A, live product demo.", note:"", loc:"Villa", refs:[]},
-      {t:"14:00–16:30", act:"Free time & self content creation", detail:"Another 2.5 hours to shoot, swim, or do nothing.", note:"", loc:"Villa / pools / beach", refs:["our pool has seen things"]},
-      {t:"16:30–18:00", act:"Nancy 101: the artsy workshop", detail:"With Crystal — decorate your own plush, build Nancy content props, interactive vibrator session.", note:"Hands on.", loc:"Villa", refs:[]},
-      {t:"19:30–", act:"Dinner at the main villa", detail:"Buffet, with a 15-min keynote from Momo & Rahul on where Nancy goes next.", note:"", loc:"Main villa", refs:[]}
-    ]},
-  { name:"Day 3 — Thu 11 Sept — Couples & BFF Day", director:"[Director]", host:"[Host]",
-    objective:"Boat day is the centrepiece — everyone on one boat, out on the Caribbean. Farewell dinner closes the last night.",
-    rows:[
-      {t:"08:00–09:00", act:"Yoga or a run", detail:"Same as yesterday.", note:"Optional.", loc:"Villa", refs:[]},
-      {t:"09:00–12:00", act:"Free time & self content creation", detail:"Three hours before lunch.", note:"", loc:"Villa / pools / beach", refs:["our pool has seen things"]},
-      {t:"15:00–19:30", act:"Get wet: boat day", detail:"Everyone on one boat, out on the Caribbean.", note:"Half or full day TBC. Bring swimwear, sunscreen, a change of clothes.", loc:"Boat", refs:["i know a guy with a boat"]},
-      {t:"19:30–", act:"Farewell dinner", detail:"Buffet back at the main villa.", note:"Last night — make it count.", loc:"Main villa", refs:[]}
-    ]},
-  { name:"Day 4 — Fri 12 Sept — Check Out", director:"[Director]", host:"[Host]",
-    objective:"Wrap. Rooms cleared and guests travel out.",
-    rows:[
-      {t:"By 11:00am–", act:"Check out", detail:"Rooms cleared by 11am, guests travel out from the villa.", note:"Airport transfers arranged.", loc:"Playacar Vista Estate", refs:[]}
-    ]}
-];
+/* crew_teams + shot_list_items -- the real shot list for Cancun does not
+   exist yet. The guest-facing day schedule at nancy-outofoffice.vercel.app
+   is a *guest itinerary* (when is dinner, when is checkout), not a shot
+   list (what to actually capture) -- those are different documents and
+   should not be conflated. This stays empty, keeping the same skeleton
+   (crew/director/host/objective, then time/activity/detail/note/location
+   rows) as the ASAP HK sheet this whole site is modelled on, until a real
+   shot wishlist exists to fill it in. */
+const CREWS = [];
 
 const VO = [
   {spk:"Host", role:"On camera", line:"We flew six hours to get cold on purpose."},
@@ -977,23 +942,12 @@ function renderVisuals(){
 
 const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
 
-/* Finds a live moodboard carousel by its caption, with the indices needed
-   to build the exact same lightbox key buildFlat() uses -- so a tile
-   shown against a Run of Show row opens the real lightbox item, not a
-   dead click. */
-function moodboardRefLookup(name){
-  for (let spi=0; spi<MOODBOARD.length; spi++){
-    const sp = MOODBOARD[spi];
-    for (let yi=0; yi<sp.years.length; yi++){
-      const y = sp.years[yi];
-      const found = liveCarousels(y).find(c => (c.cap||c.d) === name);
-      if (found) return {sp, spi, y, yi, item:found};
-    }
-  }
-  return null;
-}
-
 function renderRos(){
+  if (!CREWS.length){
+    document.getElementById("ros").innerHTML = `<div class="emptyshots">No shot list yet — real content is still being planned.<br>
+      The guest itinerary exists (see Quick Links) but that's a schedule, not a shot list; this fills in once there's an actual shot wishlist.</div>`;
+    return;
+  }
   let liveKey=null,nextKey=null,best=1e9;
   CREWS.forEach((c,ci)=>c.rows.forEach((r,ri)=>{
     const [a,b]=r.t.split("–").map(toMin);
@@ -1012,25 +966,14 @@ function renderRos(){
         const state = key===liveKey?"live":key===nextKey?"next":"";
         const [s,e]=r.t.split("–");
         /* Reference groups are looked up by name, so reordering SECTIONS
-           can never point a row at the wrong grid. refs can also name a
-           real Nude Project moodboard carousel -- resolved separately
-           since it's a different data source (real vibe reference, not a
-           per-location shot list that doesn't exist yet). */
+           can never point a row at the wrong grid. This only ever points
+           at real per-location shot references (SECTIONS) -- moodboard
+           inspiration belongs under Visuals, and storyboards belong under
+           Cancun Footage, never here. */
         const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
-        const secStrip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
-        const secCount = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
-        const secFrom  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
-
-        const mbMatches = r.refs.map(nm=>moodboardRefLookup(nm)).filter(Boolean);
-        const mbStrip = mbMatches.map(({spi,yi,item})=>item.slides.slice(0,4).map((sid,si)=>tileHtml({
-          key:`m:${spi}:${yi}:c:${item.origIndex}:${si}`, label:si+1, cap:item.cap||item.d,
-          thumbId:sid, showCap:false, seed:spi*31+yi*11+item.origIndex*7+si})).join("")).join("");
-        const mbCount = mbMatches.reduce((n,{item})=>n+Math.min(item.slides.length,4),0);
-        const mbFrom  = mbMatches.map(({sp,item})=>`${sp.name} — ${item.cap||item.d}`).join(" · ");
-
-        const strip = secStrip + mbStrip;
-        const count = secCount + mbCount;
-        const from  = [secFrom, mbFrom].filter(Boolean).join(" · ");
+        const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+        const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
+        const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
         return `<div class="row ${state}">
           <div class="row-time">${s}<span>${e}</span></div>
           <div class="row-main">
@@ -1274,7 +1217,7 @@ function renderPiece(){
   if (!p){
     document.getElementById("cBody").innerHTML = `<div class="sec">
       <div class="emptyshots">No Cancun footage yet — the shoot hasn't happened.<br>
-      Real cuts land here once they're shot; this tab is reserved for the exact Cancun content, not reference material.</div>
+      Real cuts and the storyboard land here once they exist; this tab is reserved for the exact Cancun content, not reference material.</div>
     </div>`;
     return;
   }
