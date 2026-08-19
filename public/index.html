@@ -794,7 +794,7 @@ function ordered(sec){
 ================================================================== */
 const MOODBOARD = [
   {
-    name:"Nude Project", main:true, heroFileId:"1VEVuDdn_Bx_67YKsAtZAAY2MWTrDV0IL",
+    name:"Nude Project", main:true, heroFileId:"1VEVuDdn_Bx_67YKsAtZAAY2MWTrDV0IL", heroDur:7.067,
     driveFolder:"NUDE PROJECT — Ibiza Content Timeline",
     note:"Main reference for Cancun. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
     pending:true,
@@ -858,7 +858,7 @@ const MOODBOARD = [
    here the same way the moodboard imports work: file = one hero candidate.
    Hero cycles through these with Next/Prev once there's more than one. */
 const HERO_SHOTS = [
-  { title:"Cancun", kind:"reel", fileId:"1ulA3r1Uj0ySGcDAGG0xf19OLwqaqx-Bj", seed:0, d:"19 Aug 26" }
+  { title:"Cancun", kind:"reel", fileId:"1ulA3r1Uj0ySGcDAGG0xf19OLwqaqx-Bj", seed:0, d:"19 Aug 26", dur:6.4 }
 ];
 
 /* Slots 2-4 are the template, ready to fill. */
@@ -1109,6 +1109,27 @@ function paintLb(){
 function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
 function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
+/* ---------------- hero loop ----------------
+   Drive's embed doesn't support a loop param (tested — it just stops on
+   the last frame with a replay button). It's a cross-origin iframe, so
+   there's no "ended" event to hook either. The only lever left is
+   reloading the iframe on a timer sized to the clip's real length —
+   measured exactly from each file's own moov/mvhd atom, not guessed. */
+const heroLoopTimers = {};
+function armHeroLoop(fillId, fileId, dur){
+  clearHeroLoop(fillId);
+  const wait = Math.max(1000, (dur||6)*1000 + 350);
+  heroLoopTimers[fillId] = setTimeout(()=>{
+    const fill = document.getElementById(fillId);
+    const iframe = fill && fill.querySelector("iframe");
+    if (iframe) iframe.src = `${drivePreview(fileId)}?autoplay=1&_lp=${Date.now()}`;
+    armHeroLoop(fillId, fileId, dur);
+  }, wait);
+}
+function clearHeroLoop(fillId){
+  if (heroLoopTimers[fillId]){ clearTimeout(heroLoopTimers[fillId]); delete heroLoopTimers[fillId]; }
+}
+
 /* ---------------- hero ----------------
    Real Cancun footage, from the Hero Shots Drive folder. Next/Prev walks
    HERO_SHOTS; Play opens whichever one is currently showing. */
@@ -1131,6 +1152,8 @@ function heroMediaHtml(p){
 function renderHero(){
   const p = HERO_SHOTS[heroPos];
   document.getElementById("heroFill").innerHTML = heroMediaHtml(p);
+  if (p && p.kind==="reel" && p.fileId) armHeroLoop("heroFill", p.fileId, p.dur);
+  else clearHeroLoop("heroFill");
   document.getElementById("heroTag").textContent = p ? "Cancun · Hero Shot" : "";
   const titleEl = document.getElementById("heroTitle");
   titleEl.textContent = p ? p.title : "Cancun Shot";
@@ -1166,12 +1189,14 @@ function openHero(){
    Cancun page hero, which has no place inside a reference/inspiration
    view. */
 let visHeroPos = 0;
-const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0}));
+const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0, dur:sp.heroDur}));
 function renderVisHero(){
   const p = VIS_HEROES[visHeroPos];
   document.getElementById("visHeroFill").innerHTML = p
     ? `<iframe class="fill" src="${drivePreview(p.fileId)}?autoplay=1" style="border:0" allow="autoplay" allowfullscreen></iframe>`
     : `<span class="fill" style="background:${grad(0)}"></span>`;
+  if (p) armHeroLoop("visHeroFill", p.fileId, p.dur);
+  else clearHeroLoop("visHeroFill");
   document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
   document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
   document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
@@ -1210,7 +1235,8 @@ function setMode(m){
      hero's iframe fresh on the way in so autoplay actually fires again
      rather than sitting paused from being hidden. */
   document.getElementById("pageHero").hidden = m==="visual";
-  if (m==="visual") renderVisHero(); else renderHero();
+  if (m==="visual") { clearHeroLoop("heroFill"); renderVisHero(); }
+  else { clearHeroLoop("visHeroFill"); renderHero(); }
   window.scrollTo(0,0);
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
