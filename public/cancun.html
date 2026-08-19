@@ -535,22 +535,23 @@ footer{
       <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
       <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
     </div>
-    <div class="hero-meta"><span>Date TBC</span><span>Cancun, MX</span><span>3 Crews</span><span>13 Items</span></div>
+    <div class="hero-meta"><span>9–12 Sept</span><span>Playa del Carmen, MX</span><span>4 Days</span><span>16 Rows</span></div>
   </div>
 
   <div class="pin">
     <div class="k">Locked direction</div>
-    <p>Warm film-grain comedy for every hero shot. Chaos register is BTS-only. Cinematic awe is reserved for drone and golden hour.</p>
-    <a href="#" onclick="return false">Full strategy board &rarr;</a>
+    <p>Pleasure is wellness. No agenda, no notifications. Day 1 golden hour ~5:55pm, Day 3 is boat day — the two real shoot windows. Five hashtags only: #NancyOOO #OutOfOffice #PlayaDelCarmen #CreatorTrip #PleasureIsWellness.</p>
+    <a href="https://nancy-outofoffice.vercel.app/" target="_blank" rel="noopener">Full guest itinerary site &rarr;</a>
   </div>
 
   <!-- ================= ACTION ================= -->
   <div class="panel" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
 
     <div class="sec">
-      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">3</div></div>
+      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">4</div></div>
       <div class="sub">Phase 2 of the Nancy Out of Office campaign &mdash; "Lem Island by Nancy."</div>
       <div class="qlinks">
+        <a class="qlink" href="https://nancy-outofoffice.vercel.app/" target="_blank" rel="noopener">Guest itinerary site — schedule + vibe <i>&#8599;</i></a>
         <a class="qlink" href="https://rsquaredboi.github.io/oo-board/feed.html" target="_blank" rel="noopener">The feed — reference guideline <i>&#8599;</i></a>
         <a class="qlink" href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">The board — full moodboard <i>&#8599;</i></a>
         <a class="qlink" href="us-open.html">US Open — phase 1 of this campaign <i>&#8599;</i></a>
@@ -666,69 +667,52 @@ function drivePreview(id){ return `https://drive.google.com/file/d/${id}/preview
 function driveVideoProxy(id){ return `/api/drive-video?id=${id}&v=2`; }
 
 /* media_sections + media_items */
-const SECTIONS = [
-  { type:"environment", group:"Palapa Entrance", seq:false, note:"",
-    items:[
-      {cap:"Approach from the path", sel:true},
-      {cap:"Shade line at 07:30", sel:false},
-      {cap:"Greeting mark — stand here", sel:false, ratio:"port"}
-    ]},
-  { type:"environment", group:"Cenote", seq:false,
-    note:"Keep faces lit — no full silhouette, however tempting the light is.",
-    items:[{cap:"Overhead, water surface", sel:true},{cap:"Entry reaction, tight", sel:false, ratio:"port"},{cap:"Half-submerged split", sel:false}]},
-  { type:"environment", group:"Breathwork Deck", seq:false, note:"",
-    items:[{cap:"Circle from above", sel:false},{cap:"Eye-level, over shoulder", sel:true, ratio:"port"}]},
-  { type:"environment", group:"Vertical Shots", seq:false,
-    note:"Every frame from this station is 9:16. Do not shoot horizontal here.",
-    items:[{cap:"Talent centred, headroom", sel:true, ratio:"port"},{cap:"Walk-in, phone height", sel:false, ratio:"port"}]},
-  { type:"b_roll", group:"Clean Shot @ Beach Club — 06:30–07:15", seq:true, note:"",
-    items:[
-      {cap:"Empty loungers", sel:false, ts:"00:12"},
-      {cap:"Towel stack detail", sel:false, ts:"00:31"},
-      {cap:"Bar prep hands", sel:true, ts:"01:04"},
-      {cap:"Flag in wind", sel:false, ts:"01:22"}
-    ]},
-  { type:"b_roll", group:"Golden Hour — 17:30–18:30", seq:true, note:"",
-    items:[
-      {cap:"Sun through palms", sel:true, ts:"00:08"},
-      {cap:"Footprints, receding", sel:false, ts:"00:24"},
-      {cap:"Silhouette walk-by", sel:false, ts:"00:47", ratio:"port"}
-    ]},
-  { type:"hero_flow_reference", group:"Hero Flow Reference", seq:true,
-    note:"Pacing model for the edit — cut on movement, no dip to black.",
-    items:[
-      {cap:"Open — 0:00–0:06", sel:true},
-      {cap:"Mid build", sel:false},
-      {cap:"Last beat", sel:false}
-    ]}
-];
+/* No per-location shot references exist for Playacar Vista Estate yet --
+   nobody's been there to shoot it. The real vibe reference is the Nude
+   Project moodboard (see MOODBOARD below); rows point at specific real
+   carousels there via refs, resolved by moodboardRefLookup(), not at
+   fictional environment stations. */
+const SECTIONS = [];
 
-/* crew_teams + shot_list_items */
+/* crew_teams + shot_list_items — this is the actual guest-facing run of
+   show from nancy-outofoffice.vercel.app, one block per real day, not a
+   fictional crew split. Times, activities and locations are exactly what
+   guests were sent; nothing here is invented. refs point at the Nude
+   Project carousel that's the closest real vibe match for that block --
+   left empty where nothing in the moodboard actually matches (movie
+   night, the bonfire), rather than forcing a weak connection. */
 const CREWS = [
-  { name:"Crew A — Hero Video", director:"[Director]", host:"[Host]",
-    objective:"Hero reel and Mini Mic series. Warm-film comedy register throughout.",
+  { name:"Day 1 — Tue 9 Sept — Arrivals & Welcome Dinner", director:"[Director]", host:"[Host]",
+    objective:"Land, settle in, first golden hour of the trip, welcome dinner on the beach, movie night in pyjamas.",
     rows:[
-      {t:"06:30–07:15", act:"Clean venue b-roll", detail:"Empty beach club before any guests arrive.", note:"", loc:"Beach Club", refs:["Clean Shot @ Beach Club — 06:30–07:15"]},
-      {t:"07:15–08:00", act:"Guest arrivals + welcome ritual", detail:"Handheld, follow from the path.", note:"Do not stage the greeting — catch it once, live.", loc:"Palapa Entrance", refs:["Palapa Entrance"]},
-      {t:"08:00–09:00", act:"Mini Mic #1 — travel stories", detail:"Three guests, beach walk, roaming mic.", note:"", loc:"Shoreline", refs:[]},
-      {t:"09:00–10:00", act:"Breathwork circle — hero coverage", detail:"Two cameras: one wide, one tight.", note:"", loc:"Breathwork Deck", refs:["Breathwork Deck"]},
-      {t:"10:15–11:00", act:"Cenote dip / cold plunge", detail:"Waterproof housing, entry reactions.", note:"Awe register approved for this block only.", loc:"Cenote", refs:["Cenote"]},
-      {t:"11:00–12:00", act:"Boat departure b-roll", detail:"Drone up as the boat clears the dock.", note:"", loc:"Marina", refs:[]},
-      {t:"17:30–18:30", act:"Golden hour hero shoot", detail:"The money shot — protect this window.", note:"If you are behind, cut the 16:00 block, not this one.", loc:"West Beach", refs:["Golden Hour — 17:30–18:30"]},
-      {t:"18:30–19:15", act:"Long-table dinner coverage", detail:"Toast at 18:50 — be in position by 18:45.", note:"", loc:"Terrace", refs:[]}
+      {t:"All day–", act:"Arrivals", detail:"Land in Cancún, transfer to Playacar Vista Estate. Kitchen and bar open all day.", note:"", loc:"Playacar Vista Estate", refs:["Day 2 at the NUDE PROJECT MANSION, life's a trip 🌈"]},
+      {t:"15:00–19:00", act:"Meet, greet & chill with the DJ", detail:"Open bar, small bites, DJ on the terrace as everyone rolls in.", note:"Come as you are.", loc:"Main villa", refs:["guess whos back NUDE PROJECT IBIZA MANSION 2025 🗣️🤎⛳️"]},
+      {t:"16:30–18:00", act:"Golden hour — first shoot window", detail:"Best light around 5:55pm. Portraits for anyone who wants them.", note:"Bring a look.", loc:"Villa", refs:[]},
+      {t:"19:00–21:30", act:"Welcome dinner on the beach", detail:"Bonfire, s'mores, buffet dinner, DJ on the sand.", note:"", loc:"Beach", refs:[]},
+      {t:"21:30–23:30", act:"Movie night", detail:"Nancy pillows, plushies and a rom-com.", note:"Bring your own pyjamas — cute ones, this is going on camera.", loc:"Villa", refs:[]}
     ]},
-  { name:"Crew B — Vertical / Social", director:"[Director]", host:"[Host]",
-    objective:"9:16 only. Same-day turnaround for four story drops.",
+  { name:"Day 2 — Wed 10 Sept — Nancy Workshops", director:"[Director]", host:"[Host]",
+    objective:"5.5 hours of free content time either side of the brunch and the artsy workshop. Learn the brand before the fun — keynote at dinner.",
     rows:[
-      {t:"07:30–08:30", act:"Arrival POV + room reveals", detail:"Phone height, walking.", note:"Vertical only — no horizontal frames from this crew.", loc:"Villas", refs:["Vertical Shots"]},
-      {t:"10:15–11:00", act:"Plunge reactions, vertical", detail:"Mirror Crew A's block from the opposite bank.", note:"", loc:"Cenote", refs:["Cenote"]},
-      {t:"19:30–20:30", act:"Closing DJ set — chaos BTS", detail:"Fast, messy, unpolished on purpose.", note:"Chaos register lives here and nowhere else.", loc:"Beach Club", refs:[]}
+      {t:"08:00–09:00", act:"Yoga or a run", detail:"Poolside yoga (mats + blocks provided), or a run with Britt and Rahul.", note:"Optional.", loc:"Villa", refs:[]},
+      {t:"09:00–12:00", act:"Free time & self content creation", detail:"Villa, pools and beach are all fair game — shoot whatever you like.", note:"3 hrs.", loc:"Villa / pools / beach", refs:["our pool has seen things","Nude Project Swimwear now live 🏝️🍹"]},
+      {t:"12:00–13:00", act:"Brunch with the doctors", detail:"Sharing session with Dr Jila and Dr Tara — 30 min talk, 10 min Q&A, live product demo.", note:"", loc:"Villa", refs:[]},
+      {t:"14:00–16:30", act:"Free time & self content creation", detail:"Another 2.5 hours to shoot, swim, or do nothing.", note:"", loc:"Villa / pools / beach", refs:["our pool has seen things"]},
+      {t:"16:30–18:00", act:"Nancy 101: the artsy workshop", detail:"With Crystal — decorate your own plush, build Nancy content props, interactive vibrator session.", note:"Hands on.", loc:"Villa", refs:[]},
+      {t:"19:30–", act:"Dinner at the main villa", detail:"Buffet, with a 15-min keynote from Momo & Rahul on where Nancy goes next.", note:"", loc:"Main villa", refs:[]}
     ]},
-  { name:"Photographer", director:"—", host:"—",
-    objective:"Four photo carousels and twelve hero stills.",
+  { name:"Day 3 — Thu 11 Sept — Couples & BFF Day", director:"[Director]", host:"[Host]",
+    objective:"Boat day is the centrepiece — everyone on one boat, out on the Caribbean. Farewell dinner closes the last night.",
     rows:[
-      {t:"09:00–10:00", act:"Breathwork stills", detail:"Available light, no flash.", note:"", loc:"Breathwork Deck", refs:["Breathwork Deck"]},
-      {t:"17:30–18:30", act:"Golden hour portraits", detail:"Every guest, two frames minimum.", note:"", loc:"West Beach", refs:["Golden Hour — 17:30–18:30"]}
+      {t:"08:00–09:00", act:"Yoga or a run", detail:"Same as yesterday.", note:"Optional.", loc:"Villa", refs:[]},
+      {t:"09:00–12:00", act:"Free time & self content creation", detail:"Three hours before lunch.", note:"", loc:"Villa / pools / beach", refs:["our pool has seen things"]},
+      {t:"15:00–19:30", act:"Get wet: boat day", detail:"Everyone on one boat, out on the Caribbean.", note:"Half or full day TBC. Bring swimwear, sunscreen, a change of clothes.", loc:"Boat", refs:["i know a guy with a boat"]},
+      {t:"19:30–", act:"Farewell dinner", detail:"Buffet back at the main villa.", note:"Last night — make it count.", loc:"Main villa", refs:[]}
+    ]},
+  { name:"Day 4 — Fri 12 Sept — Check Out", director:"[Director]", host:"[Host]",
+    objective:"Wrap. Rooms cleared and guests travel out.",
+    rows:[
+      {t:"By 11:00am–", act:"Check out", detail:"Rooms cleared by 11am, guests travel out from the villa.", note:"Airport transfers arranged.", loc:"Playacar Vista Estate", refs:[]}
     ]}
 ];
 
@@ -993,6 +977,22 @@ function renderVisuals(){
 
 const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
 
+/* Finds a live moodboard carousel by its caption, with the indices needed
+   to build the exact same lightbox key buildFlat() uses -- so a tile
+   shown against a Run of Show row opens the real lightbox item, not a
+   dead click. */
+function moodboardRefLookup(name){
+  for (let spi=0; spi<MOODBOARD.length; spi++){
+    const sp = MOODBOARD[spi];
+    for (let yi=0; yi<sp.years.length; yi++){
+      const y = sp.years[yi];
+      const found = liveCarousels(y).find(c => (c.cap||c.d) === name);
+      if (found) return {sp, spi, y, yi, item:found};
+    }
+  }
+  return null;
+}
+
 function renderRos(){
   let liveKey=null,nextKey=null,best=1e9;
   CREWS.forEach((c,ci)=>c.rows.forEach((r,ri)=>{
@@ -1012,11 +1012,25 @@ function renderRos(){
         const state = key===liveKey?"live":key===nextKey?"next":"";
         const [s,e]=r.t.split("–");
         /* Reference groups are looked up by name, so reordering SECTIONS
-           can never point a row at the wrong grid. */
+           can never point a row at the wrong grid. refs can also name a
+           real Nude Project moodboard carousel -- resolved separately
+           since it's a different data source (real vibe reference, not a
+           per-location shot list that doesn't exist yet). */
         const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
-        const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
-        const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
-        const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
+        const secStrip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+        const secCount = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
+        const secFrom  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
+
+        const mbMatches = r.refs.map(nm=>moodboardRefLookup(nm)).filter(Boolean);
+        const mbStrip = mbMatches.map(({spi,yi,item})=>item.slides.slice(0,4).map((sid,si)=>tileHtml({
+          key:`m:${spi}:${yi}:c:${item.origIndex}:${si}`, label:si+1, cap:item.cap||item.d,
+          thumbId:sid, showCap:false, seed:spi*31+yi*11+item.origIndex*7+si})).join("")).join("");
+        const mbCount = mbMatches.reduce((n,{item})=>n+Math.min(item.slides.length,4),0);
+        const mbFrom  = mbMatches.map(({sp,item})=>`${sp.name} — ${item.cap||item.d}`).join(" · ");
+
+        const strip = secStrip + mbStrip;
+        const count = secCount + mbCount;
+        const from  = [secFrom, mbFrom].filter(Boolean).join(" · ");
         return `<div class="row ${state}">
           <div class="row-time">${s}<span>${e}</span></div>
           <div class="row-main">
