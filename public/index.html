@@ -665,7 +665,7 @@ function drivePreview(id){ return `https://drive.google.com/file/d/${id}/preview
    download, with/without export param — all blocked the same way).
    /api/drive-video proxies the bytes through our own origin instead,
    where CORP doesn't apply. See api/drive-video.js. */
-function driveVideoProxy(id){ return `/api/drive-video?id=${id}`; }
+function driveVideoProxy(id){ return `/api/drive-video?id=${id}&v=2`; }
 
 /* media_sections + media_items */
 const SECTIONS = [
