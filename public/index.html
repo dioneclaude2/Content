@@ -77,7 +77,6 @@ details[open] > summary .caret{transform:rotate(90deg)}
 /* ---------------- hero ---------------- */
 .hero-head{display:flex;align-items:baseline;gap:16px;padding:34px var(--pad) 10px}
 .hero{position:relative;margin:0 var(--pad);aspect-ratio:16/9;overflow:hidden;background:var(--surface-2)}
-.hero.src{margin:0 var(--pad) 20px}
 .hero-fill{position:absolute;inset:0;overflow:hidden;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
 .hero-fill .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero-grain{position:absolute;inset:0;opacity:.5;pointer-events:none;background:
@@ -100,6 +99,7 @@ details[open] > summary .caret{transform:rotate(90deg)}
   font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
   transition:background .16s ease,border-color .16s ease;
 }
+.hero-play[hidden]{display:none}
 .hero-play:hover{background:rgba(255,255,255,.16);border-color:var(--white)}
 .hero-meta{
   display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px var(--pad) 0;
@@ -356,6 +356,7 @@ footer{
 .sarrow.r{right:0;background:linear-gradient(270deg,rgba(0,0,0,.5),transparent)}
 .sarrow.l{left:0}
 .sarrow:hover{color:var(--white)}
+.sarrow[hidden]{display:none}
 
 .cmeta{
   display:flex;flex-wrap:wrap;gap:7px 20px;padding:12px var(--pad) 0;
@@ -520,20 +521,22 @@ footer{
 
 <div class="wrap">
 
-  <div class="hero-head">
-    <h2>Cancun Shot</h2>
-    <div class="sec-right" id="heroIdx">Hero Reel</div>
+  <div id="pageHero">
+    <div class="hero-head">
+      <h2>Cancun Shot</h2>
+      <div class="sec-right" id="heroIdx">Hero Reel</div>
+    </div>
+    <div class="hero">
+      <div class="hero-fill" id="heroFill"></div>
+      <div class="hero-grain"></div>
+      <span class="hero-tag" id="heroTag"></span>
+      <div class="hero-title" id="heroTitle">Cancun<br>Shot</div>
+      <button class="sarrow l" id="heroPrev" onclick="stepHero(-1)" aria-label="Previous hero shot">&larr;</button>
+      <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
+      <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
+    </div>
+    <div class="hero-meta"><span>Date TBC</span><span>Cancun, MX</span><span>3 Crews</span><span>13 Items</span></div>
   </div>
-  <div class="hero">
-    <div class="hero-fill" id="heroFill"></div>
-    <div class="hero-grain"></div>
-    <span class="hero-tag" id="heroTag"></span>
-    <div class="hero-title" id="heroTitle">Cancun<br>Shot</div>
-    <button class="sarrow l" id="heroPrev" onclick="stepHero(-1)" aria-label="Previous hero shot">&larr;</button>
-    <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
-    <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
-  </div>
-  <div class="hero-meta"><span>Date TBC</span><span>Cancun, MX</span><span>3 Crews</span><span>13 Items</span></div>
 
   <div class="pin">
     <div class="k">Locked direction</div>
@@ -593,7 +596,21 @@ footer{
 
   <!-- ================= VISUALS ================= -->
   <div class="panel" id="panel-visual" role="tabpanel" aria-labelledby="tab-visual" hidden>
-    <div class="sec" style="padding-top:30px">
+    <div class="hero-head" style="padding-top:30px">
+      <h2>Inspiration Hero</h2>
+      <div class="sec-right" id="visHeroIdx">Hero Shot</div>
+    </div>
+    <div class="hero">
+      <div class="hero-fill" id="visHeroFill"></div>
+      <div class="hero-grain"></div>
+      <span class="hero-tag" id="visHeroTag"></span>
+      <div class="hero-title" id="visHeroTitle"></div>
+      <button class="sarrow l" id="visHeroPrev" onclick="stepVisHero(-1)" aria-label="Previous inspiration">&larr;</button>
+      <button class="sarrow r" id="visHeroNext" onclick="stepVisHero(1)" aria-label="Next inspiration">&rarr;</button>
+      <button class="hero-play" id="visHeroPlay" onclick="openVisHero()">&#8599;&nbsp; Expand</button>
+    </div>
+
+    <div class="sec">
       <div class="legend">
         <b>Selected</b> tiles sit at full brightness with a white rule and sort to the front. <b>Options</b> stay on the board, dimmed &mdash; tap to bring one up. The bracketed number never moves, so &ldquo;shot 04&rdquo; means the same thing to everyone.
       </div>
@@ -938,14 +955,6 @@ function renderMoodboard(){
       html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts, slide order and palette swatches below are all read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order.</div>`;
     }
 
-    if (sp.heroFileId){
-      html += `<div class="hero src">
-        <div class="hero-fill"><iframe class="fill" src="${drivePreview(sp.heroFileId)}" style="border:0" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="hero-grain"></div>
-        <span class="hero-tag">${sp.name} &middot; Hero Shot</span>
-      </div>`;
-    }
-
     html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
       const carousels = liveCarousels(y);
       return `<button class="yearpill" id="yp-${spi}-${yi}" aria-selected="${yi===0}" onclick="selectYear(${spi},${yi})">
@@ -1107,9 +1116,9 @@ let heroPos = 0;
 function heroMediaHtml(p){
   if (!p) return `<span class="fill" style="background:${grad(0)}"></span>`;
   if (p.kind==="reel" && p.fileId){
-    /* Reels play right here, inline — not just a thumbnail behind a Play
-       button that opens a separate lightbox. */
-    return `<iframe class="fill" src="${drivePreview(p.fileId)}" style="border:0" allow="autoplay" allowfullscreen></iframe>`;
+    /* Reels play right here, inline and on their own — not a thumbnail
+       behind a Play button. Drive's embed does honour ?autoplay=1. */
+    return `<iframe class="fill" src="${drivePreview(p.fileId)}?autoplay=1" style="border:0" allow="autoplay" allowfullscreen></iframe>`;
   }
   const g = grad(p.seed);
   const thumbId = p.kind==="carousel" ? (p.slides[0] && p.slides[0].id) : null;
@@ -1151,6 +1160,38 @@ function openHero(){
             fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
             seed:p.seed, meta:`Cancun · Hero Shot · ${isCar?"Carousel":"Reel"}`});
 }
+/* ---------------- visuals hero ----------------
+   Visuals gets its own hero, cycling between each moodboard source's own
+   hero shot (Nude Project now, Inspo 2-4 once they have one) — not the
+   Cancun page hero, which has no place inside a reference/inspiration
+   view. */
+let visHeroPos = 0;
+const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0}));
+function renderVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  document.getElementById("visHeroFill").innerHTML = p
+    ? `<iframe class="fill" src="${drivePreview(p.fileId)}?autoplay=1" style="border:0" allow="autoplay" allowfullscreen></iframe>`
+    : `<span class="fill" style="background:${grad(0)}"></span>`;
+  document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
+  document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
+  document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
+  document.getElementById("visHeroPlay").hidden = !p;
+  const multi = VIS_HEROES.length > 1;
+  document.getElementById("visHeroPrev").hidden = !multi;
+  document.getElementById("visHeroNext").hidden = !multi;
+}
+function stepVisHero(d){
+  if (!VIS_HEROES.length) return;
+  visHeroPos = (visHeroPos + d + VIS_HEROES.length) % VIS_HEROES.length;
+  renderVisHero();
+}
+function openVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  if (!p) return;
+  pushTemp({key:"vishero", cap:p.title, sel:false, port:true,
+            fileId:p.fileId, isReel:true, seed:p.seed, meta:`${p.title} · Hero Shot`});
+}
+
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
   if(e.key==="Escape") closeLb();
@@ -1165,11 +1206,16 @@ function setMode(m){
     document.getElementById("tab-"+k).setAttribute("aria-selected", k===m);
     document.getElementById("panel-"+k).hidden = k!==m;
   });
+  /* The Cancun page hero has no place inside Visuals; rebuild each
+     hero's iframe fresh on the way in so autoplay actually fires again
+     rather than sitting paused from being hidden. */
+  document.getElementById("pageHero").hidden = m==="visual";
+  if (m==="visual") renderVisHero(); else renderHero();
   window.scrollTo(0,0);
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
 
-buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero();
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero(); renderVisHero();
 
 /* ==================================================================
    CONTENT PIECES  —  content_pieces / shots / palette_swatches
