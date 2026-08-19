@@ -51,7 +51,13 @@ export default async function handler(req, res) {
     const v = upstream.headers.get(h);
     if (v) res.setHeader(h, v);
   }
-  res.setHeader("Cache-Control", "public, max-age=3600");
+  /* Vercel's edge cache doesn't vary by Range by default -- caching a
+     206 here means every later request, with whatever Range it actually
+     asked for, gets served that one cached slice back regardless
+     (confirmed: a HEAD-only warm-up request poisoned the cache for real
+     video-element range requests afterward). Only full 200 responses
+     are safe to cache; partial ones must bypass the edge entirely. */
+  res.setHeader("Cache-Control", upstream.status === 206 ? "no-store" : "public, max-age=3600");
 
   if (!upstream.body) {
     res.end();
