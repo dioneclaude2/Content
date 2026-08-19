@@ -927,7 +927,6 @@ function yearGridsHtml(sp, spi, y, yi){
       </div>`;
     });
   }
-  if (y.palette) h += paletteHtml(y.palette, `Palette — ${y.year}`, "");
   return h;
 }
 /* One year visible at a time — no long scroll to reach 2k26. Only the
@@ -960,8 +959,6 @@ function renderMoodboard(){
     if (sp.pending){
       html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts, slide order and palette swatches below are all read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order.</div>`;
     }
-
-    html += paletteHtml(sp.palette, "Palette — whole source", sp.paletteNote);
 
     html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
       const carousels = liveCarousels(y);
