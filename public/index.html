@@ -528,8 +528,8 @@ footer{
     <div class="hero-grain"></div>
     <span class="hero-tag" id="heroTag"></span>
     <div class="hero-title" id="heroTitle">Cancun<br>Shot</div>
-    <button class="sarrow l" onclick="stepHero(-1)" aria-label="Previous reference">&larr;</button>
-    <button class="sarrow r" onclick="stepHero(1)" aria-label="Next reference">&rarr;</button>
+    <button class="sarrow l" id="heroPrev" onclick="stepHero(-1)" aria-label="Previous hero shot">&larr;</button>
+    <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
     <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
   </div>
   <div class="hero-meta"><span>Date TBC</span><span>Cancun, MX</span><span>3 Crews</span><span>13 Items</span></div>
@@ -835,36 +835,13 @@ const MOODBOARD = [
     ]
   }
 ];
-/* Flatten the real Nude Project tree into one chronological list — shared
-   by the Hero (cycles through these) and the Content tab (one piece at a
-   time, same shape the placeholder PIECES used). No fabricated palette:
-   real colour sampling needs the Drive API at import time, not a browser
-   canvas read (Drive's thumbnail endpoint blocks anonymous CORS pixel
-   access — confirmed, not just unimplemented). */
-function buildReferencePieces(){
-  const out = [];
-  let seed = 0;
-  MOODBOARD.forEach(sp => {
-    sp.years.forEach(y => {
-      y.reels.forEach(it => {
-        out.push({
-          title: it.cap || it.d, source: sp.name, year: y.year, d: it.d,
-          kind: "reel", aspect: "9:16", fileId: it.fileId, isReference: true,
-          seed: seed++, palette: [], paletteSrc: "Pending — needs Drive API access at import to sample real colour."
-        });
-      });
-      liveCarousels(y).forEach(it => {
-        out.push({
-          title: it.cap || it.d, source: sp.name, year: y.year, d: it.d,
-          kind: "carousel", aspect: "4:5", isReference: true,
-          slides: it.slides.map((id,i) => ({id, cap: `${it.cap || it.d} — slide ${i+1} of ${it.slides.length}`})),
-          seed: seed++, palette: [], paletteSrc: "Pending — needs Drive API access at import to sample real colour."
-        });
-      });
-    });
-  });
-  return out;
-}
+/* Real Cancun hero footage — from the "Hero Shots" Drive folder, not the
+   Nude Project moodboard. As more real cuts land in that folder, add them
+   here the same way the moodboard imports work: file = one hero candidate.
+   Hero cycles through these with Next/Prev once there's more than one. */
+const HERO_SHOTS = [
+  { title:"Cancun", kind:"reel", fileId:"1ulA3r1Uj0ySGcDAGG0xf19OLwqaqx-Bj", seed:0, d:"19 Aug 26" }
+];
 
 /* Slots 2-4 are the template, ready to fill. */
 const INSPO_SLOTS = ["Inspo 02","Inspo 03","Inspo 04"];
@@ -1115,18 +1092,17 @@ function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
 function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
 /* ---------------- hero ----------------
-   No real Cancun footage exists yet — the shoot hasn't happened. Until it
-   does, the hero cycles through the real Nude Project reference set so the
-   big square shows an actual photograph instead of a gradient. Next/Prev
-   walks REFERENCE_PIECES; Play opens whichever one is currently showing. */
+   Real Cancun footage, from the Hero Shots Drive folder. Next/Prev walks
+   HERO_SHOTS; Play opens whichever one is currently showing. */
 let heroPos = 0;
 function heroMediaHtml(p){
-  const g = grad(p.seed);
+  if (!p) return `<span class="fill" style="background:${grad(0)}"></span>`;
   if (p.kind==="reel" && p.fileId){
     /* Reels play right here, inline — not just a thumbnail behind a Play
        button that opens a separate lightbox. */
     return `<iframe class="fill" src="${drivePreview(p.fileId)}" style="border:0" allow="autoplay" allowfullscreen></iframe>`;
   }
+  const g = grad(p.seed);
   const thumbId = p.kind==="carousel" ? (p.slides[0] && p.slides[0].id) : null;
   if (!thumbId) return `<span class="fill" style="background:${g}"></span>`;
   return `<span class="fill grad loading" style="background:${g}"></span>
@@ -1135,24 +1111,27 @@ function heroMediaHtml(p){
       onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
 }
 function renderHero(){
-  const p = REFERENCE_PIECES[heroPos];
+  const p = HERO_SHOTS[heroPos];
   document.getElementById("heroFill").innerHTML = heroMediaHtml(p);
-  document.getElementById("heroTag").textContent = p ? `${p.source} · Reference · ${p.year}` : "";
+  document.getElementById("heroTag").textContent = p ? "Cancun · Hero Shot" : "";
   const titleEl = document.getElementById("heroTitle");
   titleEl.textContent = p ? p.title : "Cancun Shot";
   titleEl.classList.toggle("long", !!(p && p.title.length > 34));
   const playBtn = document.getElementById("heroPlay");
   playBtn.innerHTML = p && p.kind==="carousel" ? "&#9635;&nbsp; View" : "&#8599;&nbsp; Expand";
   playBtn.hidden = false;
-  document.getElementById("heroIdx").textContent = p ? `${heroPos+1} / ${REFERENCE_PIECES.length}` : "Hero Reel";
+  document.getElementById("heroIdx").textContent = p ? `${heroPos+1} / ${HERO_SHOTS.length}` : "Hero Reel";
+  const multi = HERO_SHOTS.length > 1;
+  document.getElementById("heroPrev").hidden = !multi;
+  document.getElementById("heroNext").hidden = !multi;
 }
 function stepHero(d){
-  if (!REFERENCE_PIECES.length) return;
-  heroPos = (heroPos + d + REFERENCE_PIECES.length) % REFERENCE_PIECES.length;
+  if (!HERO_SHOTS.length) return;
+  heroPos = (heroPos + d + HERO_SHOTS.length) % HERO_SHOTS.length;
   renderHero();
 }
 function openHero(){
-  const p = REFERENCE_PIECES[heroPos];
+  const p = HERO_SHOTS[heroPos];
   if (!p){
     pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
               sel:false, port:false, seed:3, meta:"Cancun · Hero · embedded from Drive"});
@@ -1161,7 +1140,7 @@ function openHero(){
   const isCar = p.kind==="carousel";
   pushTemp({key:"hero", cap:p.title, sel:false, port:!isCar, sq:isCar,
             fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
-            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
+            seed:p.seed, meta:`Cancun · Hero Shot · ${isCar?"Carousel":"Reel"}`});
 }
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
@@ -1181,7 +1160,6 @@ function setMode(m){
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
 
-const REFERENCE_PIECES = buildReferencePieces();
 buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero();
 
 /* ==================================================================
