@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>US Open Run of Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap">
+
+<style>
+/* Committed single-world design: the UI is strictly black / white / grey.
+   Every bit of colour on the page comes from the media itself. */
+:root{
+  --black:#000000;
+  --surface:#0A0A0A;
+  --surface-2:#111111;
+  --line:#1F1F1F;
+  --line-soft:#161616;
+  --white:#FFFFFF;
+  --muted:#9B9B9B;
+  --dim:#5E5E5E;
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --pad:18px;
+}
+@media (min-width:900px){ :root{ --pad:34px; } }
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--black);color:var(--white);
+  font-family:var(--sans);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:1.5px solid var(--white);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-bottom:80px}
+
+/* ---------------- sticky bar ---------------- */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(0,0,0,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:0 var(--pad)}
+.back{
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;white-space:nowrap;padding:14px 0;
+}
+.back:hover{color:var(--white)}
+.bar-name{
+  font-weight:700;font-size:13px;letter-spacing:-.01em;text-transform:uppercase;
+  margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tabs{display:flex;gap:22px;flex:none}
+.tabs button{
+  font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);padding:15px 0 13px;border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color .16s ease,border-color .16s ease;
+}
+.tabs button[aria-selected="true"]{color:var(--white);border-bottom-color:var(--white)}
+.tabs button:hover:not([aria-selected="true"]){color:var(--muted)}
+
+/* ---------------- section heads ---------------- */
+.sec{padding-top:54px}
+.sec-h{display:flex;align-items:baseline;gap:16px;padding:0 var(--pad) 3px}
+h2,.sec-label{
+  font-weight:700;font-size:clamp(17px,4.6vw,22px);letter-spacing:-.015em;
+  text-transform:uppercase;line-height:1.1;margin:0;text-wrap:balance;
+}
+.sec-right{
+  margin-left:auto;font-size:10.5px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap;
+}
+.sub{
+  padding:0 var(--pad);font-style:italic;font-size:13.5px;color:var(--muted);
+  max-width:64ch;margin-bottom:20px;
+}
+details > summary{list-style:none;cursor:pointer}
+details > summary::-webkit-details-marker{display:none}
+.caret{margin-left:auto;font-size:11px;color:var(--dim);transition:transform .2s ease}
+details[open] > summary .caret{transform:rotate(90deg)}
+
+/* ---------------- hero ---------------- */
+.hero-head{display:flex;align-items:baseline;gap:16px;padding:34px var(--pad) 10px}
+.hero{position:relative;margin:0 var(--pad);aspect-ratio:16/9;overflow:hidden;background:var(--surface-2)}
+.hero-fill{position:absolute;inset:0;overflow:hidden;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
+.hero-fill .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-grain{position:absolute;inset:0;opacity:.5;pointer-events:none;background:
+  radial-gradient(60% 90% at 18% 30%, rgba(255,255,255,.10), transparent 60%),
+  radial-gradient(50% 70% at 85% 80%, rgba(255,255,255,.06), transparent 60%)}
+.hero-tag{
+  position:absolute;top:14px;left:14px;z-index:3;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;
+}
+.hero-tag:empty{display:none}
+.hero-title{
+  position:absolute;left:6%;top:50%;transform:translateY(-50%);pointer-events:none;
+  font-weight:700;font-size:clamp(26px,5.4vw,54px);line-height:1.06;letter-spacing:-.03em;
+  text-shadow:0 2px 24px rgba(0,0,0,.45);max-width:62%;
+}
+.hero-title.long{font-size:clamp(18px,3vw,30px)}
+.hero-play{
+  position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,255,255,.5);padding:8px 14px;background:rgba(0,0,0,.35);
+  font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .16s ease,border-color .16s ease;
+}
+.hero-play[hidden]{display:none}
+.hero-play:hover{background:rgba(255,255,255,.16);border-color:var(--white)}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px var(--pad) 0;
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+
+/* ---------------- pinned direction ---------------- */
+.pin{margin:34px var(--pad) 0;border-left:2px solid var(--white);padding:2px 0 2px 15px}
+.pin .k{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pin p{margin:6px 0 0;font-size:16px;line-height:1.42;font-weight:500;max-width:60ch}
+.pin a{
+  display:inline-block;margin-top:9px;font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;
+}
+.pin a:hover{color:var(--white);border-color:var(--muted)}
+
+/* ---------------- quick links ---------------- */
+.qlinks{display:flex;flex-wrap:wrap;gap:6px;padding:0 var(--pad)}
+.qlink{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  border:1px solid var(--line);padding:9px 13px;background:var(--surface);
+  font-size:12.5px;transition:border-color .16s ease,background .16s ease;
+}
+.qlink:hover{border-color:var(--muted);background:var(--surface-2)}
+.qlink i{font-style:normal;font-size:10px;color:var(--dim)}
+
+/* ---------------- run of show ---------------- */
+.ros{padding:0 var(--pad);max-width:880px}
+.crew{border:1px solid var(--line);margin-bottom:10px;background:var(--surface)}
+.crew-h{padding:15px 16px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.crew-name{font-weight:700;font-size:15px;letter-spacing:-.01em;text-transform:uppercase}
+.crew-roles{
+  display:flex;flex-wrap:wrap;gap:3px 18px;margin-top:8px;
+  font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+}
+.crew-roles b{color:var(--muted);font-weight:600}
+.crew-obj{margin-top:8px;font-style:italic;font-size:13px;color:var(--muted);line-height:1.45;max-width:60ch}
+
+.row{display:grid;grid-template-columns:70px 1fr;border-top:1px solid var(--line-soft)}
+.crew-body > .row:first-child{border-top:0}
+.row-time{
+  padding:14px 0 14px 16px;font-size:12px;font-weight:600;color:var(--muted);
+  font-variant-numeric:tabular-nums;line-height:1.4;letter-spacing:.01em;
+}
+.row-time span{display:block;color:var(--dim);font-weight:400}
+.row-main{padding:14px 16px 14px 2px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.row-act{font-size:16px;font-weight:600;line-height:1.28;letter-spacing:-.01em}
+.row-detail{font-size:13.5px;color:var(--muted);line-height:1.45;max-width:58ch}
+.row-note{font-size:13.5px;line-height:1.45;border-left:2px solid var(--white);padding-left:11px;max-width:58ch}
+.row-loc{font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+.row.live{background:#0C0C0C}
+.row.live .row-time{color:var(--white);box-shadow:inset 3px 0 0 var(--white)}
+.chip{
+  align-self:flex-start;font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;
+}
+.chip.now{background:var(--white);color:#000}
+.chip.next{border:1px solid var(--line);color:var(--dim);font-weight:600}
+
+details.refs summary{
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:7px 12px;
+  transition:border-color .16s ease,color .16s ease;
+}
+details.refs summary:hover{border-color:var(--muted);color:var(--white)}
+details.refs[open] summary{border-color:var(--white);color:var(--white)}
+.refstrip{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.refstrip .cell{width:158px;flex:none}
+.refstrip .cap-line .arrow{display:none}
+
+/* ---------------- grids ---------------- */
+.group{margin-bottom:34px}
+.group-label{
+  display:flex;align-items:baseline;gap:14px;padding:0 var(--pad) 12px;
+}
+.group-label .t{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.group-label .rule{flex:1;height:1px;background:var(--line)}
+.group-label .n{font-size:10.5px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+
+.dirnote{
+  margin:0 var(--pad) 16px;border-left:2px solid var(--white);padding:1px 0 1px 13px;max-width:62ch;
+}
+.dirnote b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.dirnote span{font-style:italic;font-size:13.5px;line-height:1.45}
+
+.grid{
+  display:grid;padding:0 var(--pad);
+  grid-template-columns:repeat(2,1fr);
+  column-gap:22px;row-gap:22px;
+}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:960px){.grid{grid-template-columns:repeat(4,1fr)}}
+
+/* One row, scrolls sideways — used where a fixed count (carousel slides)
+   would otherwise leave an uneven, part-empty last row in a wrapping grid. */
+.grid.scrollx{
+  display:flex;overflow-x:auto;column-gap:16px;row-gap:0;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.grid.scrollx::-webkit-scrollbar{display:none}
+.grid.scrollx .cell{flex:0 0 auto;width:clamp(130px,30vw,190px)}
+
+.cell{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0}
+.tile{
+  display:block;width:100%;padding:0;position:relative;overflow:hidden;
+  aspect-ratio:16/9;background:var(--surface-2);
+  outline:1px solid var(--line);outline-offset:-1px;
+  transition:outline-color .16s ease,opacity .16s ease;
+}
+.tile .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .16s ease}
+.cell.opt .tile .fill{opacity:.42}
+.cell.opt:hover .tile .fill{opacity:.85}
+.fill.grad.loading{animation:tilePulse 2.6s ease-in-out infinite}
+@keyframes tilePulse{0%,100%{opacity:1}50%{opacity:.82}}
+.cell.sel .tile{outline:1.5px solid var(--white)}
+.tile:hover{outline-color:var(--muted)}
+.selflag{
+  position:absolute;top:0;left:0;z-index:2;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 7px;
+}
+.tstamp{
+  position:absolute;bottom:5px;right:6px;z-index:2;font-size:9.5px;font-weight:500;
+  color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.8);font-variant-numeric:tabular-nums;
+}
+.cap-line{position:relative;display:flex;justify-content:center;align-items:center;min-height:15px}
+.cap-line .num{font-size:10.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.cell.opt .cap-line .num{color:var(--dim)}
+.cap-line .arrow{position:absolute;right:-11px;transform:translateX(50%);font-size:11px;color:var(--dim)}
+.cap-text{text-align:center;font-size:11.5px;line-height:1.35;color:var(--dim);padding:0 2px}
+.cell.sel .cap-text{color:var(--muted)}
+
+/* hide the trailing arrow at the end of each visual row */
+.grid.seq .cell:nth-child(2n) .arrow{display:none}
+@media (min-width:640px){
+  .grid.seq .cell:nth-child(2n) .arrow{display:block}
+  .grid.seq .cell:nth-child(3n) .arrow{display:none}
+}
+@media (min-width:960px){
+  .grid.seq .cell:nth-child(3n) .arrow{display:block}
+  .grid.seq .cell:nth-child(4n) .arrow{display:none}
+}
+.grid.seq .cell:last-child .arrow{display:none}
+.grid:not(.seq) .arrow{display:none}
+
+/* ---------------- VO ---------------- */
+.vo{padding:0 var(--pad);max-width:800px}
+.voline{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:15px 0;border-top:1px solid var(--line-soft)}
+.voline:first-child{border-top:0}
+.vonum{font-size:10.5px;font-weight:500;color:var(--dim);padding-top:5px;font-variant-numeric:tabular-nums}
+.vospk{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+.vospk em{font-style:normal;font-weight:500;color:var(--dim)}
+.votext{font-size:17px;line-height:1.45;max-width:52ch;letter-spacing:-.005em}
+
+/* ---------------- deliverables ---------------- */
+.dlv{padding:0 var(--pad);max-width:880px}
+.dlv-group{margin-bottom:22px}
+.dlv-owner{
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.dlv-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.dlv-name{flex:1;font-size:14.5px;min-width:0}
+.bar{width:56px;height:2px;background:var(--line);flex:none}
+.bar i{display:block;height:100%;background:var(--muted)}
+.bar i.full{background:var(--white)}
+.dlv-count{font-size:12px;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dlv-count b{color:var(--white);font-weight:700}
+.dlv-link{font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--line);text-decoration:none;white-space:nowrap;width:56px;text-align:right}
+.dlv-link.on{color:var(--muted)}
+.dlv-link.on:hover{color:var(--white)}
+
+/* ---------------- lightbox ---------------- */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:22px}
+.lb[hidden]{display:none}
+.lb-media{max-width:min(94vw,1000px);max-height:70vh;width:100%;display:flex;align-items:center;justify-content:center}
+.lb-media .fill{max-height:70vh;width:100%;object-fit:contain;outline:1px solid var(--line);outline-offset:-1px}
+.lb-cap{text-align:center;display:flex;flex-direction:column;gap:7px;max-width:620px}
+.lb-cap .t{font-size:15px}
+.lb-cap .m{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.lb-nav{display:flex;gap:8px}
+.lb-nav button{border:1px solid var(--line);padding:9px 16px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lb-nav button:hover{color:var(--white);border-color:var(--muted)}
+.lb-close{position:absolute;top:16px;right:18px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.lb-close:hover{color:var(--white)}
+
+.panel[hidden]{display:none}
+.legend{
+  margin:0 var(--pad);padding:11px 13px;border:1px solid var(--line);background:var(--surface);
+  font-size:11px;color:var(--dim);line-height:1.6;
+}
+.legend b{color:var(--muted);font-weight:600}
+footer{
+  margin-top:60px;padding:22px var(--pad) 0;border-top:1px solid var(--line);
+  font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);line-height:1.9;
+}
+
+/* ================= CONTENT PIECES ================= */
+.cbar{display:flex;align-items:center;gap:10px;padding:0 var(--pad) 16px}
+.cnav{
+  border:1px solid var(--line);width:36px;height:36px;flex:none;
+  display:grid;place-items:center;font-size:13px;color:var(--muted);
+  transition:border-color .16s ease,color .16s ease;
+}
+.cnav:hover:not([disabled]){border-color:var(--white);color:var(--white)}
+.cnav[disabled]{opacity:.28;cursor:default}
+.crail{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none}
+.crail::-webkit-scrollbar{display:none}
+.cpill{
+  border:1px solid var(--line);padding:9px 13px;white-space:nowrap;
+  font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  transition:border-color .16s ease,color .16s ease;
+}
+.cpill:hover{border-color:var(--muted);color:var(--muted)}
+.cpill[aria-current="true"]{background:var(--white);color:#000;border-color:var(--white)}
+.cidx{font-size:10.5px;font-weight:500;letter-spacing:.14em;color:var(--dim);flex:none;font-variant-numeric:tabular-nums}
+
+/* big screen */
+.screen{
+  position:relative;margin:0 var(--pad);overflow:hidden;background:#060606;
+  outline:1px solid var(--line);outline-offset:-1px;aspect-ratio:16/9;
+  touch-action:pan-y;
+}
+.screen .bg{position:absolute;inset:-10%;filter:blur(34px) saturate(.7);opacity:.55;background-size:cover;background-position:center}
+.screen .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.screen .media{position:relative;height:100%;aspect-ratio:16/9;outline:1px solid rgba(255,255,255,.08);outline-offset:-1px;overflow:hidden}
+.screen .media .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.screen .media.port{aspect-ratio:9/16}
+.screen .media.sq{aspect-ratio:4/5}
+.screen-play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.35);
+  padding:11px 20px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .16s ease,border-color .16s ease;
+}
+.screen-play:hover{background:rgba(255,255,255,.18);border-color:var(--white)}
+.screen-tag{
+  position:absolute;top:0;left:0;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;z-index:3;
+}
+.screen-count{
+  position:absolute;bottom:10px;right:12px;z-index:3;font-size:10px;font-weight:600;
+  letter-spacing:.14em;color:rgba(255,255,255,.9);font-variant-numeric:tabular-nums;
+  text-shadow:0 1px 6px rgba(0,0,0,.9);
+}
+.screen-dots{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:5px}
+.screen-dots i{width:5px;height:5px;background:rgba(255,255,255,.35);display:block}
+.screen-dots i.on{background:var(--white)}
+.sarrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:4;
+  width:38px;height:56px;display:grid;place-items:center;color:rgba(255,255,255,.75);
+  background:linear-gradient(90deg,rgba(0,0,0,.5),transparent);font-size:15px;
+}
+.sarrow.r{right:0;background:linear-gradient(270deg,rgba(0,0,0,.5),transparent)}
+.sarrow.l{left:0}
+.sarrow:hover{color:var(--white)}
+.sarrow[hidden]{display:none}
+
+.cmeta{
+  display:flex;flex-wrap:wrap;gap:7px 20px;padding:12px var(--pad) 0;
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+.cmeta .status{color:var(--white);font-weight:600}
+.cmeta .status.wip{color:var(--muted)}
+.ctitle{
+  padding:16px var(--pad) 0;font-weight:700;font-size:clamp(20px,5vw,28px);
+  letter-spacing:-.02em;text-transform:uppercase;line-height:1.05;
+}
+
+/* auto shot breakdown */
+.autotag{
+  display:inline-flex;align-items:center;gap:7px;font-size:9.5px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:#000;background:var(--white);padding:3px 8px;
+}
+.autotag.pending{background:none;color:var(--dim);border:1px solid var(--line);font-weight:600}
+.cell.shot .cap-line .num{font-weight:600}
+.shot-ts{
+  position:absolute;bottom:5px;left:6px;z-index:2;font-size:9.5px;font-weight:600;
+  color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.9);font-variant-numeric:tabular-nums;
+}
+.shot-note{
+  text-align:center;font-size:11.5px;line-height:1.35;font-style:italic;color:var(--muted);padding:0 2px;
+}
+.emptyshots{
+  margin:0 var(--pad);border:1px dashed var(--line);padding:22px 18px;text-align:center;
+  color:var(--dim);font-size:13px;line-height:1.6;
+}
+
+/* palette */
+.palette{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 var(--pad)}
+@media (min-width:640px){.palette{grid-template-columns:repeat(6,1fr)}}
+.sw{display:flex;flex-direction:column;gap:7px;text-align:left;padding:0}
+.sw .chipc{aspect-ratio:1/1;width:100%;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.sw:hover .chipc{outline-color:var(--white)}
+.sw .hex{font-size:11px;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.sw .role{font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:-4px}
+.sw.copied .hex::after{content:" copied";color:var(--dim);font-weight:500;letter-spacing:.1em;font-size:9px;text-transform:uppercase}
+.palette-src{padding:12px var(--pad) 0;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+
+/* ============ MOODBOARD COLLECTIONS ============ */
+.coll{margin:0 var(--pad) 18px;border-top:1px solid var(--white);padding-top:14px}
+.coll-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.coll-name{font-weight:700;font-size:16px;letter-spacing:-.01em;text-transform:uppercase}
+.mainflag{background:var(--white);color:#000;font-size:8.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 7px}
+.coll-src{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.coll-note{margin-top:10px;border-left:2px solid var(--white);padding-left:13px;max-width:62ch}
+.coll-note b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.coll-note span{font-style:italic;font-size:13.5px;line-height:1.45}
+.coll-empty{
+  margin:0 var(--pad) 26px;border:1px dashed var(--line);padding:18px;
+  color:var(--dim);font-size:13px;line-height:1.6;
+}
+.yr{display:flex;align-items:baseline;gap:12px;padding:0 var(--pad) 10px}
+.yr .t{font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.yr .rule{flex:1;height:1px;background:var(--line)}
+.yr .n{font-size:10px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+.pending{
+  margin:0 var(--pad) 20px;border:1px solid var(--line);background:var(--surface);
+  padding:11px 13px;font-size:11.5px;line-height:1.6;color:var(--dim);
+}
+.pending b{color:var(--muted);font-weight:600}
+
+
+/* ============ FORMAT SUB-GROUPS + TEMPLATE SLOTS ============ */
+.fmt{display:flex;align-items:baseline;gap:11px;padding:14px var(--pad) 9px}
+.fmt .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.fmt .rule{flex:1;height:1px;background:var(--line-soft)}
+.fmt .n{font-size:9.5px;font-weight:500;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+
+.grid.reel .tile{aspect-ratio:9/16}
+.grid.carousel .tile{aspect-ratio:4/5}
+.grid.reel{grid-template-columns:repeat(2,1fr)}
+.grid.carousel{grid-template-columns:repeat(2,1fr)}
+@media (min-width:640px){.grid.reel,.grid.carousel{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:960px){.grid.reel{grid-template-columns:repeat(6,1fr)}.grid.carousel{grid-template-columns:repeat(5,1fr)}}
+
+.slides{
+  position:absolute;bottom:5px;right:6px;z-index:2;display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,.62);padding:2px 6px;
+  font-size:9px;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.95);
+  font-variant-numeric:tabular-nums;
+}
+.playmark{
+  position:absolute;bottom:5px;left:6px;z-index:2;font-size:9px;color:rgba(255,255,255,.9);
+  text-shadow:0 1px 4px rgba(0,0,0,.9);
+}
+
+/* year block */
+.yearblock{border-top:1px solid var(--line);margin:0 var(--pad) 26px;padding-top:14px}
+.yearblock-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:100%;background:none;border:0;padding:0;
+  font-family:inherit;color:inherit;text-align:left;cursor:pointer}
+.yearblock-h .y{font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.yearblock-h .c{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.yearblock-h .chev{font-size:10px;color:var(--dim);transition:transform .16s ease}
+.yearblock-h[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.year-body[hidden]{display:none}
+.year-hint{font-size:11px;color:var(--dim);letter-spacing:.04em;padding:10px var(--pad) 0}
+.yearpills{display:flex;gap:10px;flex-wrap:wrap;margin:0 var(--pad) 22px;padding-bottom:2px}
+.yearpill{
+  font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--muted);padding:11px 18px;background:var(--surface);cursor:pointer;
+  transition:color .16s ease,border-color .16s ease,background .16s ease;
+}
+.yearpill .cnt{margin-left:9px;color:var(--dim);font-weight:500;font-size:11px}
+.yearpill[aria-selected="true"]{color:var(--black);background:var(--white);border-color:var(--white)}
+.yearpill[aria-selected="true"] .cnt{color:var(--black);opacity:.55}
+.yearpill:hover:not([aria-selected="true"]){border-color:var(--white);color:var(--white);background:var(--surface-2)}
+
+/* palette inside the moodboard */
+.pal-h{display:flex;align-items:baseline;gap:11px;padding:16px var(--pad) 9px}
+.pal-h .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pal-h .rule{flex:1;height:1px;background:var(--line-soft)}
+.pal-h .src{font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.pal{display:flex;flex-wrap:wrap;gap:8px;padding:0 var(--pad) 4px}
+.pal .sw2{display:flex;flex-direction:column;gap:4px;text-align:left;padding:0;width:52px;flex:none}
+.pal .sw2 .c{aspect-ratio:1/1;width:100%;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.pal .sw2:hover .c{outline-color:var(--white)}
+.pal .sw2 .h{font-size:8px;font-weight:600;letter-spacing:.02em;color:var(--muted);font-variant-numeric:tabular-nums}
+.pal .sw2.copied .h{color:var(--white)}
+
+/* per-post palette — small chips beside the images, not a big block above them */
+.postrow{display:flex;gap:18px;align-items:flex-start}
+.postrow .grid{flex:1;min-width:0;padding:0 0 4px var(--pad)}
+.sidepal{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:0 var(--pad) 4px 0}
+.sidepal .sw3{width:30px;height:30px;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.sidepal .sw3:hover{outline-color:var(--white)}
+.sidepal .sw3.copied{outline-color:var(--white);outline-width:2px}
+
+/* template slots for inspo 2,3,4 */
+.slot{
+  margin:0 var(--pad) 10px;border:1px dashed var(--line);padding:16px 18px;
+  display:flex;flex-direction:column;gap:9px;
+}
+.slot-h{display:flex;align-items:baseline;gap:12px}
+.slot-name{font-weight:700;font-size:14px;letter-spacing:-.01em;text-transform:uppercase;color:var(--dim)}
+.slot-tag{margin-left:auto;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:3px 7px}
+.slot-shape{display:flex;flex-wrap:wrap;gap:5px}
+.slot-shape span{
+  font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line-soft);padding:4px 8px;
+}
+.slot p{margin:0;font-size:12.5px;line-height:1.6;color:var(--dim);max-width:62ch}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="/">&larr; Events</a>
+    <div class="bar-name">US Open</div>
+    <div class="tabs" role="tablist" aria-label="View mode">
+      <button id="tab-action" role="tab" aria-selected="true" aria-controls="panel-action">Run of Show</button>
+      <button id="tab-content" role="tab" aria-selected="false" aria-controls="panel-content">US Open Footage</button>
+      <button id="tab-visual" role="tab" aria-selected="false" aria-controls="panel-visual">Visuals</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div id="pageHero">
+    <div class="hero-head">
+      <h2>US Open</h2>
+      <div class="sec-right" id="heroIdx">Hero Reel</div>
+    </div>
+    <div class="hero">
+      <div class="hero-fill" id="heroFill"></div>
+      <div class="hero-grain"></div>
+      <span class="hero-tag" id="heroTag"></span>
+      <div class="hero-title" id="heroTitle">US Open</div>
+      <button class="sarrow l" id="heroPrev" onclick="stepHero(-1)" aria-label="Previous hero shot">&larr;</button>
+      <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
+      <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
+    </div>
+    <div class="hero-meta"><span>Aug 25 – Sep 7</span><span>New York, NY</span><span>Crews TBD</span><span>Events TBD</span></div>
+  </div>
+
+  <div class="pin">
+    <div class="k">Locked direction</div>
+    <p>A launch, not a trip. Phase 1 is New York — timely, street-level, at the Open. Phase 2 is Cancun — the villa, the fun. Different registers, one campaign.</p>
+    <a href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">Full oo-board reference &rarr;</a>
+  </div>
+
+  <!-- ================= ACTION ================= -->
+  <div class="panel" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
+
+    <div class="sec">
+      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">3</div></div>
+      <div class="sub">From the Nancy Out of Office brief (Grand Slam Campaign, NY + Cancun).</div>
+      <div class="qlinks">
+        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/feed.html" target="_blank" rel="noopener">The feed — reference guideline <i>&#8599;</i></a>
+        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">The board — full moodboard <i>&#8599;</i></a>
+        <a class="qlink" href="cancun.html">Cancun — phase 2 of this campaign <i>&#8599;</i></a>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>Run of Show</h2><div class="sec-right" id="clockNote">Preview clock 10:42</div></div>
+      <div class="sub">Time-coded, owned, one row per action &mdash; references stay folded until you ask for them.</div>
+      <div class="ros" id="ros"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><h2>Hero VO Script</h2><div class="sec-right" id="voCount">0 Lines</div></div>
+      <div class="sub">Read order for the highlight reel. Pacing references live under Visuals.</div>
+      <div class="vo" id="vo"></div>
+    </div>
+
+    <details class="sec">
+      <summary class="sec-h"><h2>Deliverables</h2><div class="caret">&#9656;</div></summary>
+      <div class="sub">Are we done? &mdash; expected against delivered.</div>
+      <div class="dlv" id="dlv"></div>
+    </details>
+
+  </div>
+
+
+  <!-- ================= CONTENT ================= -->
+  <div class="panel" id="panel-content" role="tabpanel" aria-labelledby="tab-content" hidden>
+    <div class="sec" style="padding-top:30px">
+      <div class="sec-h"><h2>US Open Footage</h2><div class="sec-right" id="cIdx">00 / 00</div></div>
+      <div class="sub">The actual US Open shots &mdash; not reference material, that's under Visuals. One piece at a time: the cut on top, its shot breakdown under it, its palette below that. Empty until the first real cut is in.</div>
+      <div class="cbar">
+        <button class="cnav" id="cPrev" aria-label="Previous piece">&larr;</button>
+        <div class="crail" id="cRail"></div>
+        <button class="cnav" id="cNext" aria-label="Next piece">&rarr;</button>
+      </div>
+    </div>
+    <div id="cBody"></div>
+  </div>
+
+  <!-- ================= VISUALS ================= -->
+  <div class="panel" id="panel-visual" role="tabpanel" aria-labelledby="tab-visual" hidden>
+    <div class="hero-head" style="padding-top:30px">
+      <h2>Inspiration Hero</h2>
+      <div class="sec-right" id="visHeroIdx">Hero Shot</div>
+    </div>
+    <div class="hero">
+      <div class="hero-fill" id="visHeroFill"></div>
+      <div class="hero-grain"></div>
+      <span class="hero-tag" id="visHeroTag"></span>
+      <div class="hero-title" id="visHeroTitle"></div>
+      <button class="sarrow l" id="visHeroPrev" onclick="stepVisHero(-1)" aria-label="Previous inspiration">&larr;</button>
+      <button class="sarrow r" id="visHeroNext" onclick="stepVisHero(1)" aria-label="Next inspiration">&rarr;</button>
+      <button class="hero-play" id="visHeroPlay" onclick="openVisHero()">&#8599;&nbsp; Expand</button>
+    </div>
+
+    <div class="sec">
+      <div class="legend">
+        <b>Selected</b> tiles sit at full brightness with a white rule and sort to the front. <b>Options</b> stay on the board, dimmed &mdash; tap to bring one up. The bracketed number never moves, so &ldquo;shot 04&rdquo; means the same thing to everyone.
+      </div>
+    </div>
+    <div id="visuals"></div>
+  </div>
+
+  <footer>
+    Crew reference &mdash; read only<br>
+    Media stays in Google Drive &mdash; embedded, never copied
+  </footer>
+</div>
+
+<div class="lb" id="lb" hidden>
+  <button class="lb-close" onclick="closeLb()">Close &times;</button>
+  <div class="lb-media" id="lbMedia"></div>
+  <div class="lb-cap"><div class="t" id="lbCap"></div><div class="m" id="lbMeta"></div></div>
+  <div class="lb-nav"><button onclick="stepLb(-1)">&larr; Prev</button><button onclick="stepLb(1)">Next &rarr;</button></div>
+</div>
+
+<script>
+/* Data is shaped like the proposed Supabase rows, so the prototype
+   doubles as a check on the model. */
+const NOW = 10*60 + 42;   /* preview clock 10:42 */
+
+function grad(seed){
+  const p = [["#2E5C63","#7E4426"],["#3B6B5A","#141B1E"],["#7A4B2E","#231A14"],
+             ["#4E6E44","#161C16"],["#5C3F62","#1B1520"],["#33587A","#141920"],
+             ["#8A6C22","#221B0D"],["#2B4E4B","#0C1413"]][seed % 8];
+  return `linear-gradient(${(seed*41)%180}deg, ${p[0]}, ${p[1]})`;
+}
+
+/* ---------------- Drive embed utility ----------------
+   The one bit of "magic" from the spec: turn a pasted Drive share link
+   (or a bare file ID) into the thumbnail / preview URLs the site uses.
+   Folder imports skip extraction — the importer already has the ID
+   straight from the Drive API — but admin will paste raw links too. */
+function extractDriveId(input){
+  if (!input) return null;
+  const s = input.trim();
+  if (/^[\w-]{15,}$/.test(s)) return s;   // already a bare ID
+  const m = s.match(/\/d\/([\w-]{15,})/) || s.match(/[?&]id=([\w-]{15,})/) || s.match(/\/folders\/([\w-]{15,})/);
+  return m ? m[1] : null;
+}
+function driveThumb(id, w){ return `https://drive.google.com/thumbnail?id=${id}&sz=w${w||500}`; }
+function drivePreview(id){ return `https://drive.google.com/file/d/${id}/preview`; }
+/* Real <video> playback (native autoplay/loop/muted, no Google chrome)
+   instead of the /preview iframe — used for hero shots specifically.
+   Drive's direct-content URLs send Cross-Origin-Resource-Policy:
+   same-site, which blocks a <video src> from any other origin
+   regardless of URL variant (tested: uc?export=view, uc?export=
+   download, with/without export param — all blocked the same way).
+   /api/drive-video proxies the bytes through our own origin instead,
+   where CORP doesn't apply. See api/drive-video.js. */
+function driveVideoProxy(id){ return `/api/drive-video?id=${id}&v=2`; }
+
+/* media_sections + media_items */
+/* No per-location shot references exist for US Open yet -- environment
+   stations and b-roll windows get defined once real shoot days are
+   scheduled. Empty here, same honesty rule as everywhere else. */
+const SECTIONS = [];
+
+/* crew_teams + shot_list_items — built from the Nancy Out of Office brief's
+   "The events" + "Details" sections, not invented. Times/venues the brief
+   itself hasn't nailed down yet are marked TBD rather than guessed. */
+const CREWS = [
+  { name:"New York — Phase 1", director:"[Director]", host:"[Host]",
+    objective:"Aug 25 – Sep 7. Announce ACE + SMASH on the 25th, then three weeks of timely, street-level New York content built around the US Open.",
+    rows:[
+      {t:"TBD–TBD", act:"Miami tennis court shoot", detail:"Asset shoot — images and assets for launch day.", note:"Before Aug 20. Susan can run it.", loc:"Miami — tennis court", refs:[]},
+      {t:"TBD–TBD", act:"Launch announcement day", detail:"ACE + SMASH announced on social.", note:"Aug 25.", loc:"Social / online", refs:[]},
+      {t:"TBD–TBD", act:"Party tennis vibe activation", detail:"Hudson Tennis Club, tentative.", note:"Unclear if this is the same as the New York street day or a separate event.", loc:"Hudson Tennis Club (tentative)", refs:[]},
+      {t:"TBD–TBD", act:"US Open day — the suite and the grounds", detail:"Aug 28–31.", note:"", loc:"US Open", refs:[]},
+      {t:"TBD–TBD", act:"New York street day", detail:"Timely, street-level content.", note:"Date not yet set.", loc:"New York streets", refs:[]},
+      {t:"TBD–TBD", act:"New York street interview day", detail:"Street-level interview format.", note:"Date not yet set.", loc:"New York streets", refs:[]},
+      {t:"TBD–TBD", act:"PR hangout / lunch", detail:"With agencies.", note:"Still unshaped.", loc:"TBD", refs:[]},
+      {t:"TBD–TBD", act:"The tennis brunch", detail:"White table across the net, ball centerpieces, ours in pink.", note:"Art direction is locked; drone shot mandatory. Date, venue and guest list still TBD.", loc:"TBD", refs:[]}
+    ]}
+];
+
+/* No Hero Highlight VO has been written for US Open yet. */
+const VO = [];
+
+/* No deliverable counts are specified for US Open in the brief yet
+   (unlike Cancun's), so this stays empty rather than inventing numbers. */
+const DELIVERABLES = [];
+
+/* ---------------- render ---------------- */
+/* One tile. Everything that draws a grid goes through this. */
+function tileHtml(o){
+  /* o: {key, label, cap, sel, seed, thumbId, slideCount, isReel, showCap} */
+  /* A tile with a Drive thumbnail always keeps the placeholder gradient
+     underneath, pulsing, so a slow-to-generate Drive thumbnail (freshly
+     uploaded files can take 10-20s+ the first time) reads as "loading",
+     never as a blank/broken tile. The photo crossfades in on top once it
+     actually loads; on error it retries once, then just leaves the
+     gradient in place instead of a broken-image glyph. */
+  const fill = o.thumbId
+    ? `<span class="fill grad loading" style="background:${grad(o.seed)}"></span>
+       <img class="fill photo" src="${driveThumb(o.thumbId,500)}" loading="lazy" alt="${o.cap}"
+         onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+         onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`
+    : `<span class="fill" style="background:${grad(o.seed)}"></span>`;
+  return `<div class="cell ${o.sel?'sel':'opt'}">
+    <button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">
+      ${fill}
+      ${o.sel?'<span class="selflag">Selected</span>':''}
+      ${o.isReel?'<span class="playmark">&#9654;</span>':''}
+      ${o.slideCount?`<span class="slides">&#9635; ${o.slideCount}</span>`:''}
+      ${o.ts?`<span class="tstamp">${o.ts}</span>`:''}
+    </button>
+    <div class="cap-line"><span class="num">[${o.label}]</span><span class="arrow">&rarr;</span></div>
+    ${o.showCap?`<div class="cap-text">${o.cap}</div>`:''}
+  </div>`;
+}
+function cellHtml(it, n, si, i){
+  return tileHtml({key:"s:"+si+":"+i, label:n, cap:it.cap, sel:!!it.sel,
+                   seed:si*7+i, ts:it.ts, showCap:true});
+}
+/* Selected sorts to the front; the bracketed index stays bound to admin order. */
+function ordered(sec){
+  return sec.items.map((it,i)=>({it,n:i+1,i}))
+    .sort((a,b)=> sec.seq ? 0 : (b.it.sel?1:0)-(a.it.sel?1:0));
+}
+
+
+
+/* ==================================================================
+   MOODBOARD  —  inspo source > year > format > items
+   Mirrors the Drive tree exactly. Inside a year folder a FILE is a
+   reel; a SUBFOLDER is a carousel and its files are the slides.
+================================================================== */
+/* No real Drive moodboard/reference folder exists for US Open yet -- the
+   real reference is the external "oo-board" feed linked under Quick
+   Links (from the Nancy Out of Office brief). Empty here is honest;
+   once a real Drive folder exists for this event, it imports the same
+   way Nude Project does for Cancun. */
+const MOODBOARD = [];
+/* No US Open footage exists yet — the shoot hasn't happened (Aug 25 – Sep 7).
+   Same "Hero Shots" Drive-folder pattern as Cancun once real cuts land;
+   empty for now is the honest state, not a placeholder video. */
+const HERO_SHOTS = [];
+
+
+const TYPE_META = {
+  moodboard:{label:"Moodboard", sub:"A timeline, not a pile of options — read left to right to see how the tone moves year on year."},
+  environment:{label:"Environment", sub:"How each station gets shot."},
+  b_roll:{label:"B-Roll", sub:"Grouped under its capture window and kept in capture order."},
+  hero_flow_reference:{label:"Flow Reference", sub:"Pacing model for the edit."}
+};
+
+function paletteHtml(pal, label, src){
+  return `<div class="pal-h"><span class="t">${label}</span><span class="rule"></span>${src?`<span class="src">${src}</span>`:''}</div>
+    <div class="pal">${pal.map(([hex,role])=>`
+      <button class="sw2" onclick="copyHex(this,'${hex}')" title="${role}">
+        <span class="c" style="background:${hex}"></span>
+        <span class="h">${hex}</span>
+      </button>`).join("")}</div>`;
+}
+/* Small chips beside the images, not a labelled block above them. */
+function sidePaletteHtml(pal){
+  return `<div class="sidepal">${pal.map(([hex,role])=>`
+    <button class="sw3" onclick="copyHex(this,'${hex}')" style="background:${hex}" title="${role} — ${hex}" aria-label="${role} ${hex}"></button>`).join("")}</div>`;
+}
+
+/* A carousel folder that hasn't been filled in yet has no slides —
+   empty state, so it simply doesn't render (same rule as any other section). */
+function liveCarousels(y){
+  return y.carousels
+    .map((it,origIndex)=>({...it, origIndex}))
+    .filter(it=>it.slides.length>0);
+}
+
+/* Reels/carousels/palette markup for one year. Pulled out of renderMoodboard
+   so it can be built lazily, on demand, instead of all at once. */
+function yearGridsHtml(sp, spi, y, yi){
+  const carousels = liveCarousels(y);
+  let h = "";
+  if (y.reels.length){
+    h += `<div class="fmt"><span class="t">Reels</span><span class="rule"></span><span class="n">9:16</span></div>
+      <div class="grid seq reel">${y.reels.map((it,i)=>tileHtml({
+        key:`m:${spi}:${yi}:r:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
+        seed:spi*31+yi*11+i, thumbId:it.fileId, isReel:true, showCap:false})).join("")}</div>`;
+  }
+  /* Every slide of every carousel is laid out directly — a moodboard is
+     for seeing everything at once, not clicking through one cover tile
+     per post. Each post gets its own real palette, sampled from its own
+     images, right next to its grid. */
+  if (carousels.length){
+    h += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5 &middot; all slides</span></div>`;
+    carousels.forEach(it => {
+      h += `<div class="group">
+        <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${it.slides.length} slides</span></div>
+        <div class="postrow">
+          <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
+            key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
+            seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
+          ${it.palette ? sidePaletteHtml(it.palette) : ""}
+        </div>
+      </div>`;
+    });
+  }
+  return h;
+}
+/* One year visible at a time — no long scroll to reach 2k26. Only the
+   selected year's tiles are ever in the DOM, so Drive only sees requests
+   for whichever year is actually open (same throttling guard as before,
+   now expressed as tabs instead of an accordion). */
+function selectYear(spi, yi){
+  const sp = MOODBOARD[spi];
+  document.getElementById(`yb-${spi}`).innerHTML = yearGridsHtml(sp, spi, sp.years[yi], yi);
+  sp.years.forEach((y2,i)=>{
+    document.getElementById(`yp-${spi}-${i}`).setAttribute("aria-selected", String(i===yi));
+  });
+}
+
+function renderMoodboard(){
+  let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} source${MOODBOARD.length===1?'':'s'}</div></div>
+    <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year. Reels are single files; carousels open slide by slide.</div></div>`;
+
+  if (!MOODBOARD.length){
+    html += `<div class="pending"><b>No Drive folder imported yet.</b> The real reference for this event is the external oo-board feed linked under Quick Links. Paste a Drive folder here once one exists and it fills in the same way Nude Project does on Cancun's page.</div>`;
+  }
+
+  MOODBOARD.forEach((sp, spi) => {
+    const total = sp.years.reduce((n,y)=>n+y.reels.length+liveCarousels(y).length, 0);
+    html += `<div class="coll">
+      <div class="coll-h">
+        <span class="coll-name">${sp.name}</span>
+        ${sp.main?'<span class="mainflag">Main</span>':''}
+        <span class="coll-src">${sp.years.length} years &middot; ${total} posts</span>
+      </div>
+      ${sp.note?`<div class="coll-note"><b>Direction</b><span>${sp.note}</span></div>`:''}
+    </div>`;
+
+    if (sp.pending){
+      html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts, slide order and palette swatches below are all read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order.</div>`;
+    }
+
+    html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
+      const carousels = liveCarousels(y);
+      return `<button class="yearpill" id="yp-${spi}-${yi}" aria-selected="${yi===0}" onclick="selectYear(${spi},${yi})">
+        ${y.year}<span class="cnt">${y.reels.length+carousels.length}</span>
+      </button>`;
+    }).join("")}</div>
+    <div class="year-body" id="yb-${spi}">${yearGridsHtml(sp,spi,sp.years[0],0)}</div>`;
+  });
+
+  return html;
+}
+
+function renderVisuals(){
+  let html = renderMoodboard(), lastType=null;
+  SECTIONS.forEach((sec,si)=>{
+    if (sec.type!==lastType){
+      const m=TYPE_META[sec.type];
+      const count=SECTIONS.filter(x=>x.type===sec.type).reduce((n,x)=>n+x.items.length,0);
+      html+=`<div class="sec"><div class="sec-h"><h2>${m.label}</h2><div class="sec-right">01 &rarr; ${String(count).padStart(2,"0")}</div></div><div class="sub">${m.sub}</div></div>`;
+      lastType=sec.type;
+    }
+    const label = sec.schedule || sec.group;
+    html+=`<div class="group">
+      ${label?`<div class="yr"><span class="t">${label}</span><span class="rule"></span><span class="n">${sec.items.length} ${sec.items.length===1?'frame':'frames'}</span></div>`:''}
+      ${sec.note?`<div class="dirnote"><b>Direction</b><span>${sec.note}</span></div>`:''}
+      <div class="grid ${sec.seq?'seq':''}">${ordered(sec).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")}</div>
+    </div>`;
+  });
+  document.getElementById("visuals").innerHTML=html;
+}
+
+const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+
+function renderRos(){
+  let liveKey=null,nextKey=null,best=1e9;
+  CREWS.forEach((c,ci)=>c.rows.forEach((r,ri)=>{
+    const [a,b]=r.t.split("–").map(toMin);
+    if(NOW>=a&&NOW<b) liveKey=ci+":"+ri;
+    else if(a>NOW&&a<best){best=a;nextKey=ci+":"+ri;}
+  }));
+  document.getElementById("ros").innerHTML = CREWS.map((c,ci)=>`
+    <div class="crew">
+      <div class="crew-h">
+        <div class="crew-name">${c.name}</div>
+        <div class="crew-roles"><span><b>Director</b> ${c.director}</span><span><b>Host</b> ${c.host}</span></div>
+        <div class="crew-obj">${c.objective}</div>
+      </div>
+      <div class="crew-body">${c.rows.map((r,ri)=>{
+        const key=ci+":"+ri;
+        const state = key===liveKey?"live":key===nextKey?"next":"";
+        const [s,e]=r.t.split("–");
+        /* Reference groups are looked up by name, so reordering SECTIONS
+           can never point a row at the wrong grid. */
+        const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
+        const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+        const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
+        const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
+        return `<div class="row ${state}">
+          <div class="row-time">${s}<span>${e}</span></div>
+          <div class="row-main">
+            ${state==="live"?'<span class="chip now">&#9679; Now</span>':state==="next"?'<span class="chip next">Next up</span>':''}
+            <div class="row-act">${r.act}</div>
+            ${r.detail?`<div class="row-detail">${r.detail}</div>`:''}
+            ${r.note?`<div class="row-note">${r.note}</div>`:''}
+            <div class="row-loc">${r.loc}</div>
+            ${count?`<details class="refs"><summary>${count} refs &mdash; ${from}</summary><div class="refstrip">${strip}</div></details>`:''}
+          </div>
+        </div>`;
+      }).join("")}</div>
+    </div>`).join("");
+}
+
+function renderVo(){
+  document.getElementById("voCount").textContent = `${VO.length} Line${VO.length===1?'':'s'}`;
+  document.getElementById("vo").innerHTML = VO.length ? VO.map((v,i)=>`
+    <div class="voline">
+      <div class="vonum">[${i+1}]</div>
+      <div><div class="vospk">${v.spk} <em>&mdash; ${v.role}</em></div><div class="votext">${v.line}</div></div>
+    </div>`).join("") : `<div class="emptyshots">No VO script written yet.</div>`;
+}
+
+function renderDlv(){
+  if (!DELIVERABLES.length){
+    document.getElementById("dlv").innerHTML = `<div class="emptyshots">No deliverable counts set yet.</div>`;
+    return;
+  }
+  document.getElementById("dlv").innerHTML = DELIVERABLES.map(g=>`
+    <div class="dlv-group"><div class="dlv-owner">${g.owner}</div>
+    ${g.items.map(it=>{
+      const full=it.done>=it.exp, pct=Math.round(it.done/it.exp*100);
+      return `<div class="dlv-row">
+        <div class="dlv-name">${it.name}</div>
+        <div class="bar"><i class="${full?'full':''}" style="width:${pct}%"></i></div>
+        <div class="dlv-count"><b>${it.done}</b>/${it.exp}</div>
+        <a class="dlv-link ${full?'on':''}" href="#" onclick="return false">${full?'Open ↗':''}</a>
+      </div>`;}).join("")}
+    </div>`).join("");
+}
+
+/* ---------------- lightbox ---------------- */
+let lbList=[], lbPos=0;
+/* One flat list across the moodboard and every other grid, so
+   prev/next walks the whole board in the order it is displayed. */
+function buildFlat(){
+  lbList=[];
+  MOODBOARD.forEach((sp,spi)=>sp.years.forEach((y,yi)=>{
+    y.reels.forEach((it,i)=>lbList.push({
+      key:`m:${spi}:${yi}:r:${i}`, cap:it.d, sel:!!it.sel, port:true, isReel:true,
+      fileId:it.fileId, seed:spi*31+yi*11+i, meta:`${sp.name} · ${y.year} · Reel · ${it.sel?"Selected":"Option"}`}));
+    /* A carousel is a subfolder, so each slide gets its own entry and the
+       arrows walk 1..n before moving on to the next post. Folders with no
+       files yet (empty carousel) simply contribute nothing here. */
+    y.carousels.forEach((it,i)=>{
+      for(let sl=0; sl<it.slides.length; sl++){
+        lbList.push({
+          key:`m:${spi}:${yi}:c:${i}:${sl}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
+          fileId:it.slides[sl], seed:spi*31+yi*11+i+5+sl*3,
+          meta:`${sp.name} · ${y.year} · Carousel · slide ${sl+1} of ${it.slides.length} · ${it.sel?"Selected":"Option"}`});
+      }
+    });
+  }));
+  SECTIONS.forEach((sec,si)=>sec.items.forEach((it,i)=>lbList.push({
+    key:`s:${si}:${i}`, cap:it.cap, sel:!!it.sel, port:it.ratio==="port",
+    seed:si*7+i, meta:`${sec.group} · [${i+1}] · ${it.sel?"Selected":"Option"}`})));
+}
+function openLb(key){
+  lbPos=lbList.findIndex(x=>x.key===key); if(lbPos<0) lbPos=0;
+  paintLb(); document.getElementById("lb").hidden=false; document.body.style.overflow="hidden";
+}
+function paintLb(){
+  const e=lbList[lbPos];
+  const ratio = e.port ? "9/16" : e.sq ? "4/5" : "16/9";
+  const tall  = e.port || e.sq;
+  const style = `aspect-ratio:${ratio};${tall?'width:auto;height:70vh;':''}`;
+  let media;
+  if (e.fileId && e.isReel){
+    media = `<iframe class="fill" src="${drivePreview(e.fileId)}" style="${style}border:0" allow="autoplay" allowfullscreen></iframe>`;
+  } else if (e.fileId){
+    media = `<img class="fill" src="${driveThumb(e.fileId,1600)}" style="${style}" alt="${e.cap}">`;
+  } else {
+    media = `<div class="fill" style="${style}background:${grad(e.seed)}"></div>`;
+  }
+  document.getElementById("lbMedia").innerHTML = media;
+  document.getElementById("lbCap").textContent = e.cap;
+  document.getElementById("lbMeta").textContent = e.meta;
+}
+function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
+function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
+function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
+/* ---------------- hero ----------------
+   Real US Open footage, from the Hero Shots Drive folder (once it exists). Next/Prev walks
+   HERO_SHOTS; Play opens whichever one is currently showing. */
+let heroPos = 0;
+function heroMediaHtml(p){
+  if (!p) return `<span class="fill" style="background:${grad(0)}"></span>`;
+  if (p.kind==="reel" && p.fileId){
+    /* Real <video> through the proxy, not the Drive iframe — gets us
+       native autoplay/loop/muted with no reload hack and no Google
+       chrome. See driveVideoProxy() / api/drive-video.js. */
+    return `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`;
+  }
+  const g = grad(p.seed);
+  const thumbId = p.kind==="carousel" ? (p.slides[0] && p.slides[0].id) : null;
+  if (!thumbId) return `<span class="fill" style="background:${g}"></span>`;
+  return `<span class="fill grad loading" style="background:${g}"></span>
+    <img class="fill photo" src="${driveThumb(thumbId,1200)}" alt="${p.title}"
+      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+}
+/* The autoplay attribute alone doesn't reliably fire on a <video>
+   inserted via innerHTML (confirmed: needed an explicit .play() kick
+   even with autoplay set) — call it ourselves as a safety net. */
+function forcePlay(fillId){
+  const v = document.querySelector(`#${fillId} video`);
+  if (v) v.play().catch(()=>{});
+}
+function renderHero(){
+  const p = HERO_SHOTS[heroPos];
+  document.getElementById("heroFill").innerHTML = heroMediaHtml(p);
+  forcePlay("heroFill");
+  document.getElementById("heroTag").textContent = p ? "US Open · Hero Shot" : "";
+  const titleEl = document.getElementById("heroTitle");
+  titleEl.textContent = p ? p.title : "US Open";
+  titleEl.classList.toggle("long", !!(p && p.title.length > 34));
+  const playBtn = document.getElementById("heroPlay");
+  playBtn.innerHTML = p && p.kind==="carousel" ? "&#9635;&nbsp; View" : "&#8599;&nbsp; Expand";
+  playBtn.hidden = false;
+  document.getElementById("heroIdx").textContent = p ? `${heroPos+1} / ${HERO_SHOTS.length}` : "Hero Reel";
+  const multi = HERO_SHOTS.length > 1;
+  document.getElementById("heroPrev").hidden = !multi;
+  document.getElementById("heroNext").hidden = !multi;
+}
+function stepHero(d){
+  if (!HERO_SHOTS.length) return;
+  heroPos = (heroPos + d + HERO_SHOTS.length) % HERO_SHOTS.length;
+  renderHero();
+}
+function openHero(){
+  const p = HERO_SHOTS[heroPos];
+  if (!p){
+    pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
+              sel:false, port:false, seed:3, meta:"US Open · Hero · embedded from Drive"});
+    return;
+  }
+  const isCar = p.kind==="carousel";
+  pushTemp({key:"hero", cap:p.title, sel:false, port:!isCar, sq:isCar,
+            fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
+            seed:p.seed, meta:`US Open · Hero Shot · ${isCar?"Carousel":"Reel"}`});
+}
+/* ---------------- visuals hero ----------------
+   Visuals gets its own hero, cycling between each moodboard source's own
+   hero shot (Nude Project now, Inspo 2-4 once they have one) — not the
+   US Open page hero, which has no place inside a reference/inspiration
+   view. */
+let visHeroPos = 0;
+const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0, dur:sp.heroDur}));
+function renderVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  document.getElementById("visHeroFill").innerHTML = p
+    ? `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`
+    : `<span class="fill" style="background:${grad(0)}"></span>`;
+  forcePlay("visHeroFill");
+  document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
+  document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
+  document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
+  document.getElementById("visHeroPlay").hidden = !p;
+  const multi = VIS_HEROES.length > 1;
+  document.getElementById("visHeroPrev").hidden = !multi;
+  document.getElementById("visHeroNext").hidden = !multi;
+}
+function stepVisHero(d){
+  if (!VIS_HEROES.length) return;
+  visHeroPos = (visHeroPos + d + VIS_HEROES.length) % VIS_HEROES.length;
+  renderVisHero();
+}
+function openVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  if (!p) return;
+  pushTemp({key:"vishero", cap:p.title, sel:false, port:true,
+            fileId:p.fileId, isReel:true, seed:p.seed, meta:`${p.title} · Hero Shot`});
+}
+
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("lb").hidden) return;
+  if(e.key==="Escape") closeLb();
+  if(e.key==="ArrowRight") stepLb(1);
+  if(e.key==="ArrowLeft") stepLb(-1);
+});
+
+/* ---------------- tabs ---------------- */
+const MODES=["action","content","visual"];
+function setMode(m){
+  MODES.forEach(k=>{
+    document.getElementById("tab-"+k).setAttribute("aria-selected", k===m);
+    document.getElementById("panel-"+k).hidden = k!==m;
+  });
+  /* The US Open page hero has no place inside Visuals; rebuild each
+     hero's video fresh on the way in so autoplay actually fires again
+     rather than sitting paused from being hidden. */
+  document.getElementById("pageHero").hidden = m==="visual";
+  if (m==="visual") renderVisHero(); else renderHero();
+  window.scrollTo(0,0);
+}
+MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
+
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero(); renderVisHero();
+
+/* ==================================================================
+   CONTENT PIECES  —  content_pieces / shots / palette_swatches
+================================================================== */
+/* Content is for the exact US Open shots — not moodboard reference material
+   (that's what Hero/Visuals are for). No real US Open footage exists yet, so
+   this stays an honest empty placeholder rather than fictional pieces or
+   borrowed reference content, until real footage is shot and added. */
+const PIECES = [];
+
+let cPos = 0, cSlide = 0;
+
+function pieceThumbHtml(thumbId, seedVal, cls){
+  if (!thumbId) return `<span class="fill" style="background:${grad(seedVal)}"></span>`;
+  return `<span class="fill grad loading${cls?' '+cls:''}" style="background:${grad(seedVal)}"></span>
+    <img class="fill photo${cls?' '+cls:''}" src="${driveThumb(thumbId,900)}" alt=""
+      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+}
+
+function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5" ? "sq" : ""; }
+
+function renderRail(){
+  document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
+    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.year} &middot; ${p.d}</button>`).join("");
+  document.getElementById("cIdx").textContent = PIECES.length
+    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0")
+    : "00 / 00";
+  document.getElementById("cPrev").disabled = cPos===0 || !PIECES.length;
+  document.getElementById("cNext").disabled = cPos===PIECES.length-1 || !PIECES.length;
+  const pill = document.getElementById("cRail").children[cPos];
+  if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
+}
+
+function renderPiece(){
+  const p = PIECES[cPos];
+  if (!p){
+    document.getElementById("cBody").innerHTML = `<div class="sec">
+      <div class="emptyshots">No US Open footage yet — the shoot hasn't happened.<br>
+      Real cuts land here once they're shot; this tab is reserved for the exact US Open content, not reference material.</div>
+    </div>`;
+    return;
+  }
+  const isCar = p.kind==="carousel";
+  const total = isCar ? p.slides.length : 0;
+  const g = grad(p.seed + (isCar ? cSlide : 0));
+  const thumbId = isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId;
+  const bgStyle = thumbId ? `background-image:url('${driveThumb(thumbId,200)}')` : `background:${g}`;
+
+  let screen = `<div class="screen" id="screen">
+      <div class="bg" style="${bgStyle}"></div>
+      <div class="stage"><div class="media ${pieceMediaClass(p)}">${pieceThumbHtml(thumbId, p.seed+(isCar?cSlide:0))}</div></div>
+      <span class="screen-tag">${isCar?"Carousel":"Reel"} &middot; ${p.aspect}</span>
+      ${isCar ? `
+        <button class="sarrow l" onclick="slide(-1)" aria-label="Previous slide">&larr;</button>
+        <button class="sarrow r" onclick="slide(1)" aria-label="Next slide">&rarr;</button>
+        <span class="screen-count">${cSlide+1} / ${total}</span>
+        <span class="screen-dots">${p.slides.map((_,i)=>`<i class="${i===cSlide?'on':''}"></i>`).join("")}</span>
+      ` : `<button class="screen-play" onclick="openPieceLb()">&#9654;&nbsp; Play</button>`}
+    </div>`;
+
+  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide].cap}</span></div>` : "";
+
+  /* --- tier 2: shot breakdown --- */
+  let breakdown;
+  if (p.auto && p.cuts.length){
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">${p.cuts.length} shots</span></div></div>
+      <div class="sub">Marked up by hand against the cut &mdash; scrub, note the timecode, flag the beats that matter. The editor sees the same thing weeks later.</div>
+      <div class="grid seq">${p.cuts.map((c,i)=>`
+        <div class="cell shot ${c.sel?'sel':'opt'}">
+          <button class="tile" onclick="openShotLb(${cPos},${i})" aria-label="${c.cap}">
+            <span class="fill" style="background:${grad(p.seed+i*3)}"></span>
+            ${c.sel?'<span class="selflag">Key beat</span>':''}
+            <span class="shot-ts">${c.ts}</span>
+          </button>
+          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
+          <div class="cap-text">${c.cap}</div>
+          ${c.note?`<div class="shot-note">${c.note}</div>`:''}
+        </div>`).join("")}</div>
+    </div>`;
+  } else if (isCar){
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Slide Breakdown</h2><div class="sec-right">01 &rarr; ${String(total).padStart(2,"0")}</div></div>
+      <div class="sub">Every frame in the carousel, in posting order.</div>
+      <div class="grid seq">${p.slides.map((sl,i)=>`
+        <div class="cell shot ${i===cSlide?'sel':'opt'}">
+          <button class="tile" onclick="goSlide(${i})" aria-label="${sl.cap}">
+            ${pieceThumbHtml(sl.id, p.seed+i)}
+            ${i===cSlide?'<span class="selflag">Showing</span>':''}
+          </button>
+          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
+          <div class="cap-text">Slide ${i+1}</div>
+        </div>`).join("")}</div>
+    </div>`;
+  } else {
+    breakdown = `<div class="sec">
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Reference</span></div></div>
+      <div class="emptyshots">This is a Nude Project reference clip, not our footage.<br>No shot breakdown needed here.</div>
+    </div>`;
+  }
+
+  /* --- tier 3: palette --- */
+  const palette = p.palette.length ? `<div class="sec">
+      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
+      <div class="sub">The grade to match, read off the images themselves. Tap a swatch to copy its hex.</div>
+      <div class="palette">${p.palette.map(([hex,role],i)=>`
+        <button class="sw" onclick="copyHex(this,'${hex}')">
+          <span class="chipc" style="background:${hex}"></span>
+          <span class="hex">${hex}</span>
+          <span class="role">${role}</span>
+        </button>`).join("")}</div>
+      <div class="palette-src">${p.paletteSrc}</div>
+    </div>` : `<div class="sec">
+      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right"><span class="autotag pending">Pending</span></div></div>
+      <div class="emptyshots">${p.paletteSrc}</div>
+    </div>`;
+
+  document.getElementById("cBody").innerHTML =
+    `<div class="ctitle">${p.title}</div>
+     <div class="cmeta">
+       <span>${p.source}</span><span>${p.year}</span><span>${p.d}</span><span>${p.aspect}</span>
+       <span class="status">Reference</span>
+     </div>
+     <div style="height:16px"></div>
+     ${screen}${caption}${breakdown}${palette}`;
+
+  if (isCar) attachSwipe();
+}
+
+function goPiece(i){
+  cPos = Math.max(0, Math.min(PIECES.length-1, i));
+  cSlide = 0; renderRail(); renderPiece();
+  document.getElementById("panel-content").scrollIntoView({block:"start"});
+}
+function slide(d){
+  const p = PIECES[cPos]; if(!p.slides) return;
+  cSlide = (cSlide + d + p.slides.length) % p.slides.length;
+  renderPiece();
+}
+function goSlide(i){ cSlide = i; renderPiece(); }
+function copyHex(el, hex){
+  try{ navigator.clipboard.writeText(hex); }catch(e){}
+  el.classList.add("copied");
+  setTimeout(()=>el.classList.remove("copied"), 1200);
+}
+function attachSwipe(){
+  const el = document.getElementById("screen"); if(!el) return;
+  let x0=null;
+  el.addEventListener("touchstart", e=>{ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  el.addEventListener("touchend", e=>{
+    if(x0===null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45) slide(dx < 0 ? 1 : -1);
+    x0=null;
+  }, {passive:true});
+}
+function openPieceLb(){
+  const p = PIECES[cPos];
+  const isCar = p.kind==="carousel";
+  pushTemp({key:"piece", cap:p.title, sel:false, port:!isCar, sq:isCar,
+            fileId: isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId, isReel: !isCar,
+            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
+}
+function openShotLb(pi, si){
+  const p = PIECES[pi], c = p.cuts[si];
+  pushTemp({key:"shot", cap:c.cap, sel:c.sel, port:p.aspect==="9:16",
+            seed:p.seed+si*3, meta:`${p.title} · ${c.ts} · ${c.sel?"Key beat":"Shot "+(si+1)}`});
+}
+
+document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
+document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
+renderRail(); renderPiece();
+
+</script>
