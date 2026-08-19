@@ -429,9 +429,14 @@ footer{
 
 /* year block */
 .yearblock{border-top:1px solid var(--line);margin:0 var(--pad) 26px;padding-top:14px}
-.yearblock-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.yearblock-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:100%;background:none;border:0;padding:0;
+  font-family:inherit;color:inherit;text-align:left;cursor:pointer}
 .yearblock-h .y{font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
 .yearblock-h .c{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.yearblock-h .chev{font-size:10px;color:var(--dim);transition:transform .16s ease}
+.yearblock-h[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.year-body[hidden]{display:none}
+.year-hint{font-size:11px;color:var(--dim);letter-spacing:.04em;padding:10px var(--pad) 0}
 
 /* palette inside the moodboard */
 .pal-h{display:flex;align-items:baseline;gap:11px;padding:16px var(--pad) 9px}
@@ -795,6 +800,44 @@ function liveCarousels(y){
     .filter(it=>it.slides.length>0);
 }
 
+/* Reels/carousels/palette markup for one year. Pulled out of renderMoodboard
+   so it can be built lazily, on demand, instead of all at once. */
+function yearGridsHtml(sp, spi, y, yi){
+  const carousels = liveCarousels(y);
+  let h = "";
+  if (y.reels.length){
+    h += `<div class="fmt"><span class="t">Reels</span><span class="rule"></span><span class="n">9:16</span></div>
+      <div class="grid seq reel">${y.reels.map((it,i)=>tileHtml({
+        key:`m:${spi}:${yi}:r:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
+        seed:spi*31+yi*11+i, thumbId:it.fileId, isReel:true, showCap:false})).join("")}</div>`;
+  }
+  if (carousels.length){
+    h += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5</span></div>
+      <div class="grid seq carousel">${carousels.map((it,i)=>tileHtml({
+        key:`m:${spi}:${yi}:c:${it.origIndex}:0`, label:it.d, cap:it.d, sel:!!it.sel,
+        seed:spi*31+yi*11+i+5, thumbId:it.slides[0], slideCount:it.slides.length, showCap:false})).join("")}</div>`;
+  }
+  if (y.palette) h += paletteHtml(y.palette, `Palette — ${y.year}`, "");
+  return h;
+}
+const yearLoaded = {};
+/* Drive throttles the thumbnail endpoint under burst load (see CONTEXT.md
+   §8), so only the first year's images are requested on page load. Every
+   other year loads its images the moment its header is opened, not before —
+   caps how many concurrent Drive requests a single page load can trigger. */
+function toggleYear(spi, yi){
+  const key = `${spi}:${yi}`;
+  const body = document.getElementById(`yb-${spi}-${yi}`);
+  const head = document.getElementById(`yh-${spi}-${yi}`);
+  if (!yearLoaded[key]){
+    body.innerHTML = yearGridsHtml(MOODBOARD[spi], spi, MOODBOARD[spi].years[yi], yi);
+    yearLoaded[key] = true;
+  }
+  const expanded = head.getAttribute("aria-expanded") === "true";
+  head.setAttribute("aria-expanded", String(!expanded));
+  body.hidden = expanded;
+}
+
 function renderMoodboard(){
   let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} of ${MOODBOARD.length+INSPO_SLOTS.length} sources</div></div>
     <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year. Reels are single files; carousels open slide by slide.</div></div>`;
@@ -818,24 +861,17 @@ function renderMoodboard(){
 
     sp.years.forEach((y, yi) => {
       const carousels = liveCarousels(y);
-      html += `<div class="yearblock"><div class="yearblock-h">
-        <span class="y">${y.year}</span>
-        <span class="c">${y.reels.length} reels &middot; ${carousels.length} carousels</span>
-      </div></div>`;
-
-      if (y.reels.length){
-        html += `<div class="fmt"><span class="t">Reels</span><span class="rule"></span><span class="n">9:16</span></div>
-          <div class="grid seq reel">${y.reels.map((it,i)=>tileHtml({
-            key:`m:${spi}:${yi}:r:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
-            seed:spi*31+yi*11+i, thumbId:it.fileId, isReel:true, showCap:false})).join("")}</div>`;
-      }
-      if (carousels.length){
-        html += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5</span></div>
-          <div class="grid seq carousel">${carousels.map((it,i)=>tileHtml({
-            key:`m:${spi}:${yi}:c:${it.origIndex}:0`, label:it.d, cap:it.d, sel:!!it.sel,
-            seed:spi*31+yi*11+i+5, thumbId:it.slides[0], slideCount:it.slides.length, showCap:false})).join("")}</div>`;
-      }
-      if (y.palette) html += paletteHtml(y.palette, `Palette — ${y.year}`, "");
+      const first = yi === 0;
+      const key = `${spi}:${yi}`;
+      html += `<div class="yearblock">
+        <button class="yearblock-h" id="yh-${spi}-${yi}" aria-expanded="${first}" onclick="toggleYear(${spi},${yi})">
+          <span class="chev">&#9654;</span>
+          <span class="y">${y.year}</span>
+          <span class="c">${y.reels.length} reels &middot; ${carousels.length} carousels</span>
+        </button>
+        <div class="year-body" id="yb-${spi}-${yi}" ${first?"":"hidden"}>${first?yearGridsHtml(sp,spi,y,yi):""}</div>
+      </div>`;
+      if (first) yearLoaded[key] = true;
     });
   });
 
