@@ -77,15 +77,22 @@ details[open] > summary .caret{transform:rotate(90deg)}
 /* ---------------- hero ---------------- */
 .hero-head{display:flex;align-items:baseline;gap:16px;padding:34px var(--pad) 10px}
 .hero{position:relative;margin:0 var(--pad);aspect-ratio:16/9;overflow:hidden;background:var(--surface-2)}
-.hero-fill{position:absolute;inset:0;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
+.hero-fill{position:absolute;inset:0;overflow:hidden;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
+.hero-fill .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero-grain{position:absolute;inset:0;opacity:.5;background:
   radial-gradient(60% 90% at 18% 30%, rgba(255,255,255,.10), transparent 60%),
   radial-gradient(50% 70% at 85% 80%, rgba(255,255,255,.06), transparent 60%)}
+.hero-tag{
+  position:absolute;top:14px;left:14px;z-index:3;background:var(--white);color:#000;
+  font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;
+}
+.hero-tag:empty{display:none}
 .hero-title{
   position:absolute;left:6%;top:50%;transform:translateY(-50%);
-  font-weight:700;font-size:clamp(26px,5.4vw,54px);line-height:1.02;letter-spacing:-.03em;
+  font-weight:700;font-size:clamp(26px,5.4vw,54px);line-height:1.06;letter-spacing:-.03em;
   text-shadow:0 2px 24px rgba(0,0,0,.45);max-width:62%;
 }
+.hero-title.long{font-size:clamp(18px,3vw,30px)}
 .hero-play{
   position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;
   border:1px solid rgba(255,255,255,.5);padding:8px 14px;background:rgba(0,0,0,.35);
@@ -196,7 +203,7 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
 .tile .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .16s ease}
 .cell.opt .tile .fill{opacity:.42}
 .cell.opt:hover .tile .fill{opacity:.85}
-.tile .fill.grad.loading{animation:tilePulse 1.6s ease-in-out infinite}
+.fill.grad.loading{animation:tilePulse 1.6s ease-in-out infinite}
 @keyframes tilePulse{0%,100%{opacity:1}50%{opacity:.55}}
 .cell.sel .tile{outline:1.5px solid var(--white)}
 .tile:hover{outline-color:var(--muted)}
@@ -306,9 +313,10 @@ footer{
   outline:1px solid var(--line);outline-offset:-1px;aspect-ratio:16/9;
   touch-action:pan-y;
 }
-.screen .bg{position:absolute;inset:-10%;filter:blur(34px) saturate(.7);opacity:.55}
+.screen .bg{position:absolute;inset:-10%;filter:blur(34px) saturate(.7);opacity:.55;background-size:cover;background-position:center}
 .screen .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.screen .media{position:relative;height:100%;aspect-ratio:16/9;outline:1px solid rgba(255,255,255,.08);outline-offset:-1px}
+.screen .media{position:relative;height:100%;aspect-ratio:16/9;outline:1px solid rgba(255,255,255,.08);outline-offset:-1px;overflow:hidden}
+.screen .media .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .screen .media.port{aspect-ratio:9/16}
 .screen .media.sq{aspect-ratio:4/5}
 .screen-play{
@@ -439,6 +447,16 @@ footer{
 .yearblock-h[aria-expanded="true"] .chev{transform:rotate(90deg)}
 .year-body[hidden]{display:none}
 .year-hint{font-size:11px;color:var(--dim);letter-spacing:.04em;padding:10px var(--pad) 0}
+.yearpills{display:flex;gap:8px;flex-wrap:wrap;margin:0 var(--pad) 20px}
+.yearpill{
+  font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);padding:8px 14px;background:none;cursor:pointer;
+  transition:color .16s ease,border-color .16s ease,background .16s ease;
+}
+.yearpill .cnt{margin-left:8px;color:var(--dim);font-weight:500}
+.yearpill[aria-selected="true"]{color:var(--black);background:var(--white);border-color:var(--white)}
+.yearpill[aria-selected="true"] .cnt{color:var(--black);opacity:.6}
+.yearpill:hover:not([aria-selected="true"]){border-color:var(--white);color:var(--white)}
 
 /* palette inside the moodboard */
 .pal-h{display:flex;align-items:baseline;gap:11px;padding:16px var(--pad) 9px}
@@ -487,13 +505,16 @@ footer{
 
   <div class="hero-head">
     <h2>Cancun Shot</h2>
-    <div class="sec-right">Hero Reel</div>
+    <div class="sec-right" id="heroIdx">Hero Reel</div>
   </div>
   <div class="hero">
-    <div class="hero-fill"></div>
+    <div class="hero-fill" id="heroFill"></div>
     <div class="hero-grain"></div>
-    <div class="hero-title">Cancun<br>Shot</div>
-    <button class="hero-play" onclick="openHero()">&#9654;&nbsp; Play</button>
+    <span class="hero-tag" id="heroTag"></span>
+    <div class="hero-title" id="heroTitle">Cancun<br>Shot</div>
+    <button class="sarrow l" onclick="stepHero(-1)" aria-label="Previous reference">&larr;</button>
+    <button class="sarrow r" onclick="stepHero(1)" aria-label="Next reference">&rarr;</button>
+    <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
   </div>
   <div class="hero-meta"><span>Date TBC</span><span>Cancun, MX</span><span>3 Crews</span><span>13 Items</span></div>
 
@@ -749,41 +770,72 @@ const MOODBOARD = [
       { year:"2k24", folderId:"1AfApNLo2Qa-xrilaqSt09sHyw5m6VYWE",
         palette:[["#E9E0D4","Cream"],["#B84A34","Red"],["#211E1A","Ink"],["#9A8873","Clay"],["#CFA268","Tan"]],
         reels:[
-          {d:"13 Jun 24", fileId:"1d0xz_bm5CaIbZ0-qjeLWUbbS6s8U9Kq7"},
-          {d:"27 Jun 24", fileId:"1rLpC021WxvfMkrCu-cn1c7HnviMTt9D_"},
-          {d:"05 Jul 24", fileId:"1xa3UcEkaatX5dWx2Zz4DLfLjY6lxLWrX"},
-          {d:"14 Jul 24", fileId:"1O8iusw6jMes7_v7iZSZ1PZsBLATGGAiL"}
+          {d:"13 Jun 24", fileId:"1d0xz_bm5CaIbZ0-qjeLWUbbS6s8U9Kq7", cap:"NUDE PROJECT STORE IBIZA — store opening"},
+          {d:"27 Jun 24", fileId:"1rLpC021WxvfMkrCu-cn1c7HnviMTt9D_", cap:"NUDE PROJECT MANSION. Tomorrow history begins…"},
+          {d:"05 Jul 24", fileId:"1xa3UcEkaatX5dWx2Zz4DLfLjY6lxLWrX", cap:"ur welcome for the inspo in the NUDE PROJECT MANSION"},
+          {d:"14 Jul 24", fileId:"1O8iusw6jMes7_v7iZSZ1PZsBLATGGAiL", cap:"NUDE PROJECT MANSION for the history books 🤎🥱"}
         ],
         carousels:[
-          {d:"28 Jun 24", slides:["1DmeM4n8JigtR0Bc8LcBMHVfsg_DUj9vK","1mDST6zW-ftX_lHdQOGUMRflktmEVCxuU","1yIm3NLdam_-5_o2UcQ5A7IfrAPp1nNUr","1gAZsaqmSDsMlwwEcERJCj1OSVGBLGo-X","1MWE2YUz0NizTxFkk4YhrtriC95LJmfBg","1jSDwtg_E4ujFSh3lK3eUpeYuV0m46zN-"]},
-          {d:"12 Jul 24", slides:["1kF6l1eRER8Ux6c2fI1Vm9CxewDtu5cF2","1rHvuS_WKYDPXjQoWf5ajGKKh4T7MP_g-","1B7rc153vEq7AFxc7U3IBHAF-hM3g1bJg","19AUmn1i2GVfEhpPjGxfA9X6Wtq2DoYQ7","12P7xf0dgRKyYpBxFSf0HJ08J571Py0zd","1OGfc-It2Kl3hBHImDx52SqrzCrJHoe0j","1ioux5laaWt5-WxUsbEBYPJjF-Ka0TRA-","1WkTS3eqYC7NyzaR8oJ72JTwWtk1r7y3s","1Qt-1QPtF2tIQXTZVaZdNFNCkZx7wlW6d","1Es1KiCcnT6JzrQ1iZxa-GyMr38tLtLJA"]},
-          {d:"29 Jul 24", slides:[]}
+          {d:"28 Jun 24", cap:"Day 2 at the NUDE PROJECT MANSION, life's a trip 🌈", slides:["1DmeM4n8JigtR0Bc8LcBMHVfsg_DUj9vK","1mDST6zW-ftX_lHdQOGUMRflktmEVCxuU","1yIm3NLdam_-5_o2UcQ5A7IfrAPp1nNUr","1gAZsaqmSDsMlwwEcERJCj1OSVGBLGo-X","1MWE2YUz0NizTxFkk4YhrtriC95LJmfBg","1jSDwtg_E4ujFSh3lK3eUpeYuV0m46zN-"]},
+          {d:"12 Jul 24", cap:"LA ÚLTIMA in the NUDE PROJECT MANSION 🧘‍♂️🤎", slides:["1kF6l1eRER8Ux6c2fI1Vm9CxewDtu5cF2","1rHvuS_WKYDPXjQoWf5ajGKKh4T7MP_g-","1B7rc153vEq7AFxc7U3IBHAF-hM3g1bJg","19AUmn1i2GVfEhpPjGxfA9X6Wtq2DoYQ7","12P7xf0dgRKyYpBxFSf0HJ08J571Py0zd","1OGfc-It2Kl3hBHImDx52SqrzCrJHoe0j","1ioux5laaWt5-WxUsbEBYPJjF-Ka0TRA-","1WkTS3eqYC7NyzaR8oJ72JTwWtk1r7y3s","1Qt-1QPtF2tIQXTZVaZdNFNCkZx7wlW6d","1Es1KiCcnT6JzrQ1iZxa-GyMr38tLtLJA"]},
+          {d:"29 Jul 24", cap:"Still on the hangover thanks to @beefeater_es 🤎🍸", slides:[]}
         ]},
       { year:"2k25", folderId:"1TiVRA9k67httRsh1DqpzFjMfRxUFwIN2",
         palette:[["#EFE7DA","Cream"],["#C3452F","Red"],["#171512","Ink"],["#8C7B66","Clay"],["#D9A05B","Tan"]],
         reels:[
-          {d:"07 Jul 25", fileId:"1d26jjQdV78P-RmCrJYnB6B3HhPN4JfkE"},
-          {d:"15 Jul 25", fileId:"1vRLLeBNGi2mPej8waKiqCFvbP7GDOis3"}
+          {d:"07 Jul 25", fileId:"1d26jjQdV78P-RmCrJYnB6B3HhPN4JfkE", cap:"u are now welcome to the Nude Project Mansion of 2025"},
+          {d:"15 Jul 25", fileId:"1vRLLeBNGi2mPej8waKiqCFvbP7GDOis3", cap:"Best unexpected plan by far"}
         ],
         carousels:[
-          {d:"14 May 25", slides:["1NCAS9iNorEGz85Q-xI4pUWqhn5sdvpmV","1kIJQSNNHo32Ihzndz-w5ZzCFu_mH_Vuc","1BC7uepkxNdXtA18YZPljBcEK7tDz-Bjc","1QjVjoMT3365kTfocYgn52paZLqBsnf2L","1RLaXw6_-XmIdvYrIHmiAjM6DgGnhGmjB","1MH7wfxpqZXmbwDt99S9S0CCe4hys8nMh","1x2Qejsh9fjDTaMGYAI5bpzSszYu1QKku","1N5WCOK2duVUM-KTXx79wLrL97PtA-3Wn","1BLy4KbWeL9kpSKLqo6aKo_Lt7yV2y9Ji","1B0EA5sssUMhF2GMJcSr5KvbMOLHLGgoG","1OD2edzdNRuieZaIhI-4zh35sj8r6pgU0"]},
-          {d:"07 Jul 25", slides:["11KWqPXIcUFd9-B4kjo-xm_aQ0xlNZJfD","1U3xFi3V4D12pFq_puW9287ru4ObBNuks","1SaPfW3Luhv4BEla0Hy08xbZIFw7r4LEi","1U0eA2I1g__k1QBkya8cxRpbWbgL0MvZy","1fI-SVNlWC2JCHOqrFnoo-Ox6UTMggeG7"]}
+          {d:"14 May 25", cap:"Nude Project Swimwear now live 🏝️🍹", slides:["1NCAS9iNorEGz85Q-xI4pUWqhn5sdvpmV","1kIJQSNNHo32Ihzndz-w5ZzCFu_mH_Vuc","1BC7uepkxNdXtA18YZPljBcEK7tDz-Bjc","1QjVjoMT3365kTfocYgn52paZLqBsnf2L","1RLaXw6_-XmIdvYrIHmiAjM6DgGnhGmjB","1MH7wfxpqZXmbwDt99S9S0CCe4hys8nMh","1x2Qejsh9fjDTaMGYAI5bpzSszYu1QKku","1N5WCOK2duVUM-KTXx79wLrL97PtA-3Wn","1BLy4KbWeL9kpSKLqo6aKo_Lt7yV2y9Ji","1B0EA5sssUMhF2GMJcSr5KvbMOLHLGgoG","1OD2edzdNRuieZaIhI-4zh35sj8r6pgU0"]},
+          {d:"07 Jul 25", cap:"guess whos back NUDE PROJECT IBIZA MANSION 2025 🗣️🤎⛳️", slides:["11KWqPXIcUFd9-B4kjo-xm_aQ0xlNZJfD","1U3xFi3V4D12pFq_puW9287ru4ObBNuks","1SaPfW3Luhv4BEla0Hy08xbZIFw7r4LEi","1U0eA2I1g__k1QBkya8cxRpbWbgL0MvZy","1fI-SVNlWC2JCHOqrFnoo-Ox6UTMggeG7"]}
         ]},
       { year:"2k26", folderId:"10uvMNbwMwmfrU-65QC5PvM6mxZb3vGvy",
         palette:[["#F2ECE1","Cream"],["#CE5138","Red"],["#12100E","Ink"],["#7E6E5B","Clay"],["#E0AE6B","Tan"]],
         reels:[
-          {d:"23 Jun 26", fileId:"15gryv499GhIix-jw2QtyqppxrntbWcz-"},
-          {d:"25 Jun 26", fileId:"1ZHUJhNCtpZAHSBBS8bbIFFwX2fziU-8m"}
+          {d:"23 Jun 26", fileId:"15gryv499GhIix-jw2QtyqppxrntbWcz-", cap:"Collab with @sofiamcoelho — could be us but u playin"},
+          {d:"25 Jun 26", fileId:"1ZHUJhNCtpZAHSBBS8bbIFFwX2fziU-8m", cap:"gabrielribeiro — I'm not sure if this is ai"}
         ],
         carousels:[
-          {d:"19 Jun 26", slides:[]},
-          {d:"22 Jun 26", slides:["1CdUCHY5b9GlDLMI7jF6agM8hJAeOMgIC","1UTAELgB8njrM1dlAZsamCUemDwaR-2vP","1O5-lTsYPwqv_D0PNB2nDw_sw1HPv0uJZ","16FazdzgRXBQeLKvxdXLxUiN4LvRD4nHy","1qrFLi7mAW1gsBNHWbhD0ipObswEUw62i","16bC8Zvo7itq3o5-ps-oUFv8br2Ny3ZOS","1SErziOUHD_x847Wc2OnVuaULL6OLZ0xz","1XYKNQ6cSTx4GaQBRmyngjQKH4OnaKhPV","1QicUC9yNsWn4V_AMrrs77RgiGFQY10-n","14RVVQk3nGlbeVzNoWVwluOFNxrrOvFlT","1FldSLbdohrSVMM_629_IJWlq87sUW8nX"]},
-          {d:"06 Jul 26", slides:["1iZa-_FGvhNnuHZCmAd5gxnft_4qKF-4c","1aeTIBveHQPfhQjJmXWrDiIWef8jCYP0o","1u6uNnWESz1ZyrDHId4jAkFqNlfGdI4W1","1MDcGHToOTE6UBPFG-NW0JvLokKhOufyp","1kqK2tRxLvRy4H05PbRrSaJqDF84hnz-m","1-Ss6-q5rVlENX0jxPHoKT8p0CC7WiF41","1Z0V69vBf55p3SDF5KMn2kHbMVNvKvnRG","1s4JmLT_3zI3757nHNDJ_F6KGzzL2ndQi","1r-dGvHPmx8fWwlOi5CPyGAWAczs2p9Kd"]},
-          {d:"17 Jul 26", slides:["1ksxrzk0wA34OSWznRp20xFWF2v7x_JVV","1WOtUFt7w4UTIPnWZQnWDQT3pfePzeoIE","19fQcRYCpljR3XOX71IvpGhUIBHfXqndB","1KkAmZiBqRkDMrmCnnGVNg7uvBLFy8Shh","1NXTGS6gft2_lR5fEFf7WOTaLaAYkY8k5","19a6oQrO4OhArGIKbKnASQjlDBeGnIu46","1_-PwhiAm8FqFNkwFjB_ET5gxGw3Wvn4N","11X4nVTd2a7AxME52nXPbHcXTY2jzjG8f","14wFuasRdxVAoLnO4tkLAFb99neup5kpf","13rqXG--3536xGqQjwjcsv8kafs7E9Qoh","1E2ugRzd5srR9UKZUIcFH7yQfz31u4ZcU","11yfdyTlTjqkhOxsaBZnxDU9VotMDq7nb","1xpbQBtUe2lcD2MSFKUvg9H7MnxGZb2BF"]}
+          {d:"19 Jun 26", cap:"If you know, you know — Nude Project Mansion 2026", slides:[]},
+          {d:"22 Jun 26", cap:"i know a guy with a boat", slides:["1CdUCHY5b9GlDLMI7jF6agM8hJAeOMgIC","1UTAELgB8njrM1dlAZsamCUemDwaR-2vP","1O5-lTsYPwqv_D0PNB2nDw_sw1HPv0uJZ","16FazdzgRXBQeLKvxdXLxUiN4LvRD4nHy","1qrFLi7mAW1gsBNHWbhD0ipObswEUw62i","16bC8Zvo7itq3o5-ps-oUFv8br2Ny3ZOS","1SErziOUHD_x847Wc2OnVuaULL6OLZ0xz","1XYKNQ6cSTx4GaQBRmyngjQKH4OnaKhPV","1QicUC9yNsWn4V_AMrrs77RgiGFQY10-n","14RVVQk3nGlbeVzNoWVwluOFNxrrOvFlT","1FldSLbdohrSVMM_629_IJWlq87sUW8nX"]},
+          {d:"06 Jul 26", cap:"our pool has seen things", slides:["1iZa-_FGvhNnuHZCmAd5gxnft_4qKF-4c","1aeTIBveHQPfhQjJmXWrDiIWef8jCYP0o","1u6uNnWESz1ZyrDHId4jAkFqNlfGdI4W1","1MDcGHToOTE6UBPFG-NW0JvLokKhOufyp","1kqK2tRxLvRy4H05PbRrSaJqDF84hnz-m","1-Ss6-q5rVlENX0jxPHoKT8p0CC7WiF41","1Z0V69vBf55p3SDF5KMn2kHbMVNvKvnRG","1s4JmLT_3zI3757nHNDJ_F6KGzzL2ndQi","1r-dGvHPmx8fWwlOi5CPyGAWAczs2p9Kd"]},
+          {d:"17 Jul 26", cap:"I spent my whole paycheck printing photos lol", slides:["1ksxrzk0wA34OSWznRp20xFWF2v7x_JVV","1WOtUFt7w4UTIPnWZQnWDQT3pfePzeoIE","19fQcRYCpljR3XOX71IvpGhUIBHfXqndB","1KkAmZiBqRkDMrmCnnGVNg7uvBLFy8Shh","1NXTGS6gft2_lR5fEFf7WOTaLaAYkY8k5","19a6oQrO4OhArGIKbKnASQjlDBeGnIu46","1_-PwhiAm8FqFNkwFjB_ET5gxGw3Wvn4N","11X4nVTd2a7AxME52nXPbHcXTY2jzjG8f","14wFuasRdxVAoLnO4tkLAFb99neup5kpf","13rqXG--3536xGqQjwjcsv8kafs7E9Qoh","1E2ugRzd5srR9UKZUIcFH7yQfz31u4ZcU","11yfdyTlTjqkhOxsaBZnxDU9VotMDq7nb","1xpbQBtUe2lcD2MSFKUvg9H7MnxGZb2BF"]}
         ]}
     ]
   }
 ];
+/* Flatten the real Nude Project tree into one chronological list — shared
+   by the Hero (cycles through these) and the Content tab (one piece at a
+   time, same shape the placeholder PIECES used). No fabricated palette:
+   real colour sampling needs the Drive API at import time, not a browser
+   canvas read (Drive's thumbnail endpoint blocks anonymous CORS pixel
+   access — confirmed, not just unimplemented). */
+function buildReferencePieces(){
+  const out = [];
+  let seed = 0;
+  MOODBOARD.forEach(sp => {
+    sp.years.forEach(y => {
+      y.reels.forEach(it => {
+        out.push({
+          title: it.cap || it.d, source: sp.name, year: y.year, d: it.d,
+          kind: "reel", aspect: "9:16", fileId: it.fileId, isReference: true,
+          seed: seed++, palette: [], paletteSrc: "Pending — needs Drive API access at import to sample real colour."
+        });
+      });
+      liveCarousels(y).forEach(it => {
+        out.push({
+          title: it.cap || it.d, source: sp.name, year: y.year, d: it.d,
+          kind: "carousel", aspect: "4:5", isReference: true,
+          slides: it.slides.map((id,i) => ({id, cap: `${it.cap || it.d} — slide ${i+1} of ${it.slides.length}`})),
+          seed: seed++, palette: [], paletteSrc: "Pending — needs Drive API access at import to sample real colour."
+        });
+      });
+    });
+  });
+  return out;
+}
+
 /* Slots 2-4 are the template, ready to fill. */
 const INSPO_SLOTS = ["Inspo 02","Inspo 03","Inspo 04"];
 
@@ -831,22 +883,16 @@ function yearGridsHtml(sp, spi, y, yi){
   if (y.palette) h += paletteHtml(y.palette, `Palette — ${y.year}`, "");
   return h;
 }
-const yearLoaded = {};
-/* Drive throttles the thumbnail endpoint under burst load (see CONTEXT.md
-   §8), so only the first year's images are requested on page load. Every
-   other year loads its images the moment its header is opened, not before —
-   caps how many concurrent Drive requests a single page load can trigger. */
-function toggleYear(spi, yi){
-  const key = `${spi}:${yi}`;
-  const body = document.getElementById(`yb-${spi}-${yi}`);
-  const head = document.getElementById(`yh-${spi}-${yi}`);
-  if (!yearLoaded[key]){
-    body.innerHTML = yearGridsHtml(MOODBOARD[spi], spi, MOODBOARD[spi].years[yi], yi);
-    yearLoaded[key] = true;
-  }
-  const expanded = head.getAttribute("aria-expanded") === "true";
-  head.setAttribute("aria-expanded", String(!expanded));
-  body.hidden = expanded;
+/* One year visible at a time — no long scroll to reach 2k26. Only the
+   selected year's tiles are ever in the DOM, so Drive only sees requests
+   for whichever year is actually open (same throttling guard as before,
+   now expressed as tabs instead of an accordion). */
+function selectYear(spi, yi){
+  const sp = MOODBOARD[spi];
+  document.getElementById(`yb-${spi}`).innerHTML = yearGridsHtml(sp, spi, sp.years[yi], yi);
+  sp.years.forEach((y2,i)=>{
+    document.getElementById(`yp-${spi}-${i}`).setAttribute("aria-selected", String(i===yi));
+  });
 }
 
 function renderMoodboard(){
@@ -870,20 +916,13 @@ function renderMoodboard(){
 
     html += paletteHtml(sp.palette, "Palette — whole source", sp.paletteNote);
 
-    sp.years.forEach((y, yi) => {
+    html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
       const carousels = liveCarousels(y);
-      const first = yi === 0;
-      const key = `${spi}:${yi}`;
-      html += `<div class="yearblock">
-        <button class="yearblock-h" id="yh-${spi}-${yi}" aria-expanded="${first}" onclick="toggleYear(${spi},${yi})">
-          <span class="chev">&#9654;</span>
-          <span class="y">${y.year}</span>
-          <span class="c">${y.reels.length} reels &middot; ${carousels.length} carousels</span>
-        </button>
-        <div class="year-body" id="yb-${spi}-${yi}" ${first?"":"hidden"}>${first?yearGridsHtml(sp,spi,y,yi):""}</div>
-      </div>`;
-      if (first) yearLoaded[key] = true;
-    });
+      return `<button class="yearpill" id="yp-${spi}-${yi}" aria-selected="${yi===0}" onclick="selectYear(${spi},${yi})">
+        ${y.year}<span class="cnt">${y.reels.length+carousels.length}</span>
+      </button>`;
+    }).join("")}</div>
+    <div class="year-body" id="yb-${spi}">${yearGridsHtml(sp,spi,sp.years[0],0)}</div>`;
   });
 
   /* the template, ready for sources 2-4 */
@@ -1031,9 +1070,47 @@ function paintLb(){
 function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
 function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
+/* ---------------- hero ----------------
+   No real Cancun footage exists yet — the shoot hasn't happened. Until it
+   does, the hero cycles through the real Nude Project reference set so the
+   big square shows an actual photograph instead of a gradient. Next/Prev
+   walks REFERENCE_PIECES; Play opens whichever one is currently showing. */
+let heroPos = 0;
+function heroMediaHtml(p){
+  const g = grad(p.seed);
+  const thumbId = p.kind==="reel" ? p.fileId : p.slides[0] && p.slides[0].id;
+  if (!thumbId) return `<span class="fill" style="background:${g}"></span>`;
+  return `<span class="fill grad loading" style="background:${g}"></span>
+    <img class="fill photo" src="${driveThumb(thumbId,1200)}" alt="${p.title}"
+      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+}
+function renderHero(){
+  const p = REFERENCE_PIECES[heroPos];
+  document.getElementById("heroFill").innerHTML = heroMediaHtml(p);
+  document.getElementById("heroTag").textContent = p ? `${p.source} · Reference · ${p.year}` : "";
+  const titleEl = document.getElementById("heroTitle");
+  titleEl.textContent = p ? p.title : "Cancun Shot";
+  titleEl.classList.toggle("long", !!(p && p.title.length > 34));
+  document.getElementById("heroPlay").innerHTML = p && p.kind==="carousel" ? "&#9635;&nbsp; View" : "&#9654;&nbsp; Play";
+  document.getElementById("heroIdx").textContent = p ? `${heroPos+1} / ${REFERENCE_PIECES.length}` : "Hero Reel";
+}
+function stepHero(d){
+  if (!REFERENCE_PIECES.length) return;
+  heroPos = (heroPos + d + REFERENCE_PIECES.length) % REFERENCE_PIECES.length;
+  renderHero();
+}
 function openHero(){
-  pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
-            sel:false, port:false, seed:3, meta:"Cancun · Hero · embedded from Drive"});
+  const p = REFERENCE_PIECES[heroPos];
+  if (!p){
+    pushTemp({key:"hero", cap:"Hero reel — the Drive player renders here on the real site",
+              sel:false, port:false, seed:3, meta:"Cancun · Hero · embedded from Drive"});
+    return;
+  }
+  const isCar = p.kind==="carousel";
+  pushTemp({key:"hero", cap:p.title, sel:false, port:!isCar, sq:isCar,
+            fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
+            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
 }
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
@@ -1053,67 +1130,33 @@ function setMode(m){
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
 
-buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv();
+const REFERENCE_PIECES = buildReferencePieces();
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero();
 
 /* ==================================================================
    CONTENT PIECES  —  content_pieces / shots / palette_swatches
 ================================================================== */
-const PIECES = [
-  { title:"Hero Highlight Reel", kind:"reel", aspect:"16:9", dur:"1:12",
-    owner:"Crew A", status:"In edit", statusWip:true, seed:0,
-    auto:true, cuts:[
-      {ts:"0:00", cap:"Cold open — empty beach", sel:true},
-      {ts:"0:04", cap:"Title card over drone push", sel:false},
-      {ts:"0:09", cap:"Arrivals, handheld follow", sel:false},
-      {ts:"0:14", cap:"Reaction — first laugh", sel:true, note:"This is the beat the whole cut hangs on."},
-      {ts:"0:21", cap:"Breathwork wide", sel:false},
-      {ts:"0:27", cap:"Facilitator, tight", sel:false},
-      {ts:"0:33", cap:"Plunge entry gasp", sel:true},
-      {ts:"0:39", cap:"Overhead water surface", sel:false},
-      {ts:"0:46", cap:"Towel huddle", sel:false, note:"Trim — runs long."},
-      {ts:"0:53", cap:"Golden hour walk", sel:true},
-      {ts:"1:02", cap:"Toast, 35mm", sel:false},
-      {ts:"1:08", cap:"Last beat — sun drop", sel:true}
-    ],
-    palette:[["#E8DCC8","Sand"],["#2E6E74","Water"],["#C4552F","Sun"],["#1B2A2E","Shadow"],["#D9A98C","Skin"],["#8FA36B","Palm"]],
-    paletteSrc:"Sampled from 12 detected frames"
-  },
-  { title:"Mini Mic #1 — Travel Stories", kind:"reel", aspect:"9:16", dur:"0:48",
-    owner:"Crew A", status:"Not started", statusWip:true, seed:2,
-    auto:false, cuts:[],
-    palette:[["#EFE6D6","Base"],["#3A7C86","Sea"],["#B8613A","Warm"],["#161C1E","Ground"]],
-    paletteSrc:"Carried from the Beach & Water board — no footage yet"
-  },
-  { title:"Golden Hour Carousel", kind:"carousel", aspect:"4:5", dur:"6 slides",
-    owner:"Photographer", status:"Delivered", statusWip:false, seed:6,
-    auto:false,
-    slides:["Wide, sun behind","Portrait, backlit","Detail — sand on skin","Two-shot, laughing","Silhouette pair","Closing wide"],
-    cuts:[],
-    palette:[["#F0C98B","Gold"],["#C9662F","Ember"],["#7A3B22","Deep"],["#241612","Shadow"],["#E7D3B8","Highlight"]],
-    paletteSrc:"Sampled from 6 slides"
-  },
-  { title:"Chaos BTS Reel", kind:"reel", aspect:"9:16", dur:"0:22",
-    owner:"Crew B", status:"In edit", statusWip:true, seed:4,
-    auto:true, cuts:[
-      {ts:"0:00", cap:"Hard cut in, no title", sel:true},
-      {ts:"0:03", cap:"Handheld sprint", sel:false},
-      {ts:"0:07", cap:"Crowd blur", sel:false},
-      {ts:"0:11", cap:"Flash frame", sel:true, note:"Keep the blown-out one."},
-      {ts:"0:16", cap:"DJ booth, low angle", sel:false},
-      {ts:"0:19", cap:"Cut to black mid-motion", sel:true}
-    ],
-    palette:[["#5C2E62","Neon"],["#20B2A0","Cyan"],["#E24B6A","Hot"],["#0D0D10","Ground"]],
-    paletteSrc:"Sampled from 6 detected frames"
-  }
-];
+/* Content tab runs on the same real Nude Project reference set as the hero —
+   no fabricated Cancun pieces. Palette stays honest: real sampling needs the
+   Drive API at import time (confirmed no client-side CORS path), so it
+   reads "Pending" rather than showing invented hex values. */
+const PIECES = REFERENCE_PIECES;
 
 let cPos = 0, cSlide = 0;
+
+function pieceThumbHtml(thumbId, seedVal, cls){
+  if (!thumbId) return `<span class="fill" style="background:${grad(seedVal)}"></span>`;
+  return `<span class="fill grad loading${cls?' '+cls:''}" style="background:${grad(seedVal)}"></span>
+    <img class="fill photo${cls?' '+cls:''}" src="${driveThumb(thumbId,900)}" alt=""
+      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+}
 
 function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5" ? "sq" : ""; }
 
 function renderRail(){
   document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
-    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.title}</button>`).join("");
+    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.year} &middot; ${p.d}</button>`).join("");
   document.getElementById("cIdx").textContent =
     String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0");
   document.getElementById("cPrev").disabled = cPos===0;
@@ -1127,10 +1170,12 @@ function renderPiece(){
   const isCar = p.kind==="carousel";
   const total = isCar ? p.slides.length : 0;
   const g = grad(p.seed + (isCar ? cSlide : 0));
+  const thumbId = isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId;
+  const bgStyle = thumbId ? `background-image:url('${driveThumb(thumbId,200)}')` : `background:${g}`;
 
   let screen = `<div class="screen" id="screen">
-      <div class="bg" style="background:${g}"></div>
-      <div class="stage"><div class="media ${pieceMediaClass(p)}" style="background:${g}"></div></div>
+      <div class="bg" style="${bgStyle}"></div>
+      <div class="stage"><div class="media ${pieceMediaClass(p)}">${pieceThumbHtml(thumbId, p.seed+(isCar?cSlide:0))}</div></div>
       <span class="screen-tag">${isCar?"Carousel":"Reel"} &middot; ${p.aspect}</span>
       ${isCar ? `
         <button class="sarrow l" onclick="slide(-1)" aria-label="Previous slide">&larr;</button>
@@ -1140,7 +1185,7 @@ function renderPiece(){
       ` : `<button class="screen-play" onclick="openPieceLb()">&#9654;&nbsp; Play</button>`}
     </div>`;
 
-  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide]}</span></div>` : "";
+  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide].cap}</span></div>` : "";
 
   /* --- tier 2: shot breakdown --- */
   let breakdown;
@@ -1166,23 +1211,23 @@ function renderPiece(){
       <div class="sub">Every frame in the carousel, in posting order.</div>
       <div class="grid seq">${p.slides.map((sl,i)=>`
         <div class="cell shot ${i===cSlide?'sel':'opt'}">
-          <button class="tile" onclick="goSlide(${i})" aria-label="${sl}">
-            <span class="fill" style="background:${grad(p.seed+i)}"></span>
+          <button class="tile" onclick="goSlide(${i})" aria-label="${sl.cap}">
+            ${pieceThumbHtml(sl.id, p.seed+i)}
             ${i===cSlide?'<span class="selflag">Showing</span>':''}
           </button>
           <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
-          <div class="cap-text">${sl}</div>
+          <div class="cap-text">Slide ${i+1}</div>
         </div>`).join("")}</div>
     </div>`;
   } else {
     breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Awaiting footage</span></div></div>
-      <div class="emptyshots">Nothing to break down yet.<br>Once a cut is attached, add shots against it in the editor.</div>
+      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Reference</span></div></div>
+      <div class="emptyshots">This is a Nude Project reference clip, not our footage.<br>No shot breakdown needed here.</div>
     </div>`;
   }
 
   /* --- tier 3: palette --- */
-  const palette = `<div class="sec">
+  const palette = p.palette.length ? `<div class="sec">
       <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
       <div class="sub">The grade to match, read off the images themselves. Tap a swatch to copy its hex.</div>
       <div class="palette">${p.palette.map(([hex,role],i)=>`
@@ -1192,13 +1237,16 @@ function renderPiece(){
           <span class="role">${role}</span>
         </button>`).join("")}</div>
       <div class="palette-src">${p.paletteSrc}</div>
+    </div>` : `<div class="sec">
+      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right"><span class="autotag pending">Pending</span></div></div>
+      <div class="emptyshots">${p.paletteSrc}</div>
     </div>`;
 
   document.getElementById("cBody").innerHTML =
     `<div class="ctitle">${p.title}</div>
      <div class="cmeta">
-       <span>${p.owner}</span><span>${p.dur}</span><span>${p.aspect}</span>
-       <span class="status ${p.statusWip?'wip':''}">${p.status}</span>
+       <span>${p.source}</span><span>${p.year}</span><span>${p.d}</span><span>${p.aspect}</span>
+       <span class="status">Reference</span>
      </div>
      <div style="height:16px"></div>
      ${screen}${caption}${breakdown}${palette}`;
@@ -1235,8 +1283,10 @@ function attachSwipe(){
 }
 function openPieceLb(){
   const p = PIECES[cPos];
-  pushTemp({key:"piece", cap:p.title, sel:false, port:p.aspect==="9:16", sq:p.aspect==="4:5",
-            seed:p.seed, meta:`${p.kind==="carousel"?"Carousel":"Reel"} · ${p.aspect} · ${p.owner} · embedded from Drive`});
+  const isCar = p.kind==="carousel";
+  pushTemp({key:"piece", cap:p.title, sel:false, port:!isCar, sq:isCar,
+            fileId: isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId, isReel: !isCar,
+            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
 }
 function openShotLb(pi, si){
   const p = PIECES[pi], c = p.cuts[si];
