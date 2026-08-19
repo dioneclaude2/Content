@@ -870,8 +870,6 @@ const HERO_SHOTS = [
   { title:"Cancun", kind:"reel", fileId:"1ulA3r1Uj0ySGcDAGG0xf19OLwqaqx-Bj", seed:0, d:"19 Aug 26", dur:6.4 }
 ];
 
-/* Slots 2-4 are the template, ready to fill. */
-const INSPO_SLOTS = ["Inspo 02","Inspo 03","Inspo 04"];
 
 const TYPE_META = {
   moodboard:{label:"Moodboard", sub:"A timeline, not a pile of options — read left to right to see how the tone moves year on year."},
@@ -946,7 +944,7 @@ function selectYear(spi, yi){
 }
 
 function renderMoodboard(){
-  let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} of ${MOODBOARD.length+INSPO_SLOTS.length} sources</div></div>
+  let html = `<div class="sec"><div class="sec-h"><h2>Moodboard</h2><div class="sec-right">${MOODBOARD.length} source${MOODBOARD.length===1?'':'s'}</div></div>
     <div class="sub">A timeline, not a pile of options &mdash; read it front to back to see how the tone moves year on year. Reels are single files; carousels open slide by slide.</div></div>`;
 
   MOODBOARD.forEach((sp, spi) => {
@@ -973,16 +971,6 @@ function renderMoodboard(){
     <div class="year-body" id="yb-${spi}">${yearGridsHtml(sp,spi,sp.years[0],0)}</div>`;
   });
 
-  /* the template, ready for sources 2-4 */
-  html += `<div class="coll"><div class="coll-h"><span class="coll-name">Other inspiration</span>
-      <span class="coll-src">${INSPO_SLOTS.length} slots open</span></div></div>`;
-  INSPO_SLOTS.forEach(n => {
-    html += `<div class="slot">
-      <div class="slot-h"><span class="slot-name">${n}</span><span class="slot-tag">Empty</span></div>
-      <p>Paste a Drive folder here and it fills itself in, using the same shape as Nude Project.</p>
-      <div class="slot-shape"><span>Year folder</span><span>File &rarr; reel</span><span>Subfolder &rarr; carousel</span><span>Palette</span><span>Direction note</span></div>
-    </div>`;
-  });
   return html;
 }
 
