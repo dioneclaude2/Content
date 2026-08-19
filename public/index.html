@@ -212,8 +212,8 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
 .tile .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .16s ease}
 .cell.opt .tile .fill{opacity:.42}
 .cell.opt:hover .tile .fill{opacity:.85}
-.fill.grad.loading{animation:tilePulse 1.6s ease-in-out infinite}
-@keyframes tilePulse{0%,100%{opacity:1}50%{opacity:.55}}
+.fill.grad.loading{animation:tilePulse 2.6s ease-in-out infinite}
+@keyframes tilePulse{0%,100%{opacity:1}50%{opacity:.82}}
 .cell.sel .tile{outline:1.5px solid var(--white)}
 .tile:hover{outline-color:var(--muted)}
 .selflag{
@@ -472,13 +472,20 @@ footer{
 .pal-h .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .pal-h .rule{flex:1;height:1px;background:var(--line-soft)}
 .pal-h .src{font-size:9.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.pal{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:0 var(--pad) 4px}
-@media (min-width:640px){.pal{grid-template-columns:repeat(10,1fr)}}
-.pal .sw2{display:flex;flex-direction:column;gap:5px;text-align:left;padding:0}
+.pal{display:flex;flex-wrap:wrap;gap:8px;padding:0 var(--pad) 4px}
+.pal .sw2{display:flex;flex-direction:column;gap:4px;text-align:left;padding:0;width:52px;flex:none}
 .pal .sw2 .c{aspect-ratio:1/1;width:100%;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
 .pal .sw2:hover .c{outline-color:var(--white)}
-.pal .sw2 .h{font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--muted);font-variant-numeric:tabular-nums}
+.pal .sw2 .h{font-size:8px;font-weight:600;letter-spacing:.02em;color:var(--muted);font-variant-numeric:tabular-nums}
 .pal .sw2.copied .h{color:var(--white)}
+
+/* per-post palette — small chips beside the images, not a big block above them */
+.postrow{display:flex;gap:18px;align-items:flex-start}
+.postrow .grid{flex:1;min-width:0;padding:0 0 4px var(--pad)}
+.sidepal{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:0 var(--pad) 4px 0}
+.sidepal .sw3{width:30px;height:30px;outline:1px solid var(--line);outline-offset:-1px;transition:outline-color .16s ease}
+.sidepal .sw3:hover{outline-color:var(--white)}
+.sidepal .sw3.copied{outline-color:var(--white);outline-width:2px}
 
 /* template slots for inspo 2,3,4 */
 .slot{
@@ -877,6 +884,11 @@ function paletteHtml(pal, label, src){
         <span class="h">${hex}</span>
       </button>`).join("")}</div>`;
 }
+/* Small chips beside the images, not a labelled block above them. */
+function sidePaletteHtml(pal){
+  return `<div class="sidepal">${pal.map(([hex,role])=>`
+    <button class="sw3" onclick="copyHex(this,'${hex}')" style="background:${hex}" title="${role} — ${hex}" aria-label="${role} ${hex}"></button>`).join("")}</div>`;
+}
 
 /* A carousel folder that hasn't been filled in yet has no slides —
    empty state, so it simply doesn't render (same rule as any other section). */
@@ -906,10 +918,12 @@ function yearGridsHtml(sp, spi, y, yi){
     carousels.forEach(it => {
       h += `<div class="group">
         <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${it.slides.length} slides</span></div>
-        ${it.palette ? paletteHtml(it.palette, "Palette", "") : ""}
-        <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
-          key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
-          seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
+        <div class="postrow">
+          <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
+            key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
+            seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
+          ${it.palette ? sidePaletteHtml(it.palette) : ""}
+        </div>
       </div>`;
     });
   }
