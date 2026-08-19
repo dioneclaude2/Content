@@ -79,7 +79,7 @@ details[open] > summary .caret{transform:rotate(90deg)}
 .hero{position:relative;margin:0 var(--pad);aspect-ratio:16/9;overflow:hidden;background:var(--surface-2)}
 .hero-fill{position:absolute;inset:0;overflow:hidden;background:linear-gradient(118deg,#1D3B44 0%,#0B0B0B 46%,#6E2E1C 100%)}
 .hero-fill .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero-grain{position:absolute;inset:0;opacity:.5;background:
+.hero-grain{position:absolute;inset:0;opacity:.5;pointer-events:none;background:
   radial-gradient(60% 90% at 18% 30%, rgba(255,255,255,.10), transparent 60%),
   radial-gradient(50% 70% at 85% 80%, rgba(255,255,255,.06), transparent 60%)}
 .hero-tag{
@@ -88,7 +88,7 @@ details[open] > summary .caret{transform:rotate(90deg)}
 }
 .hero-tag:empty{display:none}
 .hero-title{
-  position:absolute;left:6%;top:50%;transform:translateY(-50%);
+  position:absolute;left:6%;top:50%;transform:translateY(-50%);pointer-events:none;
   font-weight:700;font-size:clamp(26px,5.4vw,54px);line-height:1.06;letter-spacing:-.03em;
   text-shadow:0 2px 24px rgba(0,0,0,.45);max-width:62%;
 }
@@ -764,11 +764,11 @@ const MOODBOARD = [
     driveFolder:"NUDE PROJECT — Ibiza Content Timeline",
     note:"Main reference for Cancun. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
     pending:true,
-    palette:[["#E7DDD0","Cream"],["#C3452F","Red"],["#1C1A17","Ink"],["#8C7B66","Clay"],["#D9A05B","Tan"],["#5E6B4F","Olive"]],
-    paletteNote:"Placeholder — sampled from the Drive thumbnails on import.",
+    palette:[["#34403A","Shadow"],["#8F9491","Grey"],["#886C56","Amber"],["#9DBBD2","Sky"],["#D3CDC5","Pale Amber"],["#7D4234","Deep Rust"]],
+    paletteNote:"Sampled from real Drive thumbnails across 2k24–2k26.",
     years:[
       { year:"2k24", folderId:"1AfApNLo2Qa-xrilaqSt09sHyw5m6VYWE",
-        palette:[["#E9E0D4","Cream"],["#B84A34","Red"],["#211E1A","Ink"],["#9A8873","Clay"],["#CFA268","Tan"]],
+        palette:[["#8F6859","Rust"],["#8D999F","Grey"],["#4D4845","Grey"],["#CDD6D3","Cream"],["#C1AC9B","Amber"]],
         reels:[
           {d:"13 Jun 24", fileId:"1d0xz_bm5CaIbZ0-qjeLWUbbS6s8U9Kq7", cap:"NUDE PROJECT STORE IBIZA — store opening"},
           {d:"27 Jun 24", fileId:"1rLpC021WxvfMkrCu-cn1c7HnviMTt9D_", cap:"NUDE PROJECT MANSION. Tomorrow history begins…"},
@@ -781,7 +781,7 @@ const MOODBOARD = [
           {d:"29 Jul 24", cap:"Still on the hangover thanks to @beefeater_es 🤎🍸", slides:[]}
         ]},
       { year:"2k25", folderId:"1TiVRA9k67httRsh1DqpzFjMfRxUFwIN2",
-        palette:[["#EFE7DA","Cream"],["#C3452F","Red"],["#171512","Ink"],["#8C7B66","Clay"],["#D9A05B","Tan"]],
+        palette:[["#616243","Deep Olive"],["#563726","Deep Rust"],["#93917C","Grey"],["#B0A99A","Gold"],["#CBBEAD","Pale Amber"]],
         reels:[
           {d:"07 Jul 25", fileId:"1d26jjQdV78P-RmCrJYnB6B3HhPN4JfkE", cap:"u are now welcome to the Nude Project Mansion of 2025"},
           {d:"15 Jul 25", fileId:"1vRLLeBNGi2mPej8waKiqCFvbP7GDOis3", cap:"Best unexpected plan by far"}
@@ -791,7 +791,7 @@ const MOODBOARD = [
           {d:"07 Jul 25", cap:"guess whos back NUDE PROJECT IBIZA MANSION 2025 🗣️🤎⛳️", slides:["11KWqPXIcUFd9-B4kjo-xm_aQ0xlNZJfD","1U3xFi3V4D12pFq_puW9287ru4ObBNuks","1SaPfW3Luhv4BEla0Hy08xbZIFw7r4LEi","1U0eA2I1g__k1QBkya8cxRpbWbgL0MvZy","1fI-SVNlWC2JCHOqrFnoo-Ox6UTMggeG7"]}
         ]},
       { year:"2k26", folderId:"10uvMNbwMwmfrU-65QC5PvM6mxZb3vGvy",
-        palette:[["#F2ECE1","Cream"],["#CE5138","Red"],["#12100E","Ink"],["#7E6E5B","Clay"],["#E0AE6B","Tan"]],
+        palette:[["#5F6664","Grey"],["#312728","Shadow"],["#8B9EAB","Sky"],["#A9BDC5","Sky"],["#CDD9DF","Pale Sky"]],
         reels:[
           {d:"23 Jun 26", fileId:"15gryv499GhIix-jw2QtyqppxrntbWcz-", cap:"Collab with @sofiamcoelho — could be us but u playin"},
           {d:"25 Jun 26", fileId:"1ZHUJhNCtpZAHSBBS8bbIFFwX2fziU-8m", cap:"gabrielribeiro — I'm not sure if this is ai"}
@@ -911,7 +911,7 @@ function renderMoodboard(){
     </div>`;
 
     if (sp.pending){
-      html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts and slide order below are read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order. Palette swatches are still placeholder pending colour sampling.</div>`;
+      html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts, slide order and palette swatches below are all read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order.</div>`;
     }
 
     html += paletteHtml(sp.palette, "Palette — whole source", sp.paletteNote);
@@ -1078,7 +1078,12 @@ function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift
 let heroPos = 0;
 function heroMediaHtml(p){
   const g = grad(p.seed);
-  const thumbId = p.kind==="reel" ? p.fileId : p.slides[0] && p.slides[0].id;
+  if (p.kind==="reel" && p.fileId){
+    /* Reels play right here, inline — not just a thumbnail behind a Play
+       button that opens a separate lightbox. */
+    return `<iframe class="fill" src="${drivePreview(p.fileId)}" style="border:0" allow="autoplay" allowfullscreen></iframe>`;
+  }
+  const thumbId = p.kind==="carousel" ? (p.slides[0] && p.slides[0].id) : null;
   if (!thumbId) return `<span class="fill" style="background:${g}"></span>`;
   return `<span class="fill grad loading" style="background:${g}"></span>
     <img class="fill photo" src="${driveThumb(thumbId,1200)}" alt="${p.title}"
@@ -1092,7 +1097,9 @@ function renderHero(){
   const titleEl = document.getElementById("heroTitle");
   titleEl.textContent = p ? p.title : "Cancun Shot";
   titleEl.classList.toggle("long", !!(p && p.title.length > 34));
-  document.getElementById("heroPlay").innerHTML = p && p.kind==="carousel" ? "&#9635;&nbsp; View" : "&#9654;&nbsp; Play";
+  const playBtn = document.getElementById("heroPlay");
+  playBtn.innerHTML = p && p.kind==="carousel" ? "&#9635;&nbsp; View" : "&#8599;&nbsp; Expand";
+  playBtn.hidden = false;
   document.getElementById("heroIdx").textContent = p ? `${heroPos+1} / ${REFERENCE_PIECES.length}` : "Hero Reel";
 }
 function stepHero(d){
@@ -1136,11 +1143,11 @@ buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero()
 /* ==================================================================
    CONTENT PIECES  —  content_pieces / shots / palette_swatches
 ================================================================== */
-/* Content tab runs on the same real Nude Project reference set as the hero —
-   no fabricated Cancun pieces. Palette stays honest: real sampling needs the
-   Drive API at import time (confirmed no client-side CORS path), so it
-   reads "Pending" rather than showing invented hex values. */
-const PIECES = REFERENCE_PIECES;
+/* Content is for the exact Cancun shots — not Nude Project reference material
+   (that's what Hero/Visuals are for). No real Cancun footage exists yet, so
+   this stays an honest empty placeholder rather than fictional pieces or
+   borrowed reference content, until real footage is shot and added. */
+const PIECES = [];
 
 let cPos = 0, cSlide = 0;
 
@@ -1157,16 +1164,24 @@ function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5
 function renderRail(){
   document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
     `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.year} &middot; ${p.d}</button>`).join("");
-  document.getElementById("cIdx").textContent =
-    String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0");
-  document.getElementById("cPrev").disabled = cPos===0;
-  document.getElementById("cNext").disabled = cPos===PIECES.length-1;
+  document.getElementById("cIdx").textContent = PIECES.length
+    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0")
+    : "00 / 00";
+  document.getElementById("cPrev").disabled = cPos===0 || !PIECES.length;
+  document.getElementById("cNext").disabled = cPos===PIECES.length-1 || !PIECES.length;
   const pill = document.getElementById("cRail").children[cPos];
   if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
 }
 
 function renderPiece(){
   const p = PIECES[cPos];
+  if (!p){
+    document.getElementById("cBody").innerHTML = `<div class="sec">
+      <div class="emptyshots">No Cancun footage yet — the shoot hasn't happened.<br>
+      Real cuts land here once they're shot; this tab is reserved for the exact Cancun content, not reference material.</div>
+    </div>`;
+    return;
+  }
   const isCar = p.kind==="carousel";
   const total = isCar ? p.slides.length : 0;
   const g = grad(p.seed + (isCar ? cSlide : 0));
