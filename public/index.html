@@ -197,10 +197,10 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
    would otherwise leave an uneven, part-empty last row in a wrapping grid. */
 .grid.scrollx{
   display:flex;overflow-x:auto;column-gap:16px;row-gap:0;
-  scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;
+  scrollbar-width:none;-ms-overflow-style:none;
 }
 .grid.scrollx::-webkit-scrollbar{display:none}
-.grid.scrollx .cell{flex:0 0 auto;width:clamp(130px,30vw,190px);scroll-snap-align:start}
+.grid.scrollx .cell{flex:0 0 auto;width:clamp(130px,30vw,190px)}
 
 .cell{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0}
 .tile{
