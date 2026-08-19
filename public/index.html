@@ -196,6 +196,8 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
 .tile .fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .16s ease}
 .cell.opt .tile .fill{opacity:.42}
 .cell.opt:hover .tile .fill{opacity:.85}
+.tile .fill.grad.loading{animation:tilePulse 1.6s ease-in-out infinite}
+@keyframes tilePulse{0%,100%{opacity:1}50%{opacity:.55}}
 .cell.sel .tile{outline:1.5px solid var(--white)}
 .tile:hover{outline-color:var(--muted)}
 .selflag{
@@ -694,8 +696,17 @@ const DELIVERABLES = [
 /* One tile. Everything that draws a grid goes through this. */
 function tileHtml(o){
   /* o: {key, label, cap, sel, seed, thumbId, slideCount, isReel, showCap} */
+  /* A tile with a Drive thumbnail always keeps the placeholder gradient
+     underneath, pulsing, so a slow-to-generate Drive thumbnail (freshly
+     uploaded files can take 10-20s+ the first time) reads as "loading",
+     never as a blank/broken tile. The photo crossfades in on top once it
+     actually loads; on error it retries once, then just leaves the
+     gradient in place instead of a broken-image glyph. */
   const fill = o.thumbId
-    ? `<img class="fill" src="${driveThumb(o.thumbId,500)}" loading="lazy" alt="${o.cap}">`
+    ? `<span class="fill grad loading" style="background:${grad(o.seed)}"></span>
+       <img class="fill photo" src="${driveThumb(o.thumbId,500)}" loading="lazy" alt="${o.cap}"
+         onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
+         onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`
     : `<span class="fill" style="background:${grad(o.seed)}"></span>`;
   return `<div class="cell ${o.sel?'sel':'opt'}">
     <button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">
