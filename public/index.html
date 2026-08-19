@@ -193,6 +193,15 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
 @media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media (min-width:960px){.grid{grid-template-columns:repeat(4,1fr)}}
 
+/* One row, scrolls sideways — used where a fixed count (carousel slides)
+   would otherwise leave an uneven, part-empty last row in a wrapping grid. */
+.grid.scrollx{
+  display:flex;overflow-x:auto;column-gap:16px;row-gap:0;
+  scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;
+}
+.grid.scrollx::-webkit-scrollbar{display:none}
+.grid.scrollx .cell{flex:0 0 auto;width:clamp(130px,30vw,190px);scroll-snap-align:start}
+
 .cell{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0}
 .tile{
   display:block;width:100%;padding:0;position:relative;overflow:hidden;
@@ -447,16 +456,16 @@ footer{
 .yearblock-h[aria-expanded="true"] .chev{transform:rotate(90deg)}
 .year-body[hidden]{display:none}
 .year-hint{font-size:11px;color:var(--dim);letter-spacing:.04em;padding:10px var(--pad) 0}
-.yearpills{display:flex;gap:8px;flex-wrap:wrap;margin:0 var(--pad) 20px}
+.yearpills{display:flex;gap:10px;flex-wrap:wrap;margin:0 var(--pad) 22px;padding-bottom:2px}
 .yearpill{
-  font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--dim);border:1px solid var(--line);padding:8px 14px;background:none;cursor:pointer;
+  font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--muted);padding:11px 18px;background:var(--surface);cursor:pointer;
   transition:color .16s ease,border-color .16s ease,background .16s ease;
 }
-.yearpill .cnt{margin-left:8px;color:var(--dim);font-weight:500}
+.yearpill .cnt{margin-left:9px;color:var(--dim);font-weight:500;font-size:11px}
 .yearpill[aria-selected="true"]{color:var(--black);background:var(--white);border-color:var(--white)}
-.yearpill[aria-selected="true"] .cnt{color:var(--black);opacity:.6}
-.yearpill:hover:not([aria-selected="true"]){border-color:var(--white);color:var(--white)}
+.yearpill[aria-selected="true"] .cnt{color:var(--black);opacity:.55}
+.yearpill:hover:not([aria-selected="true"]){border-color:var(--white);color:var(--white);background:var(--surface-2)}
 
 /* palette inside the moodboard */
 .pal-h{display:flex;align-items:baseline;gap:11px;padding:16px var(--pad) 9px}
@@ -898,7 +907,7 @@ function yearGridsHtml(sp, spi, y, yi){
       h += `<div class="group">
         <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${it.slides.length} slides</span></div>
         ${it.palette ? paletteHtml(it.palette, "Palette", "") : ""}
-        <div class="grid seq carousel">${it.slides.map((sid,si)=>tileHtml({
+        <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
           key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
           seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
       </div>`;
