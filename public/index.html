@@ -657,6 +657,15 @@ function extractDriveId(input){
 }
 function driveThumb(id, w){ return `https://drive.google.com/thumbnail?id=${id}&sz=w${w||500}`; }
 function drivePreview(id){ return `https://drive.google.com/file/d/${id}/preview`; }
+/* Real <video> playback (native autoplay/loop/muted, no Google chrome)
+   instead of the /preview iframe — used for hero shots specifically.
+   Drive's direct-content URLs send Cross-Origin-Resource-Policy:
+   same-site, which blocks a <video src> from any other origin
+   regardless of URL variant (tested: uc?export=view, uc?export=
+   download, with/without export param — all blocked the same way).
+   /api/drive-video proxies the bytes through our own origin instead,
+   where CORP doesn't apply. See api/drive-video.js. */
+function driveVideoProxy(id){ return `/api/drive-video?id=${id}`; }
 
 /* media_sections + media_items */
 const SECTIONS = [
@@ -1109,27 +1118,6 @@ function paintLb(){
 function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
 function pushTemp(entry){ lbList.unshift(entry); openLb(entry.key); lbList.shift(); }
-/* ---------------- hero loop ----------------
-   Drive's embed doesn't support a loop param (tested — it just stops on
-   the last frame with a replay button). It's a cross-origin iframe, so
-   there's no "ended" event to hook either. The only lever left is
-   reloading the iframe on a timer sized to the clip's real length —
-   measured exactly from each file's own moov/mvhd atom, not guessed. */
-const heroLoopTimers = {};
-function armHeroLoop(fillId, fileId, dur){
-  clearHeroLoop(fillId);
-  const wait = Math.max(1000, (dur||6)*1000 + 350);
-  heroLoopTimers[fillId] = setTimeout(()=>{
-    const fill = document.getElementById(fillId);
-    const iframe = fill && fill.querySelector("iframe");
-    if (iframe) iframe.src = `${drivePreview(fileId)}?autoplay=1&_lp=${Date.now()}`;
-    armHeroLoop(fillId, fileId, dur);
-  }, wait);
-}
-function clearHeroLoop(fillId){
-  if (heroLoopTimers[fillId]){ clearTimeout(heroLoopTimers[fillId]); delete heroLoopTimers[fillId]; }
-}
-
 /* ---------------- hero ----------------
    Real Cancun footage, from the Hero Shots Drive folder. Next/Prev walks
    HERO_SHOTS; Play opens whichever one is currently showing. */
@@ -1137,9 +1125,10 @@ let heroPos = 0;
 function heroMediaHtml(p){
   if (!p) return `<span class="fill" style="background:${grad(0)}"></span>`;
   if (p.kind==="reel" && p.fileId){
-    /* Reels play right here, inline and on their own — not a thumbnail
-       behind a Play button. Drive's embed does honour ?autoplay=1. */
-    return `<iframe class="fill" src="${drivePreview(p.fileId)}?autoplay=1" style="border:0" allow="autoplay" allowfullscreen></iframe>`;
+    /* Real <video> through the proxy, not the Drive iframe — gets us
+       native autoplay/loop/muted with no reload hack and no Google
+       chrome. See driveVideoProxy() / api/drive-video.js. */
+    return `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`;
   }
   const g = grad(p.seed);
   const thumbId = p.kind==="carousel" ? (p.slides[0] && p.slides[0].id) : null;
@@ -1149,11 +1138,17 @@ function heroMediaHtml(p){
       onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
       onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
 }
+/* The autoplay attribute alone doesn't reliably fire on a <video>
+   inserted via innerHTML (confirmed: needed an explicit .play() kick
+   even with autoplay set) — call it ourselves as a safety net. */
+function forcePlay(fillId){
+  const v = document.querySelector(`#${fillId} video`);
+  if (v) v.play().catch(()=>{});
+}
 function renderHero(){
   const p = HERO_SHOTS[heroPos];
   document.getElementById("heroFill").innerHTML = heroMediaHtml(p);
-  if (p && p.kind==="reel" && p.fileId) armHeroLoop("heroFill", p.fileId, p.dur);
-  else clearHeroLoop("heroFill");
+  forcePlay("heroFill");
   document.getElementById("heroTag").textContent = p ? "Cancun · Hero Shot" : "";
   const titleEl = document.getElementById("heroTitle");
   titleEl.textContent = p ? p.title : "Cancun Shot";
@@ -1193,10 +1188,9 @@ const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, 
 function renderVisHero(){
   const p = VIS_HEROES[visHeroPos];
   document.getElementById("visHeroFill").innerHTML = p
-    ? `<iframe class="fill" src="${drivePreview(p.fileId)}?autoplay=1" style="border:0" allow="autoplay" allowfullscreen></iframe>`
+    ? `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`
     : `<span class="fill" style="background:${grad(0)}"></span>`;
-  if (p) armHeroLoop("visHeroFill", p.fileId, p.dur);
-  else clearHeroLoop("visHeroFill");
+  forcePlay("visHeroFill");
   document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
   document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
   document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
@@ -1232,11 +1226,10 @@ function setMode(m){
     document.getElementById("panel-"+k).hidden = k!==m;
   });
   /* The Cancun page hero has no place inside Visuals; rebuild each
-     hero's iframe fresh on the way in so autoplay actually fires again
+     hero's video fresh on the way in so autoplay actually fires again
      rather than sitting paused from being hidden. */
   document.getElementById("pageHero").hidden = m==="visual";
-  if (m==="visual") { clearHeroLoop("heroFill"); renderVisHero(); }
-  else { clearHeroLoop("visHeroFill"); renderHero(); }
+  if (m==="visual") renderVisHero(); else renderHero();
   window.scrollTo(0,0);
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
