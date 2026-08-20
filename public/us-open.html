@@ -525,7 +525,7 @@ footer{
   .pblock{flex-direction:column;gap:8px}
   .pmedia{width:100%;max-width:300px;margin:0 auto}
 }
-.sbscreen{max-height:none;width:100%;margin:0}
+.sbscreen{aspect-ratio:9/16;max-height:none;width:100%;margin:0}
 .sbvid{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 /* Tiles take the reel's own aspect so vertical frames aren't cropped to a
    letterbox sliver; set per-piece on the grid. */
@@ -1548,7 +1548,7 @@ function pieceBlock(p, i){
     ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
     <div class="pblock">
       <div class="pmedia">
-        <div class="screen sbscreen" style="aspect-ratio:${vert?'9/16':'16/9'}">
+        <div class="screen sbscreen">
           <video id="sbPlayer-${i}" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="none"></video>
         </div>
       </div>
@@ -1659,6 +1659,7 @@ function copyHex(el, hex){
 }
 
 renderAllPieces();
+
 
 
 
