@@ -510,7 +510,13 @@ footer{
    left the entire right-hand side empty and pushed the shot list below
    the fold -- side by side uses that space and keeps the video in view
    while you read the breakdown. Stacks under 900px. */
-.pblock{display:flex;gap:22px;align-items:flex-start;padding:14px var(--pad) 0}
+.preel{border-top:1px solid var(--line);padding-top:20px;margin-top:34px}
+.preel:first-child{border-top:0;margin-top:6px}
+.preel-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:0 var(--pad) 4px}
+.preel-n{font-size:11px;font-weight:700;letter-spacing:.1em;background:var(--white);color:#000;padding:3px 7px;line-height:1}
+.preel-t{font-size:17px;font-weight:700;letter-spacing:-.01em;text-transform:uppercase}
+.preel-m{margin-left:auto;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.pblock{display:flex;gap:22px;align-items:flex-start;padding:12px var(--pad) 0}
 .pmedia{flex:0 0 auto;width:min(280px,40vw)}
 .pshots{flex:1 1 0;min-width:0;padding-top:2px}
 .pshots .sec-h,.pshots .sub{padding-left:0;padding-right:0}
@@ -624,11 +630,6 @@ footer{
     <div class="sec" style="padding-top:30px">
       <div class="sec-h"><h2>Cancun Footage</h2><div class="sec-right" id="cIdx">00 / 00</div></div>
       <div class="sub">The actual Cancun shots &mdash; not reference material, that's under Visuals. One piece at a time: the cut on top, its shot breakdown under it, its palette below that. Empty until the first real cut is in.</div>
-      <div class="cbar">
-        <button class="cnav" id="cPrev" aria-label="Previous piece">&larr;</button>
-        <div class="crail" id="cRail"></div>
-        <button class="cnav" id="cNext" aria-label="Next piece">&rarr;</button>
-      </div>
     </div>
     <div id="cBody"></div>
   </div>
@@ -1722,78 +1723,92 @@ const PIECES = [
  }
 ];
 
-let cPos = 0, sbToken = 0;
-
+/* Every reel is rendered down the page -- no per-reel toggle. Storyboards
+   paint lazily as each reel scrolls into view, so 14 reels don't all try
+   to decode video at once on load. */
 function fmtT(s){
   const m = Math.floor(s/60), r = s - m*60;
   return (m>0 ? m+":"+String(Math.floor(r)).padStart(2,"0") : r.toFixed(1)+"s");
 }
 
-function renderRail(){
-  const rail = document.getElementById("cRail");
-  rail.innerHTML = PIECES.map((p,i)=>
-    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${String(i+1).padStart(2,"0")} &middot; ${p.title}</button>`).join("");
-  document.getElementById("cIdx").textContent = PIECES.length
-    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0") : "00 / 00";
-  document.getElementById("cPrev").disabled = cPos===0 || !PIECES.length;
-  document.getElementById("cNext").disabled = cPos===PIECES.length-1 || !PIECES.length;
-  const pill = rail.children[cPos];
-  if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
+function pieceBlock(p, i){
+  const vert = p.aspect === "9:16";
+  return `<div class="preel" data-piece="${i}">
+    <div class="preel-h">
+      <span class="preel-n">${String(i+1).padStart(2,"0")}</span>
+      <span class="preel-t">${p.title}</span>
+      <span class="preel-m">${p.source} &middot; ${p.dur}s &middot; ${p.aspect} &middot; ${p.shots.length} shots</span>
+    </div>
+    ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
+    <div class="pblock">
+      <div class="pmedia">
+        <div class="screen sbscreen" style="aspect-ratio:${vert?'9/16':'16/9'}">
+          <video id="sbPlayer-${i}" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="none"></video>
+        </div>
+      </div>
+      <div class="pshots">
+        <div class="sec-h"><h2>Shot List</h2>
+          <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
+        <div class="sub">Every cut, in order &mdash; scroll sideways. Tap a shot to jump the player to it.</div>
+        <div class="grid seq scrollx sbgrid ${vert?'vert':'horiz'}" id="sb-${i}">${p.shots.map((s,j)=>`
+          <div class="cell shot" data-sb="${j}">
+            <button class="tile" onclick="seekPiece(${i},${s.in})" aria-label="Shot ${j+1}: ${s.desc.replace(/"/g,'&quot;')}">
+              <span class="fill grad" style="background:${grad(p.seed+j*3)}"></span>
+              <img class="fill sbframe" alt="">
+              <span class="sbnum">${j+1}</span>
+              <span class="sbtype">${s.type}</span>
+              <span class="shot-ts">${fmtT(s.in)}</span>
+            </button>
+            <div class="cap-text">${s.desc}</div>
+          </div>`).join("")}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
-function renderPiece(){
-  const p = PIECES[cPos];
-  if (!p){
-    document.getElementById("cBody").innerHTML =
-      `<div class="sec"><div class="emptyshots">No reels here yet.</div></div>`;
+function renderAllPieces(){
+  const idx = document.getElementById("cIdx");
+  if (idx) idx.textContent = PIECES.length ? PIECES.length + (PIECES.length===1?" reel":" reels") : "None yet";
+  const body = document.getElementById("cBody");
+  if (!PIECES.length){
+    body.innerHTML = `<div class="sec"><div class="emptyshots">No reels here yet.</div></div>`;
     return;
   }
-  const vert = p.aspect === "9:16";
-  const screen = `<div class="screen sbscreen" style="aspect-ratio:${vert?'9/16':'16/9'}">
-      <video id="sbPlayer" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="metadata"></video>
-      <span class="screen-tag">Reel &middot; ${p.dur}s &middot; ${p.shots.length} shots</span>
-    </div>`;
-
-  const board = `<div class="pshots">
-      <div class="sec-h"><h2>Storyboard &amp; Shot List</h2>
-        <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
-      <div class="sub">Every cut in the reel, in order &mdash; scroll sideways. Frames are grabbed from the video itself; tap any shot to jump the player to it.</div>
-      <div class="grid seq scrollx sbgrid ${vert?'vert':'horiz'}" id="sbGrid">${p.shots.map((s,i)=>`
-        <div class="cell shot" data-sb="${i}">
-          <button class="tile" onclick="seekPiece(${s.in})" aria-label="Shot ${i+1}: ${s.desc.replace(/"/g,'&quot;')}">
-            <span class="fill grad" style="background:${grad(p.seed+i*3)}"></span>
-            <img class="fill sbframe" alt="">
-            <span class="sbnum">${i+1}</span>
-            <span class="sbtype">${s.type}</span>
-            <span class="shot-ts">${fmtT(s.in)}</span>
-          </button>
-          <div class="cap-text">${s.desc}</div>
-        </div>`).join("")}</div>
-    </div>`;
-
-  document.getElementById("cBody").innerHTML =
-    `<div class="ctitle">${p.title}</div>
-     <div class="cmeta"><span>${p.source}</span><span>${p.dur}s</span><span>${p.aspect}</span>
-       <span>${p.shots.length} shots</span></div>
-     ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
-     <div class="pblock"><div class="pmedia">${screen}</div>${board}</div>`;
-
-  paintStoryboard(p);
+  body.innerHTML = PIECES.map(pieceBlock).join("");
+  observeStoryboards();
 }
 
-function seekPiece(t){
-  const v = document.getElementById("sbPlayer");
+function seekPiece(i, t){
+  const v = document.getElementById("sbPlayer-"+i);
   if (v){ v.currentTime = t; v.scrollIntoView({block:"center", behavior:"smooth"}); }
 }
 
-/* Real frames, grabbed from the actual video in the browser: one hidden
-   <video>, seeked to each shot's in-point and drawn to a canvas. This only
-   works because /api/drive-video serves the bytes from our own origin --
-   a direct Drive URL would taint the canvas and the read would throw. */
-async function paintStoryboard(p){
-  const grid = document.getElementById("sbGrid");
-  if (!grid) return;
-  const token = ++sbToken;
+/* Paint each reel's frames only once it's near the viewport. */
+function observeStoryboards(){
+  const blocks = [...document.querySelectorAll("[data-piece]")];
+  if (!("IntersectionObserver" in window)){
+    blocks.forEach(b=>paintStoryboard(PIECES[+b.dataset.piece], +b.dataset.piece));
+    return;
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if (!e.isIntersecting) return;
+      const i = +e.target.dataset.piece;
+      io.unobserve(e.target);
+      paintStoryboard(PIECES[i], i);
+    });
+  }, {rootMargin:"400px 0px"});
+  blocks.forEach(b=>io.observe(b));
+}
+
+/* Real frames, grabbed from the actual video: a hidden <video> seeked to
+   each cut and drawn to a canvas. Works only because /api/drive-video
+   serves the bytes from our own origin -- a direct Drive URL taints the
+   canvas and the read throws. */
+async function paintStoryboard(p, idx){
+  const grid = document.getElementById("sb-"+idx);
+  if (!grid || grid.dataset.painted) return;
+  grid.dataset.painted = "1";
   const v = document.createElement("video");
   v.src = driveVideoProxy(p.fileId);
   v.muted = true; v.preload = "auto"; v.playsInline = true;
@@ -1809,7 +1824,6 @@ async function paintStoryboard(p){
     const c = document.createElement("canvas"); c.width = w; c.height = h;
     const ctx = c.getContext("2d", {willReadFrequently:true});
     for (let i=0; i<p.shots.length; i++){
-      if (token !== sbToken) break;
       /* Grab from INSIDE the shot, not on its in-point: a frame taken
          exactly on a cut often still shows the outgoing shot. Step in ~40%
          of the way to the next cut, capped, so the thumbnail is always
@@ -1821,32 +1835,25 @@ async function paintStoryboard(p){
         let done=false; const fin=()=>{ if(!done){done=true;res();} };
         v.onseeked = fin; setTimeout(fin, 3000);
       });
-      if (token !== sbToken) break;
       ctx.drawImage(v, 0, 0, w, h);
       const img = grid.querySelector(`[data-sb="${i}"] img`);
       if (img){
         try { img.src = c.toDataURL("image/jpeg", 0.72); img.classList.add("loaded"); }
-        catch(e){ break; }   /* tainted -- leave the gradient placeholders */
+        catch(e){ break; }
       }
     }
   } catch(e){ /* placeholders stay; the shot list is still readable */ }
   v.remove();
 }
 
-function goPiece(i){
-  cPos = Math.max(0, Math.min(PIECES.length-1, i));
-  renderRail(); renderPiece();
-  document.getElementById("panel-content").scrollIntoView({block:"start"});
-}
 function copyHex(el, hex){
   try{ navigator.clipboard.writeText(hex); }catch(e){}
   el.classList.add("copied");
   setTimeout(()=>el.classList.remove("copied"), 1200);
 }
 
-document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
-document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
-renderRail(); renderPiece();
+renderAllPieces();
+
 
 
 
