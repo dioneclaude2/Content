@@ -504,6 +504,31 @@ footer{
 }
 .slot p{margin:0;font-size:12.5px;line-height:1.6;color:var(--dim);max-width:62ch}
 
+
+/* ---------- storyboard ---------- */
+.sbscreen{max-height:66vh;width:auto;margin-left:auto;margin-right:auto}
+.sbvid{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+/* Tiles take the reel's own aspect so vertical frames aren't cropped to a
+   letterbox sliver; set per-piece on the grid. */
+.sbgrid.vert .tile{aspect-ratio:9/16}
+.sbgrid.horiz .tile{aspect-ratio:4/5}
+.sbgrid .tile{overflow:hidden}
+.sbgrid .cap-text{text-align:left;font-size:11px;line-height:1.4;padding:0 1px}
+.sbframe{opacity:0;transition:opacity .25s ease}
+.sbframe.loaded{opacity:1}
+.cell.opt .tile .sbframe.loaded{opacity:1}
+.sbnum{
+  position:absolute;top:0;left:0;z-index:4;background:var(--white);color:#000;
+  font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 7px;
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.sbtype{
+  position:absolute;top:0;right:0;z-index:4;background:rgba(0,0,0,.78);color:var(--white);
+  font-size:7.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 6px;max-width:66%;text-align:right;line-height:1.3;
+}
+.sbgrid .shot-ts{z-index:4}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -1144,170 +1169,476 @@ buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero()
    (that's what Hero/Visuals are for). No real US Open footage exists yet, so
    this stays an honest empty placeholder rather than fictional pieces or
    borrowed reference content, until real footage is shot and added. */
-const PIECES = [];
+const PIECES = [
+ {
+  "title": "Product film",
+  "source": "US folder",
+  "fileId": "1spQ08WH3baEC3HpQZv-bxqpaJkBUtpoo",
+  "dur": 33.2,
+  "aspect": "9:16",
+  "seed": 0,
+  "note": "Styled product film. Opens on body/court detail, moves through art-directed still-life setups, and builds to a single long hero action (the pour) before the end card. Static camera almost throughout — the movement is in the subject, not the lens.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Detail · low angle",
+    "desc": "Ground-level tight crop on feet and ankles; subject toes a ball across the court surface. Camera static, subject moves through frame."
+   },
+   {
+    "in": 1.4,
+    "type": "Medium · tracking",
+    "desc": "Waist-down follow as the subject walks the baseline carrying a racket, ball bouncing alongside."
+   },
+   {
+    "in": 2.1,
+    "type": "Medium wide · static",
+    "desc": "Subject seated courtside holding a racket, equipment basket beside them, while a second figure crosses the foreground. Static frame, action passes through it."
+   },
+   {
+    "in": 2.7,
+    "type": "Medium · static",
+    "desc": "Same seated setup; subject raises an open broadsheet to hide their face completely. Held long, no camera move."
+   },
+   {
+    "in": 3.75,
+    "type": "Wide · establishing",
+    "desc": "Full court from the baseline: net, ball basket in the near corner, a lone distant figure serving. The context frame."
+   },
+   {
+    "in": 4.65,
+    "type": "Flat-lay · overhead",
+    "desc": "Top-down on a styled arrangement of printed matter and props in a crate. Title graphic sits over the frame."
+   },
+   {
+    "in": 6.4,
+    "type": "Insert · overhead",
+    "desc": "Gloved hand enters the top-down frame and sets a single round object into the arrangement."
+   },
+   {
+    "in": 6.9,
+    "type": "Close · static",
+    "desc": "Gloved hands present a stacked novelty object centred against a plain garment. Slight rotation to read the build."
+   },
+   {
+    "in": 8.9,
+    "type": "Overhead · water",
+    "desc": "Top-down on a pool surface with round objects and citrus slices floating; a hand reaches in from the frame edge."
+   },
+   {
+    "in": 10.4,
+    "type": "Detail · static",
+    "desc": "Racket laid flat across the net with a stemmed glass balanced on the strings. Gloved hand adjusts it."
+   },
+   {
+    "in": 11.9,
+    "type": "Split-panel",
+    "desc": "Multi-panel grid of court details — legs, net mesh, ball, patterned fabric — cut together as one frame."
+   },
+   {
+    "in": 13.4,
+    "type": "Medium · static",
+    "desc": "Two stemmed glasses on a small table courtside, subject standing behind, palms and sky above."
+   },
+   {
+    "in": 15.0,
+    "type": "Wide · static",
+    "desc": "Subject inverted against the net, legs vertical in frame; bag and rackets on the ground below."
+   },
+   {
+    "in": 17.4,
+    "type": "Medium · from behind",
+    "desc": "Subject at the net shot from behind, racket in hand, chairs and mesh framing the edges."
+   },
+   {
+    "in": 19.0,
+    "type": "Flat-lay · overhead",
+    "desc": "Top-down on a bag with rackets and fruit arranged on the court surface."
+   },
+   {
+    "in": 20.4,
+    "type": "Detail · static",
+    "desc": "Metal shaker and glassware beside the bag; gloved hands enter frame to work."
+   },
+   {
+    "in": 21.4,
+    "type": "Detail · backlit",
+    "desc": "Racket propped on a chair with a filled glass resting on the strings, lit from behind."
+   },
+   {
+    "in": 22.0,
+    "type": "Hero action · slow",
+    "desc": "The pour: liquid poured from a shaker through the racket strings into the glass below. Same action covered from several angles and held long — this is the centrepiece."
+   },
+   {
+    "in": 26.5,
+    "type": "Detail · static",
+    "desc": "Finished drink on the strings; gloved hands add a citrus wheel garnish."
+   },
+   {
+    "in": 29.0,
+    "type": "Close · static",
+    "desc": "Tight on the finished glass, garnish sharp, hand lifts it out of frame."
+   },
+   {
+    "in": 30.8,
+    "type": "End card",
+    "desc": "Logotype graphic over a darkened court background with a single prop in frame. Held to the end."
+   }
+  ]
+ },
+ {
+  "title": "Street stunt",
+  "source": "US folder",
+  "fileId": "1ierj8-oD9jsZuPfQC7bqaUi_1aHHL7SW",
+  "dur": 15.3,
+  "aspect": "9:16",
+  "seed": 1,
+  "note": "One locked-off elevated camera, never moved. A prompt is marked on the pavement and the whole reel is public reaction to it, cut as jump cuts inside the same frame. Cheapest possible setup: one position, one long record, cut later.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "High angle · locked-off",
+    "desc": "Elevated static frame down onto a street corner. A worker finishes marking a circle on the pavement, then leaves frame."
+   },
+   {
+    "in": 1.5,
+    "type": "Jump cut · same frame",
+    "desc": "Pedestrians cross; almost everyone walks past the mark without engaging. The empty-prompt beat."
+   },
+   {
+    "in": 3.0,
+    "type": "Jump cut · same frame",
+    "desc": "First participant steps into the circle and dances alone while foot traffic continues around them."
+   },
+   {
+    "in": 4.2,
+    "type": "Jump cut · same frame",
+    "desc": "Two participants in the circle together, arms raised."
+   },
+   {
+    "in": 5.4,
+    "type": "Jump cut · same frame",
+    "desc": "The pair leaves; a new pedestrian slows at the edge of the mark."
+   },
+   {
+    "in": 6.2,
+    "type": "Jump cut · same frame",
+    "desc": "Solo participant mid-spin, arms up."
+   },
+   {
+    "in": 7.0,
+    "type": "Jump cut · same frame",
+    "desc": "Sustained crowd flow; several people glance down at the mark without stopping."
+   },
+   {
+    "in": 9.0,
+    "type": "Jump cut · same frame",
+    "desc": "A participant in light clothing dances and holds the space noticeably longer."
+   },
+   {
+    "in": 10.6,
+    "type": "Jump cut · same frame",
+    "desc": "Heavy crossing traffic; the participant stays put and others start to notice."
+   },
+   {
+    "in": 12.6,
+    "type": "Jump cut · closing beat",
+    "desc": "An adult and a child dance in the circle together and a small group gathers at the edge. Ends on the crowd, not the dancer."
+   }
+  ]
+ },
+ {
+  "title": "Wall build",
+  "source": "US folder",
+  "fileId": "1BB5ejkGpsSXLL0F3J6CWR38eDaB5mQkP",
+  "dur": 5.5,
+  "aspect": "9:16",
+  "seed": 2,
+  "note": "Stop-motion message build. One locked-off frame on a blank wall; a different person steps in on every cut to add one card until the message reads. Every beat is the same camera position — the edit is the whole effect.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Locked-off · vertical",
+    "desc": "Static frame on a plain wall. A hand enters from frame left, presses the first card to the surface, withdraws."
+   },
+   {
+    "in": 0.4,
+    "type": "Jump cut",
+    "desc": "Different sleeve, different person: a second card goes up below the first."
+   },
+   {
+    "in": 0.7,
+    "type": "Jump cut",
+    "desc": "A card is added to the right of the stack."
+   },
+   {
+    "in": 1.0,
+    "type": "Jump cut",
+    "desc": "Two hands work at once, upper and lower card placed together."
+   },
+   {
+    "in": 1.4,
+    "type": "Jump cut",
+    "desc": "New participant in a dark sleeve; body enters at the frame edge as they place."
+   },
+   {
+    "in": 1.8,
+    "type": "Jump cut",
+    "desc": "Card placed lower-left, participant only partly in frame."
+   },
+   {
+    "in": 2.2,
+    "type": "Jump cut",
+    "desc": "Participant steps fully into frame and reaches high to place."
+   },
+   {
+    "in": 2.6,
+    "type": "Jump cut",
+    "desc": "Another card added, participant's back to camera."
+   },
+   {
+    "in": 3.0,
+    "type": "Jump cut",
+    "desc": "Two people in frame together — one placing, one waiting their turn."
+   },
+   {
+    "in": 3.4,
+    "type": "Jump cut",
+    "desc": "A card lands that completes a full word; participant in a light coat."
+   },
+   {
+    "in": 3.9,
+    "type": "Jump cut",
+    "desc": "Participant in a dark jacket adds the final top card."
+   },
+   {
+    "in": 4.4,
+    "type": "Jump cut",
+    "desc": "Last card pressed home; the hand withdraws out of frame."
+   },
+   {
+    "in": 4.9,
+    "type": "Locked-off · hold",
+    "desc": "Frame holds on the finished wall with nobody in it. The message is fully readable — this is the payoff frame."
+   }
+  ]
+ },
+ {
+  "title": "Poster interaction",
+  "source": "US folder",
+  "fileId": "1NIo2S8HI26F2cJEKxYO97SQ1kapz_PVz",
+  "dur": 4.4,
+  "aspect": "3:4",
+  "seed": 3,
+  "note": "Single locked-off wide, one continuous action: a passer-by engages with a street poster, takes a tear-off, and leaves. No cuts — the beats below are positions within one take.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Locked-off wide",
+    "desc": "Static frame on a pasted poster wall. Subject stands with their back to camera, reaches up and tears a tab from the sheet."
+   },
+   {
+    "in": 2.0,
+    "type": "Same take · beat",
+    "desc": "Subject turns at the wall, examining the torn tab in their hand."
+   },
+   {
+    "in": 2.9,
+    "type": "Same take · beat",
+    "desc": "Subject walks right across frame, still reading the tab."
+   },
+   {
+    "in": 3.6,
+    "type": "Same take · exit",
+    "desc": "Subject exits frame right, leaving the wall alone in shot."
+   }
+  ]
+ },
+ {
+  "title": "Prop texture plate",
+  "source": "US folder",
+  "fileId": "1ZN4v647B_vL5YtqXZxzh13ReMJOWA3GJ",
+  "dur": 6.0,
+  "aspect": "3:4",
+  "seed": 4,
+  "note": "Pure detail plate — no people at any point. One static frame on the prop, letting wind and missing tabs do the work. The kind of shot that fills gaps in an edit.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Detail · locked-off",
+    "desc": "Tight static frame on a grid of pasted sheets, tear-off tabs intact and still."
+   },
+   {
+    "in": 2.0,
+    "type": "Detail · locked-off",
+    "desc": "Same frame: tabs lift and flutter in the wind, several already torn away."
+   },
+   {
+    "in": 4.0,
+    "type": "Detail · locked-off",
+    "desc": "Continued hold — the gaps in the fringe read clearly as evidence people engaged."
+   }
+  ]
+ },
+ {
+  "title": "Long-table coverage",
+  "source": "US folder",
+  "fileId": "158NLawFcPBKmf9ZAlSj__Nzc9AYbtcoD",
+  "dur": 10.0,
+  "aspect": "9:16",
+  "seed": 5,
+  "note": "One continuous handheld take drifting along a dressed table. No cuts at all — the beats below are drift positions. Shot on a phone; foreground glassware is used deliberately to layer the frame.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Handheld · drift",
+    "desc": "Slow drift along a long dressed table; guests seated, glassware and cans stacked in the foreground, standing figures behind."
+   },
+   {
+    "in": 2.4,
+    "type": "Same take · beat",
+    "desc": "Passes a guest mid-conversation; foreground glassware crosses the lens and briefly obscures frame."
+   },
+   {
+    "in": 4.8,
+    "type": "Same take · beat",
+    "desc": "Settles loosely on two seated guests talking as background figures move through."
+   },
+   {
+    "in": 7.2,
+    "type": "Same take · out",
+    "desc": "Drift carries on to the end of the table; a staff member crosses frame right. Ends mid-move, not on a button."
+   }
+  ]
+ }
+];
 
-let cPos = 0, cSlide = 0;
+let cPos = 0, sbToken = 0;
 
-function pieceThumbHtml(thumbId, seedVal, cls){
-  if (!thumbId) return `<span class="fill" style="background:${grad(seedVal)}"></span>`;
-  return `<span class="fill grad loading${cls?' '+cls:''}" style="background:${grad(seedVal)}"></span>
-    <img class="fill photo${cls?' '+cls:''}" src="${driveThumb(thumbId,900)}" alt=""
-      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
-      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+function fmtT(s){
+  const m = Math.floor(s/60), r = s - m*60;
+  return (m>0 ? m+":"+String(Math.floor(r)).padStart(2,"0") : r.toFixed(1)+"s");
 }
 
-function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5" ? "sq" : ""; }
-
 function renderRail(){
-  document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
-    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.year} &middot; ${p.d}</button>`).join("");
+  const rail = document.getElementById("cRail");
+  rail.innerHTML = PIECES.map((p,i)=>
+    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${String(i+1).padStart(2,"0")} &middot; ${p.title}</button>`).join("");
   document.getElementById("cIdx").textContent = PIECES.length
-    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0")
-    : "00 / 00";
+    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0") : "00 / 00";
   document.getElementById("cPrev").disabled = cPos===0 || !PIECES.length;
   document.getElementById("cNext").disabled = cPos===PIECES.length-1 || !PIECES.length;
-  const pill = document.getElementById("cRail").children[cPos];
+  const pill = rail.children[cPos];
   if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
 }
 
 function renderPiece(){
   const p = PIECES[cPos];
   if (!p){
-    document.getElementById("cBody").innerHTML = `<div class="sec">
-      <div class="emptyshots">No US Open footage yet — the shoot hasn't happened.<br>
-      Real cuts land here once they're shot; this tab is reserved for the exact US Open content, not reference material.</div>
-    </div>`;
+    document.getElementById("cBody").innerHTML =
+      `<div class="sec"><div class="emptyshots">No reels here yet.</div></div>`;
     return;
   }
-  const isCar = p.kind==="carousel";
-  const total = isCar ? p.slides.length : 0;
-  const g = grad(p.seed + (isCar ? cSlide : 0));
-  const thumbId = isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId;
-  const bgStyle = thumbId ? `background-image:url('${driveThumb(thumbId,200)}')` : `background:${g}`;
-
-  let screen = `<div class="screen" id="screen">
-      <div class="bg" style="${bgStyle}"></div>
-      <div class="stage"><div class="media ${pieceMediaClass(p)}">${pieceThumbHtml(thumbId, p.seed+(isCar?cSlide:0))}</div></div>
-      <span class="screen-tag">${isCar?"Carousel":"Reel"} &middot; ${p.aspect}</span>
-      ${isCar ? `
-        <button class="sarrow l" onclick="slide(-1)" aria-label="Previous slide">&larr;</button>
-        <button class="sarrow r" onclick="slide(1)" aria-label="Next slide">&rarr;</button>
-        <span class="screen-count">${cSlide+1} / ${total}</span>
-        <span class="screen-dots">${p.slides.map((_,i)=>`<i class="${i===cSlide?'on':''}"></i>`).join("")}</span>
-      ` : `<button class="screen-play" onclick="openPieceLb()">&#9654;&nbsp; Play</button>`}
+  const vert = p.aspect === "9:16";
+  const screen = `<div class="screen sbscreen" style="aspect-ratio:${vert?'9/16':'16/9'}">
+      <video id="sbPlayer" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="metadata"></video>
+      <span class="screen-tag">Reel &middot; ${p.dur}s &middot; ${p.shots.length} shots</span>
     </div>`;
 
-  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide].cap}</span></div>` : "";
-
-  /* --- tier 2: shot breakdown --- */
-  let breakdown;
-  if (p.auto && p.cuts.length){
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">${p.cuts.length} shots</span></div></div>
-      <div class="sub">Marked up by hand against the cut &mdash; scrub, note the timecode, flag the beats that matter. The editor sees the same thing weeks later.</div>
-      <div class="grid seq">${p.cuts.map((c,i)=>`
-        <div class="cell shot ${c.sel?'sel':'opt'}">
-          <button class="tile" onclick="openShotLb(${cPos},${i})" aria-label="${c.cap}">
-            <span class="fill" style="background:${grad(p.seed+i*3)}"></span>
-            ${c.sel?'<span class="selflag">Key beat</span>':''}
-            <span class="shot-ts">${c.ts}</span>
+  const board = `<div class="sec">
+      <div class="sec-h"><h2>Storyboard &amp; Shot List</h2>
+        <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
+      <div class="sub">Every cut in the reel, in order. Frames are grabbed from the video itself &mdash; tap any shot to jump the player to it.</div>
+      <div class="grid seq sbgrid ${vert?'vert':'horiz'}" id="sbGrid">${p.shots.map((s,i)=>`
+        <div class="cell shot" data-sb="${i}">
+          <button class="tile" onclick="seekPiece(${s.in})" aria-label="Shot ${i+1}: ${s.desc.replace(/"/g,'&quot;')}">
+            <span class="fill grad" style="background:${grad(p.seed+i*3)}"></span>
+            <img class="fill sbframe" alt="">
+            <span class="sbnum">${i+1}</span>
+            <span class="sbtype">${s.type}</span>
+            <span class="shot-ts">${fmtT(s.in)}</span>
           </button>
-          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
-          <div class="cap-text">${c.cap}</div>
-          ${c.note?`<div class="shot-note">${c.note}</div>`:''}
+          <div class="cap-text">${s.desc}</div>
         </div>`).join("")}</div>
-    </div>`;
-  } else if (isCar){
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Slide Breakdown</h2><div class="sec-right">01 &rarr; ${String(total).padStart(2,"0")}</div></div>
-      <div class="sub">Every frame in the carousel, in posting order.</div>
-      <div class="grid seq">${p.slides.map((sl,i)=>`
-        <div class="cell shot ${i===cSlide?'sel':'opt'}">
-          <button class="tile" onclick="goSlide(${i})" aria-label="${sl.cap}">
-            ${pieceThumbHtml(sl.id, p.seed+i)}
-            ${i===cSlide?'<span class="selflag">Showing</span>':''}
-          </button>
-          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
-          <div class="cap-text">Slide ${i+1}</div>
-        </div>`).join("")}</div>
-    </div>`;
-  } else {
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Reference</span></div></div>
-      <div class="emptyshots">This is a Nude Project reference clip, not our footage.<br>No shot breakdown needed here.</div>
-    </div>`;
-  }
-
-  /* --- tier 3: palette --- */
-  const palette = p.palette.length ? `<div class="sec">
-      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
-      <div class="sub">The grade to match, read off the images themselves. Tap a swatch to copy its hex.</div>
-      <div class="palette">${p.palette.map(([hex,role],i)=>`
-        <button class="sw" onclick="copyHex(this,'${hex}')">
-          <span class="chipc" style="background:${hex}"></span>
-          <span class="hex">${hex}</span>
-          <span class="role">${role}</span>
-        </button>`).join("")}</div>
-      <div class="palette-src">${p.paletteSrc}</div>
-    </div>` : `<div class="sec">
-      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right"><span class="autotag pending">Pending</span></div></div>
-      <div class="emptyshots">${p.paletteSrc}</div>
     </div>`;
 
   document.getElementById("cBody").innerHTML =
     `<div class="ctitle">${p.title}</div>
-     <div class="cmeta">
-       <span>${p.source}</span><span>${p.year}</span><span>${p.d}</span><span>${p.aspect}</span>
-       <span class="status">Reference</span>
-     </div>
-     <div style="height:16px"></div>
-     ${screen}${caption}${breakdown}${palette}`;
+     <div class="cmeta"><span>${p.source}</span><span>${p.dur}s</span><span>${p.aspect}</span>
+       <span>${p.shots.length} shots</span></div>
+     ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
+     <div style="height:14px"></div>
+     ${screen}${board}`;
 
-  if (isCar) attachSwipe();
+  paintStoryboard(p);
+}
+
+function seekPiece(t){
+  const v = document.getElementById("sbPlayer");
+  if (v){ v.currentTime = t; v.scrollIntoView({block:"center", behavior:"smooth"}); }
+}
+
+/* Real frames, grabbed from the actual video in the browser: one hidden
+   <video>, seeked to each shot's in-point and drawn to a canvas. This only
+   works because /api/drive-video serves the bytes from our own origin --
+   a direct Drive URL would taint the canvas and the read would throw. */
+async function paintStoryboard(p){
+  const grid = document.getElementById("sbGrid");
+  if (!grid) return;
+  const token = ++sbToken;
+  const v = document.createElement("video");
+  v.src = driveVideoProxy(p.fileId);
+  v.muted = true; v.preload = "auto"; v.playsInline = true;
+  v.style.cssText = "position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0";
+  document.body.appendChild(v);
+  try{
+    await new Promise((res,rej)=>{
+      v.onloadedmetadata = res; v.onerror = ()=>rej(new Error("load"));
+      setTimeout(res, 25000);
+    });
+    if (!v.videoWidth) throw new Error("no dimensions");
+    const w = 400, h = Math.round(w * v.videoHeight / v.videoWidth);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const ctx = c.getContext("2d", {willReadFrequently:true});
+    for (let i=0; i<p.shots.length; i++){
+      if (token !== sbToken) break;
+      /* Grab from INSIDE the shot, not on its in-point: a frame taken
+         exactly on a cut often still shows the outgoing shot. Step in ~40%
+         of the way to the next cut, capped, so the thumbnail is always
+         representative of the shot it labels. */
+      const nextIn = (i+1 < p.shots.length) ? p.shots[i+1].in : v.duration;
+      const inset = Math.min(0.4, Math.max(0.08, (nextIn - p.shots[i].in) * 0.4));
+      v.currentTime = Math.min(p.shots[i].in + inset, Math.max(0, v.duration - 0.05));
+      await new Promise(res=>{
+        let done=false; const fin=()=>{ if(!done){done=true;res();} };
+        v.onseeked = fin; setTimeout(fin, 3000);
+      });
+      if (token !== sbToken) break;
+      ctx.drawImage(v, 0, 0, w, h);
+      const img = grid.querySelector(`[data-sb="${i}"] img`);
+      if (img){
+        try { img.src = c.toDataURL("image/jpeg", 0.72); img.classList.add("loaded"); }
+        catch(e){ break; }   /* tainted -- leave the gradient placeholders */
+      }
+    }
+  } catch(e){ /* placeholders stay; the shot list is still readable */ }
+  v.remove();
 }
 
 function goPiece(i){
   cPos = Math.max(0, Math.min(PIECES.length-1, i));
-  cSlide = 0; renderRail(); renderPiece();
+  renderRail(); renderPiece();
   document.getElementById("panel-content").scrollIntoView({block:"start"});
 }
-function slide(d){
-  const p = PIECES[cPos]; if(!p.slides) return;
-  cSlide = (cSlide + d + p.slides.length) % p.slides.length;
-  renderPiece();
-}
-function goSlide(i){ cSlide = i; renderPiece(); }
 function copyHex(el, hex){
   try{ navigator.clipboard.writeText(hex); }catch(e){}
   el.classList.add("copied");
   setTimeout(()=>el.classList.remove("copied"), 1200);
 }
-function attachSwipe(){
-  const el = document.getElementById("screen"); if(!el) return;
-  let x0=null;
-  el.addEventListener("touchstart", e=>{ x0 = e.changedTouches[0].clientX; }, {passive:true});
-  el.addEventListener("touchend", e=>{
-    if(x0===null) return;
-    const dx = e.changedTouches[0].clientX - x0;
-    if(Math.abs(dx) > 45) slide(dx < 0 ? 1 : -1);
-    x0=null;
-  }, {passive:true});
-}
-function openPieceLb(){
-  const p = PIECES[cPos];
-  const isCar = p.kind==="carousel";
-  pushTemp({key:"piece", cap:p.title, sel:false, port:!isCar, sq:isCar,
-            fileId: isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId, isReel: !isCar,
-            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
-}
-function openShotLb(pi, si){
-  const p = PIECES[pi], c = p.cuts[si];
-  pushTemp({key:"shot", cap:c.cap, sel:c.sel, port:p.aspect==="9:16",
-            seed:p.seed+si*3, meta:`${p.title} · ${c.ts} · ${c.sel?"Key beat":"Shot "+(si+1)}`});
-}
 
 document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
 document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
 renderRail(); renderPiece();
+
 
 </script>

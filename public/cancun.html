@@ -504,6 +504,31 @@ footer{
 }
 .slot p{margin:0;font-size:12.5px;line-height:1.6;color:var(--dim);max-width:62ch}
 
+
+/* ---------- storyboard ---------- */
+.sbscreen{max-height:66vh;width:auto;margin-left:auto;margin-right:auto}
+.sbvid{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+/* Tiles take the reel's own aspect so vertical frames aren't cropped to a
+   letterbox sliver; set per-piece on the grid. */
+.sbgrid.vert .tile{aspect-ratio:9/16}
+.sbgrid.horiz .tile{aspect-ratio:4/5}
+.sbgrid .tile{overflow:hidden}
+.sbgrid .cap-text{text-align:left;font-size:11px;line-height:1.4;padding:0 1px}
+.sbframe{opacity:0;transition:opacity .25s ease}
+.sbframe.loaded{opacity:1}
+.cell.opt .tile .sbframe.loaded{opacity:1}
+.sbnum{
+  position:absolute;top:0;left:0;z-index:4;background:var(--white);color:#000;
+  font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 7px;
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.sbtype{
+  position:absolute;top:0;right:0;z-index:4;background:rgba(0,0,0,.78);color:var(--white);
+  font-size:7.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 6px;max-width:66%;text-align:right;line-height:1.3;
+}
+.sbgrid .shot-ts{z-index:4}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -1186,170 +1211,628 @@ buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero()
    (that's what Hero/Visuals are for). No real Cancun footage exists yet, so
    this stays an honest empty placeholder rather than fictional pieces or
    borrowed reference content, until real footage is shot and added. */
-const PIECES = [];
+const PIECES = [
+ {
+  "title": "Interior walkthrough",
+  "source": "Nude Project · 2k24",
+  "fileId": "1d0xz_bm5CaIbZ0-qjeLWUbbS6s8U9Kq7",
+  "dur": 7.7,
+  "aspect": "9:16",
+  "seed": 0,
+  "note": "Sixteen cuts in under eight seconds. One slow push to open, then a rapid run of static detail frames — each held under half a second. Nothing moves except the first shot; the pace comes entirely from the cut.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Wide · slow push",
+    "desc": "Centre-aisle push into an interior; rug on the floor, rails either side, an arched opening framed dead centre ahead."
+   },
+   {
+    "in": 1.4,
+    "type": "Medium · tilt up",
+    "desc": "Tilt up a tall shelving unit stacked with product and speaker cabinets."
+   },
+   {
+    "in": 1.9,
+    "type": "Low angle · static",
+    "desc": "Looking straight up at a suspended speaker box against a white ceiling."
+   },
+   {
+    "in": 2.3,
+    "type": "Detail · static",
+    "desc": "Eye-level shelf of small accessories laid out in a row."
+   },
+   {
+    "in": 2.6,
+    "type": "Medium · pan",
+    "desc": "Lateral pan across a hanging garment rail."
+   },
+   {
+    "in": 3.2,
+    "type": "Detail · overhead",
+    "desc": "Top-down on the floor where patterned rug meets tile."
+   },
+   {
+    "in": 3.5,
+    "type": "Medium · static",
+    "desc": "Counter with signage and small props arranged on it."
+   },
+   {
+    "in": 3.8,
+    "type": "Wide · static",
+    "desc": "Through an arched doorway into a second room; curtain and bench beyond."
+   },
+   {
+    "in": 4.7,
+    "type": "Detail · static",
+    "desc": "Two keys hanging on a plain wall, tight crop, lots of negative space."
+   },
+   {
+    "in": 5.0,
+    "type": "Medium · static",
+    "desc": "Full-length mirror reflecting the room behind camera."
+   },
+   {
+    "in": 5.6,
+    "type": "Medium · static",
+    "desc": "Garment rail in a pastel colourway, shot square-on."
+   },
+   {
+    "in": 5.9,
+    "type": "Detail · static",
+    "desc": "Shelf styling: a woven bag beside a bowl of fruit."
+   },
+   {
+    "in": 6.2,
+    "type": "Medium · static",
+    "desc": "Shelving with books and printed matter, a round speaker below."
+   },
+   {
+    "in": 6.5,
+    "type": "Detail · static",
+    "desc": "Stone plinth with a glass display case on top."
+   },
+   {
+    "in": 6.8,
+    "type": "Medium · static",
+    "desc": "Framed artwork above a low rail."
+   },
+   {
+    "in": 7.1,
+    "type": "Detail · overhead",
+    "desc": "Top-down into a glass case on an open printed spread. Ends here, no outro."
+   }
+  ]
+ },
+ {
+  "title": "Property reveal",
+  "source": "Nude Project · 2k24",
+  "fileId": "1rLpC021WxvfMkrCu-cn1c7HnviMTt9D_",
+  "dur": 12.4,
+  "aspect": "9:16",
+  "seed": 1,
+  "note": "Two halves joined by a whip. Front half is a sustained piece to camera; back half is one unbroken aerial pull-back from a detail to the whole property. The whip pan is the edit — no cut is visible.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Talking head · handheld",
+    "desc": "Subject to camera at arm's length, building behind them. Sustained direct address with gestures, no cuts."
+   },
+   {
+    "in": 4.0,
+    "type": "Whip · transition",
+    "desc": "Camera whips down and away; the motion blur itself is used as the cut."
+   },
+   {
+    "in": 4.7,
+    "type": "Low angle · tilt up",
+    "desc": "Tilt up to a hanging sign above an entrance as the subject runs beneath the frame."
+   },
+   {
+    "in": 5.4,
+    "type": "Aerial · pull-back",
+    "desc": "Camera lifts and pulls back off the terrace, subject running along the deck below."
+   },
+   {
+    "in": 7.0,
+    "type": "Aerial · continues",
+    "desc": "Same unbroken move; the pool comes into frame with a mark visible on its floor."
+   },
+   {
+    "in": 8.3,
+    "type": "Aerial · continues",
+    "desc": "Building and pool both fully in frame, camera still rising and retreating."
+   },
+   {
+    "in": 9.8,
+    "type": "Aerial · wide hold",
+    "desc": "Move settles on the whole property against coastline and open sea. Widest frame in the reel — the payoff."
+   }
+  ]
+ },
+ {
+  "title": "Photo-ideas listicle",
+  "source": "Nude Project · 2k24",
+  "fileId": "1xa3UcEkaatX5dWx2Zz4DLfLjY6lxLWrX",
+  "dur": 12.2,
+  "aspect": "9:16",
+  "seed": 2,
+  "note": "Thirteen separate staged photo gags, roughly one per second. Each cut is a self-contained idea — no narrative between them. The format is the list, so shoot each one clean and let the edit stack them.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Medium · handheld",
+    "desc": "Two subjects at arm's length by the water; one throws a hand sign to camera."
+   },
+   {
+    "in": 1.2,
+    "type": "Medium · handheld",
+    "desc": "The second subject breaks away and runs to the water behind while the first holds frame."
+   },
+   {
+    "in": 2.3,
+    "type": "Medium wide · static",
+    "desc": "Subject holds a flat rectangular object overhead, architecture behind, framed square-on."
+   },
+   {
+    "in": 3.5,
+    "type": "Close · static",
+    "desc": "Same object raised to cover the subject's face entirely. Tight crop."
+   },
+   {
+    "in": 4.4,
+    "type": "Medium · static",
+    "desc": "Subject sits in shallow water with the object on their lap, pool stretching behind."
+   },
+   {
+    "in": 5.6,
+    "type": "Medium · static",
+    "desc": "Same setup re-shot warmer and lower — the same idea in a second treatment."
+   },
+   {
+    "in": 6.8,
+    "type": "Wide · static",
+    "desc": "Subject standing on the pool edge, full length, sea horizon behind."
+   },
+   {
+    "in": 7.4,
+    "type": "Wide · symmetrical",
+    "desc": "Subject standing in still shallow water; the reflection doubles them in frame."
+   },
+   {
+    "in": 8.3,
+    "type": "Wide · forced perspective",
+    "desc": "One subject on all fours in foreground, a second standing behind with arms out — the two read as a single figure."
+   },
+   {
+    "in": 9.5,
+    "type": "Wide · static",
+    "desc": "Subject lying flat on grass with a second posed above them."
+   },
+   {
+    "in": 9.9,
+    "type": "Wide · freeze",
+    "desc": "Beach: one subject caught mid-air at the top of a jump over a second lying down."
+   },
+   {
+    "in": 10.4,
+    "type": "Medium · static",
+    "desc": "Subject against a textured wall with a towel over the shoulders."
+   },
+   {
+    "in": 11.3,
+    "type": "Medium · static",
+    "desc": "Subject in an interior beside a lit display case. Ends on the last idea, no outro."
+   }
+  ]
+ },
+ {
+  "title": "Captioned moments",
+  "source": "Nude Project · 2k24",
+  "fileId": "1O8iusw6jMes7_v7iZSZ1PZsBLATGGAiL",
+  "dur": 16.0,
+  "aspect": "9:16",
+  "seed": 3,
+  "note": "Recap format. Each cut is one named moment with a caption over it, held long enough to land. Shots are longer than a normal reel — 1.5 to 2.5s each — because each one has to be read as well as watched.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Wide · title frame",
+    "desc": "Title over a sunset pool while figures run and jump into the water in silhouette."
+   },
+   {
+    "in": 1.7,
+    "type": "Medium · static",
+    "desc": "Three subjects against a wall mid-conversation; one handshake lands. Caption names the moment."
+   },
+   {
+    "in": 3.4,
+    "type": "Medium · tilt down",
+    "desc": "Subject cooking at a large open pan with a crowd behind; camera tilts down into the food."
+   },
+   {
+    "in": 5.8,
+    "type": "Medium · handheld",
+    "desc": "Two subjects on a watercraft at sea, laughing to camera. Sustained, no cut."
+   },
+   {
+    "in": 8.0,
+    "type": "Medium · handheld",
+    "desc": "Group in conversation by the pool at golden hour, camera drifting between them."
+   },
+   {
+    "in": 10.4,
+    "type": "Medium · handheld",
+    "desc": "Subject eating with the pool and sunset behind."
+   },
+   {
+    "in": 11.8,
+    "type": "Medium · whip in",
+    "desc": "Subject walks toward camera at sunset; a fast move carries into the next frame."
+   },
+   {
+    "in": 12.4,
+    "type": "Close · backlit",
+    "desc": "Tight portrait with the sun directly behind the head, heavy rim light. Held."
+   },
+   {
+    "in": 13.5,
+    "type": "Wide · static",
+    "desc": "Two subjects full-length on grass, hills behind, both facing camera. Closing frame."
+   }
+  ]
+ },
+ {
+  "title": "Venue lookbook",
+  "source": "Nude Project · 2k25",
+  "fileId": "1d26jjQdV78P-RmCrJYnB6B3HhPN4JfkE",
+  "dur": 9.4,
+  "aspect": "9:16",
+  "seed": 4,
+  "note": "Fourteen composed still frames cut as a reel. Almost every shot is locked-off and symmetrical — the camera never hunts. This is a venue tour shot like a lookbook, not like a walkthrough.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Wide · locked-off",
+    "desc": "Dirt track running to the horizon; a rider approaches from distance straight down the lens."
+   },
+   {
+    "in": 1.6,
+    "type": "Wide · symmetrical",
+    "desc": "Landscaped path leading to a building, framed by overhanging branches, dead centre."
+   },
+   {
+    "in": 3.0,
+    "type": "Medium · static",
+    "desc": "Stone wall with a tiled plaque beside a doorway."
+   },
+   {
+    "in": 3.4,
+    "type": "Medium · static",
+    "desc": "Oversized sculptural object sitting at the pool edge."
+   },
+   {
+    "in": 3.7,
+    "type": "Wide · locked-off",
+    "desc": "Long lap pool with a single swimmer, lawn across the foreground. Held."
+   },
+   {
+    "in": 4.7,
+    "type": "Medium · static",
+    "desc": "Wooden signpost stacked with directional arms."
+   },
+   {
+    "in": 5.1,
+    "type": "Detail · static",
+    "desc": "Framed sign on an interior wall above a console table."
+   },
+   {
+    "in": 5.4,
+    "type": "Detail · static",
+    "desc": "Bed with monogrammed cushions, tight on the styling."
+   },
+   {
+    "in": 5.8,
+    "type": "Medium · static",
+    "desc": "Hanging chairs under a tree with flowering vine behind."
+   },
+   {
+    "in": 6.5,
+    "type": "Medium · static",
+    "desc": "A vehicle parked against a wall of flowers."
+   },
+   {
+    "in": 6.8,
+    "type": "Overhead · static",
+    "desc": "Spiral staircase shot straight down the well."
+   },
+   {
+    "in": 7.2,
+    "type": "Flat-lay · overhead",
+    "desc": "Bed styled with printed matter and props, shot top-down."
+   },
+   {
+    "in": 7.5,
+    "type": "Wide · static",
+    "desc": "Sports court seen through its glass surround."
+   },
+   {
+    "in": 8.2,
+    "type": "Wide · static",
+    "desc": "Large round mirror on a lawn reflecting open sky. Closing frame."
+   }
+  ]
+ },
+ {
+  "title": "Boat day",
+  "source": "Nude Project · 2k25",
+  "fileId": "1vRLLeBNGi2mPej8waKiqCFvbP7GDOis3",
+  "dur": 8.9,
+  "aspect": "9:16",
+  "seed": 5,
+  "note": "Only four setups in nine seconds — the opposite of a fast-cut reel. A long portrait to open, a POV to travel, then one locked-off wide that holds through the whole stunt and its aftermath.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Close portrait · handheld",
+    "desc": "Sustained close on a subject aboard a moving boat, sea and sky behind, hair in the wind, reacting to something off camera."
+   },
+   {
+    "in": 3.3,
+    "type": "POV · handheld",
+    "desc": "Over the bow: another vessel ahead, sun flaring across the lens."
+   },
+   {
+    "in": 4.0,
+    "type": "Wide · locked-off",
+    "desc": "Across open water to a floating platform with a ramp, two figures on it."
+   },
+   {
+    "in": 5.5,
+    "type": "Wide · locked-off hold",
+    "desc": "Same frame as a figure slides down the ramp into the water. Held right through the action and the aftermath — no cut on impact."
+   }
+  ]
+ },
+ {
+  "title": "Outfit lookbook",
+  "source": "Nude Project · 2k26",
+  "fileId": "15gryv499GhIix-jw2QtyqppxrntbWcz-",
+  "dur": 14.8,
+  "aspect": "9:16",
+  "seed": 6,
+  "note": "Four looks, four locations, one subject. Each look gets roughly three seconds of static frame with only small body movement, and a single cutaway breaks up the middle. Ends on a whip rather than a hold.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Medium · static",
+    "desc": "Look 1: subject seated on a parked bike in a grove. Small weight shifts, camera locked."
+   },
+   {
+    "in": 3.2,
+    "type": "Medium · static",
+    "desc": "Look 2: subject on a lounger beside a DJ setup, legs crossed, adjusting position."
+   },
+   {
+    "in": 6.8,
+    "type": "Detail · cutaway",
+    "desc": "Oversized decorative objects at the poolside — a breath between looks."
+   },
+   {
+    "in": 7.3,
+    "type": "Medium · static",
+    "desc": "Look 3: subject on a court surface in an outerwear piece, turning to show the back."
+   },
+   {
+    "in": 10.2,
+    "type": "Medium · static",
+    "desc": "Look 4: subject by the pool at dusk, walking a few steps and turning to camera."
+   },
+   {
+    "in": 13.8,
+    "type": "Whip · end",
+    "desc": "Camera whips up to blown-out sky. Ends on flare instead of a held frame."
+   }
+  ]
+ },
+ {
+  "title": "Stunt attempt",
+  "source": "Nude Project · 2k26",
+  "fileId": "1ZHUJhNCtpZAHSBBS8bbIFFwX2fziU-8m",
+  "dur": 30.5,
+  "aspect": "9:16",
+  "seed": 7,
+  "note": "Documentary coverage of a single attempt, start to finish: setup, attempt, failure, recovery, celebration. Almost entirely handheld and deliberately messy — motion blur and whips are kept in rather than cut around.",
+  "shots": [
+   {
+    "in": 0.0,
+    "type": "Wide · locked-off",
+    "desc": "Pool with a line rigged across it, spectators seated along the edge. Subject starts across."
+   },
+   {
+    "in": 3.4,
+    "type": "Wide · locked-off",
+    "desc": "Subject mid-line, arms out, balancing over open water."
+   },
+   {
+    "in": 5.8,
+    "type": "Wide · locked-off",
+    "desc": "Balance goes; subject steps down into shallow water. The failure is kept, not cut."
+   },
+   {
+    "in": 7.0,
+    "type": "Medium · handheld",
+    "desc": "Subject walks out through planting toward camera, crowd closing around."
+   },
+   {
+    "in": 8.8,
+    "type": "Handheld · whip",
+    "desc": "Fast handheld chase as the subject breaks into a run. Heavy motion blur left in."
+   },
+   {
+    "in": 10.6,
+    "type": "Wide · handheld",
+    "desc": "Subject dives into the pool; splash, then surfaces and swims off."
+   },
+   {
+    "in": 13.6,
+    "type": "Whip · transition",
+    "desc": "Whip across the poolside to the waiting group."
+   },
+   {
+    "in": 15.0,
+    "type": "Medium · handheld",
+    "desc": "Subject doubled over catching breath as friends close in."
+   },
+   {
+    "in": 17.8,
+    "type": "Medium · handheld",
+    "desc": "Subject climbs out on the pool ladder, water running off them."
+   },
+   {
+    "in": 20.2,
+    "type": "Handheld · through crowd",
+    "desc": "Camera moves with the subject through the group — hands, phones, contact, no clean frame."
+   },
+   {
+    "in": 23.8,
+    "type": "Medium · handheld",
+    "desc": "Celebration: subject centre frame, crowd around them, arms up."
+   },
+   {
+    "in": 28.6,
+    "type": "Close · handheld",
+    "desc": "Tight on the subject, motion blur, ends mid-gesture rather than on a button."
+   }
+  ]
+ }
+];
 
-let cPos = 0, cSlide = 0;
+let cPos = 0, sbToken = 0;
 
-function pieceThumbHtml(thumbId, seedVal, cls){
-  if (!thumbId) return `<span class="fill" style="background:${grad(seedVal)}"></span>`;
-  return `<span class="fill grad loading${cls?' '+cls:''}" style="background:${grad(seedVal)}"></span>
-    <img class="fill photo${cls?' '+cls:''}" src="${driveThumb(thumbId,900)}" alt=""
-      onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
-      onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`;
+function fmtT(s){
+  const m = Math.floor(s/60), r = s - m*60;
+  return (m>0 ? m+":"+String(Math.floor(r)).padStart(2,"0") : r.toFixed(1)+"s");
 }
 
-function pieceMediaClass(p){ return p.aspect==="9:16" ? "port" : p.aspect==="4:5" ? "sq" : ""; }
-
 function renderRail(){
-  document.getElementById("cRail").innerHTML = PIECES.map((p,i)=>
-    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${p.year} &middot; ${p.d}</button>`).join("");
+  const rail = document.getElementById("cRail");
+  rail.innerHTML = PIECES.map((p,i)=>
+    `<button class="cpill" aria-current="${i===cPos}" onclick="goPiece(${i})">${String(i+1).padStart(2,"0")} &middot; ${p.title}</button>`).join("");
   document.getElementById("cIdx").textContent = PIECES.length
-    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0")
-    : "00 / 00";
+    ? String(cPos+1).padStart(2,"0")+" / "+String(PIECES.length).padStart(2,"0") : "00 / 00";
   document.getElementById("cPrev").disabled = cPos===0 || !PIECES.length;
   document.getElementById("cNext").disabled = cPos===PIECES.length-1 || !PIECES.length;
-  const pill = document.getElementById("cRail").children[cPos];
+  const pill = rail.children[cPos];
   if (pill) pill.scrollIntoView({block:"nearest", inline:"center"});
 }
 
 function renderPiece(){
   const p = PIECES[cPos];
   if (!p){
-    document.getElementById("cBody").innerHTML = `<div class="sec">
-      <div class="emptyshots">No Cancun footage yet — the shoot hasn't happened.<br>
-      Real cuts and the storyboard land here once they exist; this tab is reserved for the exact Cancun content, not reference material.</div>
-    </div>`;
+    document.getElementById("cBody").innerHTML =
+      `<div class="sec"><div class="emptyshots">No reels here yet.</div></div>`;
     return;
   }
-  const isCar = p.kind==="carousel";
-  const total = isCar ? p.slides.length : 0;
-  const g = grad(p.seed + (isCar ? cSlide : 0));
-  const thumbId = isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId;
-  const bgStyle = thumbId ? `background-image:url('${driveThumb(thumbId,200)}')` : `background:${g}`;
-
-  let screen = `<div class="screen" id="screen">
-      <div class="bg" style="${bgStyle}"></div>
-      <div class="stage"><div class="media ${pieceMediaClass(p)}">${pieceThumbHtml(thumbId, p.seed+(isCar?cSlide:0))}</div></div>
-      <span class="screen-tag">${isCar?"Carousel":"Reel"} &middot; ${p.aspect}</span>
-      ${isCar ? `
-        <button class="sarrow l" onclick="slide(-1)" aria-label="Previous slide">&larr;</button>
-        <button class="sarrow r" onclick="slide(1)" aria-label="Next slide">&rarr;</button>
-        <span class="screen-count">${cSlide+1} / ${total}</span>
-        <span class="screen-dots">${p.slides.map((_,i)=>`<i class="${i===cSlide?'on':''}"></i>`).join("")}</span>
-      ` : `<button class="screen-play" onclick="openPieceLb()">&#9654;&nbsp; Play</button>`}
+  const vert = p.aspect === "9:16";
+  const screen = `<div class="screen sbscreen" style="aspect-ratio:${vert?'9/16':'16/9'}">
+      <video id="sbPlayer" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="metadata"></video>
+      <span class="screen-tag">Reel &middot; ${p.dur}s &middot; ${p.shots.length} shots</span>
     </div>`;
 
-  let caption = isCar ? `<div class="cmeta"><span>${p.slides[cSlide].cap}</span></div>` : "";
-
-  /* --- tier 2: shot breakdown --- */
-  let breakdown;
-  if (p.auto && p.cuts.length){
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag">${p.cuts.length} shots</span></div></div>
-      <div class="sub">Marked up by hand against the cut &mdash; scrub, note the timecode, flag the beats that matter. The editor sees the same thing weeks later.</div>
-      <div class="grid seq">${p.cuts.map((c,i)=>`
-        <div class="cell shot ${c.sel?'sel':'opt'}">
-          <button class="tile" onclick="openShotLb(${cPos},${i})" aria-label="${c.cap}">
-            <span class="fill" style="background:${grad(p.seed+i*3)}"></span>
-            ${c.sel?'<span class="selflag">Key beat</span>':''}
-            <span class="shot-ts">${c.ts}</span>
+  const board = `<div class="sec">
+      <div class="sec-h"><h2>Storyboard &amp; Shot List</h2>
+        <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
+      <div class="sub">Every cut in the reel, in order. Frames are grabbed from the video itself &mdash; tap any shot to jump the player to it.</div>
+      <div class="grid seq sbgrid ${vert?'vert':'horiz'}" id="sbGrid">${p.shots.map((s,i)=>`
+        <div class="cell shot" data-sb="${i}">
+          <button class="tile" onclick="seekPiece(${s.in})" aria-label="Shot ${i+1}: ${s.desc.replace(/"/g,'&quot;')}">
+            <span class="fill grad" style="background:${grad(p.seed+i*3)}"></span>
+            <img class="fill sbframe" alt="">
+            <span class="sbnum">${i+1}</span>
+            <span class="sbtype">${s.type}</span>
+            <span class="shot-ts">${fmtT(s.in)}</span>
           </button>
-          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
-          <div class="cap-text">${c.cap}</div>
-          ${c.note?`<div class="shot-note">${c.note}</div>`:''}
+          <div class="cap-text">${s.desc}</div>
         </div>`).join("")}</div>
-    </div>`;
-  } else if (isCar){
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Slide Breakdown</h2><div class="sec-right">01 &rarr; ${String(total).padStart(2,"0")}</div></div>
-      <div class="sub">Every frame in the carousel, in posting order.</div>
-      <div class="grid seq">${p.slides.map((sl,i)=>`
-        <div class="cell shot ${i===cSlide?'sel':'opt'}">
-          <button class="tile" onclick="goSlide(${i})" aria-label="${sl.cap}">
-            ${pieceThumbHtml(sl.id, p.seed+i)}
-            ${i===cSlide?'<span class="selflag">Showing</span>':''}
-          </button>
-          <div class="cap-line"><span class="num">[${i+1}]</span><span class="arrow">&rarr;</span></div>
-          <div class="cap-text">Slide ${i+1}</div>
-        </div>`).join("")}</div>
-    </div>`;
-  } else {
-    breakdown = `<div class="sec">
-      <div class="sec-h"><h2>Shot Breakdown</h2><div class="sec-right"><span class="autotag pending">Reference</span></div></div>
-      <div class="emptyshots">This is a Nude Project reference clip, not our footage.<br>No shot breakdown needed here.</div>
-    </div>`;
-  }
-
-  /* --- tier 3: palette --- */
-  const palette = p.palette.length ? `<div class="sec">
-      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right">${p.palette.length} Swatches</div></div>
-      <div class="sub">The grade to match, read off the images themselves. Tap a swatch to copy its hex.</div>
-      <div class="palette">${p.palette.map(([hex,role],i)=>`
-        <button class="sw" onclick="copyHex(this,'${hex}')">
-          <span class="chipc" style="background:${hex}"></span>
-          <span class="hex">${hex}</span>
-          <span class="role">${role}</span>
-        </button>`).join("")}</div>
-      <div class="palette-src">${p.paletteSrc}</div>
-    </div>` : `<div class="sec">
-      <div class="sec-h"><h2>Colour Palette</h2><div class="sec-right"><span class="autotag pending">Pending</span></div></div>
-      <div class="emptyshots">${p.paletteSrc}</div>
     </div>`;
 
   document.getElementById("cBody").innerHTML =
     `<div class="ctitle">${p.title}</div>
-     <div class="cmeta">
-       <span>${p.source}</span><span>${p.year}</span><span>${p.d}</span><span>${p.aspect}</span>
-       <span class="status">Reference</span>
-     </div>
-     <div style="height:16px"></div>
-     ${screen}${caption}${breakdown}${palette}`;
+     <div class="cmeta"><span>${p.source}</span><span>${p.dur}s</span><span>${p.aspect}</span>
+       <span>${p.shots.length} shots</span></div>
+     ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
+     <div style="height:14px"></div>
+     ${screen}${board}`;
 
-  if (isCar) attachSwipe();
+  paintStoryboard(p);
+}
+
+function seekPiece(t){
+  const v = document.getElementById("sbPlayer");
+  if (v){ v.currentTime = t; v.scrollIntoView({block:"center", behavior:"smooth"}); }
+}
+
+/* Real frames, grabbed from the actual video in the browser: one hidden
+   <video>, seeked to each shot's in-point and drawn to a canvas. This only
+   works because /api/drive-video serves the bytes from our own origin --
+   a direct Drive URL would taint the canvas and the read would throw. */
+async function paintStoryboard(p){
+  const grid = document.getElementById("sbGrid");
+  if (!grid) return;
+  const token = ++sbToken;
+  const v = document.createElement("video");
+  v.src = driveVideoProxy(p.fileId);
+  v.muted = true; v.preload = "auto"; v.playsInline = true;
+  v.style.cssText = "position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0";
+  document.body.appendChild(v);
+  try{
+    await new Promise((res,rej)=>{
+      v.onloadedmetadata = res; v.onerror = ()=>rej(new Error("load"));
+      setTimeout(res, 25000);
+    });
+    if (!v.videoWidth) throw new Error("no dimensions");
+    const w = 400, h = Math.round(w * v.videoHeight / v.videoWidth);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const ctx = c.getContext("2d", {willReadFrequently:true});
+    for (let i=0; i<p.shots.length; i++){
+      if (token !== sbToken) break;
+      /* Grab from INSIDE the shot, not on its in-point: a frame taken
+         exactly on a cut often still shows the outgoing shot. Step in ~40%
+         of the way to the next cut, capped, so the thumbnail is always
+         representative of the shot it labels. */
+      const nextIn = (i+1 < p.shots.length) ? p.shots[i+1].in : v.duration;
+      const inset = Math.min(0.4, Math.max(0.08, (nextIn - p.shots[i].in) * 0.4));
+      v.currentTime = Math.min(p.shots[i].in + inset, Math.max(0, v.duration - 0.05));
+      await new Promise(res=>{
+        let done=false; const fin=()=>{ if(!done){done=true;res();} };
+        v.onseeked = fin; setTimeout(fin, 3000);
+      });
+      if (token !== sbToken) break;
+      ctx.drawImage(v, 0, 0, w, h);
+      const img = grid.querySelector(`[data-sb="${i}"] img`);
+      if (img){
+        try { img.src = c.toDataURL("image/jpeg", 0.72); img.classList.add("loaded"); }
+        catch(e){ break; }   /* tainted -- leave the gradient placeholders */
+      }
+    }
+  } catch(e){ /* placeholders stay; the shot list is still readable */ }
+  v.remove();
 }
 
 function goPiece(i){
   cPos = Math.max(0, Math.min(PIECES.length-1, i));
-  cSlide = 0; renderRail(); renderPiece();
+  renderRail(); renderPiece();
   document.getElementById("panel-content").scrollIntoView({block:"start"});
 }
-function slide(d){
-  const p = PIECES[cPos]; if(!p.slides) return;
-  cSlide = (cSlide + d + p.slides.length) % p.slides.length;
-  renderPiece();
-}
-function goSlide(i){ cSlide = i; renderPiece(); }
 function copyHex(el, hex){
   try{ navigator.clipboard.writeText(hex); }catch(e){}
   el.classList.add("copied");
   setTimeout(()=>el.classList.remove("copied"), 1200);
 }
-function attachSwipe(){
-  const el = document.getElementById("screen"); if(!el) return;
-  let x0=null;
-  el.addEventListener("touchstart", e=>{ x0 = e.changedTouches[0].clientX; }, {passive:true});
-  el.addEventListener("touchend", e=>{
-    if(x0===null) return;
-    const dx = e.changedTouches[0].clientX - x0;
-    if(Math.abs(dx) > 45) slide(dx < 0 ? 1 : -1);
-    x0=null;
-  }, {passive:true});
-}
-function openPieceLb(){
-  const p = PIECES[cPos];
-  const isCar = p.kind==="carousel";
-  pushTemp({key:"piece", cap:p.title, sel:false, port:!isCar, sq:isCar,
-            fileId: isCar ? (p.slides[cSlide] && p.slides[cSlide].id) : p.fileId, isReel: !isCar,
-            seed:p.seed, meta:`${p.source} · Reference · ${p.year} · ${isCar?"Carousel":"Reel"}`});
-}
-function openShotLb(pi, si){
-  const p = PIECES[pi], c = p.cuts[si];
-  pushTemp({key:"shot", cap:c.cap, sel:c.sel, port:p.aspect==="9:16",
-            seed:p.seed+si*3, meta:`${p.title} · ${c.ts} · ${c.sel?"Key beat":"Shot "+(si+1)}`});
-}
 
 document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
 document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
 renderRail(); renderPiece();
+
 
 </script>
