@@ -535,25 +535,26 @@ footer{
       <button class="sarrow r" id="heroNext" onclick="stepHero(1)" aria-label="Next hero shot">&rarr;</button>
       <button class="hero-play" id="heroPlay" onclick="openHero()">&#9654;&nbsp; Play</button>
     </div>
-    <div class="hero-meta"><span>Aug 25 – Sep 7</span><span>New York, NY</span><span>Crews TBD</span><span>Events TBD</span></div>
+    <div class="hero-meta"><span>24 Aug – 7 Sept</span><span>New York, NY</span><span>Phase 1</span><span>6 References</span></div>
   </div>
 
   <div class="pin">
     <div class="k">Locked direction</div>
-    <p>A launch, not a trip. Phase 1 is New York — timely, street-level, at the Open. Phase 2 is Cancun — the villa, the fun. Different registers, one campaign.</p>
-    <a href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">Full oo-board reference &rarr;</a>
+    <p>Tennis wardrobe, city courts with skyline, whites / court green / pink accents. Every setup has motion. Shoot doubles &mdash; one clean digital pass, one lo-fi. Keep the blurry ones.</p>
+    <a href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">The board &rarr;</a>
   </div>
 
   <!-- ================= ACTION ================= -->
   <div class="panel" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
 
     <div class="sec">
-      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">3</div></div>
-      <div class="sub">From the Nancy Out of Office brief (Grand Slam Campaign, NY + Cancun).</div>
+      <div class="sec-h"><h2>Quick Links</h2><div class="sec-right">4</div></div>
+      <div class="sub">Phase 1 of the Nancy Out of Office campaign &mdash; the ACE + SMASH launch.</div>
       <div class="qlinks">
-        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/feed.html" target="_blank" rel="noopener">The feed — reference guideline <i>&#8599;</i></a>
-        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">The board — full moodboard <i>&#8599;</i></a>
-        <a class="qlink" href="cancun.html">Cancun — phase 2 of this campaign <i>&#8599;</i></a>
+        <a class="qlink" href="https://docs.google.com/document/d/1664fr5hEoxYkdQF3kEYCnZmek7hWk4WW1YcxN49jgqo/edit" target="_blank" rel="noopener">NY event brief <i>&#8599;</i></a>
+        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/" target="_blank" rel="noopener">The board — trends + references <i>&#8599;</i></a>
+        <a class="qlink" href="https://rsquaredboi.github.io/oo-board/feed.html" target="_blank" rel="noopener">The feed — grid guideline <i>&#8599;</i></a>
+        <a class="qlink" href="cancun.html">Cancun — phase 2 <i>&#8599;</i></a>
       </div>
     </div>
 
@@ -741,16 +742,37 @@ function ordered(sec){
    Mirrors the Drive tree exactly. Inside a year folder a FILE is a
    reel; a SUBFOLDER is a carousel and its files are the slides.
 ================================================================== */
-/* No real Drive moodboard/reference folder exists for US Open yet -- the
-   real reference is the external "oo-board" feed linked under Quick
-   Links (from the Nancy Out of Office brief). Empty here is honest;
-   once a real Drive folder exists for this event, it imports the same
-   way Nude Project does for Cancun. */
-const MOODBOARD = [];
-/* No US Open footage exists yet — the shoot hasn't happened (Aug 25 – Sep 7).
-   Same "Hero Shots" Drive-folder pattern as Cancun once real cuts land;
-   empty for now is the honest state, not a placeholder video. */
-const HERO_SHOTS = [];
+/* The "US" Drive folder — flat, six reference clips, one per NY beat.
+   Flat folder means a flat list: no year subfolders, so one group, and
+   the order below is the folder's own order, not a re-sort. The
+   inspiration hero is the message clip; the US Open shoot clip is the
+   page hero above. */
+const MOODBOARD = [
+  {
+    name:"US", main:true,
+    heroFileId:"1ierj8-oD9jsZuPfQC7bqaUi_1aHHL7SW",
+    driveFolder:"US",
+    note:"One reference clip per New York beat. Watch the one for your day before you shoot it.",
+    pending:true,
+    years:[
+      { year:"Reference", folderId:"1uDE_XrAyvtA3KSLaov-Yoe1vLVE6JGe8",
+        reels:[
+          {d:"For New York brunch",            fileId:"158NLawFcPBKmf9ZAlSj__Nzc9AYbtcoD"},
+          {d:"Message should be about pleasure", fileId:"1ierj8-oD9jsZuPfQC7bqaUi_1aHHL7SW"},
+          {d:"New York guerilla",              fileId:"1BB5ejkGpsSXLL0F3J6CWR38eDaB5mQkP"},
+          {d:"New York Props (1)",             fileId:"1NIo2S8HI26F2cJEKxYO97SQ1kapz_PVz"},
+          {d:"New York Props (2)",             fileId:"1ZN4v647B_vL5YtqXZxzh13ReMJOWA3GJ"},
+          {d:"US OPEN SHOOT",                  fileId:"1spQ08WH3baEC3HpQZv-bxqpaJkBUtpoo"}
+        ],
+        carousels:[] }
+    ]
+  }
+];
+/* No US Open event footage exists yet — the shoot runs 24 Aug – 7 Sept.
+   The page hero is the US Open shoot reference clip from the US folder. */
+const HERO_SHOTS = [
+  { title:"US Open", kind:"reel", fileId:"1spQ08WH3baEC3HpQZv-bxqpaJkBUtpoo", seed:0, d:"Reference" }
+];
 
 
 const TYPE_META = {
@@ -845,7 +867,7 @@ function renderMoodboard(){
     </div>`;
 
     if (sp.pending){
-      html += `<div class="pending"><b>Live from Drive.</b> Dates, reel/carousel counts, slide order and palette swatches below are all read straight from <b>${sp.driveFolder}</b> &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b> whose files are its slides, in order.</div>`;
+      html += `<div class="pending"><b>Live from Drive.</b> Read straight from the <b>${sp.driveFolder}</b> folder, in folder order &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b>. Tap any tile to play it full size.</div>`;
     }
 
     html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
