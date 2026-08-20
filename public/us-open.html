@@ -639,19 +639,6 @@ footer{
 
   <!-- ================= VISUALS ================= -->
   <div class="panel" id="panel-visual" role="tabpanel" aria-labelledby="tab-visual" hidden>
-    <div class="hero-head" style="padding-top:30px">
-      <h2>Inspiration Hero</h2>
-      <div class="sec-right" id="visHeroIdx">Hero Shot</div>
-    </div>
-    <div class="hero">
-      <div class="hero-fill" id="visHeroFill"></div>
-      <div class="hero-grain"></div>
-      <span class="hero-tag" id="visHeroTag"></span>
-      <div class="hero-title" id="visHeroTitle"></div>
-      <button class="sarrow l" id="visHeroPrev" onclick="stepVisHero(-1)" aria-label="Previous inspiration">&larr;</button>
-      <button class="sarrow r" id="visHeroNext" onclick="stepVisHero(1)" aria-label="Next inspiration">&rarr;</button>
-      <button class="hero-play" id="visHeroPlay" onclick="openVisHero()">&#8599;&nbsp; Expand</button>
-    </div>
 
     <div class="sec">
       <div class="legend">
@@ -794,7 +781,6 @@ function ordered(sec){
 const MOODBOARD = [
   {
     name:"US", main:true,
-    heroFileId:"1ierj8-oD9jsZuPfQC7bqaUi_1aHHL7SW",
     driveFolder:"US",
     note:"One reference clip per New York beat. Watch the one for your day before you shoot it.",
     pending:true,
@@ -1123,39 +1109,6 @@ function openHero(){
             fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
             seed:p.seed, meta:`US Open · Hero Shot · ${isCar?"Carousel":"Reel"}`});
 }
-/* ---------------- visuals hero ----------------
-   Visuals gets its own hero, cycling between each moodboard source's own
-   hero shot (Nude Project now, Inspo 2-4 once they have one) — not the
-   US Open page hero, which has no place inside a reference/inspiration
-   view. */
-let visHeroPos = 0;
-const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0, dur:sp.heroDur}));
-function renderVisHero(){
-  const p = VIS_HEROES[visHeroPos];
-  document.getElementById("visHeroFill").innerHTML = p
-    ? `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`
-    : `<span class="fill" style="background:${grad(0)}"></span>`;
-  forcePlay("visHeroFill");
-  document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
-  document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
-  document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
-  document.getElementById("visHeroPlay").hidden = !p;
-  const multi = VIS_HEROES.length > 1;
-  document.getElementById("visHeroPrev").hidden = !multi;
-  document.getElementById("visHeroNext").hidden = !multi;
-}
-function stepVisHero(d){
-  if (!VIS_HEROES.length) return;
-  visHeroPos = (visHeroPos + d + VIS_HEROES.length) % VIS_HEROES.length;
-  renderVisHero();
-}
-function openVisHero(){
-  const p = VIS_HEROES[visHeroPos];
-  if (!p) return;
-  pushTemp({key:"vishero", cap:p.title, sel:false, port:true,
-            fileId:p.fileId, isReel:true, seed:p.seed, meta:`${p.title} · Hero Shot`});
-}
-
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
   if(e.key==="Escape") closeLb();
@@ -1170,16 +1123,17 @@ function setMode(m){
     document.getElementById("tab-"+k).setAttribute("aria-selected", k===m);
     document.getElementById("panel-"+k).hidden = k!==m;
   });
-  /* The US Open page hero has no place inside Visuals; rebuild each
-     hero's video fresh on the way in so autoplay actually fires again
-     rather than sitting paused from being hidden. */
+  /* The page hero belongs to Run of Show and Footage only -- Visuals is
+     reference material and carries no hero of its own. Rebuilt on the way
+     in so autoplay fires again rather than sitting paused from being
+     hidden. */
   document.getElementById("pageHero").hidden = m==="visual";
-  if (m==="visual") renderVisHero(); else renderHero();
+  if (m!=="visual") renderHero();
   window.scrollTo(0,0);
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
 
-buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero(); renderVisHero();
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero();
 
 /* ==================================================================
    CONTENT PIECES  —  content_pieces / shots / palette_swatches
