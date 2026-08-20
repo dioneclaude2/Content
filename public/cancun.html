@@ -943,7 +943,7 @@ function renderMoodboard(){
     html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
       const carousels = liveCarousels(y);
       return `<button class="yearpill" id="yp-${spi}-${yi}" aria-selected="${yi===0}" onclick="selectYear(${spi},${yi})">
-        ${y.year}<span class="cnt">${y.reels.length+carousels.length}</span>
+        ${y.year}<span class="cnt">${y.reels.length + carousels.reduce((n,c)=>n+c.slides.length,0)}</span>
       </button>`;
     }).join("")}</div>
     <div class="year-body" id="yb-${spi}">${yearGridsHtml(sp,spi,sp.years[0],0)}</div>`;

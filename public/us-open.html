@@ -553,6 +553,14 @@ footer{
   padding:4px 6px;max-width:66%;text-align:right;line-height:1.3;
 }
 .sbgrid .shot-ts{z-index:4}
+/* a still whose source video lives off-site */
+.srcmark{
+  position:absolute;bottom:0;left:0;z-index:4;background:var(--white);color:#000;
+  font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 7px;line-height:1;
+}
+a.tile{display:block;text-decoration:none}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -744,14 +752,23 @@ function tileHtml(o){
          onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
          onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`
     : `<span class="fill" style="background:${grad(o.seed)}"></span>`;
+  /* A slide can carry an href when the still is a preview of a post that
+     lives elsewhere (the oo-board references). Those open the real post in
+     a new tab instead of the lightbox -- the lightbox would only show the
+     same frozen frame. */
+  const open = o.href
+    ? `<a class="tile" href="${o.href}" target="_blank" rel="noopener" aria-label="${o.cap} — open source post">`
+    : `<button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">`;
+  const close = o.href ? `</a>` : `</button>`;
   return `<div class="cell ${o.sel?'sel':'opt'}">
-    <button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">
+    ${open}
       ${fill}
+      ${o.href?'<span class="srcmark">&#9654; watch</span>':''}
       ${o.sel?'<span class="selflag">Selected</span>':''}
       ${o.isReel?'<span class="playmark">&#9654;</span>':''}
       ${o.slideCount?`<span class="slides">&#9635; ${o.slideCount}</span>`:''}
       ${o.ts?`<span class="tstamp">${o.ts}</span>`:''}
-    </button>
+    ${close}
     <div class="cap-line"><span class="num">[${o.label}]</span><span class="arrow">&rarr;</span></div>
     ${o.showCap?`<div class="cap-text">${o.cap}</div>`:''}
   </div>`;
@@ -780,35 +797,47 @@ function ordered(sec){
    page hero above. */
 const MOODBOARD = [
   {
-    name:"NYC1", main:true,
-    driveFolder:"US",
-    note:"One reference clip per New York beat. Watch the one for your day before you shoot it.",
+    name:"New York", main:true,
+    driveFolder:"NYC1 + NYC2",
+    note:"Two reference sets, two different sources. Switch between them below — NYC1 is the clip set, NYC2 is the stills wall.",
     pending:true,
     years:[
-      { year:"Reference", folderId:"1uDE_XrAyvtA3KSLaov-Yoe1vLVE6JGe8",
+      /* NYC1 — the first folder: six clips, one per New York beat. */
+      { year:"NYC1", folderId:"1uDE_XrAyvtA3KSLaov-Yoe1vLVE6JGe8",
         reels:[
-          {d:"For New York brunch",            fileId:"158NLawFcPBKmf9ZAlSj__Nzc9AYbtcoD"},
+          {d:"For New York brunch",              fileId:"158NLawFcPBKmf9ZAlSj__Nzc9AYbtcoD"},
           {d:"Message should be about pleasure", fileId:"1ierj8-oD9jsZuPfQC7bqaUi_1aHHL7SW"},
-          {d:"New York guerilla",              fileId:"1BB5ejkGpsSXLL0F3J6CWR38eDaB5mQkP"},
-          {d:"New York Props (1)",             fileId:"1NIo2S8HI26F2cJEKxYO97SQ1kapz_PVz"},
-          {d:"New York Props (2)",             fileId:"1ZN4v647B_vL5YtqXZxzh13ReMJOWA3GJ"},
-          {d:"US OPEN SHOOT",                  fileId:"1spQ08WH3baEC3HpQZv-bxqpaJkBUtpoo"}
+          {d:"New York guerilla",                fileId:"1BB5ejkGpsSXLL0F3J6CWR38eDaB5mQkP"},
+          {d:"New York Props (1)",               fileId:"1NIo2S8HI26F2cJEKxYO97SQ1kapz_PVz"},
+          {d:"New York Props (2)",               fileId:"1ZN4v647B_vL5YtqXZxzh13ReMJOWA3GJ"},
+          {d:"US OPEN SHOOT",                    fileId:"1spQ08WH3baEC3HpQZv-bxqpaJkBUtpoo"}
         ],
-        carousels:[] }
-    ]
-  },
-  {
-    name:"NYC2", main:false,
-    driveFolder:"NYC2",
-    note:"The New York reference wall — the viral outliers the phase 1 look is built from. Stills, not clips: read them for framing, colour and where the subject sits in frame.",
-    pending:true,
-    years:[
-      { year:"Reference", folderId:"1Ym76n0blAezofFzQnOieEz9tQNxlH_yF",
+        carousels:[] },
+      /* NYC2 — the second folder: 16 stills, so one wall of frames rather
+         than reels (a reel tile carries a play marker; these are photos). */
+      { year:"NYC2", folderId:"1Ym76n0blAezofFzQnOieEz9tQNxlH_yF",
         reels:[],
         carousels:[
           {d:"NYC wall", cap:"New York reference wall",
             palette:[["#C9C1B9","Pale Amber"],["#7E7A73","Grey"],["#3D4552","Deep Blue"],["#1E2123","Ink"],["#5E4F51","Grey"]],
-            slides:["1rtekDhF37ZeOPAGZejKTVxPaehmV21TA","19aEIoJ4Z7aa8nHoyWHcsAEbrLHiV3ypF","12w3YKbMBgFsoDf6pzbkqDzeLMDOUKpkg","1i_tOKy8zJu1Adp7TuDOytX-7q17m2wEm","1rYVU_jZzdPX--W_6v6FUd3zZen3_402y","1DZbbF6g16aoq1YXGRL0AdDGjFkxxT9QX","1NI4cJlUqvsVNfl5mrD3CBfEdzS4jPoUG","125UpKLkZr_pxW9txWcgnxJ1YDgU9czdi","1rHxPFZLc7AO2Vf8yZnjxyKexwQARPfA_","1I9ESy--WuZZdVAZvaKhYSGvrTbSMfQ7z","1S0Fj07FrDCu5mOhmn-9yjVQBssxJgfI2","1V1gk1NHq-tR0gbGYX5N4eIr14svg76XH","1eLC3fTAMhpkaOH3S09CnU3hPN11kdukW","1KgZDYCQAlY9uS0Ip2TtbT1ZYUAwq3WE3","1gCgkR8oOU1bBiNZuuAQkueOvZQ61WxFl","1m3_mDoeJUdlOx_Olfohswxfr8dmOtibw"]}
+            slides:[
+              {"id": "1rtekDhF37ZeOPAGZejKTVxPaehmV21TA", "cap": "The NY frame · @aleksamarquez", "href": "https://www.tiktok.com/@aleksamarquez/video/7667961432868228366"},
+              {"id": "19aEIoJ4Z7aa8nHoyWHcsAEbrLHiV3ypF", "cap": "6am dawn · @nikowarnholtz", "href": "https://www.tiktok.com/@nikowarnholtz/video/7634148768417369374"},
+              {"id": "12w3YKbMBgFsoDf6pzbkqDzeLMDOUKpkg", "cap": "Street tennis · @120thmmm", "href": "https://www.instagram.com/p/DbweElngUPc/"},
+              {"id": "1i_tOKy8zJu1Adp7TuDOytX-7q17m2wEm", "cap": "Subway chaos · @hayatandoko", "href": "https://www.tiktok.com/@hayatandoko/video/7648115532377492767"},
+              {"id": "1rYVU_jZzdPX--W_6v6FUd3zZen3_402y", "cap": "Why I hate NYC · @funkypiging", "href": "https://www.tiktok.com/@funkypiging/video/7664753056478792974"},
+              {"id": "1DZbbF6g16aoq1YXGRL0AdDGjFkxxT9QX", "cap": "Insider nightlife · @thepinktaxreturn", "href": "https://www.tiktok.com/@thepinktaxreturn/video/7666174620482997535"},
+              {"id": "1NI4cJlUqvsVNfl5mrD3CBfEdzS4jPoUG", "cap": "Girls trip · Dumbo · @alannah_davidson", "href": "https://www.tiktok.com/@alannah_davidson/video/7669975161281563935"},
+              {"id": "125UpKLkZr_pxW9txWcgnxJ1YDgU9czdi", "cap": "Street at dusk · @jay_in_nyc", "href": "https://www.tiktok.com/@jay_in_nyc/video/7644282579251678494"},
+              {"id": "1rHxPFZLc7AO2Vf8yZnjxyKexwQARPfA_", "cap": "The humidity bit · @sarahrileey", "href": "https://www.tiktok.com/@sarahrileey/video/7671304644638887182"},
+              {"id": "1I9ESy--WuZZdVAZvaKhYSGvrTbSMfQ7z", "cap": "The cup ritual · @emmagottorff", "href": "https://www.tiktok.com/@emmagottorff/video/7546642319089339678"},
+              {"id": "1S0Fj07FrDCu5mOhmn-9yjVQBssxJgfI2", "cap": "Umpire drama · @tennischannel", "href": "https://www.tiktok.com/@tennischannel/video/7320700860609088810"},
+              {"id": "1V1gk1NHq-tR0gbGYX5N4eIr14svg76XH", "cap": "Judge as character · @ringsea.judge", "href": "https://www.tiktok.com/@ringsea.judge/video/7327334456212114721"},
+              {"id": "1eLC3fTAMhpkaOH3S09CnU3hPN11kdukW", "cap": "Player vs umpire · @holger.rune", "href": "https://www.tiktok.com/@holger.rune/video/7160362698503441670"},
+              {"id": "1KgZDYCQAlY9uS0Ip2TtbT1ZYUAwq3WE3", "cap": "Angry at the chair · @servesnap1", "href": "https://www.tiktok.com/@servesnap1/video/7327697199561837857"},
+              {"id": "1gCgkR8oOU1bBiNZuuAQkueOvZQ61WxFl", "cap": "The couple engine · @courtcouple", "href": "https://www.tiktok.com/@courtcouple/video/7542855962336496951"},
+              {"id": "1m3_mDoeJUdlOx_Olfohswxfr8dmOtibw", "cap": "Balls everywhere · @bolvtennis", "href": "https://www.tiktok.com/@bolvtennis/video/7647278388561988884"}
+            ]}
         ] }
     ]
   }
@@ -870,9 +899,14 @@ function yearGridsHtml(sp, spi, y, yi){
       h += `<div class="group">
         <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${it.slides.length} slides</span></div>
         <div class="postrow">
-          <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
-            key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
-            seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
+          <div class="grid seq carousel scrollx">${it.slides.map((sl,si)=>{
+            const o = (typeof sl === "string") ? {id:sl} : sl;
+            return tileHtml({
+              key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1,
+              cap: o.cap || `${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
+              seed:spi*31+yi*11+it.origIndex*7+si, thumbId:o.id,
+              href:o.href, showCap:!!o.cap});
+          }).join("")}</div>
           ${it.palette ? sidePaletteHtml(it.palette) : ""}
         </div>
       </div>`;
@@ -912,13 +946,13 @@ function renderMoodboard(){
     </div>`;
 
     if (sp.pending){
-      html += `<div class="pending"><b>Live from Drive.</b> Read straight from the <b>${sp.driveFolder}</b> folder, in folder order &mdash; a <b>file is a reel</b>, a <b>subfolder is a carousel</b>. Tap any tile to play it full size.</div>`;
+      html += `<div class="pending"><b>Live from Drive.</b> Read straight from <b>${sp.driveFolder}</b>, in folder order. Switch sets with the toggle below; tap any tile to open it full size.</div>`;
     }
 
     html += `<div class="yearpills" role="tablist">${sp.years.map((y,yi)=>{
       const carousels = liveCarousels(y);
       return `<button class="yearpill" id="yp-${spi}-${yi}" aria-selected="${yi===0}" onclick="selectYear(${spi},${yi})">
-        ${y.year}<span class="cnt">${y.reels.length+carousels.length}</span>
+        ${y.year}<span class="cnt">${y.reels.length + carousels.reduce((n,c)=>n+c.slides.length,0)}</span>
       </button>`;
     }).join("")}</div>
     <div class="year-body" id="yb-${spi}">${yearGridsHtml(sp,spi,sp.years[0],0)}</div>`;
@@ -1031,7 +1065,7 @@ function buildFlat(){
       for(let sl=0; sl<it.slides.length; sl++){
         lbList.push({
           key:`m:${spi}:${yi}:c:${i}:${sl}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
-          fileId:it.slides[sl], seed:spi*31+yi*11+i+5+sl*3,
+          fileId:(typeof it.slides[sl]==="string"?it.slides[sl]:it.slides[sl].id), seed:spi*31+yi*11+i+5+sl*3,
           meta:`${sp.name} · ${y.year} · Carousel · slide ${sl+1} of ${it.slides.length} · ${it.sel?"Selected":"Option"}`});
       }
     });
