@@ -506,7 +506,20 @@ footer{
 
 
 /* ---------- storyboard ---------- */
-.sbscreen{max-height:66vh;width:auto;margin-left:auto;margin-right:auto}
+/* Reel left, shot list beside it. A vertical reel in a full-width column
+   left the entire right-hand side empty and pushed the shot list below
+   the fold -- side by side uses that space and keeps the video in view
+   while you read the breakdown. Stacks under 900px. */
+.pblock{display:flex;gap:22px;align-items:flex-start;padding:14px var(--pad) 0}
+.pmedia{flex:0 0 auto;width:min(280px,40vw)}
+.pshots{flex:1 1 0;min-width:0;padding-top:2px}
+.pshots .sec-h,.pshots .sub{padding-left:0;padding-right:0}
+.pshots .grid{padding-left:0;padding-right:0}
+@media (max-width:900px){
+  .pblock{flex-direction:column;gap:8px}
+  .pmedia{width:100%;max-width:300px;margin:0 auto}
+}
+.sbscreen{max-height:none;width:100%;margin:0}
 .sbvid{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 /* Tiles take the reel's own aspect so vertical frames aren't cropped to a
    letterbox sliver; set per-piece on the grid. */
@@ -1741,7 +1754,7 @@ function renderPiece(){
       <span class="screen-tag">Reel &middot; ${p.dur}s &middot; ${p.shots.length} shots</span>
     </div>`;
 
-  const board = `<div class="sec">
+  const board = `<div class="pshots">
       <div class="sec-h"><h2>Storyboard &amp; Shot List</h2>
         <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
       <div class="sub">Every cut in the reel, in order &mdash; scroll sideways. Frames are grabbed from the video itself; tap any shot to jump the player to it.</div>
@@ -1763,8 +1776,7 @@ function renderPiece(){
      <div class="cmeta"><span>${p.source}</span><span>${p.dur}s</span><span>${p.aspect}</span>
        <span>${p.shots.length} shots</span></div>
      ${p.note?`<div class="dirnote"><b>Structure</b><span>${p.note}</span></div>`:''}
-     <div style="height:14px"></div>
-     ${screen}${board}`;
+     <div class="pblock"><div class="pmedia">${screen}</div>${board}</div>`;
 
   paintStoryboard(p);
 }
@@ -1835,6 +1847,7 @@ function copyHex(el, hex){
 document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
 document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
 renderRail(); renderPiece();
+
 
 
 
