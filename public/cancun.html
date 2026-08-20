@@ -513,6 +513,9 @@ footer{
 .sbgrid.vert .tile{aspect-ratio:9/16}
 .sbgrid.horiz .tile{aspect-ratio:4/5}
 .sbgrid .tile{overflow:hidden}
+/* Wider than a moodboard tile: each cell has to carry a readable
+   description, not just a number. */
+.sbgrid.scrollx .cell{width:clamp(168px,46vw,208px);align-self:flex-start}
 .sbgrid .cap-text{text-align:left;font-size:11px;line-height:1.4;padding:0 1px}
 .sbframe{opacity:0;transition:opacity .25s ease}
 .sbframe.loaded{opacity:1}
@@ -528,7 +531,6 @@ footer{
   padding:4px 6px;max-width:66%;text-align:right;line-height:1.3;
 }
 .sbgrid .shot-ts{z-index:4}
-
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -1742,8 +1744,8 @@ function renderPiece(){
   const board = `<div class="sec">
       <div class="sec-h"><h2>Storyboard &amp; Shot List</h2>
         <div class="sec-right">01 &rarr; ${String(p.shots.length).padStart(2,"0")}</div></div>
-      <div class="sub">Every cut in the reel, in order. Frames are grabbed from the video itself &mdash; tap any shot to jump the player to it.</div>
-      <div class="grid seq sbgrid ${vert?'vert':'horiz'}" id="sbGrid">${p.shots.map((s,i)=>`
+      <div class="sub">Every cut in the reel, in order &mdash; scroll sideways. Frames are grabbed from the video itself; tap any shot to jump the player to it.</div>
+      <div class="grid seq scrollx sbgrid ${vert?'vert':'horiz'}" id="sbGrid">${p.shots.map((s,i)=>`
         <div class="cell shot" data-sb="${i}">
           <button class="tile" onclick="seekPiece(${s.in})" aria-label="Shot ${i+1}: ${s.desc.replace(/"/g,'&quot;')}">
             <span class="fill grad" style="background:${grad(p.seed+i*3)}"></span>
@@ -1833,6 +1835,7 @@ function copyHex(el, hex){
 document.getElementById("cPrev").onclick = ()=>goPiece(cPos-1);
 document.getElementById("cNext").onclick = ()=>goPiece(cPos+1);
 renderRail(); renderPiece();
+
 
 
 </script>
