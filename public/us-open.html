@@ -554,6 +554,7 @@ footer{
 }
 .sbgrid .shot-ts{z-index:4}
 /* a still whose source video lives off-site */
+.srcmark.alt{background:var(--muted);color:#000}
 .srcmark{
   position:absolute;bottom:0;left:0;z-index:4;background:var(--white);color:#000;
   font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
@@ -756,14 +757,12 @@ function tileHtml(o){
      lives elsewhere (the oo-board references). Those open the real post in
      a new tab instead of the lightbox -- the lightbox would only show the
      same frozen frame. */
-  const open = o.href
-    ? `<a class="tile" href="${o.href}" target="_blank" rel="noopener" aria-label="${o.cap} — open source post">`
-    : `<button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">`;
-  const close = o.href ? `</a>` : `</button>`;
+  const open = `<button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">`;
+  const close = `</button>`;
   return `<div class="cell ${o.sel?'sel':'opt'}">
     ${open}
       ${fill}
-      ${o.href?'<span class="srcmark">&#9654; watch</span>':''}
+      ${o.embed?'<span class="srcmark">&#9654; plays</span>':(o.href?'<span class="srcmark alt">&#8599; open</span>':'')}
       ${o.sel?'<span class="selflag">Selected</span>':''}
       ${o.isReel?'<span class="playmark">&#9654;</span>':''}
       ${o.slideCount?`<span class="slides">&#9635; ${o.slideCount}</span>`:''}
@@ -821,22 +820,22 @@ const MOODBOARD = [
           {d:"NYC wall", cap:"New York reference wall",
             palette:[["#C9C1B9","Pale Amber"],["#7E7A73","Grey"],["#3D4552","Deep Blue"],["#1E2123","Ink"],["#5E4F51","Grey"]],
             slides:[
-              {"id": "1rtekDhF37ZeOPAGZejKTVxPaehmV21TA", "cap": "The NY frame · @aleksamarquez", "href": "https://www.tiktok.com/@aleksamarquez/video/7667961432868228366"},
-              {"id": "19aEIoJ4Z7aa8nHoyWHcsAEbrLHiV3ypF", "cap": "6am dawn · @nikowarnholtz", "href": "https://www.tiktok.com/@nikowarnholtz/video/7634148768417369374"},
+              {"id": "1rtekDhF37ZeOPAGZejKTVxPaehmV21TA", "cap": "The NY frame · @aleksamarquez", "href": "https://www.tiktok.com/@aleksamarquez/video/7667961432868228366", "embed": "https://www.tiktok.com/embed/v2/7667961432868228366"},
+              {"id": "19aEIoJ4Z7aa8nHoyWHcsAEbrLHiV3ypF", "cap": "6am dawn · @nikowarnholtz", "href": "https://www.tiktok.com/@nikowarnholtz/video/7634148768417369374", "embed": "https://www.tiktok.com/embed/v2/7634148768417369374"},
               {"id": "12w3YKbMBgFsoDf6pzbkqDzeLMDOUKpkg", "cap": "Street tennis · @120thmmm", "href": "https://www.instagram.com/p/DbweElngUPc/"},
-              {"id": "1i_tOKy8zJu1Adp7TuDOytX-7q17m2wEm", "cap": "Subway chaos · @hayatandoko", "href": "https://www.tiktok.com/@hayatandoko/video/7648115532377492767"},
-              {"id": "1rYVU_jZzdPX--W_6v6FUd3zZen3_402y", "cap": "Why I hate NYC · @funkypiging", "href": "https://www.tiktok.com/@funkypiging/video/7664753056478792974"},
-              {"id": "1DZbbF6g16aoq1YXGRL0AdDGjFkxxT9QX", "cap": "Insider nightlife · @thepinktaxreturn", "href": "https://www.tiktok.com/@thepinktaxreturn/video/7666174620482997535"},
-              {"id": "1NI4cJlUqvsVNfl5mrD3CBfEdzS4jPoUG", "cap": "Girls trip · Dumbo · @alannah_davidson", "href": "https://www.tiktok.com/@alannah_davidson/video/7669975161281563935"},
-              {"id": "125UpKLkZr_pxW9txWcgnxJ1YDgU9czdi", "cap": "Street at dusk · @jay_in_nyc", "href": "https://www.tiktok.com/@jay_in_nyc/video/7644282579251678494"},
-              {"id": "1rHxPFZLc7AO2Vf8yZnjxyKexwQARPfA_", "cap": "The humidity bit · @sarahrileey", "href": "https://www.tiktok.com/@sarahrileey/video/7671304644638887182"},
-              {"id": "1I9ESy--WuZZdVAZvaKhYSGvrTbSMfQ7z", "cap": "The cup ritual · @emmagottorff", "href": "https://www.tiktok.com/@emmagottorff/video/7546642319089339678"},
-              {"id": "1S0Fj07FrDCu5mOhmn-9yjVQBssxJgfI2", "cap": "Umpire drama · @tennischannel", "href": "https://www.tiktok.com/@tennischannel/video/7320700860609088810"},
-              {"id": "1V1gk1NHq-tR0gbGYX5N4eIr14svg76XH", "cap": "Judge as character · @ringsea.judge", "href": "https://www.tiktok.com/@ringsea.judge/video/7327334456212114721"},
-              {"id": "1eLC3fTAMhpkaOH3S09CnU3hPN11kdukW", "cap": "Player vs umpire · @holger.rune", "href": "https://www.tiktok.com/@holger.rune/video/7160362698503441670"},
-              {"id": "1KgZDYCQAlY9uS0Ip2TtbT1ZYUAwq3WE3", "cap": "Angry at the chair · @servesnap1", "href": "https://www.tiktok.com/@servesnap1/video/7327697199561837857"},
-              {"id": "1gCgkR8oOU1bBiNZuuAQkueOvZQ61WxFl", "cap": "The couple engine · @courtcouple", "href": "https://www.tiktok.com/@courtcouple/video/7542855962336496951"},
-              {"id": "1m3_mDoeJUdlOx_Olfohswxfr8dmOtibw", "cap": "Balls everywhere · @bolvtennis", "href": "https://www.tiktok.com/@bolvtennis/video/7647278388561988884"}
+              {"id": "1i_tOKy8zJu1Adp7TuDOytX-7q17m2wEm", "cap": "Subway chaos · @hayatandoko", "href": "https://www.tiktok.com/@hayatandoko/video/7648115532377492767", "embed": "https://www.tiktok.com/embed/v2/7648115532377492767"},
+              {"id": "1rYVU_jZzdPX--W_6v6FUd3zZen3_402y", "cap": "Why I hate NYC · @funkypiging", "href": "https://www.tiktok.com/@funkypiging/video/7664753056478792974", "embed": "https://www.tiktok.com/embed/v2/7664753056478792974"},
+              {"id": "1DZbbF6g16aoq1YXGRL0AdDGjFkxxT9QX", "cap": "Insider nightlife · @thepinktaxreturn", "href": "https://www.tiktok.com/@thepinktaxreturn/video/7666174620482997535", "embed": "https://www.tiktok.com/embed/v2/7666174620482997535"},
+              {"id": "1NI4cJlUqvsVNfl5mrD3CBfEdzS4jPoUG", "cap": "Girls trip · Dumbo · @alannah_davidson", "href": "https://www.tiktok.com/@alannah_davidson/video/7669975161281563935", "embed": "https://www.tiktok.com/embed/v2/7669975161281563935"},
+              {"id": "125UpKLkZr_pxW9txWcgnxJ1YDgU9czdi", "cap": "Street at dusk · @jay_in_nyc", "href": "https://www.tiktok.com/@jay_in_nyc/video/7644282579251678494", "embed": "https://www.tiktok.com/embed/v2/7644282579251678494"},
+              {"id": "1rHxPFZLc7AO2Vf8yZnjxyKexwQARPfA_", "cap": "The humidity bit · @sarahrileey", "href": "https://www.tiktok.com/@sarahrileey/video/7671304644638887182", "embed": "https://www.tiktok.com/embed/v2/7671304644638887182"},
+              {"id": "1I9ESy--WuZZdVAZvaKhYSGvrTbSMfQ7z", "cap": "The cup ritual · @emmagottorff", "href": "https://www.tiktok.com/@emmagottorff/video/7546642319089339678", "embed": "https://www.tiktok.com/embed/v2/7546642319089339678"},
+              {"id": "1S0Fj07FrDCu5mOhmn-9yjVQBssxJgfI2", "cap": "Umpire drama · @tennischannel", "href": "https://www.tiktok.com/@tennischannel/video/7320700860609088810", "embed": "https://www.tiktok.com/embed/v2/7320700860609088810"},
+              {"id": "1V1gk1NHq-tR0gbGYX5N4eIr14svg76XH", "cap": "Judge as character · @ringsea.judge", "href": "https://www.tiktok.com/@ringsea.judge/video/7327334456212114721", "embed": "https://www.tiktok.com/embed/v2/7327334456212114721"},
+              {"id": "1eLC3fTAMhpkaOH3S09CnU3hPN11kdukW", "cap": "Player vs umpire · @holger.rune", "href": "https://www.tiktok.com/@holger.rune/video/7160362698503441670", "embed": "https://www.tiktok.com/embed/v2/7160362698503441670"},
+              {"id": "1KgZDYCQAlY9uS0Ip2TtbT1ZYUAwq3WE3", "cap": "Angry at the chair · @servesnap1", "href": "https://www.tiktok.com/@servesnap1/video/7327697199561837857", "embed": "https://www.tiktok.com/embed/v2/7327697199561837857"},
+              {"id": "1gCgkR8oOU1bBiNZuuAQkueOvZQ61WxFl", "cap": "The couple engine · @courtcouple", "href": "https://www.tiktok.com/@courtcouple/video/7542855962336496951", "embed": "https://www.tiktok.com/embed/v2/7542855962336496951"},
+              {"id": "1m3_mDoeJUdlOx_Olfohswxfr8dmOtibw", "cap": "Balls everywhere · @bolvtennis", "href": "https://www.tiktok.com/@bolvtennis/video/7647278388561988884", "embed": "https://www.tiktok.com/embed/v2/7647278388561988884"}
             ]}
         ] }
     ]
@@ -905,7 +904,7 @@ function yearGridsHtml(sp, spi, y, yi){
               key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1,
               cap: o.cap || `${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
               seed:spi*31+yi*11+it.origIndex*7+si, thumbId:o.id,
-              href:o.href, showCap:!!o.cap});
+              href:o.href, embed:o.embed, showCap:!!o.cap});
           }).join("")}</div>
           ${it.palette ? sidePaletteHtml(it.palette) : ""}
         </div>
@@ -1066,7 +1065,10 @@ function buildFlat(){
         lbList.push({
           key:`m:${spi}:${yi}:c:${i}:${sl}`, cap:it.d, sel:!!it.sel, port:false, sq:true,
           fileId:(typeof it.slides[sl]==="string"?it.slides[sl]:it.slides[sl].id), seed:spi*31+yi*11+i+5+sl*3,
-          meta:`${sp.name} · ${y.year} · Carousel · slide ${sl+1} of ${it.slides.length} · ${it.sel?"Selected":"Option"}`});
+          embed:(typeof it.slides[sl]==="string"?null:it.slides[sl].embed),
+          href:(typeof it.slides[sl]==="string"?null:it.slides[sl].href),
+          cap:(typeof it.slides[sl]==="string"?it.d:(it.slides[sl].cap||it.d)),
+          meta:`${sp.name} · ${y.year} · ${it.cap||it.d} · ${sl+1} of ${it.slides.length}`});
       }
     });
   }));
@@ -1084,7 +1086,14 @@ function paintLb(){
   const tall  = e.port || e.sq;
   const style = `aspect-ratio:${ratio};${tall?'width:auto;height:70vh;':''}`;
   let media;
-  if (e.fileId && e.isReel){
+  if (e.embed){
+    /* The platform's own embed player. This is the sanctioned way to show
+       someone else's post: it streams from them, keeps their attribution
+       and view count, and nothing is downloaded or rehosted. Sized to the
+       player's own vertical format rather than the tile ratio. */
+    media = `<iframe class="fill embedplayer" src="${e.embed}" style="width:min(94vw,340px);height:min(78vh,600px);border:0"
+               allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen scrolling="no"></iframe>`;
+  } else if (e.fileId && e.isReel){
     media = `<iframe class="fill" src="${drivePreview(e.fileId)}" style="${style}border:0" allow="autoplay" allowfullscreen></iframe>`;
   } else if (e.fileId){
     media = `<img class="fill" src="${driveThumb(e.fileId,1600)}" style="${style}" alt="${e.cap}">`;
@@ -1093,7 +1102,10 @@ function paintLb(){
   }
   document.getElementById("lbMedia").innerHTML = media;
   document.getElementById("lbCap").textContent = e.cap;
-  document.getElementById("lbMeta").textContent = e.meta;
+  const meta = document.getElementById("lbMeta");
+  meta.innerHTML = e.href
+    ? `${e.meta} &nbsp;·&nbsp; <a href="${e.href}" target="_blank" rel="noopener" style="color:inherit">open the original &#8599;</a>`
+    : e.meta;
 }
 function stepLb(d){ lbPos=(lbPos+d+lbList.length)%lbList.length; paintLb(); }
 function closeLb(){ document.getElementById("lb").hidden=true; document.body.style.overflow=""; }
