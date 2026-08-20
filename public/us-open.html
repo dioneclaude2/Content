@@ -1531,7 +1531,9 @@ const PIECES = [
 
 /* Every reel is rendered down the page -- no per-reel toggle. Storyboards
    paint lazily as each reel scrolls into view, so 14 reels don't all try
-   to decode video at once on load. */
+   to decode video at once on load. The players stay preload="none" for the
+   same reason, so each one needs a poster or it renders as a grey box --
+   Drive's own thumbnail for the file, which costs nothing extra. */
 function fmtT(s){
   const m = Math.floor(s/60), r = s - m*60;
   return (m>0 ? m+":"+String(Math.floor(r)).padStart(2,"0") : r.toFixed(1)+"s");
@@ -1549,7 +1551,7 @@ function pieceBlock(p, i){
     <div class="pblock">
       <div class="pmedia">
         <div class="screen sbscreen">
-          <video id="sbPlayer-${i}" class="sbvid" src="${driveVideoProxy(p.fileId)}" controls playsinline preload="none"></video>
+          <video id="sbPlayer-${i}" class="sbvid" src="${driveVideoProxy(p.fileId)}" poster="${driveThumb(p.fileId,700)}" controls playsinline preload="none"></video>
         </div>
       </div>
       <div class="pshots">
@@ -1659,6 +1661,7 @@ function copyHex(el, hex){
 }
 
 renderAllPieces();
+
 
 
 
