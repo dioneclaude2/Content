@@ -639,6 +639,19 @@ footer{
 
   <!-- ================= VISUALS ================= -->
   <div class="panel" id="panel-visual" role="tabpanel" aria-labelledby="tab-visual" hidden>
+    <div class="hero-head" style="padding-top:30px">
+      <h2>Inspiration Hero</h2>
+      <div class="sec-right" id="visHeroIdx">Hero Shot</div>
+    </div>
+    <div class="hero">
+      <div class="hero-fill" id="visHeroFill"></div>
+      <div class="hero-grain"></div>
+      <span class="hero-tag" id="visHeroTag"></span>
+      <div class="hero-title" id="visHeroTitle"></div>
+      <button class="sarrow l" id="visHeroPrev" onclick="stepVisHero(-1)" aria-label="Previous inspiration">&larr;</button>
+      <button class="sarrow r" id="visHeroNext" onclick="stepVisHero(1)" aria-label="Next inspiration">&rarr;</button>
+      <button class="hero-play" id="visHeroPlay" onclick="openVisHero()">&#8599;&nbsp; Expand</button>
+    </div>
 
     <div class="sec">
       <div class="legend">
@@ -781,7 +794,7 @@ function ordered(sec){
 ================================================================== */
 const MOODBOARD = [
   {
-    name:"Nude Project", main:true,
+    name:"Nude Project", main:true, heroFileId:"1VEVuDdn_Bx_67YKsAtZAAY2MWTrDV0IL", heroDur:7.067,
     driveFolder:"NUDE PROJECT — Ibiza Content Timeline",
     note:"Main reference for Cancun. Read it front to back — the point is how the tone shifts year to year, not any single frame.",
     pending:true,
@@ -1152,6 +1165,38 @@ function openHero(){
             fileId: isCar ? (p.slides[0] && p.slides[0].id) : p.fileId, isReel: !isCar,
             seed:p.seed, meta:`Cancun · Hero Shot · ${isCar?"Carousel":"Reel"}`});
 }
+/* ---------------- visuals hero ----------------
+   Each moodboard source carries its own hero shot, cycled with Next/Prev.
+   Separate from the page hero above, which belongs to Run of Show and
+   Footage -- this one represents the inspiration source you're looking at. */
+let visHeroPos = 0;
+const VIS_HEROES = MOODBOARD.filter(sp=>sp.heroFileId).map(sp=>({title:sp.name, fileId:sp.heroFileId, seed:0, dur:sp.heroDur}));
+function renderVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  document.getElementById("visHeroFill").innerHTML = p
+    ? `<video class="fill" src="${driveVideoProxy(p.fileId)}" autoplay loop muted playsinline></video>`
+    : `<span class="fill" style="background:${grad(0)}"></span>`;
+  forcePlay("visHeroFill");
+  document.getElementById("visHeroTag").textContent = p ? `${p.title} · Hero Shot` : "";
+  document.getElementById("visHeroTitle").textContent = p ? p.title : "No hero shot yet";
+  document.getElementById("visHeroIdx").textContent = p ? `${visHeroPos+1} / ${VIS_HEROES.length}` : "Hero Shot";
+  document.getElementById("visHeroPlay").hidden = !p;
+  const multi = VIS_HEROES.length > 1;
+  document.getElementById("visHeroPrev").hidden = !multi;
+  document.getElementById("visHeroNext").hidden = !multi;
+}
+function stepVisHero(d){
+  if (!VIS_HEROES.length) return;
+  visHeroPos = (visHeroPos + d + VIS_HEROES.length) % VIS_HEROES.length;
+  renderVisHero();
+}
+function openVisHero(){
+  const p = VIS_HEROES[visHeroPos];
+  if (!p) return;
+  pushTemp({key:"vishero", cap:p.title, sel:false, port:true,
+            fileId:p.fileId, isReel:true, seed:p.seed, meta:`${p.title} · Hero Shot`});
+}
+
 document.addEventListener("keydown",e=>{
   if(document.getElementById("lb").hidden) return;
   if(e.key==="Escape") closeLb();
@@ -1171,12 +1216,12 @@ function setMode(m){
      in so autoplay fires again rather than sitting paused from being
      hidden. */
   document.getElementById("pageHero").hidden = m==="visual";
-  if (m!=="visual") renderHero();
+  if (m==="visual") renderVisHero(); else renderHero();
   window.scrollTo(0,0);
 }
 MODES.forEach(k=>{ document.getElementById("tab-"+k).onclick=()=>setMode(k); });
 
-buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero();
+buildFlat(); renderVisuals(); renderRos(); renderVo(); renderDlv(); renderHero(); renderVisHero();
 
 /* ==================================================================
    CONTENT PIECES  —  content_pieces / shots / palette_swatches
