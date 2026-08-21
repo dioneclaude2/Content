@@ -749,6 +749,43 @@ const DELIVERABLES = [
 
 /* ---------------- render ---------------- */
 /* One tile. Everything that draws a grid goes through this. */
+/* Drive rate-limits its thumbnail endpoint under burst, so a tile failing
+   once is normal and usually transient. Retry with backoff instead of
+   giving up after one go -- and never remove the <img>, because a removed
+   tile can never recover and just leaves a permanent gradient. */
+/* ---------------- tile loading ----------------
+   Drive's thumbnail endpoint rate-limits under burst -- eight at once
+   reliably failed several -- so tiles load in paced batches instead of all
+   at once. The first few in a strip are eager so a row is never blank on
+   arrival; the rest are pulled in on a timer.
+
+   Deliberately NOT IntersectionObserver or loading="lazy": both are driven
+   by viewport intersection, which a horizontal scroller defeats (a tile
+   off to the right never qualifies until you scroll that row) and which
+   stops firing entirely in a throttled/background tab. A timer keeps
+   working either way, so every tile is guaranteed to arrive. */
+function pumpTiles(){
+  const pending = [...document.querySelectorAll("img.photo[data-src]")];
+  if (!pending.length) return;
+  const BATCH = 4, GAP = 900;
+  pending.forEach((img, i) => {
+    setTimeout(() => {
+      if (!img.dataset.src || !img.isConnected) return;
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    }, Math.floor(i / BATCH) * GAP);
+  });
+}
+
+function retryTile(img){
+  const n = (+img.dataset.tries || 0) + 1;
+  img.dataset.tries = n;
+  if (n > 4) return;                       // give up quietly; gradient stays
+  const wait = [700, 2000, 5000, 11000][n-1];
+  const url = img.getAttribute("src").split("#")[0];
+  setTimeout(()=>{ img.src = url + "#r" + n; }, wait);
+}
+
 function tileHtml(o){
   /* o: {key, label, cap, sel, seed, thumbId, slideCount, isReel, showCap} */
   /* A tile with a Drive thumbnail always keeps the placeholder gradient
@@ -759,9 +796,10 @@ function tileHtml(o){
      gradient in place instead of a broken-image glyph. */
   const fill = o.thumbId
     ? `<span class="fill grad loading" style="background:${grad(o.seed)}"></span>
-       <img class="fill photo" src="${driveThumb(o.thumbId,500)}" loading="lazy" alt="${o.cap}"
+       <img class="fill photo" ${o.eager?`src="${driveThumb(o.thumbId,500)}"`:`data-src="${driveThumb(o.thumbId,500)}"`} alt="${o.cap}"
+         decoding="async" fetchpriority="${o.eager?'high':'auto'}"
          onload="this.classList.add('loaded');this.previousElementSibling.classList.remove('loading')"
-         onerror="if(!this.dataset.retried){this.dataset.retried=1;setTimeout(()=>{this.src=this.src},4000)}else{this.remove()}">`
+         onerror="retryTile(this)">`
     : `<span class="fill" style="background:${grad(o.seed)}"></span>`;
   return `<div class="cell ${o.sel?'sel':'opt'}">
     <button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">
@@ -900,7 +938,8 @@ function yearGridsHtml(sp, spi, y, yi){
     h += `<div class="fmt"><span class="t">Reels</span><span class="rule"></span><span class="n">9:16</span></div>
       <div class="grid seq reel">${y.reels.map((it,i)=>tileHtml({
         key:`m:${spi}:${yi}:r:${i}`, label:it.d, cap:it.d, sel:!!it.sel,
-        seed:spi*31+yi*11+i, thumbId:it.fileId, isReel:true, showCap:false})).join("")}</div>`;
+        seed:spi*31+yi*11+i, thumbId:it.fileId, isReel:true, showCap:false,
+        eager:i<5})).join("")}</div>`;
   }
   /* Every slide of every carousel is laid out directly — a moodboard is
      for seeing everything at once, not clicking through one cover tile
@@ -914,7 +953,7 @@ function yearGridsHtml(sp, spi, y, yi){
         <div class="postrow">
           <div class="grid seq carousel scrollx">${it.slides.map((sid,si)=>tileHtml({
             key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1, cap:`${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
-            seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false})).join("")}</div>
+            seed:spi*31+yi*11+it.origIndex*7+si, thumbId:sid, showCap:false, eager:si<5})).join("")}</div>
           ${it.palette ? sidePaletteHtml(it.palette) : ""}
         </div>
       </div>`;
@@ -932,6 +971,7 @@ function selectYear(spi, yi){
   sp.years.forEach((y2,i)=>{
     document.getElementById(`yp-${spi}-${i}`).setAttribute("aria-selected", String(i===yi));
   });
+  pumpTiles();
 }
 
 function renderMoodboard(){
@@ -982,6 +1022,7 @@ function renderVisuals(){
     </div>`;
   });
   document.getElementById("visuals").innerHTML=html;
+  pumpTiles();
 }
 
 const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
