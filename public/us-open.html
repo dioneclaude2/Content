@@ -212,6 +212,14 @@ details.refs[open] summary{border-color:var(--white);color:var(--white)}
 }
 .grid.scrollx::-webkit-scrollbar{display:none}
 .grid.scrollx .cell{flex:0 0 auto;width:clamp(130px,30vw,190px)}
+/* A reference row mixes formats: a reel post is 9:16, a true carousel slide
+   is 4:5. Rather than crop everything to one ratio, tiles share a fixed
+   HEIGHT and take their width from their own ratio -- so each format reads
+   true and the captions still line up across the row. */
+.grid.carousel.scrollx{--th:clamp(176px,41vw,258px)}
+.grid.carousel.scrollx .cell{width:calc(var(--th) * 4 / 5)}
+.grid.carousel.scrollx .cell.vert{width:calc(var(--th) * 9 / 16)}
+.grid.carousel.scrollx .tile{height:var(--th);width:100%}
 
 .cell{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0}
 .tile{
@@ -810,7 +818,7 @@ function tileHtml(o){
      same frozen frame. */
   const open = `<button class="tile" onclick="openLb('${o.key}')" aria-label="${o.cap}">`;
   const close = `</button>`;
-  return `<div class="cell ${o.sel?'sel':'opt'}">
+  return `<div class="cell ${o.sel?'sel':'opt'}${o.vert?' vert':''}">
     ${open}
       ${fill}
       ${o.embed?'<span class="srcmark">&#9654; plays</span>':(o.href?'<span class="srcmark alt">&#8599; open</span>':'')}
@@ -945,10 +953,24 @@ function yearGridsHtml(sp, spi, y, yi){
      per post. Each post gets its own real palette, sampled from its own
      images, right next to its grid. */
   if (carousels.length){
-    h += `<div class="fmt"><span class="t">Carousels</span><span class="rule"></span><span class="n">4:5 &middot; all slides</span></div>`;
+    /* Label the row by what it actually holds. A single video post is a
+       REEL, not a carousel -- calling fifteen TikToks a "carousel" is just
+       wrong, and it was forcing them all into a 4:5 crop. A carousel is a
+       multi-slide post. Count both and title accordingly. */
+    const allSlides = carousels.flatMap(c => c.slides.map(s => (typeof s === "string") ? {id:s} : s));
+    const nReel = allSlides.filter(s => s.embed).length;
+    const nStill = allSlides.length - nReel;
+    const fmtT = nReel && nStill ? "Reels + stills" : nReel ? "Reels" : "Carousels";
+    const fmtN = nReel && nStill ? `9:16 &amp; 4:5 &middot; ${nReel} reels, ${nStill} still${nStill>1?'s':''}`
+               : nReel ? `9:16 &middot; ${nReel} posts` : "4:5 &middot; all slides";
+    h += `<div class="fmt"><span class="t">${fmtT}</span><span class="rule"></span><span class="n">${fmtN}</span></div>`;
     carousels.forEach(it => {
+      const sl = it.slides.map(s => (typeof s === "string") ? {id:s} : s);
+      const r = sl.filter(s => s.embed).length, st = sl.length - r;
+      const meta = r ? [r?`${r} reels`:"", st?`${st} still${st>1?'s':''}`:""].filter(Boolean).join(" &middot; ")
+                     : `${sl.length} slides`;
       h += `<div class="group">
-        <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${it.slides.length} slides</span></div>
+        <div class="yr"><span class="t">${it.cap || it.d}</span><span class="rule"></span><span class="n">${it.d} &middot; ${meta}</span></div>
         <div class="postrow">
           <div class="grid seq carousel scrollx">${it.slides.map((sl,si)=>{
             const o = (typeof sl === "string") ? {id:sl} : sl;
@@ -956,7 +978,7 @@ function yearGridsHtml(sp, spi, y, yi){
               key:`m:${spi}:${yi}:c:${it.origIndex}:${si}`, label:si+1,
               cap: o.cap || `${it.cap||it.d} — slide ${si+1}`, sel:!!it.sel,
               seed:spi*31+yi*11+it.origIndex*7+si, thumbId:o.id,
-              href:o.href, embed:o.embed, showCap:!!o.cap, eager:si<5});
+              href:o.href, embed:o.embed, vert:!!o.embed, showCap:!!o.cap, eager:si<5});
           }).join("")}</div>
           ${it.palette ? sidePaletteHtml(it.palette) : ""}
         </div>
