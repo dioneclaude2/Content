@@ -160,6 +160,7 @@ details[open] > summary .caret{transform:rotate(90deg)}
 .row-detail{font-size:13.5px;color:var(--muted);line-height:1.45;max-width:58ch}
 .row-note{font-size:13.5px;line-height:1.45;border-left:2px solid var(--white);padding-left:11px;max-width:58ch}
 .row-loc{font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.row-type{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
 .row.live{background:#0C0C0C}
 .row.live .row-time{color:var(--white);box-shadow:inset 3px 0 0 var(--white)}
@@ -733,21 +734,87 @@ function driveVideoProxy(id){ return `/api/drive-video?id=${id}&v=2`; }
    scheduled. Empty here, same honesty rule as everywhere else. */
 const SECTIONS = [];
 
-/* crew_teams + shot_list_items — built from the Nancy Out of Office brief's
-   "The events" + "Details" sections, not invented. Times/venues the brief
-   itself hasn't nailed down yet are marked TBD rather than guessed. */
+/* crew_teams + shot_list_items — the run of show IS the hit list: what has
+   to be shot, grouped by day, in the sheet's row shape. Not a timed agenda.
+   Days, locations and concepts are the crew's own schedule; products are ACE
+   and SMASH. Nothing here invents volumes or roles — the sheet doesn't carry
+   them, so neither does this. */
 const CREWS = [
-  { name:"New York — Phase 1", director:"[Director]", host:"[Host]",
-    objective:"Aug 25 – Sep 7. Announce ACE + SMASH on the 25th, then three weeks of timely, street-level New York content built around the US Open.",
+  { name:"Day 1 — Tennis", when:"Sat 29 Aug", where:"Manhattan court — Seaport Racket Club / Manhattan Plaza Racquet (court not locked)",
+    objective:"Tennis play shot with the Manhattan skyline behind it. The look reference is the styled product film; 6am dawn is the closest match for light and framing.",
     rows:[
-      {t:"TBD–TBD", act:"Miami tennis court shoot", detail:"Asset shoot — images and assets for launch day.", note:"Before Aug 20. Susan can run it.", loc:"Miami — tennis court", refs:[]},
-      {t:"TBD–TBD", act:"Launch announcement day", detail:"ACE + SMASH announced on social.", note:"Aug 25.", loc:"Social / online", refs:[]},
-      {t:"TBD–TBD", act:"Party tennis vibe activation", detail:"Hudson Tennis Club, tentative.", note:"Unclear if this is the same as the New York street day or a separate event.", loc:"Hudson Tennis Club (tentative)", refs:[]},
-      {t:"TBD–TBD", act:"US Open day — the suite and the grounds", detail:"Aug 28–31.", note:"", loc:"US Open", refs:[]},
-      {t:"TBD–TBD", act:"New York street day", detail:"Timely, street-level content.", note:"Date not yet set.", loc:"New York streets", refs:[]},
-      {t:"TBD–TBD", act:"New York street interview day", detail:"Street-level interview format.", note:"Date not yet set.", loc:"New York streets", refs:[]},
-      {t:"TBD–TBD", act:"PR hangout / lunch", detail:"With agencies.", note:"Still unshaped.", loc:"TBD", refs:[]},
-      {t:"TBD–TBD", act:"The tennis brunch", detail:"White table across the net, ball centerpieces, ours in pink.", note:"Art direction is locked; drone shot mandatory. Date, venue and guest list still TBD.", loc:"TBD", refs:[]}
+      {type:"Wide · establishing", act:"Empty court, skyline behind", detail:"Court clean and empty before anyone plays, skyline filling the back of frame. Locked off. The location-setting frame.", loc:"Court", note:"", refs:[]},
+      {type:"Wide · locked-off", act:"Rally, skyline in frame", detail:"Two players rallying across the net, camera static, skyline held in the upper third.", loc:"Court", note:"", refs:[]},
+      {type:"Medium · low angle", act:"Serve, mid-toss", detail:"Shot from low so the skyline fills the background behind the toss. Catch the top of the ball arc.", loc:"Court — baseline", note:"", refs:[]},
+      {type:"Slow motion", act:"Ball at contact", detail:"Tight on the strike. High frame rate, held on the moment of contact.", loc:"Court", note:"", refs:[]},
+      {type:"Detail · static", act:"ACE + SMASH courtside", detail:"Both cans set on the net post or bench, skyline soft behind them.", loc:"Court — net post", note:"", refs:[]},
+      {type:"Macro · detail", act:"Condensation on the can", detail:"Very tight on the chilled surface. Texture shot, no context needed.", loc:"Court", note:"", refs:[]},
+      {type:"Medium · static", act:"Drink between points", detail:"Player picks up a can courtside and drinks. Natural, not presented to camera.", loc:"Court — bench", note:"", refs:[]},
+      {type:"Flat-lay · overhead", act:"Kit laid out", detail:"Top-down on racket, balls and both SKUs arranged on the court surface.", loc:"Court surface", note:"", refs:[]},
+      {type:"Medium · tracking", act:"Walking the baseline", detail:"Waist-down follow as a player walks the baseline, ball bouncing alongside.", loc:"Court — baseline", note:"", refs:[]},
+      {type:"Detail · low angle", act:"Feet on the surface", detail:"Ground-level crop on feet and ankles, ball rolled across frame.", loc:"Court surface", note:"", refs:[]},
+      {type:"Portrait · static", act:"Player to camera, holding SKU", detail:"Against the fence, direct to lens, can in hand.", loc:"Court — fence", note:"", refs:[]},
+      {type:"Hero action · slow", act:"The crack and pour", detail:"Opening and pouring, static camera, held long. Cover from more than one angle.", loc:"Court", note:"", refs:[]},
+      {type:"Wide · golden hour", act:"Silhouettes against skyline", detail:"Players backlit at the end of the day, skyline behind. Shoot last.", loc:"Court", note:"", refs:[]},
+      {type:"Wide · closing", act:"Court emptying", detail:"Bags packed, session over. The wrap frame.", loc:"Court", note:"", refs:[]}
+    ]},
+
+  { name:"Day 2 — US Open", when:"Sun 30 Aug", where:"US Open — grounds",
+    objective:"B-roll, vignettes and ace shots of the product in among the crowd. Grounds access only. Umpire and officiating references are the character model.",
+    rows:[
+      {type:"Wide · establishing", act:"Grounds entrance", detail:"Crowd flowing in. Sets the day.", loc:"US Open — entrance", note:"", refs:[]},
+      {type:"Handheld · drift", act:"Concourse walk-through", detail:"Moving with the crowd, letting people cross the lens. Density is the point.", loc:"US Open — concourse", note:"", refs:[]},
+      {type:"Detail · static", act:"Signage and wristbands", detail:"Tickets, wristbands, court signage. The texture that says which event this is.", loc:"US Open — grounds", note:"", refs:[]},
+      {type:"Medium · shallow", act:"Product in hand, crowd behind", detail:"Can held, crowd moving past out of focus behind it.", loc:"US Open — grounds", note:"", refs:[]},
+      {type:"Ace shot", act:"Product raised to court", detail:"Can held up in front of a court or scoreboard so both read in one frame. This is the money shot for the day.", loc:"US Open — courtside", note:"", refs:[]},
+      {type:"Vignette · low angle", act:"Crowd reaction", detail:"Cheering caught from below, faces up. Shoot on real play, not staged.", loc:"US Open — stands", note:"", refs:[]},
+      {type:"Detail · static", act:"Scoreboard / court number", detail:"Clean graphic frame for the edit to cut on.", loc:"US Open — courtside", note:"", refs:[]},
+      {type:"Handheld · observational", act:"Queue and concessions", detail:"Food and drink lines, product intercut naturally.", loc:"US Open — concessions", note:"", refs:[]},
+      {type:"Medium · static", act:"Group toast", detail:"Cans raised together. Keep it loose.", loc:"US Open — grounds", note:"", refs:[]},
+      {type:"Vignette · from below", act:"The umpire chair", detail:"Chair shot from underneath, looking up. The officiating references are all built on this angle.", loc:"US Open — courtside", note:"", refs:[]},
+      {type:"Wide · from stands", act:"Full court from height", detail:"The context frame — whole court, players small.", loc:"US Open — stands", note:"", refs:[]},
+      {type:"Detail · static", act:"Stadium texture", detail:"Steps, seat backs, rails. Cutaway material.", loc:"US Open — stands", note:"", refs:[]},
+      {type:"Vignette · candid", act:"Fans in merch", detail:"Characters in the crowd. Ask before shooting close.", loc:"US Open — grounds", note:"", refs:[]},
+      {type:"Wide · golden hour", act:"Grounds at sunset", detail:"Last light across the grounds.", loc:"US Open — grounds", note:"", refs:[]},
+      {type:"Backup block", act:"Subway content if we wrap early", detail:"Only if the day finishes ahead of schedule — falls back to the Day 3 subway setups.", loc:"Subway", note:"Backup only. Do not cut into grounds time.", refs:[]}
+    ]},
+
+  { name:"Day 3 — Central Park & Times Square", when:"Mon 31 Aug", where:"Central Park (AM) → Times Square and subway (PM/evening)",
+    objective:"Morning run concept in the park, then skits, memes, the red flag / green flag series and costume vignettes through Times Square and the subway. Models wear the costumes.",
+    rows:[
+      {type:"Wide · establishing", act:"Park path at dawn", detail:"Empty path, early light. Before the run.", loc:"Central Park", note:"", refs:[]},
+      {type:"Detail · tracking", act:"Running feet on path", detail:"Low, following the stride. Cut-in for the run sequence.", loc:"Central Park", note:"", refs:[]},
+      {type:"Medium · tracking", act:"Runner mid-stride", detail:"Held alongside, park moving behind.", loc:"Central Park", note:"", refs:[]},
+      {type:"Detail · static", act:"Product at the pause", detail:"Can in hand at the end of the run, breath still up.", loc:"Central Park", note:"", refs:[]},
+      {type:"Wide · landmark", act:"Bridge or arch in frame", detail:"One recognisable park landmark so the location reads instantly.", loc:"Central Park", note:"", refs:[]},
+      {type:"Locked-off · skit", act:"Bench skit", detail:"Static frame, single joke beat, played out in one take.", loc:"Central Park — bench", note:"", refs:[]},
+      {type:"Locked-off · series", act:"Red flag / green flag", detail:"One flag per take, same framing every time so they cut together as a set. Shoot all of them back to back.", loc:"Central Park", note:"Same camera position for every take or the series will not cut.", refs:[]},
+      {type:"Wide · establishing", act:"Times Square, screens and crowd", detail:"The location frame. Screens lit, crowd dense.", loc:"Times Square", note:"", refs:[]},
+      {type:"High angle · locked-off", act:"Costume vignette in the crowd", detail:"Elevated static frame, costumes in the middle of the crowd, public reaction cut as jump cuts inside the one frame. One position, one long record, cut later.", loc:"Times Square", note:"This is the street stunt reference exactly — the whole effect is in the edit, not the camera.", refs:[]},
+      {type:"Medium · tracking", act:"Costumes walking through", detail:"Following the models through the crowd, catching reactions as they pass.", loc:"Times Square", note:"", refs:[]},
+      {type:"Wide · static", act:"Subway platform", detail:"Platform frame, train arriving or leaving.", loc:"Subway — platform", note:"", refs:[]},
+      {type:"Handheld · in-car", act:"Costumes on the train", detail:"Inside the car with passengers reacting. Handheld, close, unpolished.", loc:"Subway — car", note:"", refs:[]},
+      {type:"Detail · static", act:"Subway texture", detail:"Poles, seats, tiles, signage. Cutaways.", loc:"Subway", note:"", refs:[]},
+      {type:"Locked-off · meme", act:"Single-beat meme setup", detail:"Static frame, one gag, no coverage needed.", loc:"Times Square / subway", note:"", refs:[]},
+      {type:"Wide · night", act:"Times Square lit", detail:"Full night, screens at their brightest. Closes the day.", loc:"Times Square", note:"", refs:[]}
+    ]},
+
+  { name:"Day 4 — Brooklyn", when:"Tue 1 Sept", where:"Brooklyn Bridge Park → Domino Park",
+    objective:"Vlog-style cinematic content, plus the fake tennis concept — mimed rally with the ball movement faked in the edit.",
+    rows:[
+      {type:"Wide · establishing", act:"Bridge Park, skyline across the water", detail:"Manhattan across the river. The location frame.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Handheld · drift", act:"Waterfront walk", detail:"Vlog-style drift along the water, foreground crossing the lens. Loose, not stabilised.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Medium · to camera", act:"Vlog address", detail:"Talent speaking straight to lens, walking or standing. Handheld.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Wide · two-shot", act:"Fake tennis — the rally", detail:"Both players miming a rally with no ball, swings timed to each other so the ball can be added later. Lock the camera off.", loc:"Brooklyn Bridge Park", note:"No reference exists for this one — shoot generous coverage and keep the timing clean and repeatable.", refs:[]},
+      {type:"Medium · singles", act:"Fake tennis — each side", detail:"Matching medium on each player, swinging on cue. Needed to cut the rally together.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Medium · reaction", act:"Fake tennis — the celebration", detail:"Win and loss reactions, played big.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Detail · static", act:"Racket, no ball", detail:"Tight on the racket mid-swing. Sells the gag in the edit.", loc:"Brooklyn Bridge Park", note:"", refs:[]},
+      {type:"Wide · establishing", act:"Domino Park", detail:"The park structures and architecture. Second location reads clearly.", loc:"Domino Park", note:"", refs:[]},
+      {type:"Medium · static", act:"Product on the ledge", detail:"Cans set on a rail or ledge with the skyline behind.", loc:"Domino Park", note:"", refs:[]},
+      {type:"Wide · golden hour", act:"Silhouettes against the bridge", detail:"Backlit, bridge behind. Timed to last light.", loc:"Brooklyn waterfront", note:"", refs:[]},
+      {type:"Handheld · candid", act:"Group walking", detail:"Talent walking and talking, caught rather than directed.", loc:"Brooklyn", note:"", refs:[]},
+      {type:"Detail · static", act:"Hands and product", detail:"Close texture — hands, cans, surfaces.", loc:"Brooklyn", note:"", refs:[]},
+      {type:"Wide · closing", act:"Skyline wrap", detail:"Final frame of the trip. Shoot it before the 4:00 PM departure.", loc:"Brooklyn waterfront", note:"Caroline departs 4:00 PM. Anything needing her is shot before then.", refs:[]}
     ]}
 ];
 
@@ -1057,24 +1124,19 @@ function renderVisuals(){
 
 const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
 
+/* No clock. A run of show here is the hit list -- what has to be shot that
+   day -- so rows are numbered shots, not time slots, and nothing is ever
+   marked "now" or "next". */
 function renderRos(){
-  let liveKey=null,nextKey=null,best=1e9;
-  CREWS.forEach((c,ci)=>c.rows.forEach((r,ri)=>{
-    const [a,b]=r.t.split("–").map(toMin);
-    if(NOW>=a&&NOW<b) liveKey=ci+":"+ri;
-    else if(a>NOW&&a<best){best=a;nextKey=ci+":"+ri;}
-  }));
   document.getElementById("ros").innerHTML = CREWS.map((c,ci)=>`
     <div class="crew">
       <div class="crew-h">
         <div class="crew-name">${c.name}</div>
-        <div class="crew-roles"><span><b>Director</b> ${c.director}</span><span><b>Host</b> ${c.host}</span></div>
+        <div class="crew-roles"><span><b>When</b> ${c.when}</span><span><b>Where</b> ${c.where}</span><span><b>Shots</b> ${c.rows.length}</span></div>
         <div class="crew-obj">${c.objective}</div>
       </div>
       <div class="crew-body">${c.rows.map((r,ri)=>{
-        const key=ci+":"+ri;
-        const state = key===liveKey?"live":key===nextKey?"next":"";
-        const [s,e]=r.t.split("–");
+        const state = "";
         /* Reference groups are looked up by name, so reordering SECTIONS
            can never point a row at the wrong grid. */
         const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
@@ -1082,9 +1144,9 @@ function renderRos(){
         const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
         const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
         return `<div class="row ${state}">
-          <div class="row-time">${s}<span>${e}</span></div>
+          <div class="row-time">${String(ri+1).padStart(2,"0")}</div>
           <div class="row-main">
-            ${state==="live"?'<span class="chip now">&#9679; Now</span>':state==="next"?'<span class="chip next">Next up</span>':''}
+            <div class="row-type">${r.type}</div>
             <div class="row-act">${r.act}</div>
             ${r.detail?`<div class="row-detail">${r.detail}</div>`:''}
             ${r.note?`<div class="row-note">${r.note}</div>`:''}
