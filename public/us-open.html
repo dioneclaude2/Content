@@ -137,33 +137,75 @@ details[open] > summary .caret{transform:rotate(90deg)}
 .qlink i{font-style:normal;font-size:10px;color:var(--dim)}
 
 /* ---------------- run of show ---------------- */
-.ros{padding:0 var(--pad);max-width:880px}
+/* Was 880px, sized for a narrow time-coded list. Shot rows run two columns
+   on wide screens, so the card now aligns with the hero above it instead of
+   stopping two thirds of the way across. */
+.ros{padding:0 var(--pad);max-width:1180px}
+/* ---------------- run of show ----------------
+   A hit list is read on set, at a glance, usually one-handed. So: a heavy
+   numbered spine down the left that you can thumb through, the shot type
+   above the shot so you know the grammar before the content, and segment
+   bands breaking the day into the blocks it is actually shot in. */
 .crew{border:1px solid var(--line);margin-bottom:10px;background:var(--surface)}
-.crew-h{padding:15px 16px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
-.crew-name{font-weight:700;font-size:15px;letter-spacing:-.01em;text-transform:uppercase}
-.crew-roles{
-  display:flex;flex-wrap:wrap;gap:3px 18px;margin-top:8px;
-  font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+.crew-h{padding:20px 20px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.crew-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.crew-name{font-weight:700;font-size:clamp(19px,3.2vw,25px);letter-spacing:-.02em;text-transform:uppercase;line-height:1.05}
+.crew-when{
+  margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--black);background:var(--white);padding:5px 9px;line-height:1;white-space:nowrap;
 }
-.crew-roles b{color:var(--muted);font-weight:600}
-.crew-obj{margin-top:8px;font-style:italic;font-size:13px;color:var(--muted);line-height:1.45;max-width:60ch}
+.crew-where{margin-top:9px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+.crew-obj{margin-top:11px;font-style:italic;font-size:13.5px;color:var(--muted);line-height:1.5;max-width:66ch}
 
-.row{display:grid;grid-template-columns:70px 1fr;border-top:1px solid var(--line-soft)}
-.crew-body > .row:first-child{border-top:0}
-.row-time{
-  padding:14px 0 14px 16px;font-size:12px;font-weight:600;color:var(--muted);
-  font-variant-numeric:tabular-nums;line-height:1.4;letter-spacing:.01em;
+/* Segment band. Same rule-and-label grammar as the format headers on
+   Visuals, so the page only ever teaches you one pattern. */
+.rseg{display:flex;align-items:baseline;gap:12px;padding:26px 20px 10px}
+.row + .rseg{border-top:1px solid var(--line)}
+.crew-body > .rseg:first-child{padding-top:16px}
+.rseg .t{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--white)}
+.rseg .rule{flex:1;height:1px;background:var(--line)}
+.rseg .n{font-size:9.5px;font-weight:600;letter-spacing:.12em;color:var(--dim);font-variant-numeric:tabular-nums}
+
+.row{display:grid;grid-template-columns:58px 1fr;transition:background .14s ease}
+.row:hover{background:var(--surface-2)}
+.row-num{
+  padding:14px 0 18px;text-align:center;
+  font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.15;
+  color:var(--dim);font-variant-numeric:tabular-nums;transition:color .14s ease;
 }
-.row-time span{display:block;color:var(--dim);font-weight:400}
-.row-main{padding:14px 16px 14px 2px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.row-act{font-size:16px;font-weight:600;line-height:1.28;letter-spacing:-.01em}
-.row-detail{font-size:13.5px;color:var(--muted);line-height:1.45;max-width:58ch}
-.row-note{font-size:13.5px;line-height:1.45;border-left:2px solid var(--white);padding-left:11px;max-width:58ch}
-.row-loc{font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.row-type{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.row:hover .row-num{color:var(--white)}
+/* The spine: a hairline that runs unbroken down the column because the rows
+   stack flush. Lights up on the row you are reading. */
+.row-main{
+  padding:14px 20px 18px 17px;display:grid;gap:5px 30px;min-width:0;
+  border-left:1px solid var(--line);transition:border-color .14s ease;
+}
+.row-head,.row-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+/* Wide screens: the shot and its description sit side by side rather than
+   stacked, so a 1280px card is not two thirds empty and the eye can run
+   straight down the shot names alone when scanning for one. */
+@media (min-width:1040px){
+  .row-main{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:start}
+  .row-body{padding-top:1px}
+}
+.row:hover .row-main{border-left-color:var(--white)}
+.row-act{font-size:16.5px;font-weight:600;line-height:1.3;letter-spacing:-.01em}
+.row-detail{font-size:13.5px;color:var(--muted);line-height:1.5;max-width:64ch}
+.row-note{
+  font-size:12.5px;line-height:1.5;border-left:2px solid var(--white);
+  padding:1px 0 1px 11px;margin-top:3px;max-width:64ch;
+}
+.row-loc{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:2px}
+.row-type{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:560px){
+  .row{grid-template-columns:44px 1fr}
+  .row-num{font-size:14px;padding-top:15px}
+  .row-main{padding:14px 15px 17px 13px}
+  .rseg{padding:22px 15px 9px}
+  .crew-h{padding:17px 15px 15px}
+  .crew-when{margin-left:0}
+}
 
-.row.live{background:#0C0C0C}
-.row.live .row-time{color:var(--white);box-shadow:inset 3px 0 0 var(--white)}
 .chip{
   align-self:flex-start;font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;
 }
@@ -626,8 +668,9 @@ a.tile{display:block;text-decoration:none}
     </div>
 
     <div class="sec">
-      <div class="sec-h"><h2>Run of Show</h2><div class="sec-right" id="clockNote">Preview clock 10:42</div></div>
-      <div class="sub">Time-coded, owned, one row per action &mdash; references stay folded until you ask for them.</div>
+      <div class="sec-h"><h2>Run of Show</h2><div class="sec-right" id="rosCount"></div></div>
+      <div class="sub">The hit list &mdash; what has to be shot, day by day. Pick a day; every shot for it is below, in order.</div>
+      <div class="yearpills" id="rosPills" role="tablist"></div>
       <div class="ros" id="ros"></div>
     </div>
 
@@ -695,7 +738,6 @@ a.tile{display:block;text-decoration:none}
 <script>
 /* Data is shaped like the proposed Supabase rows, so the prototype
    doubles as a check on the model. */
-const NOW = 10*60 + 42;   /* preview clock 10:42 */
 
 function grad(seed){
   const p = [["#2E5C63","#7E4426"],["#3B6B5A","#141B1E"],["#7A4B2E","#231A14"],
@@ -817,6 +859,30 @@ const CREWS = [
       {type:"Wide · closing", act:"Skyline wrap", detail:"Final frame of the trip. Shoot it before the 4:00 PM departure.", loc:"Brooklyn waterfront", note:"Caroline departs 4:00 PM. Anything needing her is shot before then.", refs:[]}
     ]}
 ];
+
+
+/* Reading rhythm. 57 shots in a flat list is a wall -- these break each day
+   into the blocks it is actually shot in. [firstShotNumber, label]; a shot
+   belongs to the last block that starts at or before it. */
+const SEGS = [
+  [[1,"Establish"],[2,"Play"],[5,"Product"],[9,"Detail"],[11,"Hero"],[13,"Golden hour"]],
+  [[1,"Arrival"],[4,"Product in the crowd"],[6,"Crowd &amp; vignettes"],[10,"Court &amp; characters"],[14,"Golden hour"],[15,"Backup"]],
+  [[1,"Central Park &middot; morning run"],[6,"Central Park &middot; skits"],[8,"Times Square"],[11,"Subway"],[14,"Times Square &middot; night"]],
+  [[1,"Bridge Park &middot; vlog"],[4,"Fake tennis"],[8,"Domino Park"],[10,"Golden hour &amp; wrap"]]
+];
+function segFor(di, n){
+  const t = SEGS[di] || [];
+  let cur = null;
+  for (const [start, label] of t) if (n >= start) cur = [start, label];
+  return cur;
+}
+function segRange(di, start){
+  const t = SEGS[di] || [], rows = CREWS[di].rows.length;
+  const nxt = t.find(([s2]) => s2 > start);
+  const end = nxt ? nxt[0] - 1 : rows;
+  return start === end ? String(start).padStart(2,"0")
+                       : `${String(start).padStart(2,"0")}\u2013${String(end).padStart(2,"0")}`;
+}
 
 /* No Hero Highlight VO has been written for US Open yet. */
 const VO = [];
@@ -1122,40 +1188,78 @@ function renderVisuals(){
   pumpTiles();
 }
 
-const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
 
 /* No clock. A run of show here is the hit list -- what has to be shot that
    day -- so rows are numbered shots, not time slots, and nothing is ever
-   marked "now" or "next". */
+   marked "now" or "next".
+
+   One day at a time, switched by the same chip toggle used everywhere else.
+   Four days of shots stacked into one column is a scroll nobody reads to the
+   end of; a day is the unit the crew actually works in. */
+let ROS_DAY = 0;
+
 function renderRos(){
-  document.getElementById("ros").innerHTML = CREWS.map((c,ci)=>`
+  document.getElementById("rosCount").textContent =
+    `${CREWS.reduce((n,c)=>n+c.rows.length,0)} shots \u00b7 ${CREWS.length} days`;
+  document.getElementById("rosPills").innerHTML = CREWS.map((c,i)=>`
+    <button class="yearpill" id="rp-${i}" aria-selected="${i===ROS_DAY}" onclick="selectDay(${i})">
+      ${c.name.split(" \u2014 ")[0]}<span class="cnt">${c.rows.length}</span>
+    </button>`).join("");
+  renderDay();
+}
+
+function selectDay(i){
+  ROS_DAY = i;
+  CREWS.forEach((c,j)=>document.getElementById(`rp-${j}`).setAttribute("aria-selected", String(j===i)));
+  renderDay();
+}
+
+function renderDay(){
+  const ci = ROS_DAY, c = CREWS[ci];
+  let lastSeg = null;
+  const body = c.rows.map((r,ri)=>{
+    const n = ri + 1;
+    const seg = segFor(ci, n);
+    let head = "";
+    if (seg && (!lastSeg || seg[0] !== lastSeg[0])){
+      lastSeg = seg;
+      head = `<div class="rseg"><span class="t">${seg[1]}</span><span class="rule"></span><span class="n">${segRange(ci, seg[0])}</span></div>`;
+    }
+    /* Reference groups are looked up by name, so reordering SECTIONS can
+       never point a row at the wrong grid. */
+    const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
+    const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
+    const count = idxs.reduce((n2,si)=>n2+SECTIONS[si].items.length,0);
+    const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" \u00b7 ");
+    return head + `<div class="row">
+      <div class="row-num">${String(n).padStart(2,"0")}</div>
+      <div class="row-main">
+        <div class="row-head">
+          <div class="row-type">${r.type}</div>
+          <div class="row-act">${r.act}</div>
+        </div>
+        <div class="row-body">
+          ${r.detail?`<div class="row-detail">${r.detail}</div>`:''}
+          ${r.note?`<div class="row-note">${r.note}</div>`:''}
+          <div class="row-loc">${r.loc}</div>
+          ${count?`<details class="refs"><summary>${count} refs &mdash; ${from}</summary><div class="refstrip">${strip}</div></details>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("ros").innerHTML = `
     <div class="crew">
       <div class="crew-h">
-        <div class="crew-name">${c.name}</div>
-        <div class="crew-roles"><span><b>When</b> ${c.when}</span><span><b>Where</b> ${c.where}</span><span><b>Shots</b> ${c.rows.length}</span></div>
+        <div class="crew-top">
+          <div class="crew-name">${c.name}</div>
+          <div class="crew-when">${c.when}</div>
+        </div>
+        <div class="crew-where">${c.where}</div>
         <div class="crew-obj">${c.objective}</div>
       </div>
-      <div class="crew-body">${c.rows.map((r,ri)=>{
-        const state = "";
-        /* Reference groups are looked up by name, so reordering SECTIONS
-           can never point a row at the wrong grid. */
-        const idxs  = r.refs.map(nm=>SECTIONS.findIndex(x=>(x.schedule||x.group)===nm)).filter(i=>i>=0);
-        const strip = idxs.map(si=>ordered(SECTIONS[si]).slice(0,4).map(o=>cellHtml(o.it,o.n,si,o.i)).join("")).join("");
-        const count = idxs.reduce((n,si)=>n+SECTIONS[si].items.length,0);
-        const from  = idxs.map(si=>SECTIONS[si].schedule||SECTIONS[si].group).join(" · ");
-        return `<div class="row ${state}">
-          <div class="row-time">${String(ri+1).padStart(2,"0")}</div>
-          <div class="row-main">
-            <div class="row-type">${r.type}</div>
-            <div class="row-act">${r.act}</div>
-            ${r.detail?`<div class="row-detail">${r.detail}</div>`:''}
-            ${r.note?`<div class="row-note">${r.note}</div>`:''}
-            <div class="row-loc">${r.loc}</div>
-            ${count?`<details class="refs"><summary>${count} refs &mdash; ${from}</summary><div class="refstrip">${strip}</div></details>`:''}
-          </div>
-        </div>`;
-      }).join("")}</div>
-    </div>`).join("");
+      <div class="crew-body">${body}</div>
+    </div>`;
 }
 
 function renderVo(){
