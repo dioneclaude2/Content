@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nancy Creative Crew Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+/* This site is deliberately NOT the crew reference site. That one is strictly
+   black and grey because all its colour comes from the media it shows. This
+   one shows no media — it teaches a method — so it gets its own voice:
+   pastel grounds, black ink, hard shadows, nothing pale. */
+:root{
+  --pink:#FFB3D4;
+  --pink-soft:#FFE2EE;
+  --pink-loud:#FF3D8A;
+  --yellow:#FFE459;
+  --yellow-soft:#FFF6C4;
+  --lilac:#D9CCFF;
+  --paper:#FFFCF5;
+  --ink:#151021;
+  --ink-soft:#4A4159;
+  --display:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --pad:20px;
+  --bd:3px solid var(--ink);
+  --shadow:6px 6px 0 var(--ink);
+}
+@media (min-width:900px){ :root{ --pad:44px; } }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1;margin:0}
+p{margin:0 0 14px}
+p:last-child{margin-bottom:0}
+b,strong{font-weight:700}
+a{color:inherit}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad)}
+
+/* ---------------- top bar ---------------- */
+header{
+  position:sticky;top:0;z-index:60;background:var(--paper);
+  border-bottom:var(--bd);
+}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px var(--pad)}
+.logo{
+  font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em;
+  background:var(--pink);border:var(--bd);padding:7px 12px;transform:rotate(-1.5deg);
+  white-space:nowrap;
+}
+nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+nav::-webkit-scrollbar{display:none}
+nav a{
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;border:2px solid var(--ink);padding:6px 11px;white-space:nowrap;
+  background:var(--paper);
+}
+nav a:hover{background:var(--yellow)}
+
+/* ---------------- marquee ---------------- */
+.marq{background:var(--ink);color:var(--yellow);overflow:hidden;border-bottom:var(--bd)}
+.marq div{
+  display:inline-block;white-space:nowrap;padding:9px 0;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  animation:slide 26s linear infinite;
+}
+.marq span{padding:0 26px}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marq div{animation:none}}
+
+/* ---------------- hero ---------------- */
+.hero{padding:52px 0 46px;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(40px,9vw,92px);max-width:16ch}
+.hero h1 em{font-style:normal;background:var(--yellow);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.hero h1 .strike{position:relative;color:var(--ink-soft)}
+.hero h1 .strike:after{content:"";position:absolute;left:-.04em;right:-.04em;top:52%;height:6px;background:var(--pink-loud);transform:rotate(-2deg)}
+.hero .lede{font-size:clamp(16px,2.1vw,20px);max-width:56ch;margin-top:26px;color:var(--ink-soft)}
+.stickers{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.sticker{
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  border:var(--bd);padding:7px 12px;background:var(--pink-soft);
+}
+.sticker:nth-child(2n){background:var(--yellow-soft);transform:rotate(1.5deg)}
+.sticker:nth-child(3n){background:var(--lilac);transform:rotate(-1.5deg)}
+
+/* ---------------- the one rule ---------------- */
+.bigrule{
+  border:var(--bd);box-shadow:var(--shadow);background:var(--pink);
+  padding:30px 26px;margin:0 0 14px;
+}
+.bigrule .k{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.bigrule h2{font-size:clamp(28px,5.6vw,54px);margin:14px 0 0}
+.bigrule p{margin-top:16px;font-size:16px;max-width:62ch}
+
+/* ---------------- sections ---------------- */
+section{padding:56px 0 0}
+.sec-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.num{
+  font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,64px);line-height:.8;
+  color:var(--paper);-webkit-text-stroke:2.5px var(--ink);
+}
+.sec-head h2{font-size:clamp(26px,4.6vw,44px)}
+.sec-sub{font-size:16px;color:var(--ink-soft);max-width:66ch;margin:14px 0 0}
+.hr{height:0;border-top:var(--bd);margin:22px 0 0}
+
+/* ---------------- generic card ---------------- */
+.cards{display:grid;gap:18px;margin-top:26px}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}.cards.three{grid-template-columns:repeat(3,1fr)}}
+.card{border:var(--bd);background:#fff;padding:20px;box-shadow:var(--shadow)}
+.card.pink{background:var(--pink-soft)}
+.card.yellow{background:var(--yellow-soft)}
+.card.lilac{background:var(--lilac)}
+.card h3{font-size:20px;margin-bottom:9px}
+.card .tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;border:2px solid var(--ink);
+  padding:4px 8px;margin-bottom:11px;background:var(--paper);
+}
+.card p{font-size:14.5px;color:var(--ink-soft)}
+.card p b{color:var(--ink)}
+
+/* ---------------- the loop ---------------- */
+.loop{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-top:26px}
+.loop-step{
+  flex:1 1 150px;border:var(--bd);background:var(--yellow);padding:15px 14px;box-shadow:4px 4px 0 var(--ink);
+}
+.loop-step .n{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em}
+.loop-step h3{font-size:17px;margin:7px 0 6px}
+.loop-step p{font-size:13px;color:var(--ink-soft);margin:0}
+.loop-step:nth-child(2n){background:var(--pink)}
+.loop-arrow{align-self:center;font-size:22px;font-weight:700;color:var(--ink)}
+@media (max-width:759px){.loop-arrow{display:none}}
+.anti{
+  margin-top:20px;border:var(--bd);background:var(--ink);color:var(--paper);
+  padding:20px;box-shadow:var(--shadow);
+}
+.anti .k{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-loud)}
+.anti h3{font-size:clamp(19px,3.2vw,27px);margin:11px 0 12px;color:var(--paper)}
+.anti p{font-size:14.5px;color:#CFC7DD;max-width:64ch}
+.anti .chain{
+  font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  margin-top:15px;color:var(--yellow);
+}
+.anti .chain s{color:#7C7290}
+
+/* ---------------- outlier maths ---------------- */
+.calc{border:var(--bd);background:var(--yellow-soft);padding:22px;box-shadow:var(--shadow);margin-top:26px}
+.calc h3{font-size:20px;margin-bottom:6px}
+.calc .hint{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px}
+.calc-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.field{flex:1 1 180px}
+.field label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.field input{
+  width:100%;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);
+  background:#fff;border:var(--bd);padding:11px 12px;
+}
+.field input:focus{outline:none;background:var(--yellow)}
+.verdict{margin-top:18px;border-top:var(--bd);padding-top:16px}
+.verdict .score{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,54px);line-height:1}
+.verdict .label{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
+.verdict p{font-size:14px;color:var(--ink-soft);margin-top:10px;max-width:56ch}
+
+/* ---------------- checklist ---------------- */
+.check{margin-top:24px;border:var(--bd);background:#fff;box-shadow:var(--shadow)}
+.check-item{display:grid;grid-template-columns:30px 1fr;gap:0 14px;padding:15px 18px;border-bottom:2px solid var(--ink)}
+.check-item:last-child{border-bottom:0}
+.check-item .box{width:19px;height:19px;border:var(--bd);margin-top:2px}
+.check-item h3{font-size:15.5px;margin-bottom:4px}
+.check-item p{font-size:14px;color:var(--ink-soft);margin:0}
+.check-item code,.icode{font-family:var(--mono);font-size:13px;background:var(--yellow);border:2px solid var(--ink);padding:1px 5px}
+
+/* ---------------- anatomy ---------------- */
+.anat{display:grid;gap:0;margin-top:26px;border:var(--bd);box-shadow:var(--shadow);background:#fff}
+.anat-row{display:grid;grid-template-columns:1fr;gap:4px 18px;padding:17px 20px;border-bottom:2px solid var(--ink)}
+@media (min-width:760px){.anat-row{grid-template-columns:190px 1fr}}
+.anat-row:last-child{border-bottom:0}
+.anat-row:nth-child(2n){background:var(--pink-soft)}
+.anat-row .part{font-family:var(--display);font-weight:800;font-size:17px}
+.anat-row .part small{display:block;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:5px}
+.anat-row p{font-size:14.5px;color:var(--ink-soft);margin:0}
+
+/* ---------------- do / don't ---------------- */
+.dd{display:grid;gap:18px;margin-top:26px}
+@media (min-width:860px){.dd{grid-template-columns:1fr 1fr}}
+.col{border:var(--bd);box-shadow:var(--shadow);overflow:hidden}
+.col .top{padding:15px 20px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:23px}
+.col.do .top{background:var(--yellow)}
+.col.no .top{background:var(--pink-loud);color:#fff}
+.col ul{margin:0;padding:0;list-style:none;background:#fff}
+.col li{padding:14px 20px 14px 48px;border-bottom:2px solid var(--ink);position:relative;font-size:14.5px;color:var(--ink-soft)}
+.col li:last-child{border-bottom:0}
+.col li b{color:var(--ink)}
+.col li:before{
+  position:absolute;left:18px;top:13px;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);
+}
+.col.do li:before{content:"\2713"}
+.col.no li:before{content:"\2715";color:var(--pink-loud)}
+
+/* ---------------- style rules ---------------- */
+.style-grid{display:grid;gap:14px;margin-top:26px}
+@media (min-width:700px){.style-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){.style-grid{grid-template-columns:repeat(3,1fr)}}
+.srule{border:var(--bd);background:#fff;padding:17px}
+.srule:nth-child(3n+1){background:var(--pink-soft)}
+.srule:nth-child(3n+2){background:var(--yellow-soft)}
+.srule:nth-child(3n){background:var(--lilac)}
+.srule h3{font-size:16px;margin-bottom:8px}
+.srule p{font-size:14px;color:var(--ink-soft);margin:0}
+.confirm{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);
+  background:var(--paper);padding:3px 7px;margin-left:7px;vertical-align:middle;
+}
+.flagnote{
+  margin-top:22px;border:var(--bd);border-left:10px solid var(--pink-loud);
+  background:#fff;padding:16px 19px;font-size:14.5px;color:var(--ink-soft);
+}
+.flagnote b{color:var(--ink)}
+
+/* ---------------- template block ---------------- */
+.tmpl{
+  margin-top:24px;border:var(--bd);box-shadow:var(--shadow);background:var(--ink);
+  color:var(--paper);padding:20px;font-family:var(--mono);font-size:13.5px;line-height:1.9;
+  overflow-x:auto;
+}
+.tmpl .lbl{color:var(--yellow)}
+.tmpl .fill{color:#8E84A6}
+
+footer{
+  margin-top:70px;border-top:var(--bd);background:var(--pink);
+  padding:32px var(--pad);
+}
+footer .f-in{max-width:1120px;margin:0 auto}
+footer .big{font-family:var(--display);font-weight:800;font-size:clamp(20px,3.6vw,34px);max-width:22ch}
+footer p{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:16px}
+</style>
+
+<header>
+  <div class="bar">
+    <div class="logo">Nancy Creative Crew Guide</div>
+    <nav>
+      <a href="#rule">The Rule</a>
+      <a href="#outliers">Outliers</a>
+      <a href="#find">Find</a>
+      <a href="#save">Save</a>
+      <a href="#replicate">Replicate</a>
+      <a href="#style">Our Style</a>
+      <a href="#dodont">Do / Don't</a>
+    </nav>
+  </div>
+</header>
+
+<div class="marq"><div id="marqTrack"></div></div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Find the <em>outlier</em> first. <span class="strike">Then</span> make the thing.</h1>
+    <p class="lede">
+      This is how we work. Not a project brief &mdash; the method underneath every project.
+      How to hunt for content that actually performed, how to read it, how to replicate the
+      part that made it work, and what our edits are supposed to look like.
+    </p>
+    <div class="stickers">
+      <span class="sticker">Reference first</span>
+      <span class="sticker">Idea second</span>
+      <span class="sticker">Edit last</span>
+      <span class="sticker">Copy the mechanism</span>
+      <span class="sticker">Never the subject</span>
+    </div>
+  </div>
+
+  <!-- ============ THE RULE ============ -->
+  <section id="rule">
+    <div class="bigrule">
+      <div class="k">The one rule &mdash; everything else is detail</div>
+      <h2>Search first. Then copy and replicate.</h2>
+      <p>
+        We find the reference before we plan the content. The idea comes <b>out of</b> the
+        outlier &mdash; not the other way round. Every caption, every text overlay, every cut
+        should be traceable back to something we saw work.
+      </p>
+    </div>
+
+    <div class="loop">
+      <div class="loop-step"><div class="n">[01]</div><h3>Search</h3><p>Hunt for outliers before anyone opens a camera or a timeline.</p></div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-step"><div class="n">[02]</div><h3>Save</h3><p>Into the swipe file, with one line on <b>why</b> it worked.</p></div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-step"><div class="n">[03]</div><h3>Plan</h3><p>Build the idea from the reference. Hook, overlays and structure decided now.</p></div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-step"><div class="n">[04]</div><h3>Shoot</h3><p>Shoot to that plan, so the edit already exists before the edit.</p></div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-step"><div class="n">[05]</div><h3>Edit</h3><p>Execute the plan, then check the cut back against the reference.</p></div>
+    </div>
+
+    <div class="anti">
+      <div class="k">The one that gets things killed</div>
+      <h3>Editing first and looking for inspiration afterwards.</h3>
+      <p>
+        This can never happen. If the cut already exists and we go hunting for a reference for
+        the caption or the text overlay, that overlay is a guess dressed up as a decision. It
+        was not chosen for a reason, because at the moment it was chosen there was no reason
+        available. Unintentional never performs &mdash; and you can feel it in the content,
+        even when you cannot point at what is wrong.
+      </p>
+      <div class="chain"><s>Edit &rarr; find reference &rarr; retrofit the overlay</s> &nbsp;&larr; not this, ever</div>
+    </div>
+  </section>
+
+  <!-- ============ OUTLIERS ============ -->
+  <section id="outliers">
+    <div class="sec-head"><div class="num">01</div><h2>What counts as an outlier</h2></div>
+    <p class="sec-sub">
+      An outlier is not the post with the most views. It is the post that beat <b>its own
+      account's normal</b> by the widest margin. That gap is the only thing that tells you the
+      <em>format</em> did the work rather than the follower count.
+    </p>
+    <div class="hr"></div>
+
+    <div class="cards three">
+      <div class="card pink">
+        <span class="tag">Rule of thumb</span>
+        <h3>Views &divide; that account's median</h3>
+        <p>Pull up the creator's recent posts, eyeball the middle one, divide. <b>5&times; or better and you have an outlier.</b> Under 2&times; is just a good day.</p>
+      </div>
+      <div class="card yellow">
+        <span class="tag">The gold</span>
+        <h3>Small account, huge numbers</h3>
+        <p>A 4k-follower account with 900k views is worth ten big-account posts. Nothing carried it but the idea and the execution &mdash; which means <b>it is copyable</b>.</p>
+      </div>
+      <div class="card lilac">
+        <span class="tag">Careful</span>
+        <h3>Big account, big numbers</h3>
+        <p>Usually just the audience showing up. Not an outlier, and not a lesson. Check it against their own median before you save it.</p>
+      </div>
+    </div>
+
+    <div class="calc">
+      <h3>Outlier check</h3>
+      <div class="hint">Do the maths before you save. Median = the middle-of-the-road view count on that creator's recent posts, not their best one.</div>
+      <div class="calc-row">
+        <div class="field">
+          <label for="v">Views on the post</label>
+          <input id="v" type="text" inputmode="numeric" value="900000" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="m">Their median views</label>
+          <input id="m" type="text" inputmode="numeric" value="60000" autocomplete="off">
+        </div>
+      </div>
+      <div class="verdict">
+        <div class="score" id="score">15.0&times;</div>
+        <div class="label" id="label">Certified outlier</div>
+        <p id="advice">Save it. Break it down. This one earned a full anatomy pass.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FIND ============ -->
+  <section id="find">
+    <div class="sec-head"><div class="num">02</div><h2>How to hunt</h2></div>
+    <p class="sec-sub">
+      Hunting is a scheduled job, not something you do when you are stuck. Blocks of it, before
+      a project is planned &mdash; so there is always a full swipe file to build ideas out of.
+    </p>
+    <div class="hr"></div>
+
+    <div class="check">
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Search the format, not the topic</h3>
+        <p>Type the <em>shape</em> of the thing into search, not our product. <span class="icode">get ready with me tennis</span>, <span class="icode">day in the life nyc</span>, <span class="icode">outfit transition</span>. Topic search finds competitors; format search finds mechanics.</p>
+      </div></div>
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Sort by what performed, then filter by recency</h3>
+        <p>A format that worked eighteen months ago is a period piece. Anything older than about three months, check that it is still running before you build on it.</p>
+      </div></div>
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Check the ratios, not just the views</h3>
+        <p>Saves and shares beat likes. A high save rate means people wanted it later &mdash; that is the signal that the <b>idea</b> was strong rather than the face.</p>
+      </div></div>
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Read the comments for the reason</h3>
+        <p>The comments will usually tell you exactly what landed &mdash; the outfit, the line, the twist at 4 seconds. That sentence is your "why" line when you save it.</p>
+      </div></div>
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Hunt outside our category</h3>
+        <p>Most of what we can steal cleanly comes from outside fashion. Food, travel, gaming and sports edits solve hooks and pacing problems we have, and nobody will recognise the source.</p>
+      </div></div>
+      <div class="check-item"><div class="box"></div><div>
+        <h3>Stop at enough, not at perfect</h3>
+        <p>Ten to fifteen strong outliers is a planning session. Two hundred saved posts nobody annotated is a graveyard.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ============ SAVE ============ -->
+  <section id="save">
+    <div class="sec-head"><div class="num">03</div><h2>Save it properly</h2></div>
+    <p class="sec-sub">
+      A saved post with no note is worthless in a week &mdash; you will remember that you liked
+      it and not what for. <b>Never save without the why line.</b> It takes fifteen seconds and
+      it is the entire value of the swipe file.
+    </p>
+    <div class="hr"></div>
+
+    <div class="tmpl">
+<span class="lbl">LINK</span>        <span class="fill">paste the post</span>
+<span class="lbl">SCORE</span>       <span class="fill">views &divide; their median, e.g. 15x</span>
+<span class="lbl">WHY IT WORKED</span>  <span class="fill">one sentence, the mechanism &mdash; not "nice edit"</span>
+<span class="lbl">STEAL</span>       <span class="fill">the exact part we are taking: hook / overlay cadence / cut rhythm</span>
+<span class="lbl">FOR</span>         <span class="fill">which project or format this is a candidate for</span>
+    </div>
+
+    <div class="cards two">
+      <div class="card yellow">
+        <span class="tag">Good why line</span>
+        <p>&ldquo;Hook is a question on screen at 0:00 with the answer withheld until 0:06 &mdash; the pause is what holds people, not the outfit.&rdquo;</p>
+      </div>
+      <div class="card pink">
+        <span class="tag">Useless why line</span>
+        <p>&ldquo;Love this &mdash; great vibes, cool transitions.&rdquo; Nothing here can be rebuilt. In a week this is a screenshot of a stranger.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPLICATE ============ -->
+  <section id="replicate">
+    <div class="sec-head"><div class="num">04</div><h2>Copy &amp; replicate &mdash; properly</h2></div>
+    <p class="sec-sub">
+      Copying the <b>mechanism</b> is the job. Copying the <b>subject</b> is theft and it does not
+      even work. Break the outlier into its parts, take the parts that made it move, swap
+      everything else for ours.
+    </p>
+    <div class="hr"></div>
+
+    <div class="anat">
+      <div class="anat-row"><div class="part">Hook<small>First 1 second</small></div><p>What is on screen and what is being withheld. This is the single most copyable part of any outlier &mdash; and the part most people skip.</p></div>
+      <div class="anat-row"><div class="part">Structure<small>The shape</small></div><p>How many beats, what order, where the turn lands. Write it out as a list before you plan the shoot.</p></div>
+      <div class="anat-row"><div class="part">Text overlays<small>Cadence &amp; placement</small></div><p>How many words, how long they hold, where they sit, when they change. <b>Decided at planning, never in the edit.</b></p></div>
+      <div class="anat-row"><div class="part">Cut rhythm<small>Pacing</small></div><p>Count the cuts in the first five seconds. That number is the format's pulse &mdash; match it rather than guessing.</p></div>
+      <div class="anat-row"><div class="part">Audio<small>Track &amp; sound design</small></div><p>Whether the cut serves the track or the track sits under the cut. Note where location sound is doing the work.</p></div>
+      <div class="anat-row"><div class="part">Ending<small>Last 2 seconds</small></div><p>Loop, payoff, or hard stop. The ending is what decides a rewatch, and rewatch is what decides reach.</p></div>
+    </div>
+
+    <div class="cards two">
+      <div class="card yellow">
+        <span class="tag">Take</span>
+        <h3>The mechanism</h3>
+        <p>Hook shape, beat order, overlay cadence, cut rhythm, ending type. All of it is format, and format belongs to nobody.</p>
+      </div>
+      <div class="card pink">
+        <span class="tag">Never take</span>
+        <h3>The specifics</h3>
+        <p>Their exact words, their joke, their song choice where it is the point, their product moment, their face. Copy those and you have made their content with our logo on it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STYLE ============ -->
+  <section id="style">
+    <div class="sec-head"><div class="num">05</div><h2>Our editing style</h2></div>
+    <p class="sec-sub">
+      The house look. This is what a Nancy edit is supposed to feel like regardless of which
+      project it came from.
+    </p>
+    <div class="hr"></div>
+
+    <div class="style-grid">
+      <div class="srule"><h3>Everything moves<span class="confirm">Confirm</span></h3><p>Every setup has motion in it. If a shot sits still for more than a beat it is either a deliberate hold or it is out.</p></div>
+      <div class="srule"><h3>Shoot doubles<span class="confirm">Confirm</span></h3><p>One clean digital pass, one lo-fi. Both passes live in the same cut &mdash; the contrast between them is the look.</p></div>
+      <div class="srule"><h3>Keep the blurry ones<span class="confirm">Confirm</span></h3><p>Out-of-focus and lo-fi frames are selects, not mistakes. At least one survives into every deliverable.</p></div>
+      <div class="srule"><h3>Never colour-match the passes<span class="confirm">Confirm</span></h3><p>Do not grade the lo-fi toward the digital to "unify" a sequence. That difference is the point of shooting twice.</p></div>
+      <div class="srule"><h3>Cut on movement<span class="confirm">Confirm</span></h3><p>Cut on motion, not on the beat grid. Wide &rarr; detail &rarr; face is the order that reads as intent.</p></div>
+      <div class="srule"><h3>Location sound stays<span class="confirm">Confirm</span></h3><p>Real sound under the music. It is what stops a cut reading like a stock edit. No effects for things that were not there.</p></div>
+      <div class="srule"><h3>Colour comes from the frame<span class="confirm">Confirm</span></h3><p>All colour on screen comes from what was shot. Type and overlays stay white or black &mdash; never coloured.</p></div>
+      <div class="srule"><h3>Type is Archivo, bold caps<span class="confirm">Confirm</span></h3><p>Square corners, no drop shadow, no stroke. If an overlay needs an effect to be readable, it is in the wrong place.</p></div>
+      <div class="srule"><h3>A reel is 9:16<span class="confirm">Confirm</span></h3><p>Reels are shot and cut 9:16 and labelled reels. A 9:16 crop of a carousel is not a reel and reads like one.</p></div>
+    </div>
+
+    <div class="flagnote">
+      <b>Flagged for you:</b> every rule in this section is drafted from the direction notes and
+      commits in the crew repo &mdash; most of it came off the US Open shoot. Some are genuinely
+      house style and some were calls for that one project. Tell me which is which and I will
+      cut the ones that do not generalise.
+    </div>
+  </section>
+
+  <!-- ============ DO / DON'T ============ -->
+  <section id="dodont">
+    <div class="sec-head"><div class="num">06</div><h2>Do / Don't</h2></div>
+    <p class="sec-sub">The short version. If you read nothing else on this page, read the right-hand column.</p>
+    <div class="hr"></div>
+
+    <div class="dd">
+      <div class="col do">
+        <div class="top">Do</div>
+        <ul>
+          <li><b>Find the reference first.</b> Always. The idea is built out of the outlier.</li>
+          <li>Write the text overlays at planning, before anything is shot.</li>
+          <li>Save every reference with a one-line why. Fifteen seconds, every time.</li>
+          <li>Do the maths &mdash; views against that account's own median.</li>
+          <li>Steal from outside our category. Better mechanics, no resemblance.</li>
+          <li>Count the cuts in the first five seconds and match that pulse.</li>
+          <li>Check the finished cut back against the reference before it goes out.</li>
+        </ul>
+      </div>
+      <div class="col no">
+        <div class="top">Don't</div>
+        <ul>
+          <li><b>Edit first and look for inspiration after.</b> This is the big one. It can never happen.</li>
+          <li>Retrofit a caption or overlay onto a cut that is already locked.</li>
+          <li>Save a post without writing down why it worked.</li>
+          <li>Call a big account's normal post an outlier because the number is large.</li>
+          <li>Copy the subject, the joke or the exact words. Take the mechanism instead.</li>
+          <li>Build on a format from a year ago without checking it still runs.</li>
+          <li>Add colour with type, transitions or overlays.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="f-in">
+    <div class="big">If you cannot say which outlier an idea came from, it is not an idea yet.</div>
+    <p>Nancy Creative Crew Guide &mdash; internal &mdash; read before you plan</p>
+  </div>
+</footer>
+
+<script>
+/* ---- marquee ---- */
+const MARQ = ["Search first","Then copy and replicate","Reference &rarr; idea &rarr; edit",
+              "Never edit then look for inspo","Copy the mechanism, not the subject",
+              "No why line, no save"];
+document.getElementById("marqTrack").innerHTML =
+  (MARQ.map(t => "<span>" + t + "</span>").join("") + "&nbsp;").repeat(2);
+
+/* ---- outlier score ---- */
+const TIERS = [
+  { min:10, label:"Certified outlier",   advice:"Save it. Break it down. This one earned a full anatomy pass." },
+  { min:5,  label:"Outlier",             advice:"Worth saving and worth replicating. Write the why line while you still remember what hit." },
+  { min:2,  label:"Strong, not an outlier", advice:"Good post. Note it if the hook is unusual, but do not build a project around it." },
+  { min:0,  label:"Just a normal post",  advice:"Their audience showed up. There is no lesson here — keep hunting." }
+];
+
+function num(el){
+  const n = parseFloat(String(el.value).replace(/[^0-9.]/g, ""));
+  return isFinite(n) ? n : 0;
+}
+
+function score(){
+  const views = num(document.getElementById("v"));
+  const med = num(document.getElementById("m"));
+  const s = document.getElementById("score");
+  const l = document.getElementById("label");
+  const a = document.getElementById("advice");
+
+  if (!med || !views) {
+    s.textContent = "—";
+    l.textContent = "Need both numbers";
+    a.textContent = "Put in the post's views and that creator's median. The ratio is the whole point.";
+    return;
+  }
+  const x = views / med;
+  const tier = TIERS.find(t => x >= t.min);
+  s.textContent = (x >= 100 ? Math.round(x) : x.toFixed(1)) + "×";
+  l.textContent = tier.label;
+  a.textContent = tier.advice;
+}
+
+["v","m"].forEach(id => document.getElementById(id).addEventListener("input", score));
+score();
+</script>
