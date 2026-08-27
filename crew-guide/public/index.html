@@ -4,13 +4,26 @@
 <title>Nancy Creative Crew Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* The three brand faces. PP Editorial New is self-hosted from assets/ — the
+   same two-cut setup already used in the nancy files project, plus Ultralight
+   and Ultrabold so the specimen can show the real range. Helvetica is a system
+   face on the machines the crew use, so it is never downloaded. */
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultralight.otf') format('opentype');font-weight:200;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+</style>
 
 <style>
 /* This site is deliberately NOT the crew reference site. That one is strictly
    black and grey because all its colour comes from the media it shows. This
    one shows no media — it teaches a method — so it gets its own voice:
-   pastel grounds, black ink, hard shadows, nothing pale. */
+   pastel grounds, black ink, hard shadows, nothing pale.
+
+   Sections are <details> toggles on purpose: closed, the whole guide fits on
+   one screen, so adding the next one never makes the page feel long. */
 :root{
   --pink:#FFB3D4;
   --pink-soft:#FFE2EE;
@@ -18,12 +31,17 @@
   --yellow:#FFE459;
   --yellow-soft:#FFF6C4;
   --lilac:#D9CCFF;
+  --lilac-soft:#EDE7FF;
   --paper:#FFFCF5;
   --ink:#151021;
   --ink-soft:#4A4159;
   --display:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
   --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
   --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  /* brand faces, used inside the Typography toggle */
+  --ppe:"PP Editorial New","Instrument Serif",Georgia,serif;
+  --fraunces:"Fraunces",Georgia,serif;
+  --helv:"Helvetica Neue",Helvetica,Arial,sans-serif;
   --pad:20px;
   --bd:3px solid var(--ink);
   --shadow:6px 6px 0 var(--ink);
@@ -31,39 +49,33 @@
 @media (min-width:900px){ :root{ --pad:44px; } }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:96px}
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:16px;line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3,.disp{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1;margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0;text-wrap:balance}
 p{margin:0 0 14px}
 p:last-child{margin-bottom:0}
 b,strong{font-weight:700}
-a{color:inherit}
+:focus-visible{outline:3px solid var(--pink-loud);outline-offset:3px}
 
-.wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 var(--pad)}
 
 /* ---------------- top bar ---------------- */
-header{
-  position:sticky;top:0;z-index:60;background:var(--paper);
-  border-bottom:var(--bd);
-}
+header{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:var(--bd)}
 .bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px var(--pad)}
 .logo{
   font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em;
   background:var(--pink);border:var(--bd);padding:7px 12px;transform:rotate(-1.5deg);
   white-space:nowrap;
 }
-nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
-nav::-webkit-scrollbar{display:none}
-nav a{
-  font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  text-decoration:none;border:2px solid var(--ink);padding:6px 11px;white-space:nowrap;
-  background:var(--paper);
+.bar .all{
+  margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;background:var(--paper);
+  border:2px solid var(--ink);padding:7px 12px;cursor:pointer;
 }
-nav a:hover{background:var(--yellow)}
+.bar .all:hover{background:var(--yellow)}
 
 /* ---------------- marquee ---------------- */
 .marq{background:var(--ink);color:var(--yellow);overflow:hidden;border-bottom:var(--bd)}
@@ -76,508 +88,1251 @@ nav a:hover{background:var(--yellow)}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.marq div{animation:none}}
 
-/* ---------------- hero ---------------- */
-.hero{padding:52px 0 46px;position:relative;overflow:hidden}
-.hero h1{font-size:clamp(40px,9vw,92px);max-width:16ch}
+/* ---------------- hero + rule strip ---------------- */
+.hero{padding:44px 0 26px}
+.hero h1{font-size:clamp(34px,7.4vw,68px);max-width:17ch}
 .hero h1 em{font-style:normal;background:var(--yellow);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-.hero h1 .strike{position:relative;color:var(--ink-soft)}
-.hero h1 .strike:after{content:"";position:absolute;left:-.04em;right:-.04em;top:52%;height:6px;background:var(--pink-loud);transform:rotate(-2deg)}
-.hero .lede{font-size:clamp(16px,2.1vw,20px);max-width:56ch;margin-top:26px;color:var(--ink-soft)}
-.stickers{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.sticker{
-  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  border:var(--bd);padding:7px 12px;background:var(--pink-soft);
-}
-.sticker:nth-child(2n){background:var(--yellow-soft);transform:rotate(1.5deg)}
-.sticker:nth-child(3n){background:var(--lilac);transform:rotate(-1.5deg)}
+.hero p{font-size:clamp(15px,1.9vw,18px);max-width:58ch;margin-top:20px;color:var(--ink-soft)}
 
-/* ---------------- the one rule ---------------- */
-.bigrule{
-  border:var(--bd);box-shadow:var(--shadow);background:var(--pink);
-  padding:30px 26px;margin:0 0 14px;
-}
-.bigrule .k{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
-.bigrule h2{font-size:clamp(28px,5.6vw,54px);margin:14px 0 0}
-.bigrule p{margin-top:16px;font-size:16px;max-width:62ch}
+.rulestrip{border:var(--bd);box-shadow:var(--shadow);background:var(--pink);padding:22px 24px;margin-bottom:30px}
+.rulestrip .k{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.rulestrip h2{font-size:clamp(23px,4.4vw,40px);margin:12px 0 0}
+.rulestrip p{margin-top:13px;font-size:15px;max-width:62ch}
 
-/* ---------------- sections ---------------- */
-section{padding:56px 0 0}
-.sec-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:8px}
-.num{
-  font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,64px);line-height:.8;
-  color:var(--paper);-webkit-text-stroke:2.5px var(--ink);
+/* ---------------- page tabs ----------------
+   One page visible at a time. Nothing scrolls past its own subject, and a new
+   page is one entry in PAGES — no restructuring, no longer scroll. */
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 var(--pad) 12px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.01em;
+  border:var(--bd);background:var(--paper);color:var(--ink);
+  padding:9px 14px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:9px;
 }
-.sec-head h2{font-size:clamp(26px,4.6vw,44px)}
-.sec-sub{font-size:16px;color:var(--ink-soft);max-width:66ch;margin:14px 0 0}
-.hr{height:0;border-top:var(--bd);margin:22px 0 0}
+.tabs button .tn{
+  font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  color:var(--ink-soft);
+}
+.tabs button:hover{background:var(--yellow-soft)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--pink-loud)}
+.tabs button[aria-selected="true"] .tn{color:var(--yellow)}
 
-/* ---------------- generic card ---------------- */
-.cards{display:grid;gap:18px;margin-top:26px}
-@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}.cards.three{grid-template-columns:repeat(3,1fr)}}
-.card{border:var(--bd);background:#fff;padding:20px;box-shadow:var(--shadow)}
-.card.pink{background:var(--pink-soft)}
-.card.yellow{background:var(--yellow-soft)}
-.card.lilac{background:var(--lilac)}
-.card h3{font-size:20px;margin-bottom:9px}
-.card .tag{
-  display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;border:2px solid var(--ink);
-  padding:4px 8px;margin-bottom:11px;background:var(--paper);
+.page[hidden]{display:none}
+.page-head{padding:38px 0 22px;border-bottom:var(--bd);margin-bottom:26px}
+.page-head .pnum{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.14em;border:2px solid var(--ink);background:var(--yellow);
+  padding:4px 9px;margin-bottom:14px;
 }
-.card p{font-size:14.5px;color:var(--ink-soft)}
-.card p b{color:var(--ink)}
+.page-head h2{font-size:clamp(30px,6.2vw,54px)}
+.page-lede{font-size:15.5px;color:var(--ink-soft);max-width:66ch;margin-bottom:24px}
 
-/* ---------------- the loop ---------------- */
-.loop{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-top:26px}
-.loop-step{
-  flex:1 1 150px;border:var(--bd);background:var(--yellow);padding:15px 14px;box-shadow:4px 4px 0 var(--ink);
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:44px;padding-top:22px;border-top:var(--bd)}
+.pager button{
+  font-family:var(--display);font-weight:800;font-size:15px;border:var(--bd);
+  background:var(--paper);padding:12px 16px;cursor:pointer;text-align:left;max-width:46%;
 }
-.loop-step .n{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em}
-.loop-step h3{font-size:17px;margin:7px 0 6px}
-.loop-step p{font-size:13px;color:var(--ink-soft);margin:0}
-.loop-step:nth-child(2n){background:var(--pink)}
-.loop-arrow{align-self:center;font-size:22px;font-weight:700;color:var(--ink)}
-@media (max-width:759px){.loop-arrow{display:none}}
-.anti{
-  margin-top:20px;border:var(--bd);background:var(--ink);color:var(--paper);
-  padding:20px;box-shadow:var(--shadow);
+.pager button:hover{background:var(--pink-soft)}
+.pager button small{
+  display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;
 }
-.anti .k{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-loud)}
-.anti h3{font-size:clamp(19px,3.2vw,27px);margin:11px 0 12px;color:var(--paper)}
-.anti p{font-size:14.5px;color:#CFC7DD;max-width:64ch}
-.anti .chain{
-  font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  margin-top:15px;color:var(--yellow);
-}
-.anti .chain s{color:#7C7290}
+.pager button:only-child{margin-left:auto}
+.pager .spacer{flex:1}
 
-/* ---------------- outlier maths ---------------- */
-.calc{border:var(--bd);background:var(--yellow-soft);padding:22px;box-shadow:var(--shadow);margin-top:26px}
-.calc h3{font-size:20px;margin-bottom:6px}
-.calc .hint{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px}
-.calc-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.field{flex:1 1 180px}
-.field label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
-.field input{
-  width:100%;font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);
-  background:#fff;border:var(--bd);padding:11px 12px;
+.why-brief{border:var(--bd);box-shadow:var(--shadow);background:var(--lilac-soft);padding:20px 22px;margin:0 0 26px}
+.why-brief .k{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:11px}
+.why-brief p{font-size:15px;max-width:64ch}
+.evolving{border:var(--bd);border-left:10px solid var(--yellow);background:#fff;padding:17px 19px;margin-bottom:26px}
+.evolving .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px}
+.evolving p{font-size:14.5px;color:var(--ink-soft);max-width:66ch}
+.evolving b{color:var(--ink)}
+
+/* shared flags */
+.chip{
+  display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);
+  background:var(--paper);padding:2px 6px;vertical-align:middle;
 }
-.field input:focus{outline:none;background:var(--yellow)}
-.verdict{margin-top:18px;border-top:var(--bd);padding-top:16px}
-.verdict .score{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,54px);line-height:1}
-.verdict .label{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
-.verdict p{font-size:14px;color:var(--ink-soft);margin-top:10px;max-width:56ch}
-
-/* ---------------- checklist ---------------- */
-.check{margin-top:24px;border:var(--bd);background:#fff;box-shadow:var(--shadow)}
-.check-item{display:grid;grid-template-columns:30px 1fr;gap:0 14px;padding:15px 18px;border-bottom:2px solid var(--ink)}
-.check-item:last-child{border-bottom:0}
-.check-item .box{width:19px;height:19px;border:var(--bd);margin-top:2px}
-.check-item h3{font-size:15.5px;margin-bottom:4px}
-.check-item p{font-size:14px;color:var(--ink-soft);margin:0}
-.check-item code,.icode{font-family:var(--mono);font-size:13px;background:var(--yellow);border:2px solid var(--ink);padding:1px 5px}
-
-/* ---------------- anatomy ---------------- */
-.anat{display:grid;gap:0;margin-top:26px;border:var(--bd);box-shadow:var(--shadow);background:#fff}
-.anat-row{display:grid;grid-template-columns:1fr;gap:4px 18px;padding:17px 20px;border-bottom:2px solid var(--ink)}
-@media (min-width:760px){.anat-row{grid-template-columns:190px 1fr}}
-.anat-row:last-child{border-bottom:0}
-.anat-row:nth-child(2n){background:var(--pink-soft)}
-.anat-row .part{font-family:var(--display);font-weight:800;font-size:17px}
-.anat-row .part small{display:block;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:5px}
-.anat-row p{font-size:14.5px;color:var(--ink-soft);margin:0}
+.neednote{
+  border:var(--bd);border-left:10px solid var(--pink-loud);background:var(--paper);
+  padding:15px 18px;font-size:14.5px;color:var(--ink-soft);
+}
+.neednote b{color:var(--ink)}
+.neednote.top{margin-bottom:24px}
+.neednote.bot{margin-top:22px}
 
 /* ---------------- do / don't ---------------- */
-.dd{display:grid;gap:18px;margin-top:26px}
+.dd{display:grid;gap:18px}
 @media (min-width:860px){.dd{grid-template-columns:1fr 1fr}}
-.col{border:var(--bd);box-shadow:var(--shadow);overflow:hidden}
-.col .top{padding:15px 20px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:23px}
+.col{border:var(--bd);overflow:hidden}
+.col .top{padding:13px 18px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:21px}
 .col.do .top{background:var(--yellow)}
 .col.no .top{background:var(--pink-loud);color:#fff}
 .col ul{margin:0;padding:0;list-style:none;background:#fff}
-.col li{padding:14px 20px 14px 48px;border-bottom:2px solid var(--ink);position:relative;font-size:14.5px;color:var(--ink-soft)}
+.col li{padding:13px 18px 13px 46px;border-bottom:2px solid var(--ink);position:relative;font-size:14.5px;color:var(--ink-soft)}
 .col li:last-child{border-bottom:0}
 .col li b{color:var(--ink)}
-.col li:before{
-  position:absolute;left:18px;top:13px;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);
-}
-.col.do li:before{content:"\2713"}
+.col li:before{position:absolute;left:17px;top:12px;font-family:var(--display);font-weight:800;font-size:16px}
+.col.do li:before{content:"\2713";color:var(--ink)}
 .col.no li:before{content:"\2715";color:var(--pink-loud)}
+.col li.big{background:var(--yellow-soft);font-size:15.5px;color:var(--ink)}
+.col.no li.big{background:var(--pink-soft)}
 
-/* ---------------- style rules ---------------- */
-.style-grid{display:grid;gap:14px;margin-top:26px}
+.verdictline{margin-top:22px;border:var(--bd);background:var(--ink);color:var(--paper);padding:19px 20px}
+.verdictline h3{font-size:clamp(18px,3vw,25px);color:var(--paper);margin-bottom:10px}
+.verdictline p{font-size:14.5px;color:#CFC7DD;max-width:62ch;margin:0}
+
+/* ---------------- typography ---------------- */
+.faces{display:grid;gap:16px;margin-bottom:24px}
+@media (min-width:820px){.faces{grid-template-columns:repeat(3,1fr)}}
+.face{border:var(--bd);padding:19px;display:flex;flex-direction:column;gap:12px}
+.face:nth-child(1){background:var(--lilac-soft)}
+.face:nth-child(2){background:var(--pink-soft)}
+.face:nth-child(3){background:var(--yellow-soft)}
+.face .fname{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.face .big{font-size:clamp(38px,6vw,58px);line-height:.94}
+.face .big.ppe{font-family:var(--ppe);font-weight:400}
+.face .big.fra{font-family:var(--fraunces);font-weight:600}
+.face .big.hel{font-family:var(--helv);font-weight:700;letter-spacing:-.02em}
+.face .job{font-size:13.5px;color:var(--ink-soft);margin-top:auto}
+.face .job b{color:var(--ink)}
+
+.cuts{border:var(--bd);background:#fff;margin-bottom:24px}
+.cut{display:grid;grid-template-columns:1fr;gap:4px 20px;padding:14px 18px;border-bottom:2px solid var(--ink)}
+@media (min-width:700px){.cut{grid-template-columns:160px 1fr;align-items:baseline}}
+.cut:last-child{border-bottom:0}
+.cut .cn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.cut .cs{font-family:var(--ppe);font-size:clamp(21px,3.4vw,29px);line-height:1.1}
+.cut .cs.ul{font-weight:200}
+.cut .cs.rg{font-weight:400}
+.cut .cs.it{font-weight:400;font-style:italic}
+.cut .cs.ub{font-weight:800}
+
+/* the highlights type scale */
+.scale-h{font-family:var(--display);font-weight:800;font-size:19px;margin:26px 0 10px;display:flex;align-items:center;gap:9px}
+.roles{border:var(--bd);background:#fff}
+.role{display:grid;grid-template-columns:1fr;gap:8px 22px;padding:17px 19px;border-bottom:2px solid var(--ink)}
+@media (min-width:760px){.role{grid-template-columns:132px 1fr;align-items:center}}
+.role:last-child{border-bottom:0}
+.role .rname{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.role .rname b{display:block;font-family:var(--display);font-size:23px;color:var(--ink);letter-spacing:-.01em;margin-top:3px}
+.role .samp{font-family:var(--helv);text-transform:uppercase;font-weight:700;line-height:1.1;letter-spacing:-.03em}
+.role .samp.hd{font-size:clamp(26px,4.8vw,40px)}
+.role .samp.sh{font-size:clamp(17px,2.7vw,23px)}
+.role .samp.bd{font-size:12px;letter-spacing:.02em}
+.logo-rule{border:var(--bd);background:var(--pink-soft);padding:19px;margin-top:22px}
+.logo-rule .k{font-family:var(--display);font-weight:800;font-size:17px;margin-bottom:9px}
+.logo-rule p{font-size:14px;color:var(--ink-soft);max-width:62ch}
+.lr-grid{display:grid;gap:10px;margin-top:14px}
+@media (min-width:640px){.lr-grid{grid-template-columns:repeat(3,1fr)}}
+.lr{border:var(--bd);background:#fff;padding:13px 15px}
+.lr-n{display:block;font-family:var(--display);font-weight:800;font-size:25px;line-height:1}
+.lr-l{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+
+/* the on-screen anatomy */
+.onscreen{display:grid;gap:18px;margin-bottom:22px}
+@media (min-width:780px){.onscreen{grid-template-columns:auto 1fr;align-items:start}}
+.shot{
+  position:relative;aspect-ratio:9/16;width:min(238px,78vw);
+  border:var(--bd);overflow:hidden;
+  background:linear-gradient(163deg,#6E7F8D 0%,#3E4A55 55%,#272E35 100%);
+}
+.shot .standin{
+  position:absolute;top:8px;left:8px;font-family:var(--mono);font-size:8px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);
+}
+.shot .campaign{
+  position:absolute;top:8px;right:8px;font-family:var(--helv);font-size:9px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;color:#fff;
+}
+.shot .heroT{
+  position:absolute;left:14px;right:14px;top:50%;transform:translateY(-50%);
+  font-family:var(--helv);font-weight:700;font-size:25px;line-height:1.02;
+  letter-spacing:-.035em;text-transform:uppercase;color:#fff;
+}
+.shot .logo-b{position:absolute;left:0;right:0;bottom:16px;display:grid;place-items:center}
+.shot .logo-b img{width:44%;height:auto;display:block;opacity:.96}
+.callouts{display:grid;gap:10px}
+.callout{border:var(--bd);background:#fff;padding:14px 16px}
+.callout .cnum{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.callout h3{font-size:16px;margin-bottom:6px}
+.callout p{font-size:13.5px;color:var(--ink-soft);margin:0}
+.callout .chip{margin-left:6px}
+.measures{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.measures span.q{background:var(--pink-soft)}
+.measures span{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:2px solid var(--ink);background:var(--yellow-soft);padding:3px 7px;
+}
+
+/* ---------------- editing style: video types ---------------- */
+.prioboard{display:grid;gap:16px;margin-bottom:26px}
+@media (min-width:820px){.prioboard{grid-template-columns:1.25fr 1fr}}
+.pb{border:var(--bd);overflow:hidden}
+.pb .pb-h{padding:13px 17px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pb .pb-h small{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.pb.first .pb-h{background:var(--yellow)}
+.pb.second .pb-h{background:var(--lilac)}
+.pb ol{margin:0;padding:0;list-style:none;background:#fff;counter-reset:pb}
+.pb li{
+  counter-increment:pb;padding:12px 17px 12px 46px;position:relative;
+  border-bottom:2px solid var(--ink);font-size:15px;font-weight:600;
+}
+.pb li:last-child{border-bottom:0}
+.pb li:before{
+  content:counter(pb,decimal-leading-zero);position:absolute;left:16px;top:13px;
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-soft);
+}
+.pb li small{display:block;font-weight:400;font-size:13px;color:var(--ink-soft);margin-top:2px}
+
+.chip.prio{background:var(--yellow)}
+.chip.lhf{background:var(--lilac)}
+.fmt-rules{margin:13px 0 0;padding:0;list-style:none}
+.fmt-rules li{
+  position:relative;padding:0 0 8px 17px;font-size:13.5px;line-height:1.55;color:var(--ink-soft);
+}
+.fmt-rules li:last-child{padding-bottom:0}
+.fmt-rules li:before{content:"\2014";position:absolute;left:0;color:var(--ink)}
+.fmt-rules li b{color:var(--ink)}
+.tmpls{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.tmpls span{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:2px solid var(--ink);background:#fff;padding:4px 8px;
+}
+
+.vtypes{display:grid;gap:20px}
+.vtype{border:var(--bd);background:var(--paper);padding:20px;display:grid;gap:20px}
+@media (min-width:900px){.vtype{grid-template-columns:.85fr 1.15fr;align-items:start}}
+.vtype:nth-child(3n+1){background:var(--pink-soft)}
+.vtype:nth-child(3n+2){background:var(--yellow-soft)}
+.vtype:nth-child(3n){background:var(--lilac-soft)}
+@media (min-width:900px){
+  /* Flipping the order alone would drop the videos into the narrow column and
+     shrink them on every other row — swap the track widths to match. */
+  .vtype:nth-child(even){grid-template-columns:1.15fr .85fr}
+  .vtype:nth-child(even) .vt-say{order:2}
+  .vtype:nth-child(even) .vt-vids{order:1}
+}
+.vt-say .kicker{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vt-say h3{font-size:clamp(20px,3.2vw,28px);margin-bottom:11px}
+.vt-say p{font-size:14.5px;color:var(--ink-soft)}
+.vt-groups{display:grid;gap:16px}
+.grp-h{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;
+}
+.grp-h small{display:block;font-family:var(--sans);font-size:12.5px;font-weight:400;letter-spacing:0;text-transform:none;margin-top:4px}
+.vt-vids{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.slot{
+  position:relative;aspect-ratio:9/16;border:var(--bd);background:var(--lilac-soft);
+  text-decoration:none;color:inherit;overflow:hidden;display:block;
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+a.slot:hover,a.slot:focus-visible{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.slot .thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.slot .fallback{
+  position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:7px;
+  text-align:center;padding:8px;
+}
+.slot .play{
+  width:30px;height:30px;border:2px solid var(--ink);display:grid;place-items:center;
+  font-size:11px;line-height:1;background:var(--paper);
+}
+.slot .sn{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.slot .badge{
+  position:absolute;left:0;bottom:0;z-index:2;
+  font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--ink);color:var(--yellow);padding:4px 7px;
+}
+.alsoig{
+  margin-top:9px;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+}
+.alsoig a{color:var(--ink);text-decoration:none;border-bottom:2px solid var(--pink-loud);margin-left:5px}
+.alsoig a:hover{background:var(--yellow)}
+
+.houserules{margin-top:26px}
+.houserules > .hr-h{font-family:var(--display);font-weight:800;font-size:19px;margin-bottom:6px}
+.houserules > .hr-s{font-size:14px;color:var(--ink-soft);margin-bottom:16px;max-width:62ch}
+.style-grid{display:grid;gap:12px}
 @media (min-width:700px){.style-grid{grid-template-columns:1fr 1fr}}
-@media (min-width:1000px){.style-grid{grid-template-columns:repeat(3,1fr)}}
-.srule{border:var(--bd);background:#fff;padding:17px}
+@media (min-width:980px){.style-grid{grid-template-columns:repeat(3,1fr)}}
+.srule{border:var(--bd);padding:14px}
 .srule:nth-child(3n+1){background:var(--pink-soft)}
 .srule:nth-child(3n+2){background:var(--yellow-soft)}
-.srule:nth-child(3n){background:var(--lilac)}
-.srule h3{font-size:16px;margin-bottom:8px}
-.srule p{font-size:14px;color:var(--ink-soft);margin:0}
-.confirm{
-  display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);
-  background:var(--paper);padding:3px 7px;margin-left:7px;vertical-align:middle;
-}
-.flagnote{
-  margin-top:22px;border:var(--bd);border-left:10px solid var(--pink-loud);
-  background:#fff;padding:16px 19px;font-size:14.5px;color:var(--ink-soft);
-}
-.flagnote b{color:var(--ink)}
+.srule:nth-child(3n){background:var(--lilac-soft)}
+.srule h3{font-size:14.5px;margin-bottom:7px}
+.srule p{font-size:13px;color:var(--ink-soft);margin:0}
+.srule .chip{margin-left:5px}
 
-/* ---------------- template block ---------------- */
-.tmpl{
-  margin-top:24px;border:var(--bd);box-shadow:var(--shadow);background:var(--ink);
-  color:var(--paper);padding:20px;font-family:var(--mono);font-size:13.5px;line-height:1.9;
-  overflow-x:auto;
+/* ---------------- captions & overlays ---------------- */
+.vibe{border:var(--bd);box-shadow:var(--shadow);background:var(--pink-soft);padding:20px 22px;margin-bottom:22px}
+.vibe .k{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:11px}
+.vibe p{font-size:15.5px;max-width:64ch}
+.vibe-rules{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.vibe-rules span{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:2px solid var(--ink);background:var(--paper);padding:5px 9px;
 }
-.tmpl .lbl{color:var(--yellow)}
-.tmpl .fill{color:#8E84A6}
 
-footer{
-  margin-top:70px;border-top:var(--bd);background:var(--pink);
-  padding:32px var(--pad);
+.toolcta{
+  border:var(--bd);box-shadow:var(--shadow);background:var(--ink);color:var(--paper);
+  padding:22px;display:grid;gap:18px;align-items:center;margin-bottom:34px;
 }
-footer .f-in{max-width:1120px;margin:0 auto}
-footer .big{font-family:var(--display);font-weight:800;font-size:clamp(20px,3.6vw,34px);max-width:22ch}
-footer p{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:16px}
+@media (min-width:760px){.toolcta{grid-template-columns:1fr auto}}
+.toolcta .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--yellow);margin-bottom:9px}
+.toolcta h3{font-size:clamp(24px,4.4vw,36px);color:var(--paper);margin-bottom:10px}
+.toolcta p{font-size:14.5px;color:#CFC7DD;max-width:52ch;margin:0}
+.tc-btn{
+  display:inline-flex;align-items:center;gap:10px;white-space:nowrap;text-decoration:none;
+  font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink);
+  background:var(--yellow);border:3px solid var(--paper);padding:15px 22px;
+  box-shadow:5px 5px 0 var(--pink-loud);
+}
+.tc-btn:hover{background:var(--pink);}
+.tc-btn:active{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--pink-loud)}
+
+.sec-h3{font-family:var(--display);font-weight:800;font-size:clamp(21px,3.4vw,29px);margin:0 0 8px}
+.sec-p{font-size:14.5px;color:var(--ink-soft);max-width:66ch;margin-bottom:20px}
+
+.worked{display:grid;gap:14px;margin-bottom:38px}
+.wk{border:var(--bd);background:#fff;display:grid;grid-template-columns:1fr}
+@media (min-width:820px){.wk{grid-template-columns:1.15fr .85fr}}
+.wk .cap{padding:18px 20px;font-family:var(--sans);font-size:16px;line-height:1.5}
+.wk:nth-child(3n+1) .cap{background:var(--yellow-soft)}
+.wk:nth-child(3n+2) .cap{background:var(--pink-soft)}
+.wk:nth-child(3n) .cap{background:var(--lilac-soft)}
+.wk .why{padding:18px 20px;border-top:2px solid var(--ink)}
+@media (min-width:820px){.wk .why{border-top:0;border-left:2px solid var(--ink)}}
+.wk .why .lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+.wk .why p{font-size:13.5px;color:var(--ink-soft);margin:0}
+.wk .why b{color:var(--ink)}
+
+.skelnav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.skelnav a{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink);border:2px solid var(--ink);background:var(--paper);padding:6px 10px;
+}
+.skelnav a:hover{background:var(--yellow)}
+.skelgroups{display:grid;gap:22px}
+.skgrp{border:var(--bd);background:#fff}
+.skgrp .gh{padding:14px 18px;border-bottom:var(--bd);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.skgrp .gh h4{font-family:var(--display);font-weight:800;font-size:19px;margin:0}
+.skgrp .gh small{font-size:13px;color:var(--ink-soft)}
+.skgrp:nth-child(4n+1) .gh{background:var(--yellow)}
+.skgrp:nth-child(4n+2) .gh{background:var(--pink)}
+.skgrp:nth-child(4n+3) .gh{background:var(--lilac)}
+.skgrp:nth-child(4n) .gh{background:var(--yellow-soft)}
+.skgrp ol{margin:0;padding:0;list-style:none;columns:1}
+@media (min-width:700px){.skgrp ol{columns:2;column-gap:0}}
+.skgrp li{
+  break-inside:avoid;padding:10px 16px;border-bottom:2px solid var(--line,rgba(21,16,33,.12));
+  font-family:var(--helv);font-size:14px;font-weight:600;display:flex;gap:10px;
+}
+.skgrp li .n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink-soft);min-width:22px}
+.skgrp li b{font-weight:700;color:var(--pink-loud)}
+
+/* ---------------- drive player ---------------- */
+.lb[hidden]{display:none}
+.lb{
+  position:fixed;inset:0;z-index:200;background:rgba(10,7,17,.93);
+  display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px;
+}
+.lb-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lb-bar .t{
+  flex:1;min-width:0;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.lb-btn{
+  font-family:var(--display);font-weight:800;font-size:14px;cursor:pointer;
+  border:3px solid var(--paper);background:var(--paper);color:var(--ink);padding:8px 14px;
+}
+.lb-btn:hover{background:var(--yellow)}
+.lb-btn.ghost{background:transparent;color:var(--paper)}
+.lb-btn.ghost:hover{background:var(--paper);color:var(--ink)}
+.lb-stage{
+  display:grid;place-items:center;min-height:0;
+}
+.lb-frame{
+  position:relative;height:100%;max-height:100%;aspect-ratio:9/16;
+  border:3px solid var(--paper);background:#000;overflow:hidden;
+}
+.lb-frame.wide{aspect-ratio:4/5}
+.lb-frame iframe,.lb-frame img{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb-frame img{object-fit:contain;background:#000}
+.lb-foot{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.lb-count{
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--paper);
+}
+.slot .live{
+  position:absolute;right:0;bottom:0;z-index:2;
+  font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--pink-loud);color:#fff;padding:4px 7px;
+}
+
+/* ---------------- outliers ---------------- */
+.glance{display:grid;gap:0;border:var(--bd);background:var(--paper);margin-bottom:24px}
+.glance-step{display:grid;grid-template-columns:44px 1fr;gap:0 14px;padding:16px 18px;border-bottom:2px solid var(--ink)}
+.glance-step:last-child{border-bottom:0}
+.glance-step .n{font-family:var(--display);font-weight:800;font-size:23px;line-height:1}
+.glance-step h3{font-size:16px;margin-bottom:5px}
+.glance-step p{font-size:14px;color:var(--ink-soft);margin:0}
+
+.panels{display:grid;gap:18px}
+@media (min-width:800px){.panels{grid-template-columns:1fr 1fr}}
+.panel{border:var(--bd);background:#fff;overflow:hidden}
+.panel .ptop{padding:13px 17px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:18px}
+.panel.no .ptop{background:var(--ink);color:var(--paper)}
+.panel.yes .ptop{background:var(--yellow)}
+.chart{display:flex;align-items:flex-end;gap:5px;height:150px;padding:18px 17px 0}
+.chart .b{flex:1;background:var(--lilac);border:2px solid var(--ink);border-bottom:0;min-height:5px}
+.chart .b.post{background:var(--pink-loud)}
+.chart-x{
+  display:flex;justify-content:space-between;padding:7px 17px 0;
+  font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+}
+.panel .say{padding:15px 17px 17px;font-size:14px;color:var(--ink-soft)}
+.panel .say b{color:var(--ink)}
+
+footer{margin-top:56px;border-top:var(--bd);background:var(--pink);padding:30px var(--pad)}
+footer .f-in{max-width:1060px;margin:0 auto}
+footer .big{font-family:var(--display);font-weight:800;font-size:clamp(19px,3.4vw,31px);max-width:22ch;text-wrap:balance}
+footer p{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:15px}
 </style>
 
 <header>
   <div class="bar">
     <div class="logo">Nancy Creative Crew Guide</div>
-    <nav>
-      <a href="#rule">The Rule</a>
-      <a href="#outliers">Outliers</a>
-      <a href="#find">Find</a>
-      <a href="#save">Save</a>
-      <a href="#replicate">Replicate</a>
-      <a href="#style">Our Style</a>
-      <a href="#dodont">Do / Don't</a>
-    </nav>
   </div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Guide sections"></div>
 </header>
 
 <div class="marq"><div id="marqTrack"></div></div>
 
 <div class="wrap">
 
-  <div class="hero">
-    <h1>Find the <em>outlier</em> first. <span class="strike">Then</span> make the thing.</h1>
-    <p class="lede">
-      This is how we work. Not a project brief &mdash; the method underneath every project.
-      How to hunt for content that actually performed, how to read it, how to replicate the
-      part that made it work, and what our edits are supposed to look like.
-    </p>
-    <div class="stickers">
-      <span class="sticker">Reference first</span>
-      <span class="sticker">Idea second</span>
-      <span class="sticker">Edit last</span>
-      <span class="sticker">Copy the mechanism</span>
-      <span class="sticker">Never the subject</span>
+
+  <!-- ============ 01 DO'S AND DON'TS ============ -->
+  <section class="page" id="page-dodont" role="tabpanel" aria-labelledby="tab-dodont" hidden>
+    <div class="page-head"><span class="pnum">01</span><h2>Do's and Don'ts</h2></div>
+    <div class="page-body">
+      <div class="rulestrip">
+        <div class="k">The one rule &mdash; everything else is detail</div>
+        <h2>Reference first. Idea second. Edit last.</h2>
+        <p>
+          The idea comes <b>out of</b> the reference, never the other way round. Every caption,
+          overlay and cut should trace back to something we already saw work. Same for the
+          music: find the track, then cut to it.
+        </p>
+      </div>
+      <p class="page-lede">The whole guide in two columns. The right-hand one matters more.</p>
+
+      <div class="why-brief">
+        <div class="k">Why this brief exists</div>
+        <p>
+          We work with different editors and creators on every project. This is so you do not
+          have to guess what we are after &mdash; and so you can come back with <b>finished
+          content</b>, not just a set of cuts.
+        </p>
+        <p>
+          Good cuts on their own are not the job. The job is cuts that were <b>chosen</b>, text
+          overlays where they make it stronger, and an editor who can tell what is working in a
+          piece and what could be better.
+        </p>
+      </div>
+      <div class="dd">
+        <div class="col do">
+          <div class="top">Do</div>
+          <ul>
+            <li class="big"><b>Find the reference first.</b> Always. The idea gets built out of it.</li>
+            <li><b>Find the music first</b>, then let the track decide where the cuts land.</li>
+            <li>Write the text overlays at planning, before anything is shot.</li>
+            <li>Decide the hook before the shoot &mdash; what is on screen in the first second.</li>
+            <li>Copy the <b>mechanism</b>: hook shape, beat order, overlay cadence, cut rhythm.</li>
+            <li>Steal from outside our category. Better mechanics, and nobody clocks the source.</li>
+            <li>Check the finished cut back against the reference before it goes out.</li>
+          </ul>
+        </div>
+        <div class="col no">
+          <div class="top">Don't</div>
+          <ul>
+            <li class="big"><b>Edit first, then go looking for inspo.</b> This can never happen &mdash; see below.</li>
+            <li>Cut the video first and drop a beat underneath it afterwards.</li>
+            <li>Retrofit a caption or overlay onto a cut that is already locked.</li>
+            <li>Copy the subject, the joke or the exact words. That is just their content with our logo on it.</li>
+            <li>Call a big account's normal post an outlier because the number looks big.</li>
+            <li>Build on a format from a year ago without checking it still runs.</li>
+            <li>Add colour with type, transitions or overlays.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="verdictline">
+        <h3>Why editing first never works</h3>
+        <p>
+          If the cut already exists and we go hunting for a reference for the caption or the
+          overlay, that overlay is a guess dressed up as a decision. It was not chosen for a
+          reason, because at the moment it was chosen there was no reason available. You can
+          feel it in the content even when you cannot point at what is wrong.
+        </p>
+      </div>
+    <div class="pager"></div>
     </div>
+  </section>
+
+  <!-- ============ 02 TYPOGRAPHY ============ -->
+  <section class="page" id="page-type" role="tabpanel" aria-labelledby="tab-type" hidden>
+    <div class="page-head"><span class="pnum">02</span><h2>Typography</h2></div>
+    <div class="page-body">
+      <p class="page-lede">
+        Three faces, and each one has a job. Type on screen is the part of an edit people
+        actually read, so it is the part they judge fastest.
+      </p>
+
+      <div class="faces">
+        <div class="face">
+          <div class="fname">Display</div>
+          <div class="big ppe">PP Editorial New</div>
+          <div class="job"><b>The brand face.</b> Titles, covers, anything that has to feel like us before it is read. Set it large and let it be quiet.</div>
+        </div>
+        <div class="face">
+          <div class="fname">Secondary</div>
+          <div class="big fra">Fraunces</div>
+          <div class="job"><b>The workhorse serif.</b> Where Editorial is too fine to hold up &mdash; smaller headings, longer runs of display text.</div>
+        </div>
+        <div class="face">
+          <div class="fname">Body &amp; on-screen</div>
+          <div class="big hel">Helvetica</div>
+          <div class="job"><b>Body copy, and what we put in the edit.</b> It is Instagram's native font, so it reads as part of the platform rather than as a graphic laid on top.</div>
+        </div>
+      </div>
+
+      <div class="cuts">
+        <div class="cut"><div class="cn">Editorial &mdash; Ultralight</div><div class="cs ul">Out of Office</div></div>
+        <div class="cut"><div class="cn">Editorial &mdash; Regular</div><div class="cs rg">Out of Office</div></div>
+        <div class="cut"><div class="cn">Editorial &mdash; Italic</div><div class="cs it">Out of Office</div></div>
+        <div class="cut"><div class="cn">Editorial &mdash; Ultrabold</div><div class="cs ub">Out of Office</div></div>
+      </div>
+
+      <div class="scale-h">The scale <span class="chip">Highlights</span></div>
+      <div class="roles">
+        <div class="role">
+          <div class="rname">Header<b>40&ndash;50</b></div>
+          <div class="samp hd">The first line they read</div>
+        </div>
+        <div class="role">
+          <div class="rname">Subheader<b>20&ndash;30</b></div>
+          <div class="samp sh">The point of the shot, in six words</div>
+        </div>
+        <div class="role">
+          <div class="rname">Body<b>8&ndash;10</b></div>
+          <div class="samp bd">Supporting detail that can be skipped</div>
+        </div>
+      </div>
+
+      <div class="logo-rule">
+        <div class="k">The logo is a type element, not a fixed stamp</div>
+        <p>
+          It takes the size of whatever job it is doing on that frame &mdash; there is no single
+          logo size. Set it to the role it is playing.
+        </p>
+        <div class="lr-grid">
+          <div class="lr"><span class="lr-n">40&ndash;50</span><span class="lr-l">As a header</span></div>
+          <div class="lr"><span class="lr-n">20&ndash;30</span><span class="lr-l">As a subheader</span></div>
+          <div class="lr"><span class="lr-n">10</span><span class="lr-l">As body text</span></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:20px;margin-bottom:6px">In the edit</h3>
+      <p style="font-size:14.5px;color:var(--ink-soft);margin-bottom:18px;max-width:62ch">
+        Three things go on a frame, and that is all. Hero text, the campaign title, the logo.
+      </p>
+
+      <div class="onscreen">
+        <div class="shot">
+          <span class="standin">Footage stands in</span>
+          <span class="campaign">Out of Office</span>
+          <div class="heroT">Every setup has motion</div>
+          <div class="logo-b"><img src="assets/nancy-logo-cream.svg" alt="Nancy logo"></div>
+        </div>
+        <div class="callouts">
+          <div class="callout">
+            <div class="cnum">Middle of frame</div>
+            <h3>Hero text &mdash; Helvetica, adjusted<span class="chip">Your numbers</span></h3>
+            <p>Helvetica with the measurements pulled in from default &mdash; tighter tracking, tighter leading. That adjustment is what stops it looking like a stock caption.</p>
+            <div class="measures"><span>Header 40&ndash;50</span><span>Subheader 20&ndash;30</span><span>Body 8&ndash;10</span><span class="q">Tracking TBC</span></div>
+          </div>
+          <div class="callout">
+            <div class="cnum">Top of frame</div>
+            <h3>Campaign title<span class="chip">Confirm</span></h3>
+            <p>The topic or campaign name, small and out of the way. It labels the frame; it is not competing with the hero line.</p>
+          </div>
+          <div class="callout">
+            <div class="cnum">Bottom of frame</div>
+            <h3>Nancy logo</h3>
+            <p>Sits at the bottom, centred, cream. Same place every time &mdash; that consistency is what makes a grid of posts read as one campaign.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="neednote bot">
+        <b>Still open:</b> tracking and leading, and whether hero text is caps or sentence
+        case. The sizes above are the highlights scale as you gave it &mdash; worth confirming
+        they are CapCut type sizes rather than pixels on a 1080-wide frame, since 8&ndash;10px
+        at full frame size would be unreadable.
+      </div>
+    <div class="pager"></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 OUR EDITING STYLE ============ -->
+  <section class="page" id="page-style" role="tabpanel" aria-labelledby="tab-style" hidden>
+    <div class="page-head"><span class="pnum">03</span><h2>Our editing style</h2></div>
+    <div class="page-body">
+      <p class="page-lede">
+        Six formats. Two of them are quick wins; the other four are what every event owes.
+        Know which one you are making before you open the timeline.
+      </p>
+
+      <div class="evolving">
+        <div class="k">Read the examples this way</div>
+        <p>
+          Our editing style has been <b>evolving</b>, and it is still moving. The examples below
+          are a feel for what we have been making recently &mdash; not a locked specification.
+          We are working toward something more organised and more specific, particularly on
+          typography, and we are locking it in as we go.
+        </p>
+        <p style="margin-top:10px">
+          So do not copy these frame for frame. What matters is that <b>the cuts and the type are
+          interesting</b>, that you can read an outlier and tell why it worked, and that you can
+          move with the style as it tightens.
+        </p>
+      </div>
+
+      <div class="prioboard" id="prioboard"></div>
+
+      <div class="verdictline" style="margin-top:0;margin-bottom:26px">
+        <h3>Music first, then the cuts</h3>
+        <p>
+          Find the track before you cut anything, and let it decide where the cuts land. Cutting
+          first and dropping a beat underneath afterwards is the same mistake as editing first
+          and hunting for a reference after &mdash; the timing was not chosen, it was inherited.
+        </p>
+      </div>
+
+      <div class="vtypes" id="vtypes"></div>
+
+      <div class="houserules">
+        <div class="hr-h">House rules</div>
+        <div class="hr-s">The craft calls that apply whatever the format is.</div>
+        <div class="style-grid">
+          <div class="srule"><h3>Everything moves<span class="chip">Confirm</span></h3><p>Every setup has motion in it. If a shot sits still for more than a beat it is either a deliberate hold or it is out.</p></div>
+          <div class="srule"><h3>Shoot doubles<span class="chip">Confirm</span></h3><p>One clean digital pass, one lo-fi. Both live in the same cut &mdash; the contrast between them is the look.</p></div>
+          <div class="srule"><h3>Keep the blurry ones<span class="chip">Confirm</span></h3><p>Out-of-focus and lo-fi frames are selects, not mistakes. At least one survives into every deliverable.</p></div>
+          <div class="srule"><h3>Never match the passes<span class="chip">Confirm</span></h3><p>Do not grade the lo-fi toward the digital to "unify" a sequence. That difference is the point of shooting twice.</p></div>
+          <div class="srule"><h3>Colour comes from frame<span class="chip">Confirm</span></h3><p>All colour on screen comes from what was shot. Type and overlays stay white or cream &mdash; never coloured.</p></div>
+          <div class="srule"><h3>On-screen type is Helvetica</h3><p>Hero text is Helvetica with adjusted measurements, campaign title top, logo bottom. Full spec under Typography.</p></div>
+          <div class="srule"><h3>A reel is 9:16</h3><p>Reels are shot and cut 9:16 and labelled reels. A 9:16 crop of a carousel is not a reel and reads like one.</p></div>
+        </div>
+      </div>
+
+      <div class="neednote bot">
+        <b>Still open:</b> the order <em>within</em> each priority group is the order you named
+        them, not a ranking &mdash; tell me if it should be different. Video examples are still
+        empty slots; send links and they drop in.
+      </div>
+    <div class="pager"></div>
+    </div>
+  </section>
+
+  <!-- ============ 04 UNDERSTANDING OUTLIERS ============ -->
+  <section class="page" id="page-outlier" role="tabpanel" aria-labelledby="tab-outlier" hidden>
+    <div class="page-head"><span class="pnum">04</span><h2>Understanding outliers</h2></div>
+    <div class="page-body">
+      <p class="page-lede">
+        Nobody has to go hunting for these right now. This is just so that when one lands on
+        your feed, you can tell in about ten seconds whether it is worth saving.
+      </p>
+
+      <div class="glance">
+        <div class="glance-step"><div class="n">1</div><div>
+          <h3>Something stops you</h3>
+          <p>A video with loads of reactions in the comments, or copy on screen that is genuinely good. That feeling is the trigger &mdash; it is not the answer yet.</p>
+        </div></div>
+        <div class="glance-step"><div class="n">2</div><div>
+          <h3>Tap the account</h3>
+          <p>Do not judge the post on its own. The number means nothing until you know what normal looks like for whoever posted it.</p>
+        </div></div>
+        <div class="glance-step"><div class="n">3</div><div>
+          <h3>Scroll their last 30 days</h3>
+          <p>Just look at the view counts on their recent posts. That is the whole check &mdash; no maths, no tools.</p>
+        </div></div>
+      </div>
+
+      <div class="panels">
+        <div class="panel no">
+          <div class="ptop">Not an outlier</div>
+          <div class="chart" id="chartNo"></div>
+          <div class="chart-x"><span>Last 30 days</span><span>The post</span></div>
+          <div class="say">
+            Everything they post does roughly this. <b>The account did the work, not the video.</b>
+            There is nothing here to copy &mdash; their audience just showed up, the way it always does.
+          </div>
+        </div>
+        <div class="panel yes">
+          <div class="ptop">Outlier</div>
+          <div class="chart" id="chartYes"></div>
+          <div class="chart-x"><span>Last 30 days</span><span>The post</span></div>
+          <div class="say">
+            Their other posts are <b>obviously</b> lower &mdash; not a bit lower, obviously lower.
+            Something about this one video did that, and whatever it was, we can take it.
+          </div>
+        </div>
+      </div>
+
+      <div class="verdictline">
+        <h3>If you have to squint, it's a no</h3>
+        <p>
+          A real outlier is unmissable &mdash; the bar towers over everything around it. If you
+          find yourself doing sums to argue that it counts, you already have your answer. Keep
+          scrolling.
+        </p>
+      </div>
+    <div class="pager"></div>
+    </div>
+  </section>
+
+  <!-- ============ 05 CAPTIONS ============ -->
+  <section class="page" id="page-caption" role="tabpanel" aria-labelledby="tab-caption" hidden>
+    <div class="page-head"><span class="pnum">05</span><h2>Captions &amp; overlays</h2></div>
+    <div class="page-body">
+      <p class="page-lede">
+        The overlay earns the stop. The caption deepens the idea. They are never the same
+        sentence, and neither of them narrates what is already on screen.
+      </p>
+
+      <div class="vibe">
+        <div class="k">The voice, in one paragraph</div>
+        <p>
+          Nancy sounds like a woman who understands culture, intimacy and marketing, and is
+          bored of pretending otherwise. Genuine, witty, confident, unbothered. She can be
+          funny without performing humour, and can sell without sounding desperate to convert.
+          <b>Never crude just because the category is.</b>
+        </p>
+        <div class="vibe-rules">
+          <span>lowercase on Instagram</span>
+          <span>complete sentences</span>
+          <span>no em dashes</span>
+          <span>four emojis maximum</span>
+          <span>one joke, not five</span>
+          <span>never narrate the footage</span>
+        </div>
+      </div>
+
+      <div class="toolcta">
+        <div class="tc-copy">
+          <div class="k">Write it here</div>
+          <h3>Nancy Caps</h3>
+          <p>
+            Captions and text overlays, written in Nancy's voice. Use this rather than writing
+            from scratch, and rather than any general AI tool that does not know the brand.
+          </p>
+        </div>
+        <a class="tc-btn" href="https://nancycaps-geivhm2u.manus.space/" target="_blank" rel="noopener">
+          Open Nancy Caps <span aria-hidden="true">&#8599;</span>
+        </a>
+      </div>
+
+      <h3 class="sec-h3">What has actually worked</h3>
+      <p class="sec-p">Real captions, and the reason each one landed. The pattern is the same every time: the footage is the evidence, the caption is the meaning.</p>
+      <div class="worked" id="worked"></div>
+
+      <h3 class="sec-h3">100 overlay skeletons</h3>
+      <p class="sec-p">
+        Formats in heavy rotation across the platform, grouped by the emotional engine that
+        makes each one work. <b>Keep the logic, change the filling.</b> Pick the engine that
+        matches the footage first, then find the most Nancy-specific thing to put in the blank.
+      </p>
+      <div class="skelnav" id="skelNav"></div>
+      <div class="skelgroups" id="skelGroups"></div>
+    </div>
+  </section>
+
+
+
+</div>
+
+<div class="lb" id="lb" hidden>
+  <div class="lb-bar">
+    <div class="t" id="lbTitle"></div>
+    <a class="lb-btn ghost" id="lbOpen" href="#" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+    <button class="lb-btn" type="button" id="lbClose">Close &times;</button>
   </div>
-
-  <!-- ============ THE RULE ============ -->
-  <section id="rule">
-    <div class="bigrule">
-      <div class="k">The one rule &mdash; everything else is detail</div>
-      <h2>Search first. Then copy and replicate.</h2>
-      <p>
-        We find the reference before we plan the content. The idea comes <b>out of</b> the
-        outlier &mdash; not the other way round. Every caption, every text overlay, every cut
-        should be traceable back to something we saw work.
-      </p>
-    </div>
-
-    <div class="loop">
-      <div class="loop-step"><div class="n">[01]</div><h3>Search</h3><p>Hunt for outliers before anyone opens a camera or a timeline.</p></div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-step"><div class="n">[02]</div><h3>Save</h3><p>Into the swipe file, with one line on <b>why</b> it worked.</p></div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-step"><div class="n">[03]</div><h3>Plan</h3><p>Build the idea from the reference. Hook, overlays and structure decided now.</p></div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-step"><div class="n">[04]</div><h3>Shoot</h3><p>Shoot to that plan, so the edit already exists before the edit.</p></div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-step"><div class="n">[05]</div><h3>Edit</h3><p>Execute the plan, then check the cut back against the reference.</p></div>
-    </div>
-
-    <div class="anti">
-      <div class="k">The one that gets things killed</div>
-      <h3>Editing first and looking for inspiration afterwards.</h3>
-      <p>
-        This can never happen. If the cut already exists and we go hunting for a reference for
-        the caption or the text overlay, that overlay is a guess dressed up as a decision. It
-        was not chosen for a reason, because at the moment it was chosen there was no reason
-        available. Unintentional never performs &mdash; and you can feel it in the content,
-        even when you cannot point at what is wrong.
-      </p>
-      <div class="chain"><s>Edit &rarr; find reference &rarr; retrofit the overlay</s> &nbsp;&larr; not this, ever</div>
-    </div>
-  </section>
-
-  <!-- ============ OUTLIERS ============ -->
-  <section id="outliers">
-    <div class="sec-head"><div class="num">01</div><h2>What counts as an outlier</h2></div>
-    <p class="sec-sub">
-      An outlier is not the post with the most views. It is the post that beat <b>its own
-      account's normal</b> by the widest margin. That gap is the only thing that tells you the
-      <em>format</em> did the work rather than the follower count.
-    </p>
-    <div class="hr"></div>
-
-    <div class="cards three">
-      <div class="card pink">
-        <span class="tag">Rule of thumb</span>
-        <h3>Views &divide; that account's median</h3>
-        <p>Pull up the creator's recent posts, eyeball the middle one, divide. <b>5&times; or better and you have an outlier.</b> Under 2&times; is just a good day.</p>
-      </div>
-      <div class="card yellow">
-        <span class="tag">The gold</span>
-        <h3>Small account, huge numbers</h3>
-        <p>A 4k-follower account with 900k views is worth ten big-account posts. Nothing carried it but the idea and the execution &mdash; which means <b>it is copyable</b>.</p>
-      </div>
-      <div class="card lilac">
-        <span class="tag">Careful</span>
-        <h3>Big account, big numbers</h3>
-        <p>Usually just the audience showing up. Not an outlier, and not a lesson. Check it against their own median before you save it.</p>
-      </div>
-    </div>
-
-    <div class="calc">
-      <h3>Outlier check</h3>
-      <div class="hint">Do the maths before you save. Median = the middle-of-the-road view count on that creator's recent posts, not their best one.</div>
-      <div class="calc-row">
-        <div class="field">
-          <label for="v">Views on the post</label>
-          <input id="v" type="text" inputmode="numeric" value="900000" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="m">Their median views</label>
-          <input id="m" type="text" inputmode="numeric" value="60000" autocomplete="off">
-        </div>
-      </div>
-      <div class="verdict">
-        <div class="score" id="score">15.0&times;</div>
-        <div class="label" id="label">Certified outlier</div>
-        <p id="advice">Save it. Break it down. This one earned a full anatomy pass.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FIND ============ -->
-  <section id="find">
-    <div class="sec-head"><div class="num">02</div><h2>How to hunt</h2></div>
-    <p class="sec-sub">
-      Hunting is a scheduled job, not something you do when you are stuck. Blocks of it, before
-      a project is planned &mdash; so there is always a full swipe file to build ideas out of.
-    </p>
-    <div class="hr"></div>
-
-    <div class="check">
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Search the format, not the topic</h3>
-        <p>Type the <em>shape</em> of the thing into search, not our product. <span class="icode">get ready with me tennis</span>, <span class="icode">day in the life nyc</span>, <span class="icode">outfit transition</span>. Topic search finds competitors; format search finds mechanics.</p>
-      </div></div>
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Sort by what performed, then filter by recency</h3>
-        <p>A format that worked eighteen months ago is a period piece. Anything older than about three months, check that it is still running before you build on it.</p>
-      </div></div>
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Check the ratios, not just the views</h3>
-        <p>Saves and shares beat likes. A high save rate means people wanted it later &mdash; that is the signal that the <b>idea</b> was strong rather than the face.</p>
-      </div></div>
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Read the comments for the reason</h3>
-        <p>The comments will usually tell you exactly what landed &mdash; the outfit, the line, the twist at 4 seconds. That sentence is your "why" line when you save it.</p>
-      </div></div>
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Hunt outside our category</h3>
-        <p>Most of what we can steal cleanly comes from outside fashion. Food, travel, gaming and sports edits solve hooks and pacing problems we have, and nobody will recognise the source.</p>
-      </div></div>
-      <div class="check-item"><div class="box"></div><div>
-        <h3>Stop at enough, not at perfect</h3>
-        <p>Ten to fifteen strong outliers is a planning session. Two hundred saved posts nobody annotated is a graveyard.</p>
-      </div></div>
-    </div>
-  </section>
-
-  <!-- ============ SAVE ============ -->
-  <section id="save">
-    <div class="sec-head"><div class="num">03</div><h2>Save it properly</h2></div>
-    <p class="sec-sub">
-      A saved post with no note is worthless in a week &mdash; you will remember that you liked
-      it and not what for. <b>Never save without the why line.</b> It takes fifteen seconds and
-      it is the entire value of the swipe file.
-    </p>
-    <div class="hr"></div>
-
-    <div class="tmpl">
-<span class="lbl">LINK</span>        <span class="fill">paste the post</span>
-<span class="lbl">SCORE</span>       <span class="fill">views &divide; their median, e.g. 15x</span>
-<span class="lbl">WHY IT WORKED</span>  <span class="fill">one sentence, the mechanism &mdash; not "nice edit"</span>
-<span class="lbl">STEAL</span>       <span class="fill">the exact part we are taking: hook / overlay cadence / cut rhythm</span>
-<span class="lbl">FOR</span>         <span class="fill">which project or format this is a candidate for</span>
-    </div>
-
-    <div class="cards two">
-      <div class="card yellow">
-        <span class="tag">Good why line</span>
-        <p>&ldquo;Hook is a question on screen at 0:00 with the answer withheld until 0:06 &mdash; the pause is what holds people, not the outfit.&rdquo;</p>
-      </div>
-      <div class="card pink">
-        <span class="tag">Useless why line</span>
-        <p>&ldquo;Love this &mdash; great vibes, cool transitions.&rdquo; Nothing here can be rebuilt. In a week this is a screenshot of a stranger.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ REPLICATE ============ -->
-  <section id="replicate">
-    <div class="sec-head"><div class="num">04</div><h2>Copy &amp; replicate &mdash; properly</h2></div>
-    <p class="sec-sub">
-      Copying the <b>mechanism</b> is the job. Copying the <b>subject</b> is theft and it does not
-      even work. Break the outlier into its parts, take the parts that made it move, swap
-      everything else for ours.
-    </p>
-    <div class="hr"></div>
-
-    <div class="anat">
-      <div class="anat-row"><div class="part">Hook<small>First 1 second</small></div><p>What is on screen and what is being withheld. This is the single most copyable part of any outlier &mdash; and the part most people skip.</p></div>
-      <div class="anat-row"><div class="part">Structure<small>The shape</small></div><p>How many beats, what order, where the turn lands. Write it out as a list before you plan the shoot.</p></div>
-      <div class="anat-row"><div class="part">Text overlays<small>Cadence &amp; placement</small></div><p>How many words, how long they hold, where they sit, when they change. <b>Decided at planning, never in the edit.</b></p></div>
-      <div class="anat-row"><div class="part">Cut rhythm<small>Pacing</small></div><p>Count the cuts in the first five seconds. That number is the format's pulse &mdash; match it rather than guessing.</p></div>
-      <div class="anat-row"><div class="part">Audio<small>Track &amp; sound design</small></div><p>Whether the cut serves the track or the track sits under the cut. Note where location sound is doing the work.</p></div>
-      <div class="anat-row"><div class="part">Ending<small>Last 2 seconds</small></div><p>Loop, payoff, or hard stop. The ending is what decides a rewatch, and rewatch is what decides reach.</p></div>
-    </div>
-
-    <div class="cards two">
-      <div class="card yellow">
-        <span class="tag">Take</span>
-        <h3>The mechanism</h3>
-        <p>Hook shape, beat order, overlay cadence, cut rhythm, ending type. All of it is format, and format belongs to nobody.</p>
-      </div>
-      <div class="card pink">
-        <span class="tag">Never take</span>
-        <h3>The specifics</h3>
-        <p>Their exact words, their joke, their song choice where it is the point, their product moment, their face. Copy those and you have made their content with our logo on it.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ STYLE ============ -->
-  <section id="style">
-    <div class="sec-head"><div class="num">05</div><h2>Our editing style</h2></div>
-    <p class="sec-sub">
-      The house look. This is what a Nancy edit is supposed to feel like regardless of which
-      project it came from.
-    </p>
-    <div class="hr"></div>
-
-    <div class="style-grid">
-      <div class="srule"><h3>Everything moves<span class="confirm">Confirm</span></h3><p>Every setup has motion in it. If a shot sits still for more than a beat it is either a deliberate hold or it is out.</p></div>
-      <div class="srule"><h3>Shoot doubles<span class="confirm">Confirm</span></h3><p>One clean digital pass, one lo-fi. Both passes live in the same cut &mdash; the contrast between them is the look.</p></div>
-      <div class="srule"><h3>Keep the blurry ones<span class="confirm">Confirm</span></h3><p>Out-of-focus and lo-fi frames are selects, not mistakes. At least one survives into every deliverable.</p></div>
-      <div class="srule"><h3>Never colour-match the passes<span class="confirm">Confirm</span></h3><p>Do not grade the lo-fi toward the digital to "unify" a sequence. That difference is the point of shooting twice.</p></div>
-      <div class="srule"><h3>Cut on movement<span class="confirm">Confirm</span></h3><p>Cut on motion, not on the beat grid. Wide &rarr; detail &rarr; face is the order that reads as intent.</p></div>
-      <div class="srule"><h3>Location sound stays<span class="confirm">Confirm</span></h3><p>Real sound under the music. It is what stops a cut reading like a stock edit. No effects for things that were not there.</p></div>
-      <div class="srule"><h3>Colour comes from the frame<span class="confirm">Confirm</span></h3><p>All colour on screen comes from what was shot. Type and overlays stay white or black &mdash; never coloured.</p></div>
-      <div class="srule"><h3>Type is Archivo, bold caps<span class="confirm">Confirm</span></h3><p>Square corners, no drop shadow, no stroke. If an overlay needs an effect to be readable, it is in the wrong place.</p></div>
-      <div class="srule"><h3>A reel is 9:16<span class="confirm">Confirm</span></h3><p>Reels are shot and cut 9:16 and labelled reels. A 9:16 crop of a carousel is not a reel and reads like one.</p></div>
-    </div>
-
-    <div class="flagnote">
-      <b>Flagged for you:</b> every rule in this section is drafted from the direction notes and
-      commits in the crew repo &mdash; most of it came off the US Open shoot. Some are genuinely
-      house style and some were calls for that one project. Tell me which is which and I will
-      cut the ones that do not generalise.
-    </div>
-  </section>
-
-  <!-- ============ DO / DON'T ============ -->
-  <section id="dodont">
-    <div class="sec-head"><div class="num">06</div><h2>Do / Don't</h2></div>
-    <p class="sec-sub">The short version. If you read nothing else on this page, read the right-hand column.</p>
-    <div class="hr"></div>
-
-    <div class="dd">
-      <div class="col do">
-        <div class="top">Do</div>
-        <ul>
-          <li><b>Find the reference first.</b> Always. The idea is built out of the outlier.</li>
-          <li>Write the text overlays at planning, before anything is shot.</li>
-          <li>Save every reference with a one-line why. Fifteen seconds, every time.</li>
-          <li>Do the maths &mdash; views against that account's own median.</li>
-          <li>Steal from outside our category. Better mechanics, no resemblance.</li>
-          <li>Count the cuts in the first five seconds and match that pulse.</li>
-          <li>Check the finished cut back against the reference before it goes out.</li>
-        </ul>
-      </div>
-      <div class="col no">
-        <div class="top">Don't</div>
-        <ul>
-          <li><b>Edit first and look for inspiration after.</b> This is the big one. It can never happen.</li>
-          <li>Retrofit a caption or overlay onto a cut that is already locked.</li>
-          <li>Save a post without writing down why it worked.</li>
-          <li>Call a big account's normal post an outlier because the number is large.</li>
-          <li>Copy the subject, the joke or the exact words. Take the mechanism instead.</li>
-          <li>Build on a format from a year ago without checking it still runs.</li>
-          <li>Add colour with type, transitions or overlays.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
+  <div class="lb-stage"><div class="lb-frame" id="lbFrame"></div></div>
+  <div class="lb-foot" id="lbFoot"></div>
 </div>
 
 <footer>
   <div class="f-in">
-    <div class="big">If you cannot say which outlier an idea came from, it is not an idea yet.</div>
+    <div class="big">If you cannot say which reference an idea came from, it is not an idea yet.</div>
     <p>Nancy Creative Crew Guide &mdash; internal &mdash; read before you plan</p>
   </div>
 </footer>
 
 <script>
 /* ---- marquee ---- */
-const MARQ = ["Search first","Then copy and replicate","Reference &rarr; idea &rarr; edit",
-              "Never edit then look for inspo","Copy the mechanism, not the subject",
-              "No why line, no save"];
+const MARQ = ["Reference first","Idea second","Edit last",
+              "Never edit then look for inspo","Music first, then the cuts","Copy the mechanism, not the subject"];
 document.getElementById("marqTrack").innerHTML =
   (MARQ.map(t => "<span>" + t + "</span>").join("") + "&nbsp;").repeat(2);
 
-/* ---- outlier score ---- */
-const TIERS = [
-  { min:10, label:"Certified outlier",   advice:"Save it. Break it down. This one earned a full anatomy pass." },
-  { min:5,  label:"Outlier",             advice:"Worth saving and worth replicating. Write the why line while you still remember what hit." },
-  { min:2,  label:"Strong, not an outlier", advice:"Good post. Note it if the hook is unusual, but do not build a project around it." },
-  { min:0,  label:"Just a normal post",  advice:"Their audience showed up. There is no lesson here — keep hunting." }
+/* ---- the formats ----
+   One array drives the priority board and the blocks below it, so the two can
+   never drift. A format can carry more than one example group (carousels have
+   a headline-type set; community splits into games and interviews).
+   Links open the post in a new tab — no third-party embed, so no like counts,
+   no play counts and no platform chrome anywhere on the page. */
+const IG = "https://www.instagram.com/p/";
+/* Drive ids for the real examples. A file is a reel, a subfolder is a
+   carousel and its files are the slides — the folder rule, unchanged.
+   Thumbnails come straight from Drive; where a viewer cannot reach Drive
+   (the artifact sandbox blocks external hosts) the tile falls back to a
+   labelled card that still opens the file. */
+const DRIVE = {"Carousel": [{"t": "carousel", "id": "1jluE4dj8kk79IpH3Y_b3mUPQI3qVqyZN", "name": "A 69 years old grandma", "cover": "17LstYgPHBv262rmHC0FTO3Lu4kUJmRKN", "n": 13, "slides": ["17LstYgPHBv262rmHC0FTO3Lu4kUJmRKN", "1wEQ276u6grqWQpBTou1LEh-htWNIm5e8", "1UOSmsPX-fWnoqoAEV15tVrIOim6zhXWX", "1V8VNcnRCWO98v9dXeUVeODKaIdrCiXGK", "1w7MajWywREEIvjkeEF5MQJGGE6Gr-GYf", "1h1bgba2_P1LuCU6Y7SivRrXA2cHvpgI3", "1tsNcHRIohBCFsyMOZ0HJj0JxfJyT3_Kl", "1o7SYTQ7bTWjLHTMa9zY6148PeAfbCtwm", "1WO9A42wYOJzNEBBrPYqPGoA6hr4hlEWt", "1LSNl9SaiiTLwuU8lv2cmgTUg4RxmwBrc", "1-U3WeBWBRcR9bSIN0GlFswDchfctS-Of", "1er-UbR6PAZsBkrSmS8638phJWIQ6ZOvy", "1O6psX2adMEbm-QtTFqGcUq87ht1_7EHy"]}, {"t": "carousel", "id": "131_CKu3nJX0PAyA3Qa_CDS4E6z4iIFZL", "name": "Served by the King", "cover": "14Gi2ZaKeWYxpmWWivvYf1swxlQjLSemf", "n": 10, "slides": ["14Gi2ZaKeWYxpmWWivvYf1swxlQjLSemf", "1vmaOujV3nooxamk6dDi_2w9VJM_2WPlh", "1DsVezStkSDP0rj2BVcsX4sXq-8E4HFeC", "1GiFzf7Mdr1zVaMRzwxg-rB0_TpHrV4un", "14tGQCMyXMdrAOLGVjmUq3EvsInB-bgDV", "10_Jv6N48Jt--bWyP0qA-hCD6XiTu9Kia", "1Be3lqoCyOzJGGz9SLadFEDvCOWYI07_9", "1aiqkh7yQiBx7acd7Q25MHHF-wuHpLt86", "1mK07Anc1Pl71wngxJvA-zpgRVCMvRm7r", "1p5i12nXRvrtBJA14OW0BqxkcYAeqsPCp"]}, {"t": "carousel", "id": "1vwr5-gnt3LpZCh8dDnXcw_M5HnBj6-mP", "name": "Today is meaningful", "cover": "1bWxXpNM2HcLBvI8ljpBvE4n_wFE9bY1Z", "n": 14, "slides": ["1bWxXpNM2HcLBvI8ljpBvE4n_wFE9bY1Z", "12s15Sdhbe1Kolu6Isajau6i0eO7x1BCI", "1Clsae3axzD8SpAIqwvWM6hSX7i1JUxBl", "1QF8aP6ZxMLCFVREo7ZxF-7BxdfPVBoq3", "1CbMTPRw7jLYdYN71_SPzvypeJzHa7NbH", "1JzvL5GTVPEqiOgIXYDHolAKqzocidG-0", "1Zs3veCYfOSchawAWwKDBmzEdc1bdx4Mv", "1KlDCo6VI1-417hwwANBLKqmbqaEoaKgj", "1phL9ply3HeS5QMYMdgBsA236sRBeK1qL", "1wqJMjpO66VvxgegcKDh-0Lb6fW0LCxl1", "1u4m1tp7RHGuDr8lBiBohPseb_76Dn_4O", "13KBOh4M-YVNgaPlSWlJZuS83i9rS92I_", "1aooHPE6EGKnlRLm55rKzFjR3MWzEJD6J", "1Tl31W1i_IcRZxtf3z6SdgEeFPEAnh4MX"]}], "Carousel Headline type": [{"t": "carousel", "id": "1n50jQca97maOX87HwkioZYqgpMJn8P9r", "name": "Kinda chic", "cover": "1ghE2xY_U4vObRX2UNHog2X9DwCwERX3-", "n": 9, "slides": ["1ghE2xY_U4vObRX2UNHog2X9DwCwERX3-", "1VchbVyxOTudfzswUgZmcoH2mdhBnfZH9", "1yPDmAKSBRRdNoQ0xmvx-acQV_VqQCvpY", "1siN8qTE9EBAW885Cx7S7fWT8Z7mifb1S", "1WUEKIQCoxNeTa7S4WyJG_gQU8Xfg6Vrq", "1NpxeZjYIkwXQ9uBWE0MNNrpNJ5KF2fe4", "1xO-toXAAp88Vrv14LgUwxq-kkoXODb-u", "1fBrFvkvgrZS-7wUYPWXgQpgBeWgxgDSb", "1-4v8qwQk-b4eMfRx-1cq-Ccq-xZGPvgX"]}, {"t": "carousel", "id": "1y36jOF3AMChidIVzzzzKo5zRZmWJCFW2", "name": "We held this dinner for every woman", "cover": "18X2PiJ6cF8fPYScUt87XAtciO2GmM7nB", "n": 9, "slides": ["18X2PiJ6cF8fPYScUt87XAtciO2GmM7nB", "1ep8a_TpZptM5oSgYrjzgUKKFS7VJ5Pvq", "1Fxh1A6EKdt92W5DNPWdmPbE9Yw-T70d0", "1r_zxOPxFm294CQfN7Dd52A7JMt0XSgrM", "1B6o95V0seL70TmVxX8wpunEcxTXZAtmW", "1vj1YkKvasis4nlyWHOwokL0RYfDnYz0I", "1DRAlzYvKTjXA4DKYlCTwcrNVqhLWBSkh", "1q-kmMdpvFHzuEgVJ5nr_B-iPDWPhwAkU", "1x2WX9juahM7Qcr0qFXVy5yAaLbz5bpi_"]}, {"t": "carousel", "id": "1Cq3TPyUeB-DMiW5bt20NEHp4aWS8nQLq", "name": "We took nancy brighton pride", "cover": "1qGM9nHgubvU1DXmq7CYfJjtWXXBdv8XK", "n": 7, "slides": ["1qGM9nHgubvU1DXmq7CYfJjtWXXBdv8XK", "1YPMFnwVl1KUcey6Y9hjylSmxhVNfg_Au", "1VaOr8GN7jvowLIe-b6Ry9mTSTMWP28F_", "18USqfCORFSnBdJYYg7KkmjA5tYlvaB0I", "1IQv2K33gW-pdZ8FNGCV9IoPgoqCXRs7N", "1c24AF3bkeORQB9sPwlwhlvUuNJbB1vFl", "1rBBiGDYen3dZ-c6VefV-Ac01EHE8oyZW"]}], "Event Highlights": [{"t": "video", "id": "1Pp0dGZSwSKhCf7b-grc8w_VtSej_I-1G", "name": "s3xual wellness as a social experience 🍋 nancy exists to make moments like this feel less revol"}, {"t": "video", "id": "1T-ywF0MckmqYsNJsvyM4t1H2x6C47o5m", "name": "tell me your brand is doing something right without telling me your brand is doing something rig"}, {"t": "video", "id": "1lFNaRgJkUgXb9Mj8XA1LAG4IoDO1XuVh", "name": "the loudest man in sport helping us make the quietest conversation louder with his queen! 🍋🎾👑"}], "Games": [{"t": "video", "id": "14q2_91LbASxRy6f-97DDWL6PR9KFsCIO", "name": "he wants to be a doctor 😳_hot or cold with nancy 🍋🔥🥶"}, {"t": "video", "id": "1k_vJviAy2rem2kpig7Wt4OQqaWLjcBqO", "name": "She must be a witch! How did she get it so fast! This lady was amazing at our matching game and"}, {"t": "video", "id": "1vK2fKiuaMcy_e2IrKF04s6U6qkeaSB_P", "name": "Vibing with AVO 💚😚🥑💦"}], "Interviews": [{"t": "video", "id": "1p6_-bu0Erg9WS9P4r1Or_j_RqPXzJD9b", "name": "“If we don’t talk about it, we feel like we’re alone, and when we feel alone, we feel like we’re"}, {"t": "video", "id": "1CqxIMUOofzw_MxBYXe_rPjqV41MC5hAX", "name": "a chef knows what she wants 🍋"}, {"t": "video", "id": "1nujqQ2uArLpcKhuXtVSb6aZh-okZeuP3", "name": "i like feeling everything ok nick 🍋🫢"}], "Memes": [{"t": "video", "id": "1g3Ee5iTqHHPNzihCOBXAZjKGXbEKQddm", "name": "she’s gonna have fun tonight 😈👅💦"}, {"t": "video", "id": "1_nSL1iktMsMHOqGGvNT2ZgfUY5dACwae", "name": "someone had to 🍋💦"}, {"t": "video", "id": "1iVaU7EItC0ycg_omeXhK5qepldsGxgsp", "name": "waterproof means waterproof 🍋💦"}], "Photo reels": [{"t": "video", "id": "1xape8vG_rqHpPoIwukQ6g3E37T7KIe5J", "name": "imagine women talking about pleasure at the dinner table the same way they talk about their day."}, {"t": "video", "id": "1S2xto7i4Em35WW2Savx5HlOdH0Xn_OEE", "name": "Miami Swim Week is officially over. Time to take off the bikini 👙, turn off the phone, and turn"}, {"t": "video", "id": "1WJbRITn3X3x2a1d2wY6hbZrpqn7pWIvZ", "name": "pleasure is wellness✨ we combined cold plunges, sauna, breath work, and our favourite fruits int"}], "Wishlist": [{"t": "video", "id": "1E_wVvc97xT_7AU3_wJnrd_7qmzC7NnS2", "name": "I heard these fruits vibr4tes ✨🍋🥑🍓💦"}]};
+
+const FORMATS = [
+  {
+    name:"Event highlights", prio:"priority",
+    line:"Fast cuts, cut to the beat, and unmistakably ours.",
+    rules:[
+      "<b>Find the music first.</b> The track decides where the cuts land \u2014 never cut first and drop a beat under it after.",
+      "Faster is better, but balanced against the track. The beat sets the pace, not a stopwatch.",
+      "<b>Nancy branded, always.</b> Logo at the bottom, campaign title, the full lockup.",
+      "Take the mechanism from an outlier, then write a snappy text overlay of our own.",
+      "Fast cuts with text running over them is fair game."
+    ],
+    groups:[{ drive:"Event Highlights", links:[IG+"DcDLSifkrmb/", IG+"DaIrB02ElPU/", IG+"DapnApPAfW3/"] }]
+  },
+  {
+    name:"Photo reels", prio:"priority",
+    line:"Event highlights, except every frame is a still.",
+    rules:[
+      "A snappy, fast, beat-driven edit built out of our static assets.",
+      "<b>Same rules as event highlights</b> \u2014 music first, cuts follow, branded the same way.",
+      "Only the source changes. Nothing about the approach does."
+    ],
+    groups:[{ drive:"Photo reels", links:[IG+"DcDevpSAjPs/", IG+"DZEfUpKChQX/", IG+"DanCOxiCv2b/"] }]
+  },
+  {
+    name:"Carousels", prio:"priority",
+    line:"The strongest stills we have, in the right order.",
+    rules:[
+      "The best visuals from the static assets \u2014 nothing filler-grade to pad a count.",
+      "People and candid shots. Product shots.",
+      "<b>Mix video in.</b> A product vibrating, or a genuinely aesthetic moment.",
+      "Pulls from the same shoot as photo reels and event highlights."
+    ],
+    groups:[
+      { label:"The standard", drive:"Carousel",
+        links:[IG+"DZL17Tnk3ZS/?img_index=13", IG+"DaPcIbzjLoo/?img_index=4", IG+"DcEFECPEzTk/?img_index=1"] },
+      { label:"Headline type", note:"Same format, showing how the headline is set.", drive:"Carousel Headline type",
+        links:[IG+"DbNqEVok60S/?img_index=1", IG+"DcBDOZFjPC6/?img_index=1", IG+"DbvB8B4E-z2/?img_index=1"] }
+    ]
+  },
+  {
+    name:"Wishlist", prio:"priority",
+    line:"Founder and team picks \u2014 replicated exactly.",
+    rules:[
+      "Trends sitting in our top five, chosen by the founders and the team.",
+      "<b>Follow the source exactly:</b> exact edit, exact text overlay, exact editing style.",
+      "This is the one deliberate exception to \u201ccopy the mechanism, not the subject\u201d \u2014 here a faithful replication <em>is</em> the brief."
+    ],
+    groups:[{ drive:"Wishlist", links:[IG+"DcIxnorD2iD/"] }]
+  },
+  {
+    name:"Community", prio:"lhf",
+    line:"Games and interviews \u2014 the segments people show up for.",
+    rules:[
+      "<b>Games</b> are closer to clipping than editing: fast cuts straight through, and a punch-in on the face whenever a reaction is genuinely funny.",
+      "<b>Interviews</b> are the easy win: add captions, censor what needs censoring \u2014 checked before export, not after posting \u2014 and pull clips that actually say something.",
+      "Interview design is just the text: classic font in CapCut. No extra treatment needed."
+    ],
+    templates:["Hot or Cold","Spill and Chill with Nancy"],
+    groups:[
+      { label:"Games", drive:"Games", links:[IG+"DcLdLn1ly-W/", IG+"DaGDqAosxz0/", IG+"DcVpmpbk62C/"] },
+      { label:"Interviews", drive:"Interviews", links:[IG+"DaIEFZ_leoX/", IG+"DaIuaSuEhjz/", IG+"DaN1SkdsKZs/"] }
+    ]
+  },
+  {
+    name:"Memes", prio:"lhf",
+    line:"Clip it, cut it fast, punch in on the reaction.",
+    rules:[
+      "Fast cuts straight through the footage \u2014 clipping more than editing.",
+      "<b>Zoom into faces</b> when a reaction is genuinely funny. That punch-in is the joke.",
+      "Snappy and funny is the whole bar.",
+      "Reference an actual meme where it lands."
+    ],
+    groups:[{ drive:"Memes", links:[IG+"DcFxOufgHIt/", IG+"DZM6au_D_vU/", IG+"DZITHvnEaOc/"] }]
+  }
 ];
 
-function num(el){
-  const n = parseFloat(String(el.value).replace(/[^0-9.]/g, ""));
-  return isFinite(n) ? n : 0;
+function pad2(n){ return String(n).padStart(2, "0"); }
+
+function renderPriority(){
+  const groups = [
+    { key:"priority", cls:"first",  title:"Priority",          note:"Every event owes these" },
+    { key:"lhf",      cls:"second", title:"Low-hanging fruit", note:"Quick wins" }
+  ];
+  document.getElementById("prioboard").innerHTML = groups.map(g => `
+    <div class="pb ${g.cls}">
+      <div class="pb-h">${g.title} <small>${g.note}</small></div>
+      <ol>${FORMATS.filter(f => f.prio === g.key).map(f =>
+        `<li>${f.name}<small>${f.line}</small></li>`).join("")}</ol>
+    </div>`).join("");
 }
 
-function score(){
-  const views = num(document.getElementById("v"));
-  const med = num(document.getElementById("m"));
-  const s = document.getElementById("score");
-  const l = document.getElementById("label");
-  const a = document.getElementById("advice");
+function driveThumb(id){ return "https://drive.google.com/thumbnail?id=" + id + "&sz=w400"; }
 
-  if (!med || !views) {
-    s.textContent = "—";
-    l.textContent = "Need both numbers";
-    a.textContent = "Put in the post's views and that creator's median. The ratio is the whole point.";
-    return;
+function slotRow(g){
+  const head = g.label
+    ? `<div class="grp-h">${g.label}${g.note ? `<small>${g.note}</small>` : ""}</div>` : "";
+  const items = (g.drive && DRIVE[g.drive]) || [];
+
+  const tiles = items.map((it, n) => {
+    const cover = it.t === "carousel" ? it.cover : it.id;
+    const href  = it.t === "carousel"
+      ? "https://drive.google.com/drive/folders/" + it.id
+      : "https://drive.google.com/file/d/" + it.id + "/view";
+    const badge = it.t === "carousel"
+      ? `<span class="badge">${it.n} slides</span>`
+      : `<span class="badge">Reel</span>`;
+    return `
+      <a class="slot" href="${href}" target="_blank" rel="noopener"
+         data-grp="${g.drive}" data-idx="${n}" title="${it.name.replace(/"/g, "&quot;")}">
+        ${cover ? `<img class="thumb" src="${driveThumb(cover)}" alt="" loading="lazy">` : ""}
+        <span class="fallback"><span class="play" aria-hidden="true">&#9654;</span><span class="sn">${String(n + 1).padStart(2, "0")}</span></span>
+        ${badge}
+      </a>`;
+  }).join("");
+
+  const posts = (g.links || []).length
+    ? `<div class="alsoig">Also on Instagram: ` +
+      g.links.map((h, i) => `<a href="${h}" target="_blank" rel="noopener">${String(i + 1).padStart(2, "0")}</a>`).join(" ") +
+      `</div>`
+    : "";
+
+  return head + `<div class="vt-vids">${tiles}</div>` + posts;
+}
+
+/* Drive is unreachable from the artifact sandbox, so a thumbnail that fails
+   is expected rather than exceptional: drop the image and let the labelled
+   card underneath show through. The tile still opens the file either way. */
+function wireThumbFallbacks(){
+  document.querySelectorAll("img.thumb").forEach(img => {
+    const drop = () => img.remove();
+    img.addEventListener("error", drop);
+    if (img.complete && img.naturalWidth === 0) drop();
+  });
+}
+
+/* ---- the player ---- */
+const lb = () => document.getElementById("lb");
+let SHOW = null;   // { slides:[ids], i, name, folder }
+
+function lbRender(){
+  const frame = document.getElementById("lbFrame");
+  const foot  = document.getElementById("lbFoot");
+  document.getElementById("lbTitle").textContent = SHOW.name;
+
+  if (SHOW.type === "video"){
+    frame.className = "lb-frame";
+    frame.innerHTML = `<iframe src="https://drive.google.com/file/d/${SHOW.id}/preview"
+      allow="autoplay; fullscreen" allowfullscreen title="${SHOW.name.replace(/"/g, "&quot;")}"></iframe>`;
+    foot.innerHTML = "";
+    document.getElementById("lbOpen").href = "https://drive.google.com/file/d/" + SHOW.id + "/view";
+  } else {
+    frame.className = "lb-frame wide";
+    const id = SHOW.slides[SHOW.i];
+    frame.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1400" alt="">`;
+    foot.innerHTML = `
+      <button class="lb-btn" type="button" data-step="-1">&larr; Prev</button>
+      <span class="lb-count">${SHOW.i + 1} / ${SHOW.slides.length}</span>
+      <button class="lb-btn" type="button" data-step="1">Next &rarr;</button>`;
+    document.getElementById("lbOpen").href = "https://drive.google.com/drive/folders/" + SHOW.id;
   }
-  const x = views / med;
-  const tier = TIERS.find(t => x >= t.min);
-  s.textContent = (x >= 100 ? Math.round(x) : x.toFixed(1)) + "×";
-  l.textContent = tier.label;
-  a.textContent = tier.advice;
 }
 
-["v","m"].forEach(id => document.getElementById(id).addEventListener("input", score));
-score();
+function openPlayer(item){
+  SHOW = item.t === "carousel"
+    ? { type:"carousel", id:item.id, slides:item.slides, i:0, name:item.name }
+    : { type:"video", id:item.id, name:item.name };
+  lb().hidden = false;
+  document.body.style.overflow = "hidden";
+  lbRender();
+  document.getElementById("lbClose").focus();
+}
+
+function closePlayer(){
+  lb().hidden = true;
+  document.getElementById("lbFrame").innerHTML = "";   // stops playback
+  document.body.style.overflow = "";
+  SHOW = null;
+}
+
+function stepSlide(d){
+  if (!SHOW || SHOW.type !== "carousel") return;
+  SHOW.i = (SHOW.i + d + SHOW.slides.length) % SHOW.slides.length;
+  lbRender();
+}
+
+function wirePlayer(){
+  document.getElementById("lbClose").addEventListener("click", closePlayer);
+  lb().addEventListener("click", e => { if (e.target === lb()) closePlayer(); });
+  document.getElementById("lbFoot").addEventListener("click", e => {
+    const b = e.target.closest("button[data-step]");
+    if (b) stepSlide(+b.dataset.step);
+  });
+  document.addEventListener("keydown", e => {
+    if (lb().hidden) return;
+    if (e.key === "Escape") closePlayer();
+    if (e.key === "ArrowRight") stepSlide(1);
+    if (e.key === "ArrowLeft") stepSlide(-1);
+  });
+
+  /* Tiles are real links with real hrefs, so they still work with no JS.
+     With JS, every one of them plays in place. */
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a.slot");
+    if (!a) return;
+    const item = (DRIVE[a.dataset.grp] || [])[+a.dataset.idx];
+    if (!item) return;
+    e.preventDefault();
+    openPlayer(item);
+  });
+
+  document.querySelectorAll("a.slot").forEach(a => {
+    a.insertAdjacentHTML("beforeend", '<span class="live">Play</span>');
+  });
+}
+
+
+function renderFormats(){
+  document.getElementById("vtypes").innerHTML = FORMATS.map((f, i) => `
+    <div class="vtype">
+      <div class="vt-say">
+        <div class="kicker">${pad2(i + 1)} &mdash; ${f.name}
+          <span class="chip ${f.prio === "priority" ? "prio" : "lhf"}">${f.prio === "priority" ? "Priority" : "Low-hanging fruit"}</span>
+        </div>
+        <h3>${f.line}</h3>
+        <ul class="fmt-rules">${f.rules.map(r => `<li>${r}</li>`).join("")}</ul>
+        ${f.templates ? `<div class="tmpls">${f.templates.map(t => `<span>${t}</span>`).join("")}</div>` : ""}
+      </div>
+      <div class="vt-groups">${f.groups.map(slotRow).join("")}</div>
+    </div>`).join("");
+}
+
+renderPriority();
+renderFormats();
+wireThumbFallbacks();
+wirePlayer();
+
+/* ---- the two example accounts ----
+   Deliberately drawn, not calculated: the whole lesson is that you can see it
+   without numbers. Last bar is the post being judged. */
+function bars(el, heights){
+  document.getElementById(el).innerHTML = heights.map((h, i) =>
+    '<span class="b' + (i === heights.length - 1 ? ' post' : '') + '" style="height:' + h + '%"></span>'
+  ).join("");
+}
+bars("chartNo",  [64, 71, 58, 76, 62, 69, 60, 73, 66, 79]);
+bars("chartYes", [15, 19, 12, 22, 16, 14, 20, 13, 18, 97]);
+
+
+
+/* ---- captions & overlays ----
+   Published captions only, and why each one landed. The skeletons are formats
+   in heavy rotation across the platform, grouped by the engine that makes each
+   one work — pick the engine that fits the footage, then fill the blank with
+   the most Nancy-specific thing available. */
+const WORKED = [
+  ["the fight for pleasure and the fight for pride have always shared the same enemy: shame. and that\u2019s exactly why we show up \u{1F34B}\u{1F3F3}\uFE0F\u200D\u{1F308}",
+   "Cultural",
+   "The footage was a parade. The caption named <b>the thing both fights are actually against</b>. It moved one level above the asset without floating away from it."],
+  ["intentional from start to finish \u{1F34B} we built this morning to prove that pleasure belongs wherever wellness lives.",
+   "Event",
+   "No schedule, no thank-you list, no describing the sauna. It says <b>why the event existed</b> \u2014 which is the only part the footage could not show."],
+  ["pleasure is wellness. the rest of the industry is still learning to say it out loud \u{1F34B}",
+   "Thesis",
+   "A simple truth, then one sharp turn. That is the Nancy sentence shape: <b>ordinary words, precise meaning</b>, and the power sitting in the timing."],
+  ["our next serve is coming very soon \u{1F3BE} get ready to receive",
+   "Teaser",
+   "Protects the reveal completely. One double meaning doing two jobs at once, and <b>nothing about the product is disclosed</b>."],
+  ["warning: please do try this at home \u{1F34B}\u{1F4A6}",
+   "Fun",
+   "Understatement \u2014 something outrageous treated as ordinary. Six words, <b>no second sentence explaining the joke</b>."],
+  ["the jelly did not stand a chance \u{1F34B}\u{1F4A6}",
+   "Deadpan",
+   "States the funniest true thing plainly and stops. The restraint <b>is</b> the joke; a follow-up line would have killed it."],
+  ["pleasure has no expiry date \u{1F34B} the women sharing how Berri helped them reconnect with sensuality are the reason this recognition matters.",
+   "Press",
+   "The headline was a statistic. The caption chose <b>the human story underneath it</b> instead, which is what made the coverage worth posting."]
+];
+
+const SKELS = [
+  ["Curiosity", "Open a gap and refuse to close it yet.", [
+    "POV: ____", "Wait for it: ____", "Watch to the last frame for ____",
+    "What if I told you ____", "Nobody talks about ____",
+    "The part nobody mentions about ____", "Here is what they do not tell you about ____",
+    "The truth about ____", "Can you guess what happens when ____",
+    "There is a ____ nobody talks about", "I was not going to share this, but ____",
+    "The reason ____ has nothing to do with ____",
+    "Do not skip to the end \u2014 ____", "Final result first. Now the ____"
+  ]],
+  ["Permission", "Give them the thing they were waiting to be allowed.", [
+    "Friendly reminder: you do not need to ____ to deserve ____",
+    "This is your sign to ____", "You are allowed to ____",
+    "You do not have to ____ to ____", "Permission to ____",
+    "Nobody is going to say this, so: ____", "It is okay to ____",
+    "You are not behind for ____", "Warning: ____", "Stop apologising for ____",
+    "Consider this your ____", "No one is coming to give you ____, so ____"
+  ]],
+  ["Contradiction", "Take a familiar belief and turn it over.", [
+    "Everyone is wrong about ____", "Everyone talks about ____ but nobody talks about ____",
+    "Unpopular opinion: ____", "Hot take: ____", "____ is out. ____ is in",
+    "You have been lied to about ____", "Stop doing ____. Do ____ instead",
+    "____ is not the answer. ____ is", "It is not ____, it is ____",
+    "Who said ____ has to be ____", "Plot twist: ____",
+    "The ____ everyone follows is the problem", "____ walked so ____ could run"
+  ]],
+  ["Defiance", "Someone said it could not be done. Prove it on camera.", [
+    "You cannot ____ / bet.", "They said ____. So we ____",
+    "Bet you cannot ____", "Prove me wrong: ____", "I challenge you to ____",
+    "Try not to ____ when you see this", "Do not try this at ____",
+    "Powerful women do not ____", "We were told ____. We did not listen",
+    "____ said it was impossible", "Watch me ____"
+  ]],
+  ["Relatability", "Name the thing everyone thought was just them.", [
+    "The feminine urge to ____", "Nobody: / Me: ____",
+    "Tell me you ____ without telling me you ____",
+    "If you have ever ____, this is for you", "Stop scrolling if ____",
+    "You are not alone if ____", "Girls who ____ will understand",
+    "If you ____, we can be friends", "The way I ____",
+    "Me pretending ____", "It is giving ____", "Nobody warned me about ____",
+    "Am I the only one who ____", "That one friend who ____",
+    "____ but make it ____"
+  ]],
+  ["Confession", "A real story, told from the consequence backwards.", [
+    "I used to ____ until ____", "The day I stopped ____",
+    "My biggest mistake with ____ was ____", "I wish someone told me ____ sooner",
+    "____ years ago I ____. Today I ____",
+    "One sentence changed how I ____", "I cannot stop thinking about ____",
+    "If past me could see ____", "I almost quit ____, and then ____",
+    "The most expensive lesson I learned about ____",
+    "I tried ____ for ____. Here is what happened", "Nobody knows this about me: ____"
+  ]],
+  ["Status", "Aspiration \u2014 the version of them the footage implies.", [
+    "Imagine a world where ____", "POV: you finally ____", "Hot girls ____",
+    "____ girls do it differently", "The ____ era has begun",
+    "POV: you stopped ____ and started ____", "Main character energy: ____",
+    "She is ____ and she is ____", "This is what ____ looks like",
+    "Manifesting ____", "Soft launch of ____"
+  ]],
+  ["Useful", "A list or a lesson. Earns the save.", [
+    "____ things nobody tells you about ____", "____ mistakes you are making with ____",
+    "____ ways to ____", "Things I wish I knew about ____",
+    "How to ____ without ____", "The easiest way to ____",
+    "Save this before you ____", "Only ____% of people know this about ____",
+    "Read this if you ____", "A beginner\u2019s guide to ____",
+    "Green flags in ____", "Red flags in ____"
+  ]]
+];
+
+function renderCaptions(){
+  const w = document.getElementById("worked");
+  if (!w) return;
+  w.innerHTML = WORKED.map(x => `
+    <div class="wk">
+      <div class="cap">${x[0]}</div>
+      <div class="why"><div class="lbl">${x[1]} &mdash; why it worked</div><p>${x[2]}</p></div>
+    </div>`).join("");
+
+  const slug = t => t.toLowerCase().replace(/[^a-z]+/g, "-");
+  document.getElementById("skelNav").innerHTML = SKELS.map(g =>
+    `<a href="#sk-${slug(g[0])}">${g[0]} <span style="opacity:.55">${g[2].length}</span></a>`).join("");
+
+  let n = 0;
+  document.getElementById("skelGroups").innerHTML = SKELS.map(g => `
+    <div class="skgrp" id="sk-${slug(g[0])}">
+      <div class="gh"><h4>${g[0]}</h4><small>${g[1]}</small></div>
+      <ol>${g[2].map(t => {
+        n++;
+        return `<li><span class="n">${String(n).padStart(3, "0")}</span><span>${t.replace(/____/g, "<b>____</b>")}</span></li>`;
+      }).join("")}</ol>
+    </div>`).join("");
+}
+
+renderCaptions();
+
+/* ---- page routing ----
+   Each page is a panel; only one is ever in the document flow. The hash keeps
+   a page linkable and survives a reload, so someone can be sent straight to
+   Typography rather than "scroll down a bit". */
+const PAGES = [
+  { id:"dodont",  label:"Do's and Don'ts" },
+  { id:"type",    label:"Typography" },
+  { id:"style",   label:"Our editing style" },
+  { id:"outlier", label:"Understanding outliers" },
+  { id:"caption",  label:"Captions & overlays" }
+];
+
+const tabsEl = document.getElementById("tabs");
+tabsEl.innerHTML = PAGES.map((p, i) => `
+  <button role="tab" id="tab-${p.id}" aria-controls="page-${p.id}" aria-selected="false" type="button">
+    <span class="tn">${String(i + 1).padStart(2, "0")}</span>${p.label}
+  </button>`).join("");
+
+function pagerFor(i){
+  const prev = PAGES[i - 1], next = PAGES[i + 1];
+  return (prev ? `<button type="button" data-go="${prev.id}"><small>&larr; Previous</small>${prev.label}</button>` : '<span class="spacer"></span>')
+       + (next ? `<button type="button" data-go="${next.id}"><small>Next &rarr;</small>${next.label}</button>` : "");
+}
+
+function show(id, push){
+  const i = Math.max(0, PAGES.findIndex(p => p.id === id));
+  const page = PAGES[i];
+  PAGES.forEach(p => {
+    const on = p.id === page.id;
+    document.getElementById("page-" + p.id).hidden = !on;
+    document.getElementById("tab-" + p.id).setAttribute("aria-selected", String(on));
+  });
+  const pager = document.querySelector("#page-" + page.id + " .pager");
+  if (pager) pager.innerHTML = pagerFor(i);
+  if (push && location.hash !== "#" + page.id) history.replaceState(null, "", "#" + page.id);
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+tabsEl.addEventListener("click", e => {
+  const b = e.target.closest("button[role=tab]");
+  if (b) show(b.id.replace("tab-", ""), true);
+});
+
+/* left/right arrows walk the tab strip, as a tablist should */
+tabsEl.addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const cur = PAGES.findIndex(p => document.getElementById("tab-" + p.id).getAttribute("aria-selected") === "true");
+  const nxt = (cur + (e.key === "ArrowRight" ? 1 : PAGES.length - 1)) % PAGES.length;
+  show(PAGES[nxt].id, true);
+  document.getElementById("tab-" + PAGES[nxt].id).focus();
+  e.preventDefault();
+});
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button[data-go]");
+  if (b) show(b.dataset.go, true);
+});
+
+window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
+show(location.hash.slice(1) || PAGES[0].id, false);
 </script>
