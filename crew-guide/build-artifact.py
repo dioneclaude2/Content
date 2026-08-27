@@ -40,6 +40,20 @@ if "__NANCY_BRAIN__" in html:
     if "__NANCY_BRAIN__" in html:
         raise SystemExit("brain placeholder still present after injection")
 
+# Inline the Drive thumbnails the same way. The Artifact copy then renders
+# every example with no external request at all — the tiles and the carousel
+# slides are in the file. Video still needs Drive to play, so the player
+# iframe stays a live URL.
+cache = here / "brain" / "thumbcache"
+if cache.exists():
+    thumbs = {}
+    for f in sorted(cache.glob("*_w*.jpg")):
+        fid = f.name.rsplit("_w", 1)[0]
+        thumbs[fid] = "data:image/jpeg;base64," + base64.b64encode(f.read_bytes()).decode()
+    if thumbs:
+        html = html.replace("const THUMBS = {};", "const THUMBS = " + json.dumps(thumbs) + ";", 1)
+        print("  inlined %d thumbnails" % len(thumbs))
+
 leftover = re.findall(r'(?:url\(\'|src=")assets/[^\'"]+', html)
 if leftover:
     raise SystemExit("un-inlined asset refs remain: %s" % leftover)

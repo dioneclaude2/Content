@@ -993,7 +993,14 @@ function renderPriority(){
     </div>`).join("");
 }
 
-function driveThumb(id){ return "https://drive.google.com/thumbnail?id=" + id + "&sz=w400"; }
+/* Filled in by build-artifact.py for the Artifact copy, where the bytes are
+   inlined as data URIs. Left empty on the deployed site, which fetches from
+   Drive directly. Either way the tile shows a real frame. */
+const THUMBS = {};
+
+function driveThumb(id, w){
+  return THUMBS[id] || ("https://drive.google.com/thumbnail?id=" + id + "&sz=w" + (w || 400));
+}
 
 function slotRow(g){
   const head = g.label
@@ -1055,7 +1062,7 @@ function lbRender(){
   } else {
     frame.className = "lb-frame wide";
     const id = SHOW.slides[SHOW.i];
-    frame.innerHTML = `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1400" alt="">`;
+    frame.innerHTML = `<img src="${driveThumb(id, 1400)}" alt="">`;
     foot.innerHTML = `
       <button class="lb-btn" type="button" data-step="-1">&larr; Prev</button>
       <span class="lb-count">${SHOW.i + 1} / ${SHOW.slides.length}</span>
