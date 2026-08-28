@@ -538,12 +538,6 @@ a.fdl:hover{background:var(--yellow)}
   <section class="page" id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden>
     <div class="page-head"><span class="pnum">01</span><h2>The work</h2></div>
     <div class="page-body">
-      <div class="oneline" style="background:var(--yellow)">
-        <div class="k">The short version</div>
-        <h3>Edit on the beat, and make it interesting.</h3>
-        <p>If you would post it yourself, it is probably right.</p>
-      </div>
-
       <h3 class="sh">What to make</h3>
       <div class="notyours">Carousels and founder picks are handled in-house by Dione and Remo, so no need to touch those.</div>
       <div class="fmts" id="fmts"></div>
@@ -576,10 +570,10 @@ const THUMBS = {};
 function driveThumb(id, w){ return THUMBS[id] || ("https://drive.google.com/thumbnail?id=" + id + "&sz=w" + (w || 400)); }
 
 const FORMATS = [
-  { g:"yours", n:1, name:"Event highlights", tag:"Always", line:"Fast cuts to the beat, unmistakably ours.",
-    body:"Every setup has motion.", drive:"Event Highlights" },
-  { g:"yours", n:2, name:"Photo reels", tag:"Always", line:"Event highlights, but every frame is a still.",
-    body:"Same rules, same pace, built from stills.", drive:"Photo reels" },
+  { g:"yours", n:1, name:"Event highlights", tag:"Always", line:"Fast cuts, edited on the beat.",
+    body:"Find the track first, then cut to it. Every setup has motion.", drive:"Event Highlights" },
+  { g:"yours", n:2, name:"Photo reels", tag:"Always", line:"The same thing, built from photos.",
+    body:"Edit on the beat, same pace as highlights.", drive:"Photo reels" },
   { g:"if", n:3, name:"Speaker series", tag:"If in the assets", line:"Street interviews and sit-downs. The easy win.",
     body:"Street interviews, panels, sit-downs. Captions, censoring, good clips. Design is just the text.", drive:"Interviews" },
   { g:"if", n:4, name:"Games", tag:"If in the assets", line:"Clip it, cut it fast, punch in on the reaction.",
