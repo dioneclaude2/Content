@@ -220,6 +220,8 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
 .band p{font-size:13px;color:#CFC7DD;margin:0}
 .fmt.muted{opacity:.72}
 .fmt.muted .tiles{filter:grayscale(.35)}
+.sh{font-family:var(--display);font-weight:800;font-size:clamp(19px,3vw,25px);margin:30px 0 10px}
+.co .sz{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;border:2px solid var(--ink);background:var(--yellow);padding:1px 5px;margin-left:5px;vertical-align:middle}
 </style>
 
 <header>
@@ -232,28 +234,18 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
 
 <div class="wrap">
 
-  <!-- 01 START -->
-  <section class="page" id="page-start" role="tabpanel" aria-labelledby="tab-start" hidden>
-    <div class="page-head"><span class="pnum">01</span><h2>Start here</h2></div>
+  <!-- 01 THE BRAND -->
+  <section class="page" id="page-brand" role="tabpanel" aria-labelledby="tab-brand" hidden>
+    <div class="page-head"><span class="pnum">01</span><h2>The brand</h2></div>
     <div class="page-body">
       <div class="oneline">
-        <div class="k">The one rule</div>
-        <h3>Reference first. Idea second. Edit last.</h3>
-        <p>Find the reference before you plan. Find the music before you cut. Nothing gets decided after the fact.</p>
+        <div class="k">Who we are</div>
+        <h3>Nancy makes female pleasure easier to talk about and harder to shame.</h3>
+        <p>Confident, witty, culturally aware. Never crude for shock.</p>
       </div>
-      <div class="grid3">
-        <div class="box p"><h4>Who we are</h4><p>Nancy makes female pleasure easier to talk about and harder to shame. Confident, witty, never crude for shock.</p></div>
-        <div class="box y"><h4>What we need</h4><p>Finished content, not a set of cuts. Intentional edits, text overlays where they make it stronger.</p></div>
-        <div class="box l"><h4>How to use this</h4><p>03 is the method, 04 is what to make, 02 is how it should look. Read 05 before you export.</p></div>
-      </div>
-      <div class="need"><b>Style is still tightening.</b> Examples show what we have been making recently, not a locked spec. Match the intent, not the frame.</div>
-    </div>
-  </section>
 
-  <!-- 02 LOOK -->
-  <section class="page" id="page-look" role="tabpanel" aria-labelledby="tab-look" hidden>
-    <div class="page-head"><span class="pnum">02</span><h2>The look</h2></div>
-    <div class="page-body">
+      <div class="need"><b>The style is still tightening.</b> The samples here show what we have been making recently, not a locked spec. Match the intent, not the frame.</div>
+
       <div class="assetdl">
         <div>
           <div class="k">Brand assets</div>
@@ -263,7 +255,16 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
         <a class="dl-btn" href="#" data-assets>Folder link to come <span aria-hidden="true">&#8595;</span></a>
       </div>
 
-      <h3 style="font-size:20px;margin:28px 0 10px">Type</h3>
+      <h3 class="sh">Colour</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chipc" style="background:#FDF7F5"></div><div class="m"><b>Cream</b>#FDF7F5</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
+      </div>
+      <div class="need"><b>On screen, colour comes from the footage.</b> Type stays white or cream, never coloured.</div>
+
+      <h3 class="sh">Type</h3>
       <div class="faces">
         <div class="face"><div class="fn">Display</div><div class="big ppe">PP Editorial New</div><div class="j">Titles and covers. Set large, kept quiet.</div></div>
         <div class="face"><div class="fn">Secondary</div><div class="big fra">Fraunces</div><div class="j">Where Editorial is too fine to hold up.</div></div>
@@ -275,73 +276,57 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
         <div class="sr"><div class="n">Body<b>8&ndash;10</b></div><div class="s c">Supporting detail that can be skipped</div></div>
       </div>
 
-      <h3 style="font-size:20px;margin:28px 0 10px">On the frame</h3>
+      <h3 class="sh">On the frame</h3>
+      <p class="lede">Three things go on a frame, and that is all.</p>
       <div class="sample">
         <div class="shot">
           <img class="bg" data-drive="__FRAME__" alt="">
           <div class="hero">Every setup<br>has motion</div>
           <div class="lock"><img src="assets/nancy-logo-cream.svg" alt="Nancy"><span>Out of Office</span></div>
-          <span class="pin pin-hero">Header 40&ndash;50</span>
-          <span class="pin pin-logo">Logo</span>
-          <span class="pin pin-camp">Subheader 20&ndash;30</span>
         </div>
         <div class="callouts">
-          <div class="co"><div class="n">Middle of frame</div><h4>Heading</h4><p>Helvetica, caps, tracking and leading pulled in from default. The line people actually read.</p></div>
+          <div class="co"><div class="n">Middle of frame</div><h4>Heading <span class="sz">40&ndash;50</span></h4><p>Helvetica, caps, tracking and leading pulled in from default. The line people actually read.</p></div>
           <div class="co"><div class="n">Bottom, above the title</div><h4>Nancy logo</h4><p>Centred, cream, same position on every frame.</p></div>
-          <div class="co"><div class="n">Bottom, under the logo</div><h4>Campaign title</h4><p>Small caps, wide tracking. Labels the frame without competing.</p></div>
-          <div class="co"><div class="n">Body 8&ndash;10</div><h4>Anything else</h4><p>Credits, locations, disclaimers. Rare, and never fighting the heading.</p></div>
+          <div class="co"><div class="n">Bottom, under the logo</div><h4>Campaign title <span class="sz">20&ndash;30</span></h4><p>Small caps, wide tracking. Labels the frame without competing.</p></div>
+          <div class="co"><div class="n">Rarely</div><h4>Body <span class="sz">8&ndash;10</span></h4><p>Credits or locations only. Never fighting the heading.</p></div>
         </div>
       </div>
       <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
     </div>
   </section>
 
-  <!-- 03 IDEAL -->
-  <section class="page" id="page-ideal" role="tabpanel" aria-labelledby="tab-ideal" hidden>
-    <div class="page-head"><span class="pnum">03</span><h2>The ideal run</h2></div>
+  <!-- 02 THE WORK -->
+  <section class="page" id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden>
+    <div class="page-head"><span class="pnum">02</span><h2>The work</h2></div>
     <div class="page-body">
+      <div class="oneline" style="background:var(--yellow)">
+        <div class="k">What we need back</div>
+        <h3>Finished content, not a set of cuts.</h3>
+        <p>An edit you would post yourself. Every choice made on purpose, and traceable to something that already worked.</p>
+      </div>
+
+      <h3 class="sh">The ideal run</h3>
       <p class="lede">How a strong piece gets made, in order. Skip a step and it shows.</p>
       <div class="steps">
         <div class="step"><div class="sn">01</div><div><h4>Find the outlier</h4><p>A post that beat its own account&rsquo;s normal by a wide margin. Not the biggest account &mdash; the biggest gap.</p></div></div>
-        <div class="step"><div class="sn">02</div><div><h4>Grab the text overlay</h4><p>Take the trending overlay shape that made it work. The format is the part worth having.</p></div></div>
-        <div class="step"><div class="sn">03</div><div><h4>Fit it to the event</h4><p>Rewrite the blank with something true about our footage. Same mechanism, our subject.</p></div></div>
+        <div class="step"><div class="sn">02</div><div><h4>Take its text overlay</h4><p>The trending overlay shape is the part worth having. The format, not the words.</p></div></div>
+        <div class="step"><div class="sn">03</div><div><h4>Fit it to the event</h4><p>Fill the blank with something true about our footage. Same mechanism, our subject.</p></div></div>
         <div class="step"><div class="sn">04</div><div><h4>Find the track</h4><p>Music before cuts, always. The beat decides the pace.</p></div></div>
         <div class="step"><div class="sn">05</div><div><h4>Cut it</h4><p>Then check it back against the reference before you send.</p></div></div>
       </div>
-      <div class="oneline" style="background:var(--lilac);margin-top:22px">
-        <div class="k">The short version</div>
-        <h3>Outlier, overlay, then our footage.</h3>
-        <p>Take the shape of something that already worked and fill it with something only we have.</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- 04 WHAT TO MAKE -->
-  <section class="page" id="page-make" role="tabpanel" aria-labelledby="tab-make" hidden>
-    <div class="page-head"><span class="pnum">04</span><h2>What to make</h2></div>
-    <div class="page-body">
-      <div class="oneline" style="background:var(--yellow)">
-        <div class="k">Focus, in order</div>
-        <h3>Event highlights, then photo reels.</h3>
-        <p>Speaker series, games and memes follow when the assets include them. Carousels and founder picks are handled in-house &mdash; not yours to build.</p>
-      </div>
-
+      <h3 class="sh">What to make</h3>
       <div class="notyours">
-        <b>Carousels and founder picks are handled in-house.</b> We have an editor assigned to
-        both, so leave them. They appear at the bottom of this page for context only.
+        <b>Carousels and founder picks are handled in-house.</b> We have an editor assigned to both,
+        so leave them. They appear at the bottom for context only.
       </div>
       <div class="fmts" id="fmts"></div>
-    </div>
-  </section>
 
-  <!-- 05 RULES -->
-  <section class="page" id="page-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
-    <div class="page-head"><span class="pnum">05</span><h2>Rules &amp; delivery</h2></div>
-    <div class="page-body">
+      <h3 class="sh">Rules</h3>
       <div class="dd">
         <div class="col do"><div class="t">Do</div><ul>
           <li><b>Find the reference first.</b> Build the idea out of it.</li>
-          <li>Write text overlays at planning, before the edit.</li>
+          <li>Find the track before you cut.</li>
           <li>Cut on movement. Match the reference&rsquo;s pulse.</li>
           <li>Keep location sound under the music.</li>
           <li>Keep the lo-fi and blurry frames. They are selects.</li>
@@ -354,9 +339,10 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
           <li>Let a fourth element onto the frame.</li>
         </ul></div>
       </div>
+
+      <h3 class="sh">Delivery</h3>
       <div class="specs">
         <div class="spec"><div class="k">Reels</div><div class="v">9:16, shot and cut. A 9:16 crop of a carousel is not a reel.</div></div>
-        <div class="spec"><div class="k">Carousels</div><div class="v">Best stills only. People, candid, product, plus a moving frame or two.</div></div>
         <div class="spec"><div class="k">On-screen type</div><div class="v">Helvetica, caps, white or cream. No stroke, no shadow, no plate.</div></div>
         <div class="spec"><div class="k">Master<span class="chip">TBC</span></div><div class="v">Format, frame rate and delivery route to be confirmed.</div></div>
         <div class="spec"><div class="k">Naming<span class="chip">TBC</span></div><div class="v">Convention to be confirmed.</div></div>
@@ -496,11 +482,8 @@ document.addEventListener("keydown", e => {
 
 /* pages */
 const PAGES = [
-  { id:"start", label:"Start here" },
-  { id:"look",  label:"The look" },
-  { id:"ideal", label:"The ideal run" },
-  { id:"make",  label:"What to make" },
-  { id:"rules", label:"Rules & delivery" }
+  { id:"brand", label:"The brand" },
+  { id:"work",  label:"The work" }
 ];
 const tabsEl = document.getElementById("tabs");
 tabsEl.innerHTML = PAGES.map((p,i) => `<button role="tab" id="tab-${p.id}" aria-controls="page-${p.id}" aria-selected="false" type="button"><span class="tn">${pad2(i+1)}</span>${p.label}</button>`).join("");
