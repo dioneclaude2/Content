@@ -11,10 +11,10 @@
 /* The external cut of the crew guide: same visual system, a quarter of the
    words. Everything here is spec — what to make and how it should look —
    with the teaching left in the internal version. */
-@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultralight.otf') format('opentype');font-weight:200;font-style:normal;font-display:swap}
-@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('/brand-guide/assets/PPEditorialNew-Ultralight.otf') format('opentype');font-weight:200;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('/brand-guide/assets/PPEditorialNew-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('/brand-guide/assets/PPEditorialNew-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('/brand-guide/assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
 
 :root{
   --pink:#FFB3D4; --pink-soft:#FFE2EE; --pink-loud:#FF3D8A;
@@ -184,6 +184,42 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
 .lb-frame img{object-fit:contain;background:#000}
 .lb-foot{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .lb-count{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--paper)}
+
+/* assets download */
+.assetdl{border:var(--bd);box-shadow:var(--shadow);background:var(--ink);color:var(--paper);padding:20px 22px;display:grid;gap:16px;align-items:center;margin-bottom:24px}
+@media (min-width:700px){.assetdl{grid-template-columns:1fr auto}}
+.assetdl .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
+.assetdl h3{font-size:clamp(20px,3.4vw,29px);color:var(--paper);margin-bottom:8px}
+.assetdl p{font-size:14px;color:#CFC7DD;margin:0;max-width:48ch}
+.dl-btn{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none;font-family:var(--display);font-weight:800;font-size:16px;color:var(--ink);background:var(--yellow);border:3px solid var(--paper);padding:13px 18px;box-shadow:4px 4px 0 var(--pink-loud)}
+.dl-btn[href="#"]{background:var(--paper);opacity:.75;cursor:not-allowed}
+
+/* annotated sample */
+.sample{display:grid;gap:20px;margin-top:18px}
+@media (min-width:820px){.sample{grid-template-columns:auto 1fr;align-items:start}}
+.sample .shot{width:min(250px,74vw)}
+.pin{position:absolute;z-index:3;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:3px 6px;white-space:nowrap}
+.pin-hero{top:calc(50% - 34px);left:6px}
+.pin-logo{bottom:44px;right:6px;background:var(--pink)}
+.pin-camp{bottom:6px;right:6px;background:var(--lilac)}
+
+/* ideal steps */
+.lede{font-size:15px;color:var(--ink-soft);max-width:62ch;margin-bottom:20px}
+.steps{border:var(--bd);background:#fff}
+.step{display:grid;grid-template-columns:46px 1fr;gap:0 14px;padding:15px 18px;border-bottom:2px solid var(--ink)}
+.step:last-child{border-bottom:0}
+.step .sn{font-family:var(--display);font-weight:800;font-size:21px;line-height:1}
+.step h4{font-size:16px;margin-bottom:4px}
+.step p{font-size:13.5px;color:var(--ink-soft);margin:0}
+
+/* not-yours note */
+.notyours{border:var(--bd);border-left:10px solid var(--lilac);background:#fff;padding:15px 18px;margin-bottom:20px;font-size:14px;color:var(--ink-soft)}
+.notyours b{color:var(--ink)}
+.band{border:var(--bd);background:var(--ink);color:var(--paper);padding:15px 18px;margin-top:6px}
+.band h3{font-size:19px;color:var(--paper);margin-bottom:5px}
+.band p{font-size:13px;color:#CFC7DD;margin:0}
+.fmt.muted{opacity:.72}
+.fmt.muted .tiles{filter:grayscale(.35)}
 </style>
 
 <header>
@@ -208,7 +244,7 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
       <div class="grid3">
         <div class="box p"><h4>Who we are</h4><p>Nancy makes female pleasure easier to talk about and harder to shame. Confident, witty, never crude for shock.</p></div>
         <div class="box y"><h4>What we need</h4><p>Finished content, not a set of cuts. Intentional edits, text overlays where they make it stronger.</p></div>
-        <div class="box l"><h4>How to use this</h4><p>Look at 03 for what to make, 02 for how it should look, 04 before you export.</p></div>
+        <div class="box l"><h4>How to use this</h4><p>03 is the method, 04 is what to make, 02 is how it should look. Read 05 before you export.</p></div>
       </div>
       <div class="need"><b>Style is still tightening.</b> Examples show what we have been making recently, not a locked spec. Match the intent, not the frame.</div>
     </div>
@@ -218,23 +254,14 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
   <section class="page" id="page-look" role="tabpanel" aria-labelledby="tab-look" hidden>
     <div class="page-head"><span class="pnum">02</span><h2>The look</h2></div>
     <div class="page-body">
-      <h3 style="font-size:20px;margin-bottom:10px">Logo</h3>
-      <div class="logobox"><img src="assets/nancy-logo-cream.svg" alt="Nancy"></div>
-      <div class="grid3">
-        <div class="box"><h4>Placement</h4><p>Bottom of frame, centred. Same place every time.</p></div>
-        <div class="box"><h4>Colour</h4><p>Cream on footage. Never recoloured, never outlined.</p></div>
-        <div class="box"><h4>Size</h4><p>Takes the size of the job it is doing &mdash; see the scale below.</p></div>
+      <div class="assetdl">
+        <div>
+          <div class="k">Brand assets</div>
+          <h3>Logos, colours, everything else</h3>
+          <p>One folder. Download it before you start &mdash; do not rebuild anything by eye.</p>
+        </div>
+        <a class="dl-btn" href="#" data-assets>Folder link to come <span aria-hidden="true">&#8595;</span></a>
       </div>
-      <div class="need">Sending more logo variants and clear-space rules.<span class="chip">Awaiting assets</span></div>
-
-      <h3 style="font-size:20px;margin:28px 0 10px">Colour</h3>
-      <div class="swatches">
-        <div class="sw"><div class="chipc" style="background:#FDF7F5"></div><div class="m"><b>Cream</b>#FDF7F5</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
-      </div>
-      <div class="need"><b>On screen, colour comes from the footage.</b> Type and overlays stay white or cream, never coloured.</div>
 
       <h3 style="font-size:20px;margin:28px 0 10px">Type</h3>
       <div class="faces">
@@ -249,38 +276,67 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
       </div>
 
       <h3 style="font-size:20px;margin:28px 0 10px">On the frame</h3>
-      <div class="frameblk">
+      <div class="sample">
         <div class="shot">
-          <img class="bg" data-drive="1Pp0dGZSwSKhCf7b-grc8w_VtSej_I-1G" alt="">
-          <div class="hero">Every setup has motion</div>
-          <div class="lock"><img src="assets/nancy-logo-cream.svg" alt="Nancy"><span>Out of Office</span></div>
+          <img class="bg" data-drive="__FRAME__" alt="">
+          <div class="hero">Every setup<br>has motion</div>
+          <div class="lock"><img src="/brand-guide/assets/nancy-logo-cream.svg" alt="Nancy"><span>Out of Office</span></div>
+          <span class="pin pin-hero">Header 40&ndash;50</span>
+          <span class="pin pin-logo">Logo</span>
+          <span class="pin pin-camp">Subheader 20&ndash;30</span>
         </div>
         <div class="callouts">
-          <div class="co"><div class="n">Middle</div><h4>Hero text</h4><p>Helvetica, caps, tracking and leading pulled in from default.</p></div>
-          <div class="co"><div class="n">Bottom</div><h4>Logo, then campaign title</h4><p>One centred block, same position on every frame.</p></div>
-          <div class="co"><div class="n">Nothing else</div><h4>Three elements, maximum</h4><p>A fourth replaces one of these or it does not go on.</p></div>
+          <div class="co"><div class="n">Middle of frame</div><h4>Heading</h4><p>Helvetica, caps, tracking and leading pulled in from default. The line people actually read.</p></div>
+          <div class="co"><div class="n">Bottom, above the title</div><h4>Nancy logo</h4><p>Centred, cream, same position on every frame.</p></div>
+          <div class="co"><div class="n">Bottom, under the logo</div><h4>Campaign title</h4><p>Small caps, wide tracking. Labels the frame without competing.</p></div>
+          <div class="co"><div class="n">Body 8&ndash;10</div><h4>Anything else</h4><p>Credits, locations, disclaimers. Rare, and never fighting the heading.</p></div>
         </div>
       </div>
       <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
     </div>
   </section>
 
-  <!-- 03 WHAT TO MAKE -->
+  <!-- 03 IDEAL -->
+  <section class="page" id="page-ideal" role="tabpanel" aria-labelledby="tab-ideal" hidden>
+    <div class="page-head"><span class="pnum">03</span><h2>The ideal run</h2></div>
+    <div class="page-body">
+      <p class="lede">How a strong piece gets made, in order. Skip a step and it shows.</p>
+      <div class="steps">
+        <div class="step"><div class="sn">01</div><div><h4>Find the outlier</h4><p>A post that beat its own account&rsquo;s normal by a wide margin. Not the biggest account &mdash; the biggest gap.</p></div></div>
+        <div class="step"><div class="sn">02</div><div><h4>Grab the text overlay</h4><p>Take the trending overlay shape that made it work. The format is the part worth having.</p></div></div>
+        <div class="step"><div class="sn">03</div><div><h4>Fit it to the event</h4><p>Rewrite the blank with something true about our footage. Same mechanism, our subject.</p></div></div>
+        <div class="step"><div class="sn">04</div><div><h4>Find the track</h4><p>Music before cuts, always. The beat decides the pace.</p></div></div>
+        <div class="step"><div class="sn">05</div><div><h4>Cut it</h4><p>Then check it back against the reference before you send.</p></div></div>
+      </div>
+      <div class="oneline" style="background:var(--lilac);margin-top:22px">
+        <div class="k">The short version</div>
+        <h3>Outlier, overlay, then our footage.</h3>
+        <p>Take the shape of something that already worked and fill it with something only we have.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 WHAT TO MAKE -->
   <section class="page" id="page-make" role="tabpanel" aria-labelledby="tab-make" hidden>
-    <div class="page-head"><span class="pnum">03</span><h2>What to make</h2></div>
+    <div class="page-head"><span class="pnum">04</span><h2>What to make</h2></div>
     <div class="page-body">
       <div class="oneline" style="background:var(--yellow)">
-        <div class="k">Before you cut</div>
-        <h3>Find the track first.</h3>
-        <p>The music decides where the cuts land. Never cut first and drop a beat underneath afterwards.</p>
+        <div class="k">Focus, in order</div>
+        <h3>Event highlights, then photo reels.</h3>
+        <p>Speaker series, games and memes follow when the assets include them. Carousels and founder picks are handled in-house &mdash; not yours to build.</p>
+      </div>
+
+      <div class="notyours">
+        <b>Carousels and founder picks are handled in-house.</b> We have an editor assigned to
+        both, so leave them. They appear at the bottom of this page for context only.
       </div>
       <div class="fmts" id="fmts"></div>
     </div>
   </section>
 
-  <!-- 04 RULES -->
+  <!-- 05 RULES -->
   <section class="page" id="page-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
-    <div class="page-head"><span class="pnum">04</span><h2>Rules &amp; delivery</h2></div>
+    <div class="page-head"><span class="pnum">05</span><h2>Rules &amp; delivery</h2></div>
     <div class="page-body">
       <div class="dd">
         <div class="col do"><div class="t">Do</div><ul>
@@ -291,11 +347,11 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
           <li>Keep the lo-fi and blurry frames. They are selects.</li>
         </ul></div>
         <div class="col no"><div class="t">Don&rsquo;t</div><ul>
-          <li><b>Edit first, then look for inspo.</b> Never.</li>
-          <li>Retrofit a caption onto a locked cut.</li>
+          <li><b>Cut off the beat.</b> If the edit is not riding the track, it is not finished.</li>
+          <li>Edit first and look for the reference afterwards.</li>
+          <li><b>Colour or decorate the type.</b> Effects, gradients and outlines fight the footage.</li>
           <li>Colour-match the clean and lo-fi passes together.</li>
-          <li>Add colour with type, transitions or overlays.</li>
-          <li>Copy a reference&rsquo;s exact words or joke.</li>
+          <li>Let a fourth element onto the frame.</li>
         </ul></div>
       </div>
       <div class="specs">
@@ -334,20 +390,21 @@ const THUMBS = {};
 function driveThumb(id, w){ return THUMBS[id] || ("https://drive.google.com/thumbnail?id=" + id + "&sz=w" + (w || 400)); }
 
 const FORMATS = [
-  { name:"Event highlights", tag:"Priority", line:"Fast cuts to the beat, unmistakably ours.",
-    body:"Every setup has motion. Branded on frame: logo and campaign title at the bottom.", drive:"Event Highlights" },
-  { name:"Photo reels", tag:"Priority", line:"Event highlights, but every frame is a still.",
-    body:"Same rules, same pace, built from static assets.", drive:"Photo reels" },
-  { name:"Carousels", tag:"Priority", line:"The strongest stills, in the right order.",
-    body:"People, candid and product shots, with a moving frame mixed in.",
+  { g:"yours", n:1, name:"Event highlights", tag:"Always", line:"Fast cuts to the beat, unmistakably ours.",
+    body:"Every setup has motion. Logo and campaign title at the bottom of the frame.", drive:"Event Highlights" },
+  { g:"yours", n:2, name:"Photo reels", tag:"Always", line:"Event highlights, but every frame is a still.",
+    body:"Same rules, same pace, built from the stills in the folder.", drive:"Photo reels" },
+  { g:"if", n:3, name:"Speaker series", tag:"If in the assets", line:"The easy win. Captions and good clips.",
+    body:"Add captions, censor what needs censoring before export, and pull the clips that actually say something. Design is just the text.", drive:"Interviews" },
+  { g:"if", n:4, name:"Games", tag:"If in the assets", line:"Clip it, cut it fast, punch in on the reaction.",
+    body:"Closer to clipping than editing. Zoom into faces when a reaction is genuinely funny.", drive:"Games" },
+  { g:"if", n:5, name:"Memes", tag:"If in the assets", line:"Snappy and funny is the whole bar.",
+    body:"Fast cuts straight through. Reference an actual meme where it lands.", drive:"Memes" },
+  { g:"inhouse", name:"Carousels", tag:"In-house", line:"The strongest stills, in the right order.",
+    body:"Shown so you can see how the stills get used. You do not build these.",
     groups:[["The standard","Carousel"],["Headline type","Carousel Headline type"]] },
-  { name:"Wishlist", tag:"Priority", line:"Founder picks, replicated exactly.",
-    body:"Follow the source: exact edit, exact overlay, exact style. The one place to copy precisely.", drive:"Wishlist" },
-  { name:"Community", tag:"Quick win", line:"Games and interviews.",
-    body:"Games: fast cuts, punch in on the reaction. Interviews: captions, censor what needs it, meaningful clips only.",
-    groups:[["Games","Games"],["Interviews","Interviews"]] },
-  { name:"Memes", tag:"Quick win", line:"Clip it, cut it fast, punch in.",
-    body:"Snappy and funny is the whole bar.", drive:"Memes" }
+  { g:"inhouse", name:"Founder picks", tag:"In-house", line:"Replicated exactly from the source.",
+    body:"Our editor follows the reference frame for frame. Shown here for context only.", drive:"Wishlist" }
 ];
 
 function pad2(n){ return String(n).padStart(2,"0"); }
@@ -368,14 +425,27 @@ function tilesFor(key){
   }).join("") + '</div>';
 }
 
-document.getElementById("fmts").innerHTML = FORMATS.map(f => {
+function fmtCard(f){
   const media = f.groups
     ? f.groups.map(g => `<div class="grp">${g[0]}</div>` + tilesFor(g[1])).join("")
     : tilesFor(f.drive);
-  return `<div class="fmt">
-    <div><div class="kick">${f.name} &mdash; ${f.tag}</div><h3>${f.line}</h3><p>${f.body}</p></div>
+  return `<div class="fmt${f.g === "inhouse" ? " muted" : ""}">
+    <div><div class="kick">${f.n ? pad2(f.n) + " &mdash; " : ""}${f.name} &middot; ${f.tag}</div>
+      <h3>${f.line}</h3><p>${f.body}</p></div>
     <div>${media}</div>
   </div>`;
+}
+
+const BANDS = [
+  ["yours",  "Yours, every time",   "Start here. If time is short, these win."],
+  ["if",     "Yours if the assets have it", "Only when the folder includes the footage."],
+  ["inhouse","Handled in-house",    "Someone is already assigned. Shown for context, not for you to build."]
+];
+
+document.getElementById("fmts").innerHTML = BANDS.map(b => {
+  const items = FORMATS.filter(f => f.g === b[0]);
+  if (!items.length) return "";
+  return `<div class="band"><h3>${b[1]}</h3><p>${b[2]}</p></div>` + items.map(fmtCard).join("");
 }).join("");
 
 document.querySelectorAll("img[data-drive]").forEach(i => { i.src = driveThumb(i.dataset.drive, 600); });
@@ -428,6 +498,7 @@ document.addEventListener("keydown", e => {
 const PAGES = [
   { id:"start", label:"Start here" },
   { id:"look",  label:"The look" },
+  { id:"ideal", label:"The ideal run" },
   { id:"make",  label:"What to make" },
   { id:"rules", label:"Rules & delivery" }
 ];
