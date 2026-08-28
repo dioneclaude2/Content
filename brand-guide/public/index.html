@@ -324,7 +324,7 @@ a.fdl:hover{background:var(--yellow)}
 
   <!-- 01 THE BRAND -->
   <section class="page" id="page-brand" role="tabpanel" aria-labelledby="tab-brand" hidden>
-    <div class="page-head"><span class="pnum">01</span><h2>The brand</h2></div>
+    <div class="page-head"><span class="pnum">02</span><h2>Brand guidelines</h2></div>
     <div class="page-body">
       <div class="oneline">
         <div class="k">Who we are</div>
@@ -447,6 +447,19 @@ a.fdl:hover{background:var(--yellow)}
       </div>
 
       <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
+
+      <h3 class="sh">Rules</h3>
+      <div class="dd">
+        <div class="col do"><div class="t">Do</div><ul>
+          <li><b>Find the track before you cut.</b> The music decides where the cuts land.</li>
+          <li>Cut on movement.</li>
+        </ul></div>
+        <div class="col no"><div class="t">Don&rsquo;t</div><ul>
+          <li><b>Cut off the beat.</b> If the edit is not riding the track, it is not finished.</li>
+          <li>Colour-match the clean and lo-fi passes together.</li>
+        </ul></div>
+      </div>
+
     </div>
   </section>
 
@@ -465,51 +478,28 @@ a.fdl:hover{background:var(--yellow)}
 
   <!-- 02 THE WORK -->
   <section class="page" id="page-work" role="tabpanel" aria-labelledby="tab-work" hidden>
-    <div class="page-head"><span class="pnum">02</span><h2>The work</h2></div>
+    <div class="page-head"><span class="pnum">01</span><h2>The work</h2></div>
     <div class="page-body">
       <div class="oneline" style="background:var(--yellow)">
         <div class="k">What we need back</div>
         <h3>Finished content, not a set of cuts.</h3>
-        <p>An edit you would post yourself. Every choice made on purpose, and traceable to something that already worked.</p>
+        <p>An edit you would post yourself.</p>
       </div>
 
       <h3 class="sh">What you will receive</h3>
-      <p class="lede">Footage lands day by day in the shared folder, not all at once. Start on a day as soon as its folder is up.</p>
+      <p class="lede">Footage lands day by day. Start on a day as soon as its folder is up.</p>
       <div class="grid2">
-        <div class="box p"><h4>Two passes of everything</h4><p>A clean digital pass and a lo-fi one. <b>Use both in the same cut</b> and do not grade them to match &mdash; the difference is the look.</p></div>
-        <div class="box y"><h4>Talking footage</h4><p>Street interviews and panels. Caption it, censor what needs it before export, and keep only the clips that actually say something.</p></div>
-        <div class="box l"><h4>Stills</h4><p>Your source for photo reels. Cut them fast and to the beat, exactly like a highlights edit.</p></div>
-        <div class="box"><h4>Location sound</h4><p>Real audio from the day. <b>Keep it under the music</b> &mdash; it is what stops a cut sounding like stock.</p></div>
+        <div class="box p"><h4>Two passes of everything</h4><p><b>Use both in the same cut.</b> Do not grade them to match.</p></div>
+        <div class="box y"><h4>Talking footage</h4><p>Caption it, censor before export, keep the clips that say something.</p></div>
+        <div class="box l"><h4>Stills</h4><p>Your source for photo reels. Fast, and on the beat.</p></div>
+        <div class="box"><h4>Location sound</h4><p><b>Keep it under the music.</b></p></div>
       </div>
-      <div class="need"><b>Work it in this order:</b> watch the day through once, pull your selects, find the track, then cut. The blurry and lo-fi frames are selects, not rejects.</div>
+      <div class="need"><b>In this order:</b> watch the day, pull selects, find the track, cut.</div>
 
       <h3 class="sh">What to make</h3>
-      <div class="notyours">
-        <b>Carousels and founder picks are handled in-house.</b> We have an editor assigned to both,
-        so leave them. They appear at the bottom for context only.
-      </div>
+      <div class="notyours"><b>Carousels and founder picks are in-house.</b> Leave them.</div>
       <div class="fmts" id="fmts"></div>
 
-      <h3 class="sh">Rules</h3>
-      <div class="dd">
-        <div class="col do"><div class="t">Do</div><ul>
-          <li><b>Find the track before you cut.</b> The music decides where the cuts land.</li>
-          <li>Cut on movement.</li>
-        </ul></div>
-        <div class="col no"><div class="t">Don&rsquo;t</div><ul>
-          <li><b>Cut off the beat.</b> If the edit is not riding the track, it is not finished.</li>
-          <li>Colour-match the clean and lo-fi passes together.</li>
-        </ul></div>
-      </div>
-
-      <h3 class="sh">Delivery</h3>
-      <div class="specs">
-        <div class="spec"><div class="k">Reels</div><div class="v">9:16, shot and cut. A 9:16 crop of a carousel is not a reel.</div></div>
-        <div class="spec"><div class="k">On-screen type</div><div class="v">Helvetica, caps, white or Tickled Pink. No stroke, no shadow, no plate.</div></div>
-        <div class="spec"><div class="k">Master<span class="chip">TBC</span></div><div class="v">Format, frame rate and delivery route to be confirmed.</div></div>
-        <div class="spec"><div class="k">Naming<span class="chip">TBC</span></div><div class="v">Convention to be confirmed.</div></div>
-      </div>
-      <div class="need">Questions before you export are cheaper than a re-cut. Ask.</div>
     </div>
   </section>
 
@@ -539,20 +529,20 @@ function driveThumb(id, w){ return THUMBS[id] || ("https://drive.google.com/thum
 
 const FORMATS = [
   { g:"yours", n:1, name:"Event highlights", tag:"Always", line:"Fast cuts to the beat, unmistakably ours.",
-    body:"Every setup has motion. Logo and campaign title at the bottom of the frame.", drive:"Event Highlights" },
+    body:"Every setup has motion.", drive:"Event Highlights" },
   { g:"yours", n:2, name:"Photo reels", tag:"Always", line:"Event highlights, but every frame is a still.",
-    body:"Same rules, same pace, built from the stills in the folder.", drive:"Photo reels" },
+    body:"Same rules, same pace, built from stills.", drive:"Photo reels" },
   { g:"if", n:3, name:"Speaker series", tag:"If in the assets", line:"Street interviews and sit-downs. The easy win.",
-    body:"Anything where someone is talking to camera \u2014 street interviews with a handheld mic, panels, sit-downs. Add captions, censor what needs censoring before export, and pull the clips that actually say something. Design is just the text.", drive:"Interviews" },
+    body:"Street interviews, panels, sit-downs. Captions, censoring, good clips. Design is just the text.", drive:"Interviews" },
   { g:"if", n:4, name:"Games", tag:"If in the assets", line:"Clip it, cut it fast, punch in on the reaction.",
-    body:"Closer to clipping than editing. Zoom into faces when a reaction is genuinely funny.", drive:"Games" },
+    body:"Punch in on the face when the reaction is funny.", drive:"Games" },
   { g:"if", n:5, name:"Memes", tag:"If in the assets", line:"Snappy and funny is the whole bar.",
-    body:"Fast cuts straight through. Reference an actual meme where it lands.", drive:"Memes" },
+    body:"Fast cuts straight through.", drive:"Memes" },
   { g:"inhouse", name:"Carousels", tag:"In-house", line:"The strongest stills, in the right order.",
-    body:"Shown so you can see how the stills get used. You do not build these.",
+    body:"Shown for context. You do not build these.",
     groups:[["The standard","Carousel"],["Headline type","Carousel Headline type"]] },
   { g:"inhouse", name:"Founder picks", tag:"In-house", line:"Replicated exactly from the source.",
-    body:"Our editor follows the reference frame for frame. Shown here for context only.", drive:"Wishlist" }
+    body:"Shown for context. You do not build these.", drive:"Wishlist" }
 ];
 
 function pad2(n){ return String(n).padStart(2,"0"); }
@@ -585,9 +575,9 @@ function fmtCard(f){
 }
 
 const BANDS = [
-  ["yours",  "Yours, every time",   "Start here. If time is short, these win."],
-  ["if",     "Yours if the assets have it", "Only when the folder includes the footage."],
-  ["inhouse","Handled in-house",    "Someone is already assigned. Shown for context, not for you to build."]
+  ["yours",  "Yours, every time",   "If time is short, these win."],
+  ["if",     "Yours if the assets have it", "Only if the folder has the footage."],
+  ["inhouse","Handled in-house",    "Not yours to build."]
 ];
 
 document.getElementById("fmts").innerHTML = BANDS.map(b => {
@@ -681,8 +671,8 @@ document.addEventListener("keydown", e => {
 
 /* pages */
 const PAGES = [
-  { id:"brand", label:"The brand" },
   { id:"work",  label:"The work" },
+  { id:"brand", label:"Brand guidelines" },
   { id:"days",  label:"Schedule & assets" }
 ];
 const tabsEl = document.getElementById("tabs");
