@@ -169,6 +169,7 @@ footer .in{max-width:1060px;margin:0 auto}
 footer .b{font-family:var(--display);font-weight:800;font-size:clamp(18px,3.2vw,28px);max-width:24ch;text-wrap:balance}
 footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:14px}
 
+
 /* player */
 .lb[hidden]{display:none}
 .lb{position:fixed;inset:0;z-index:200;background:rgba(10,7,17,.93);display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}
@@ -222,6 +223,26 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
 .fmt.muted .tiles{filter:grayscale(.35)}
 .sh{font-family:var(--display);font-weight:800;font-size:clamp(19px,3vw,25px);margin:30px 0 10px}
 .co .sz{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;border:2px solid var(--ink);background:var(--yellow);padding:1px 5px;margin-left:5px;vertical-align:middle}
+.sched{display:grid;gap:16px}
+.day{border:var(--bd);background:#fff;display:grid;gap:0}
+@media (min-width:720px){.day{grid-template-columns:132px 1fr}}
+.day:nth-child(3n+1){background:var(--pink-soft)}.day:nth-child(3n+2){background:var(--yellow-soft)}.day:nth-child(3n){background:var(--lilac-soft)}
+.dmeta{padding:16px 18px;border-bottom:2px solid var(--ink)}
+@media (min-width:720px){.dmeta{border-bottom:0;border-right:2px solid var(--ink)}}
+.dmeta .dd{display:block;font-family:var(--display);font-weight:800;font-size:19px}
+.dmeta .dt{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
+.dbody{padding:16px 18px}
+.dbody h3{font-size:clamp(18px,2.8vw,23px);margin-bottom:6px}
+.dwin{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:11px}
+.tbcchip{border:2px solid var(--ink);background:var(--paper);padding:1px 5px;margin-left:5px;font-size:9px}
+.track{position:relative;height:15px;border:2px solid var(--ink);background:var(--paper);overflow:hidden}
+.track .span{position:absolute;top:0;bottom:0;background:var(--ink)}
+.track .span.open{background:repeating-linear-gradient(90deg,var(--ink),var(--ink) 7px,transparent 7px,transparent 12px)}
+.ticks{display:flex;justify-content:space-between;margin-top:4px;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.08em;color:var(--ink-soft)}
+.dbody p{font-size:13.5px;color:var(--ink-soft);margin:11px 0 0}
+.atags{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.atags span{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);background:#fff;padding:4px 8px}
+.vol{margin-top:9px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 </style>
 
 <header>
@@ -292,6 +313,19 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
         </div>
       </div>
       <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
+    </div>
+  </section>
+
+  <!-- 03 SCHEDULE & ASSETS -->
+  <section class="page" id="page-days" role="tabpanel" aria-labelledby="tab-days" hidden>
+    <div class="page-head"><span class="pnum">03</span><h2>Schedule &amp; assets</h2></div>
+    <div class="page-body">
+      <p class="lede">
+        Four shoot days. What happens, when it runs, and what lands in the folder afterwards.
+        All times EST. You do not need the call sheet &mdash; this is what to expect.
+      </p>
+      <div class="sched" id="sched"></div>
+      <div class="need"><b>Footage arrives day by day, not all at once.</b> Start on a day as soon as its folder is up rather than waiting for the full set.<span class="chip">Day 3 and 4 end times TBC</span></div>
     </div>
   </section>
 
@@ -436,6 +470,53 @@ document.getElementById("fmts").innerHTML = BANDS.map(b => {
 
 document.querySelectorAll("img[data-drive]").forEach(i => { i.src = driveThumb(i.dataset.drive, 600); });
 
+/* ---- shoot days ----
+   Windows and asset types only. The minute-by-minute call sheet stays
+   internal; an outside editor needs to know what lands and roughly when. */
+const DAY_START = 8, DAY_END = 23;   // the scale the bars are drawn on
+
+const DAYS = [
+  { d:"Day 1", date:"Fri 28 Aug", name:"Brunch + Soho",
+    from:8, to:22, window:"8:00 AM &ndash; 10:00 PM",
+    line:"A brunch event at 113 Spring St with a panel, then dinner and mini mic around Soho after dark.",
+    assets:["Event highlights","Speaker series","Mini mic","Photo reels"],
+    volume:"15&ndash;20+ brunch &middot; 10+ mini mic" },
+  { d:"Day 2", date:"Sat 29 Aug", name:"Central Park + Times Square",
+    from:10, to:22, window:"10:00 AM &ndash; 10:00 PM",
+    line:"Street interviews and product shots in the park, Times Square through the afternoon, skits and memes at night.",
+    assets:["Event highlights","Games","Memes","Photo reels"],
+    volume:"Two locations, full day" },
+  { d:"Day 3", date:"Sun 30 Aug", name:"US Open &mdash; opening day",
+    from:8.5, to:null, window:"From 8:30 AM", tbc:true,
+    line:"Mini mic and outfits on the approach and in the queue, then the outer courts and the day session.",
+    assets:["Event highlights","Mini mic","Photo reels"],
+    volume:"40+ &middot; ~20 per location" },
+  { d:"Day 4", date:"Mon 31 Aug", name:"Iconic NY moments",
+    from:8, to:null, window:"From 8:00 AM", tbc:true,
+    line:"A landmark route across the city &mdash; Charging Bull, Fearless Girl, Oculus, Katz&rsquo;s, Grand Central, LOVE, the Met and a rooftop.",
+    assets:["Photo reels","Event highlights"],
+    volume:"20+" }
+];
+
+function pct(h){ return ((h - DAY_START) / (DAY_END - DAY_START)) * 100; }
+
+document.getElementById("sched").innerHTML = DAYS.map(x => {
+  const left = pct(x.from);
+  const width = x.to ? pct(x.to) - left : 100 - left;
+  return `<div class="day">
+    <div class="dmeta"><span class="dd">${x.d}</span><span class="dt">${x.date}</span></div>
+    <div class="dbody">
+      <h3>${x.name}</h3>
+      <div class="dwin">${x.window}${x.tbc ? ' <span class="tbcchip">End TBC</span>' : ""}</div>
+      <div class="track"><span class="span${x.tbc ? " open" : ""}" style="left:${left}%;width:${width}%"></span></div>
+      <div class="ticks"><span>8 AM</span><span>1 PM</span><span>6 PM</span><span>11 PM</span></div>
+      <p>${x.line}</p>
+      <div class="atags">${x.assets.map(a => `<span>${a}</span>`).join("")}</div>
+      <div class="vol">Expect roughly &mdash; ${x.volume}</div>
+    </div>
+  </div>`;
+}).join("");
+
 /* player */
 const lb = () => document.getElementById("lb");
 let SHOW = null;
@@ -483,7 +564,8 @@ document.addEventListener("keydown", e => {
 /* pages */
 const PAGES = [
   { id:"brand", label:"The brand" },
-  { id:"work",  label:"The work" }
+  { id:"work",  label:"The work" },
+  { id:"days",  label:"Schedule & assets" }
 ];
 const tabsEl = document.getElementById("tabs");
 tabsEl.innerHTML = PAGES.map((p,i) => `<button role="tab" id="tab-${p.id}" aria-controls="page-${p.id}" aria-selected="false" type="button"><span class="tn">${pad2(i+1)}</span>${p.label}</button>`).join("");
