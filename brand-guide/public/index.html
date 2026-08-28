@@ -2,7 +2,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nancy Brand Guide</title>
-<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23FFB3D4"/><text y=".9em" x="50" text-anchor="middle" font-size="76">&#127916;</text></svg>'>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23FF30CC"/><text y=".9em" x="50" text-anchor="middle" font-size="76">&#127916;</text></svg>'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap">
@@ -17,7 +17,7 @@
 @font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
 
 :root{
-  --pink:#FFB3D4; --pink-soft:#FFE2EE; --pink-loud:#FF3D8A;
+  --pink:#FFB3D4; --pink-soft:#FFE2EE; --pink-loud:#FF30CC;   /* Tickled Pink, the real brand colour */
   --yellow:#FFE459; --yellow-soft:#FFF6C4;
   --lilac:#D9CCFF; --lilac-soft:#EDE7FF;
   --paper:#FFFCF5; --ink:#151021; --ink-soft:#4A4159;
@@ -170,7 +170,7 @@ footer .b{font-family:var(--display);font-weight:800;font-size:clamp(18px,3.2vw,
 footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:14px}
 
 
-/* player */
+/* lightbox player */
 .lb[hidden]{display:none}
 .lb{position:fixed;inset:0;z-index:200;background:rgba(10,7,17,.93);display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}
 .lb-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -223,26 +223,26 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
 .fmt.muted .tiles{filter:grayscale(.35)}
 .sh{font-family:var(--display);font-weight:800;font-size:clamp(19px,3vw,25px);margin:30px 0 10px}
 .co .sz{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;border:2px solid var(--ink);background:var(--yellow);padding:1px 5px;margin-left:5px;vertical-align:middle}
-.sched{display:grid;gap:16px}
-.day{border:var(--bd);background:#fff;display:grid;gap:0}
-@media (min-width:720px){.day{grid-template-columns:132px 1fr}}
-.day:nth-child(3n+1){background:var(--pink-soft)}.day:nth-child(3n+2){background:var(--yellow-soft)}.day:nth-child(3n){background:var(--lilac-soft)}
-.dmeta{padding:16px 18px;border-bottom:2px solid var(--ink)}
-@media (min-width:720px){.dmeta{border-bottom:0;border-right:2px solid var(--ink)}}
-.dmeta .dd{display:block;font-family:var(--display);font-weight:800;font-size:19px}
-.dmeta .dt{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
-.dbody{padding:16px 18px}
-.dbody h3{font-size:clamp(18px,2.8vw,23px);margin-bottom:6px}
-.dwin{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:11px}
-.tbcchip{border:2px solid var(--ink);background:var(--paper);padding:1px 5px;margin-left:5px;font-size:9px}
-.track{position:relative;height:15px;border:2px solid var(--ink);background:var(--paper);overflow:hidden}
-.track .span{position:absolute;top:0;bottom:0;background:var(--ink)}
-.track .span.open{background:repeating-linear-gradient(90deg,var(--ink),var(--ink) 7px,transparent 7px,transparent 12px)}
-.ticks{display:flex;justify-content:space-between;margin-top:4px;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.08em;color:var(--ink-soft)}
-.dbody p{font-size:13.5px;color:var(--ink-soft);margin:11px 0 0}
-.atags{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
-.atags span{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);background:#fff;padding:4px 8px}
-.vol{margin-top:9px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.sched{display:grid;gap:14px}
+.day{border:var(--bd);background:#fff;display:grid;overflow:hidden}
+@media (min-width:720px){.day{grid-template-columns:230px 1fr}}
+.dmeta{background:var(--ink);color:var(--paper);padding:20px;display:grid;align-content:center;gap:1px}
+.dmeta .dnum{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-loud)}
+.dmeta .ddate{font-family:var(--display);font-weight:800;font-size:clamp(34px,6vw,46px);line-height:1;letter-spacing:-.035em;margin-top:6px}
+.dmeta .ddow{font-family:var(--display);font-weight:800;font-size:clamp(16px,2.6vw,20px);line-height:1.15;color:#B9AFCC}
+.dmeta .dtime{
+  margin-top:13px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.04em;
+  color:var(--ink);background:var(--pink-loud);padding:7px 10px;justify-self:start;
+}
+.dmeta .dtime em{display:block;font-style:normal;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-top:2px}
+.dbody{padding:20px}
+.dbody h3{font-size:clamp(19px,3vw,24px);margin-bottom:7px}
+.dbody p{font-size:14px;color:var(--ink-soft);margin:0}
+.atags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.atags span{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--ink);background:var(--paper);padding:4px 8px}
+.swatches.two{grid-template-columns:1fr}
+@media (min-width:640px){.swatches.two{grid-template-columns:1fr 1fr;max-width:560px}}
+.atags span.q{background:var(--pink-loud);color:#fff}
 </style>
 
 <header>
@@ -273,17 +273,19 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
           <h3>Logos, colours, everything else</h3>
           <p>One folder. Download it before you start &mdash; do not rebuild anything by eye.</p>
         </div>
-        <a class="dl-btn" href="#" data-assets>Folder link to come <span aria-hidden="true">&#8595;</span></a>
+        <a class="dl-btn" href="https://drive.google.com/drive/folders/1Y1FAkoKslf0mRgMw8YAukewRP6JY9pQj?usp=drive_link" target="_blank" rel="noopener">Open the logo folder <span aria-hidden="true">&#8599;</span></a>
       </div>
 
       <h3 class="sh">Colour</h3>
-      <div class="swatches">
-        <div class="sw"><div class="chipc" style="background:#FDF7F5"></div><div class="m"><b>Cream</b>#FDF7F5</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
-        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>In the folder</div></div>
+      <div class="swatches two">
+        <div class="sw"><div class="chipc" style="background:#FF30CC"></div><div class="m"><b>Tickled Pink</b>#FF30CC</div></div>
+        <div class="sw"><div class="chipc" style="background:#FDF7F5;border-bottom:3px solid var(--ink)"></div><div class="m"><b>Cream white</b>#FDF7F5</div></div>
       </div>
-      <div class="need"><b>On screen, colour comes from the footage.</b> Type stays white or cream, never coloured.</div>
+      <div class="need">
+        <b>On-screen type is cream white or Tickled Pink</b> &mdash; whichever reads against the
+        lighting in the shot. Nothing else. Everything else on screen is colour that was
+        already in the frame.
+      </div>
 
       <h3 class="sh">Type</h3>
       <div class="faces">
@@ -368,7 +370,7 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
         <div class="col no"><div class="t">Don&rsquo;t</div><ul>
           <li><b>Cut off the beat.</b> If the edit is not riding the track, it is not finished.</li>
           <li>Edit first and look for the reference afterwards.</li>
-          <li><b>Colour or decorate the type.</b> Effects, gradients and outlines fight the footage.</li>
+          <li><b>Decorate the type.</b> No strokes, shadows, plates or gradients. Cream white or Tickled Pink, nothing else.</li>
           <li>Colour-match the clean and lo-fi passes together.</li>
           <li>Let a fourth element onto the frame.</li>
         </ul></div>
@@ -377,7 +379,7 @@ footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing
       <h3 class="sh">Delivery</h3>
       <div class="specs">
         <div class="spec"><div class="k">Reels</div><div class="v">9:16, shot and cut. A 9:16 crop of a carousel is not a reel.</div></div>
-        <div class="spec"><div class="k">On-screen type</div><div class="v">Helvetica, caps, white or cream. No stroke, no shadow, no plate.</div></div>
+        <div class="spec"><div class="k">On-screen type</div><div class="v">Helvetica, caps, cream white or Tickled Pink. No stroke, no shadow, no plate.</div></div>
         <div class="spec"><div class="k">Master<span class="chip">TBC</span></div><div class="v">Format, frame rate and delivery route to be confirmed.</div></div>
         <div class="spec"><div class="k">Naming<span class="chip">TBC</span></div><div class="v">Convention to be confirmed.</div></div>
       </div>
@@ -414,8 +416,8 @@ const FORMATS = [
     body:"Every setup has motion. Logo and campaign title at the bottom of the frame.", drive:"Event Highlights" },
   { g:"yours", n:2, name:"Photo reels", tag:"Always", line:"Event highlights, but every frame is a still.",
     body:"Same rules, same pace, built from the stills in the folder.", drive:"Photo reels" },
-  { g:"if", n:3, name:"Speaker series", tag:"If in the assets", line:"The easy win. Captions and good clips.",
-    body:"Add captions, censor what needs censoring before export, and pull the clips that actually say something. Design is just the text.", drive:"Interviews" },
+  { g:"if", n:3, name:"Speaker series", tag:"If in the assets", line:"Street interviews and sit-downs. The easy win.",
+    body:"Anything where someone is talking to camera \u2014 street interviews with a handheld mic, panels, sit-downs. Add captions, censor what needs censoring before export, and pull the clips that actually say something. Design is just the text.", drive:"Interviews" },
   { g:"if", n:4, name:"Games", tag:"If in the assets", line:"Clip it, cut it fast, punch in on the reaction.",
     body:"Closer to clipping than editing. Zoom into faces when a reaction is genuinely funny.", drive:"Games" },
   { g:"if", n:5, name:"Memes", tag:"If in the assets", line:"Snappy and funny is the whole bar.",
@@ -473,49 +475,40 @@ document.querySelectorAll("img[data-drive]").forEach(i => { i.src = driveThumb(i
 /* ---- shoot days ----
    Windows and asset types only. The minute-by-minute call sheet stays
    internal; an outside editor needs to know what lands and roughly when. */
-const DAY_START = 8, DAY_END = 23;   // the scale the bars are drawn on
 
 const DAYS = [
-  { d:"Day 1", date:"Fri 28 Aug", name:"Brunch + Soho",
-    from:8, to:22, window:"8:00 AM &ndash; 10:00 PM",
-    line:"A brunch event at 113 Spring St with a panel, then dinner and mini mic around Soho after dark.",
-    assets:["Event highlights","Speaker series","Mini mic","Photo reels"],
-    volume:"15&ndash;20+ brunch &middot; 10+ mini mic" },
-  { d:"Day 2", date:"Sat 29 Aug", name:"Central Park + Times Square",
-    from:10, to:22, window:"10:00 AM &ndash; 10:00 PM",
-    line:"Street interviews and product shots in the park, Times Square through the afternoon, skits and memes at night.",
-    assets:["Event highlights","Games","Memes","Photo reels"],
-    volume:"Two locations, full day" },
-  { d:"Day 3", date:"Sun 30 Aug", name:"US Open &mdash; opening day",
-    from:8.5, to:null, window:"From 8:30 AM", tbc:true,
-    line:"Mini mic and outfits on the approach and in the queue, then the outer courts and the day session.",
-    assets:["Event highlights","Mini mic","Photo reels"],
-    volume:"40+ &middot; ~20 per location" },
-  { d:"Day 4", date:"Mon 31 Aug", name:"Iconic NY moments",
-    from:8, to:null, window:"From 8:00 AM", tbc:true,
-    line:"A landmark route across the city &mdash; Charging Bull, Fearless Girl, Oculus, Katz&rsquo;s, Grand Central, LOVE, the Met and a rooftop.",
-    assets:["Photo reels","Event highlights"],
-    volume:"20+" }
+  { d:"Day 1", dow:"Friday", date:"28 Aug", time:"11:00 AM \u2013 10:00 PM",
+    name:"Brunch + Soho",
+    line:"Brunch and a panel at 113 Spring St, then dinner and street interviews around Soho after dark.",
+    assets:["Event highlights","Speaker series","Photo reels"] },
+  { d:"Day 2", dow:"Saturday", date:"29 Aug", time:"10:00 AM \u2013 10:00 PM",
+    name:"Central Park + Times Square",
+    line:"Street interviews and product shots in the park, Times Square in the afternoon, skits and memes at night.",
+    assets:["Event highlights","Speaker series","Games","Memes","Photo reels"] },
+  { d:"Day 3", dow:"Sunday", date:"30 Aug", time:"From 8:30 AM", tbc:true,
+    name:"US Open \u2014 opening day",
+    line:"Street interviews and outfits on the approach and in the queue, then the outer courts and the day session.",
+    assets:["Event highlights","Speaker series","Photo reels"] },
+  { d:"Day 4", dow:"Monday", date:"31 Aug", time:"From 9:00 AM", tbc:true,
+    name:"Iconic NY moments",
+    line:"A landmark route across the city \u2014 Charging Bull, Fearless Girl, Oculus, Katz\u2019s, Grand Central, LOVE, the Met and a rooftop.",
+    assets:["Photo reels","Event highlights"], assetsTbc:true }
 ];
 
-function pct(h){ return ((h - DAY_START) / (DAY_END - DAY_START)) * 100; }
-
-document.getElementById("sched").innerHTML = DAYS.map(x => {
-  const left = pct(x.from);
-  const width = x.to ? pct(x.to) - left : 100 - left;
-  return `<div class="day">
-    <div class="dmeta"><span class="dd">${x.d}</span><span class="dt">${x.date}</span></div>
+document.getElementById("sched").innerHTML = DAYS.map(x => `
+  <div class="day">
+    <div class="dmeta">
+      <span class="dnum">${x.d}</span>
+      <span class="ddate">${x.date}</span>
+      <span class="ddow">${x.dow}</span>
+      <span class="dtime">${x.time}${x.tbc ? '<em>end TBC</em>' : ""}</span>
+    </div>
     <div class="dbody">
       <h3>${x.name}</h3>
-      <div class="dwin">${x.window}${x.tbc ? ' <span class="tbcchip">End TBC</span>' : ""}</div>
-      <div class="track"><span class="span${x.tbc ? " open" : ""}" style="left:${left}%;width:${width}%"></span></div>
-      <div class="ticks"><span>8 AM</span><span>1 PM</span><span>6 PM</span><span>11 PM</span></div>
       <p>${x.line}</p>
-      <div class="atags">${x.assets.map(a => `<span>${a}</span>`).join("")}</div>
-      <div class="vol">Expect roughly &mdash; ${x.volume}</div>
+      <div class="atags">${x.assets.map(a => `<span>${a}</span>`).join("")}${x.assetsTbc ? '<span class="q">Still being confirmed</span>' : ""}</div>
     </div>
-  </div>`;
-}).join("");
+  </div>`).join("");
 
 /* player */
 const lb = () => document.getElementById("lb");
