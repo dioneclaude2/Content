@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nancy Brand Guide</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23FFB3D4"/><text y=".9em" x="50" text-anchor="middle" font-size="76">&#127916;</text></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+/* The external cut of the crew guide: same visual system, a quarter of the
+   words. Everything here is spec — what to make and how it should look —
+   with the teaching left in the internal version. */
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultralight.otf') format('opentype');font-weight:200;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+
+:root{
+  --pink:#FFB3D4; --pink-soft:#FFE2EE; --pink-loud:#FF3D8A;
+  --yellow:#FFE459; --yellow-soft:#FFF6C4;
+  --lilac:#D9CCFF; --lilac-soft:#EDE7FF;
+  --paper:#FFFCF5; --ink:#151021; --ink-soft:#4A4159;
+  --cream:#FDF7F5;
+  --display:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  --ppe:"PP Editorial New","Instrument Serif",Georgia,serif;
+  --fraunces:"Fraunces",Georgia,serif;
+  --helv:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --pad:20px; --bd:3px solid var(--ink); --shadow:6px 6px 0 var(--ink);
+}
+@media (min-width:900px){ :root{ --pad:44px; } }
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0 0 12px}p:last-child{margin-bottom:0}
+:focus-visible{outline:3px solid var(--pink-loud);outline-offset:3px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 var(--pad)}
+
+header{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:var(--bd)}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px var(--pad)}
+.logo{font-family:var(--display);font-weight:800;font-size:17px;background:var(--pink);border:var(--bd);padding:7px 12px;transform:rotate(-1.5deg);white-space:nowrap}
+.forwho{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 var(--pad) 12px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{font-family:var(--display);font-weight:800;font-size:15px;border:var(--bd);background:var(--paper);color:var(--ink);padding:9px 14px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:9px}
+.tabs button .tn{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-soft)}
+.tabs button:hover{background:var(--yellow-soft)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--pink-loud)}
+.tabs button[aria-selected="true"] .tn{color:var(--yellow)}
+.page[hidden]{display:none}
+.page-head{padding:36px 0 20px;border-bottom:var(--bd);margin-bottom:24px}
+.page-head .pnum{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;border:2px solid var(--ink);background:var(--yellow);padding:4px 9px;margin-bottom:13px}
+.page-head h2{font-size:clamp(30px,6.2vw,54px)}
+
+/* one-liner blocks */
+.oneline{border:var(--bd);box-shadow:var(--shadow);background:var(--pink);padding:20px 22px;margin-bottom:22px}
+.oneline .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:9px}
+.oneline h3{font-size:clamp(22px,4.2vw,36px)}
+.oneline p{margin-top:10px;font-size:15px;max-width:60ch}
+
+.grid2{display:grid;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.grid3{display:grid;gap:14px}
+@media (min-width:700px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.box{border:var(--bd);background:#fff;padding:17px}
+.box h4{font-size:16px;margin-bottom:7px}
+.box p{font-size:13.5px;color:var(--ink-soft)}
+.box.p{background:var(--pink-soft)}.box.y{background:var(--yellow-soft)}.box.l{background:var(--lilac-soft)}
+
+.need{border:var(--bd);border-left:10px solid var(--pink-loud);background:#fff;padding:15px 18px;margin-top:20px;font-size:14px;color:var(--ink-soft)}
+.need b{color:var(--ink)}
+.chip{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);background:var(--paper);padding:2px 6px;vertical-align:middle;margin-left:6px}
+
+/* logo */
+.logobox{border:var(--bd);background:var(--ink);padding:34px;display:grid;place-items:center;margin-bottom:14px}
+.logobox img{width:min(300px,70%);height:auto;display:block}
+.swatches{display:grid;gap:12px}
+@media (min-width:640px){.swatches{grid-template-columns:repeat(4,1fr)}}
+.sw{border:var(--bd);overflow:hidden}
+.sw .chipc{height:74px}
+.sw .m{padding:9px 11px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sw .m b{display:block;font-family:var(--display);font-size:13px;letter-spacing:0;text-transform:none;margin-bottom:3px}
+.sw.tbd .chipc{background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 8px,var(--lilac-soft) 8px,var(--lilac-soft) 16px)}
+
+/* type */
+.faces{display:grid;gap:14px;margin-bottom:20px}
+@media (min-width:820px){.faces{grid-template-columns:repeat(3,1fr)}}
+.face{border:var(--bd);padding:17px;display:flex;flex-direction:column;gap:10px}
+.face:nth-child(1){background:var(--lilac-soft)}.face:nth-child(2){background:var(--pink-soft)}.face:nth-child(3){background:var(--yellow-soft)}
+.face .fn{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.face .big{font-size:clamp(30px,5vw,46px);line-height:.95}
+.face .big.ppe{font-family:var(--ppe);font-weight:400}
+.face .big.fra{font-family:var(--fraunces);font-weight:600}
+.face .big.hel{font-family:var(--helv);font-weight:700;letter-spacing:-.02em}
+.face .j{font-size:13px;color:var(--ink-soft);margin-top:auto}
+.scale{border:var(--bd);background:#fff}
+.sr{display:grid;grid-template-columns:1fr;gap:6px 20px;padding:15px 18px;border-bottom:2px solid var(--ink)}
+@media (min-width:700px){.sr{grid-template-columns:118px 1fr;align-items:center}}
+.sr:last-child{border-bottom:0}
+.sr .n{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.sr .n b{display:block;font-family:var(--display);font-size:21px;color:var(--ink);margin-top:2px}
+.sr .s{font-family:var(--helv);font-weight:700;text-transform:uppercase;letter-spacing:-.03em;line-height:1.08}
+.sr .s.a{font-size:clamp(24px,4.4vw,36px)}.sr .s.b{font-size:clamp(16px,2.6vw,22px)}.sr .s.c{font-size:12px;letter-spacing:.02em}
+
+/* frame */
+.frameblk{display:grid;gap:18px;margin-top:20px}
+@media (min-width:760px){.frameblk{grid-template-columns:auto 1fr;align-items:start}}
+.shot{position:relative;aspect-ratio:9/16;width:min(230px,74vw);border:var(--bd);overflow:hidden;background:#20262c}
+.shot .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.shot:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.05) 38%,rgba(0,0,0,.55) 100%)}
+.shot .hero{position:absolute;z-index:2;left:13px;right:13px;top:50%;transform:translateY(-50%);font-family:var(--helv);font-weight:700;font-size:24px;line-height:1.02;letter-spacing:-.035em;text-transform:uppercase;color:#fff}
+.shot .lock{position:absolute;z-index:2;left:0;right:0;bottom:14px;display:grid;justify-items:center;gap:6px}
+.shot .lock img{width:44%;height:auto;display:block}
+.shot .lock span{font-family:var(--helv);font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fff}
+.callouts{display:grid;gap:10px}
+.co{border:var(--bd);background:#fff;padding:13px 15px}
+.co .n{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+.co h4{font-size:15px;margin-bottom:5px}
+.co p{font-size:13px;color:var(--ink-soft);margin:0}
+
+/* formats */
+.fmts{display:grid;gap:18px}
+.fmt{border:var(--bd);background:var(--paper);padding:18px;display:grid;gap:16px}
+@media (min-width:900px){.fmt{grid-template-columns:.8fr 1.2fr;align-items:start}}
+.fmt:nth-child(3n+1){background:var(--pink-soft)}.fmt:nth-child(3n+2){background:var(--yellow-soft)}.fmt:nth-child(3n){background:var(--lilac-soft)}
+.fmt .kick{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+.fmt h3{font-size:clamp(19px,3vw,25px);margin-bottom:8px}
+.fmt p{font-size:14px;color:var(--ink-soft)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.grp{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:12px 0 7px}
+.tile{position:relative;aspect-ratio:9/16;border:var(--bd);background:var(--lilac-soft);overflow:hidden;display:block;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease}
+.tile:hover,.tile:focus-visible{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.tile .fb{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:6px;text-align:center;padding:8px}
+.tile .pl{width:28px;height:28px;border:2px solid var(--ink);display:grid;place-items:center;font-size:10px;background:var(--paper)}
+.tile .sn{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.tile .bd{position:absolute;left:0;bottom:0;z-index:2;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--yellow);padding:3px 6px}
+.tile .lv{position:absolute;right:0;bottom:0;z-index:2;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--pink-loud);color:#fff;padding:3px 6px}
+
+/* rules */
+.dd{display:grid;gap:16px}
+@media (min-width:860px){.dd{grid-template-columns:1fr 1fr}}
+.col{border:var(--bd);overflow:hidden}
+.col .t{padding:12px 17px;border-bottom:var(--bd);font-family:var(--display);font-weight:800;font-size:20px}
+.col.do .t{background:var(--yellow)}.col.no .t{background:var(--pink-loud);color:#fff}
+.col ul{margin:0;padding:0;list-style:none;background:#fff}
+.col li{padding:12px 17px 12px 44px;border-bottom:2px solid var(--ink);position:relative;font-size:14px;color:var(--ink-soft)}
+.col li:last-child{border-bottom:0}
+.col li b{color:var(--ink)}
+.col li:before{position:absolute;left:16px;top:11px;font-family:var(--display);font-weight:800;font-size:15px}
+.col.do li:before{content:"\2713";color:var(--ink)}
+.col.no li:before{content:"\2715";color:var(--pink-loud)}
+.specs{border:var(--bd);background:#fff;margin-top:22px}
+.spec{display:grid;grid-template-columns:1fr;gap:3px 18px;padding:13px 17px;border-bottom:2px solid var(--ink)}
+@media (min-width:640px){.spec{grid-template-columns:170px 1fr;align-items:baseline}}
+.spec:last-child{border-bottom:0}
+.spec .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.spec .v{font-size:14px}
+
+.pager{display:flex;gap:12px;justify-content:space-between;margin-top:38px;padding-top:20px;border-top:var(--bd)}
+.pager button{font-family:var(--display);font-weight:800;font-size:15px;border:var(--bd);background:var(--paper);padding:11px 15px;cursor:pointer;text-align:left;max-width:46%}
+.pager button:hover{background:var(--pink-soft)}
+.pager button small{display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px}
+.pager .spacer{flex:1}
+footer{margin-top:52px;border-top:var(--bd);background:var(--pink);padding:28px var(--pad)}
+footer .in{max-width:1060px;margin:0 auto}
+footer .b{font-family:var(--display);font-weight:800;font-size:clamp(18px,3.2vw,28px);max-width:24ch;text-wrap:balance}
+footer p{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:14px}
+
+/* player */
+.lb[hidden]{display:none}
+.lb{position:fixed;inset:0;z-index:200;background:rgba(10,7,17,.93);display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}
+.lb-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lb-bar .t{flex:1;min-width:0;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-btn{font-family:var(--display);font-weight:800;font-size:14px;cursor:pointer;border:3px solid var(--paper);background:var(--paper);color:var(--ink);padding:8px 14px;text-decoration:none}
+.lb-btn:hover{background:var(--yellow)}
+.lb-btn.ghost{background:transparent;color:var(--paper)}
+.lb-stage{display:grid;place-items:center;min-height:0}
+.lb-frame{position:relative;height:100%;max-height:100%;aspect-ratio:9/16;border:3px solid var(--paper);background:#000;overflow:hidden}
+.lb-frame.wide{aspect-ratio:4/5}
+.lb-frame iframe,.lb-frame img{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb-frame img{object-fit:contain;background:#000}
+.lb-foot{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.lb-count{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--paper)}
+</style>
+
+<header>
+  <div class="bar">
+    <div class="logo">Nancy Brand Guide</div>
+    <div class="forwho">For editors &amp; creators</div>
+  </div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Sections"></div>
+</header>
+
+<div class="wrap">
+
+  <!-- 01 START -->
+  <section class="page" id="page-start" role="tabpanel" aria-labelledby="tab-start" hidden>
+    <div class="page-head"><span class="pnum">01</span><h2>Start here</h2></div>
+    <div class="page-body">
+      <div class="oneline">
+        <div class="k">The one rule</div>
+        <h3>Reference first. Idea second. Edit last.</h3>
+        <p>Find the reference before you plan. Find the music before you cut. Nothing gets decided after the fact.</p>
+      </div>
+      <div class="grid3">
+        <div class="box p"><h4>Who we are</h4><p>Nancy makes female pleasure easier to talk about and harder to shame. Confident, witty, never crude for shock.</p></div>
+        <div class="box y"><h4>What we need</h4><p>Finished content, not a set of cuts. Intentional edits, text overlays where they make it stronger.</p></div>
+        <div class="box l"><h4>How to use this</h4><p>Look at 03 for what to make, 02 for how it should look, 04 before you export.</p></div>
+      </div>
+      <div class="need"><b>Style is still tightening.</b> Examples show what we have been making recently, not a locked spec. Match the intent, not the frame.</div>
+    </div>
+  </section>
+
+  <!-- 02 LOOK -->
+  <section class="page" id="page-look" role="tabpanel" aria-labelledby="tab-look" hidden>
+    <div class="page-head"><span class="pnum">02</span><h2>The look</h2></div>
+    <div class="page-body">
+      <h3 style="font-size:20px;margin-bottom:10px">Logo</h3>
+      <div class="logobox"><img src="assets/nancy-logo-cream.svg" alt="Nancy"></div>
+      <div class="grid3">
+        <div class="box"><h4>Placement</h4><p>Bottom of frame, centred. Same place every time.</p></div>
+        <div class="box"><h4>Colour</h4><p>Cream on footage. Never recoloured, never outlined.</p></div>
+        <div class="box"><h4>Size</h4><p>Takes the size of the job it is doing &mdash; see the scale below.</p></div>
+      </div>
+      <div class="need">Sending more logo variants and clear-space rules.<span class="chip">Awaiting assets</span></div>
+
+      <h3 style="font-size:20px;margin:28px 0 10px">Colour</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chipc" style="background:#FDF7F5"></div><div class="m"><b>Cream</b>#FDF7F5</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
+        <div class="sw tbd"><div class="chipc"></div><div class="m"><b>TBC</b>To come</div></div>
+      </div>
+      <div class="need"><b>On screen, colour comes from the footage.</b> Type and overlays stay white or cream, never coloured.</div>
+
+      <h3 style="font-size:20px;margin:28px 0 10px">Type</h3>
+      <div class="faces">
+        <div class="face"><div class="fn">Display</div><div class="big ppe">PP Editorial New</div><div class="j">Titles and covers. Set large, kept quiet.</div></div>
+        <div class="face"><div class="fn">Secondary</div><div class="big fra">Fraunces</div><div class="j">Where Editorial is too fine to hold up.</div></div>
+        <div class="face"><div class="fn">On screen</div><div class="big hel">Helvetica</div><div class="j">Everything in the edit. Instagram&rsquo;s native font.</div></div>
+      </div>
+      <div class="scale">
+        <div class="sr"><div class="n">Header<b>40&ndash;50</b></div><div class="s a">The first line they read</div></div>
+        <div class="sr"><div class="n">Subheader<b>20&ndash;30</b></div><div class="s b">The point, in six words</div></div>
+        <div class="sr"><div class="n">Body<b>8&ndash;10</b></div><div class="s c">Supporting detail that can be skipped</div></div>
+      </div>
+
+      <h3 style="font-size:20px;margin:28px 0 10px">On the frame</h3>
+      <div class="frameblk">
+        <div class="shot">
+          <img class="bg" data-drive="1Pp0dGZSwSKhCf7b-grc8w_VtSej_I-1G" alt="">
+          <div class="hero">Every setup has motion</div>
+          <div class="lock"><img src="assets/nancy-logo-cream.svg" alt="Nancy"><span>Out of Office</span></div>
+        </div>
+        <div class="callouts">
+          <div class="co"><div class="n">Middle</div><h4>Hero text</h4><p>Helvetica, caps, tracking and leading pulled in from default.</p></div>
+          <div class="co"><div class="n">Bottom</div><h4>Logo, then campaign title</h4><p>One centred block, same position on every frame.</p></div>
+          <div class="co"><div class="n">Nothing else</div><h4>Three elements, maximum</h4><p>A fourth replaces one of these or it does not go on.</p></div>
+        </div>
+      </div>
+      <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
+    </div>
+  </section>
+
+  <!-- 03 WHAT TO MAKE -->
+  <section class="page" id="page-make" role="tabpanel" aria-labelledby="tab-make" hidden>
+    <div class="page-head"><span class="pnum">03</span><h2>What to make</h2></div>
+    <div class="page-body">
+      <div class="oneline" style="background:var(--yellow)">
+        <div class="k">Before you cut</div>
+        <h3>Find the track first.</h3>
+        <p>The music decides where the cuts land. Never cut first and drop a beat underneath afterwards.</p>
+      </div>
+      <div class="fmts" id="fmts"></div>
+    </div>
+  </section>
+
+  <!-- 04 RULES -->
+  <section class="page" id="page-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+    <div class="page-head"><span class="pnum">04</span><h2>Rules &amp; delivery</h2></div>
+    <div class="page-body">
+      <div class="dd">
+        <div class="col do"><div class="t">Do</div><ul>
+          <li><b>Find the reference first.</b> Build the idea out of it.</li>
+          <li>Write text overlays at planning, before the edit.</li>
+          <li>Cut on movement. Match the reference&rsquo;s pulse.</li>
+          <li>Keep location sound under the music.</li>
+          <li>Keep the lo-fi and blurry frames. They are selects.</li>
+        </ul></div>
+        <div class="col no"><div class="t">Don&rsquo;t</div><ul>
+          <li><b>Edit first, then look for inspo.</b> Never.</li>
+          <li>Retrofit a caption onto a locked cut.</li>
+          <li>Colour-match the clean and lo-fi passes together.</li>
+          <li>Add colour with type, transitions or overlays.</li>
+          <li>Copy a reference&rsquo;s exact words or joke.</li>
+        </ul></div>
+      </div>
+      <div class="specs">
+        <div class="spec"><div class="k">Reels</div><div class="v">9:16, shot and cut. A 9:16 crop of a carousel is not a reel.</div></div>
+        <div class="spec"><div class="k">Carousels</div><div class="v">Best stills only. People, candid, product, plus a moving frame or two.</div></div>
+        <div class="spec"><div class="k">On-screen type</div><div class="v">Helvetica, caps, white or cream. No stroke, no shadow, no plate.</div></div>
+        <div class="spec"><div class="k">Master<span class="chip">TBC</span></div><div class="v">Format, frame rate and delivery route to be confirmed.</div></div>
+        <div class="spec"><div class="k">Naming<span class="chip">TBC</span></div><div class="v">Convention to be confirmed.</div></div>
+      </div>
+      <div class="need">Questions before you export are cheaper than a re-cut. Ask.</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="lb" id="lb" hidden>
+  <div class="lb-bar">
+    <div class="t" id="lbTitle"></div>
+    <a class="lb-btn ghost" id="lbOpen" href="#" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+    <button class="lb-btn" type="button" id="lbClose">Close &times;</button>
+  </div>
+  <div class="lb-stage"><div class="lb-frame" id="lbFrame"></div></div>
+  <div class="lb-foot" id="lbFoot"></div>
+</div>
+
+<footer>
+  <div class="in">
+    <div class="b">Intentional beats polished. Every choice should trace back to something.</div>
+    <p>Nancy Brand Guide &mdash; for editors and creators</p>
+  </div>
+</footer>
+
+<script>
+const DRIVE = {"Carousel": [{"t": "carousel", "id": "1jluE4dj8kk79IpH3Y_b3mUPQI3qVqyZN", "name": "A 69 years old grandma", "cover": "17LstYgPHBv262rmHC0FTO3Lu4kUJmRKN", "n": 13, "slides": ["17LstYgPHBv262rmHC0FTO3Lu4kUJmRKN", "1wEQ276u6grqWQpBTou1LEh-htWNIm5e8", "1UOSmsPX-fWnoqoAEV15tVrIOim6zhXWX", "1V8VNcnRCWO98v9dXeUVeODKaIdrCiXGK", "1w7MajWywREEIvjkeEF5MQJGGE6Gr-GYf", "1h1bgba2_P1LuCU6Y7SivRrXA2cHvpgI3", "1tsNcHRIohBCFsyMOZ0HJj0JxfJyT3_Kl", "1o7SYTQ7bTWjLHTMa9zY6148PeAfbCtwm", "1WO9A42wYOJzNEBBrPYqPGoA6hr4hlEWt", "1LSNl9SaiiTLwuU8lv2cmgTUg4RxmwBrc", "1-U3WeBWBRcR9bSIN0GlFswDchfctS-Of", "1er-UbR6PAZsBkrSmS8638phJWIQ6ZOvy", "1O6psX2adMEbm-QtTFqGcUq87ht1_7EHy"]}, {"t": "carousel", "id": "131_CKu3nJX0PAyA3Qa_CDS4E6z4iIFZL", "name": "Served by the King", "cover": "14Gi2ZaKeWYxpmWWivvYf1swxlQjLSemf", "n": 10, "slides": ["14Gi2ZaKeWYxpmWWivvYf1swxlQjLSemf", "1vmaOujV3nooxamk6dDi_2w9VJM_2WPlh", "1DsVezStkSDP0rj2BVcsX4sXq-8E4HFeC", "1GiFzf7Mdr1zVaMRzwxg-rB0_TpHrV4un", "14tGQCMyXMdrAOLGVjmUq3EvsInB-bgDV", "10_Jv6N48Jt--bWyP0qA-hCD6XiTu9Kia", "1Be3lqoCyOzJGGz9SLadFEDvCOWYI07_9", "1aiqkh7yQiBx7acd7Q25MHHF-wuHpLt86", "1mK07Anc1Pl71wngxJvA-zpgRVCMvRm7r", "1p5i12nXRvrtBJA14OW0BqxkcYAeqsPCp"]}, {"t": "carousel", "id": "1vwr5-gnt3LpZCh8dDnXcw_M5HnBj6-mP", "name": "Today is meaningful", "cover": "1bWxXpNM2HcLBvI8ljpBvE4n_wFE9bY1Z", "n": 14, "slides": ["1bWxXpNM2HcLBvI8ljpBvE4n_wFE9bY1Z", "12s15Sdhbe1Kolu6Isajau6i0eO7x1BCI", "1Clsae3axzD8SpAIqwvWM6hSX7i1JUxBl", "1QF8aP6ZxMLCFVREo7ZxF-7BxdfPVBoq3", "1CbMTPRw7jLYdYN71_SPzvypeJzHa7NbH", "1JzvL5GTVPEqiOgIXYDHolAKqzocidG-0", "1Zs3veCYfOSchawAWwKDBmzEdc1bdx4Mv", "1KlDCo6VI1-417hwwANBLKqmbqaEoaKgj", "1phL9ply3HeS5QMYMdgBsA236sRBeK1qL", "1wqJMjpO66VvxgegcKDh-0Lb6fW0LCxl1", "1u4m1tp7RHGuDr8lBiBohPseb_76Dn_4O", "13KBOh4M-YVNgaPlSWlJZuS83i9rS92I_", "1aooHPE6EGKnlRLm55rKzFjR3MWzEJD6J", "1Tl31W1i_IcRZxtf3z6SdgEeFPEAnh4MX"]}], "Carousel Headline type": [{"t": "carousel", "id": "1n50jQca97maOX87HwkioZYqgpMJn8P9r", "name": "Kinda chic", "cover": "1ghE2xY_U4vObRX2UNHog2X9DwCwERX3-", "n": 9, "slides": ["1ghE2xY_U4vObRX2UNHog2X9DwCwERX3-", "1VchbVyxOTudfzswUgZmcoH2mdhBnfZH9", "1yPDmAKSBRRdNoQ0xmvx-acQV_VqQCvpY", "1siN8qTE9EBAW885Cx7S7fWT8Z7mifb1S", "1WUEKIQCoxNeTa7S4WyJG_gQU8Xfg6Vrq", "1NpxeZjYIkwXQ9uBWE0MNNrpNJ5KF2fe4", "1xO-toXAAp88Vrv14LgUwxq-kkoXODb-u", "1fBrFvkvgrZS-7wUYPWXgQpgBeWgxgDSb", "1-4v8qwQk-b4eMfRx-1cq-Ccq-xZGPvgX"]}, {"t": "carousel", "id": "1y36jOF3AMChidIVzzzzKo5zRZmWJCFW2", "name": "We held this dinner for every woman", "cover": "18X2PiJ6cF8fPYScUt87XAtciO2GmM7nB", "n": 9, "slides": ["18X2PiJ6cF8fPYScUt87XAtciO2GmM7nB", "1ep8a_TpZptM5oSgYrjzgUKKFS7VJ5Pvq", "1Fxh1A6EKdt92W5DNPWdmPbE9Yw-T70d0", "1r_zxOPxFm294CQfN7Dd52A7JMt0XSgrM", "1B6o95V0seL70TmVxX8wpunEcxTXZAtmW", "1vj1YkKvasis4nlyWHOwokL0RYfDnYz0I", "1DRAlzYvKTjXA4DKYlCTwcrNVqhLWBSkh", "1q-kmMdpvFHzuEgVJ5nr_B-iPDWPhwAkU", "1x2WX9juahM7Qcr0qFXVy5yAaLbz5bpi_"]}, {"t": "carousel", "id": "1Cq3TPyUeB-DMiW5bt20NEHp4aWS8nQLq", "name": "We took nancy brighton pride", "cover": "1qGM9nHgubvU1DXmq7CYfJjtWXXBdv8XK", "n": 7, "slides": ["1qGM9nHgubvU1DXmq7CYfJjtWXXBdv8XK", "1YPMFnwVl1KUcey6Y9hjylSmxhVNfg_Au", "1VaOr8GN7jvowLIe-b6Ry9mTSTMWP28F_", "18USqfCORFSnBdJYYg7KkmjA5tYlvaB0I", "1IQv2K33gW-pdZ8FNGCV9IoPgoqCXRs7N", "1c24AF3bkeORQB9sPwlwhlvUuNJbB1vFl", "1rBBiGDYen3dZ-c6VefV-Ac01EHE8oyZW"]}], "Event Highlights": [{"t": "video", "id": "1Pp0dGZSwSKhCf7b-grc8w_VtSej_I-1G", "name": "s3xual wellness as a social experience 🍋 nancy exists to make moments like this feel less revol"}, {"t": "video", "id": "1T-ywF0MckmqYsNJsvyM4t1H2x6C47o5m", "name": "tell me your brand is doing something right without telling me your brand is doing something rig"}, {"t": "video", "id": "1lFNaRgJkUgXb9Mj8XA1LAG4IoDO1XuVh", "name": "the loudest man in sport helping us make the quietest conversation louder with his queen! 🍋🎾👑"}], "Games": [{"t": "video", "id": "14q2_91LbASxRy6f-97DDWL6PR9KFsCIO", "name": "he wants to be a doctor 😳_hot or cold with nancy 🍋🔥🥶"}, {"t": "video", "id": "1k_vJviAy2rem2kpig7Wt4OQqaWLjcBqO", "name": "She must be a witch! How did she get it so fast! This lady was amazing at our matching game and"}, {"t": "video", "id": "1vK2fKiuaMcy_e2IrKF04s6U6qkeaSB_P", "name": "Vibing with AVO 💚😚🥑💦"}], "Interviews": [{"t": "video", "id": "1p6_-bu0Erg9WS9P4r1Or_j_RqPXzJD9b", "name": "“If we don’t talk about it, we feel like we’re alone, and when we feel alone, we feel like we’re"}, {"t": "video", "id": "1CqxIMUOofzw_MxBYXe_rPjqV41MC5hAX", "name": "a chef knows what she wants 🍋"}, {"t": "video", "id": "1nujqQ2uArLpcKhuXtVSb6aZh-okZeuP3", "name": "i like feeling everything ok nick 🍋🫢"}], "Memes": [{"t": "video", "id": "1g3Ee5iTqHHPNzihCOBXAZjKGXbEKQddm", "name": "she’s gonna have fun tonight 😈👅💦"}, {"t": "video", "id": "1_nSL1iktMsMHOqGGvNT2ZgfUY5dACwae", "name": "someone had to 🍋💦"}, {"t": "video", "id": "1iVaU7EItC0ycg_omeXhK5qepldsGxgsp", "name": "waterproof means waterproof 🍋💦"}], "Photo reels": [{"t": "video", "id": "1xape8vG_rqHpPoIwukQ6g3E37T7KIe5J", "name": "imagine women talking about pleasure at the dinner table the same way they talk about their day."}, {"t": "video", "id": "1S2xto7i4Em35WW2Savx5HlOdH0Xn_OEE", "name": "Miami Swim Week is officially over. Time to take off the bikini 👙, turn off the phone, and turn"}, {"t": "video", "id": "1WJbRITn3X3x2a1d2wY6hbZrpqn7pWIvZ", "name": "pleasure is wellness✨ we combined cold plunges, sauna, breath work, and our favourite fruits int"}], "Wishlist": [{"t": "video", "id": "1E_wVvc97xT_7AU3_wJnrd_7qmzC7NnS2", "name": "I heard these fruits vibr4tes ✨🍋🥑🍓💦"}]};
+const THUMBS = {};
+function driveThumb(id, w){ return THUMBS[id] || ("https://drive.google.com/thumbnail?id=" + id + "&sz=w" + (w || 400)); }
+
+const FORMATS = [
+  { name:"Event highlights", tag:"Priority", line:"Fast cuts to the beat, unmistakably ours.",
+    body:"Every setup has motion. Branded on frame: logo and campaign title at the bottom.", drive:"Event Highlights" },
+  { name:"Photo reels", tag:"Priority", line:"Event highlights, but every frame is a still.",
+    body:"Same rules, same pace, built from static assets.", drive:"Photo reels" },
+  { name:"Carousels", tag:"Priority", line:"The strongest stills, in the right order.",
+    body:"People, candid and product shots, with a moving frame mixed in.",
+    groups:[["The standard","Carousel"],["Headline type","Carousel Headline type"]] },
+  { name:"Wishlist", tag:"Priority", line:"Founder picks, replicated exactly.",
+    body:"Follow the source: exact edit, exact overlay, exact style. The one place to copy precisely.", drive:"Wishlist" },
+  { name:"Community", tag:"Quick win", line:"Games and interviews.",
+    body:"Games: fast cuts, punch in on the reaction. Interviews: captions, censor what needs it, meaningful clips only.",
+    groups:[["Games","Games"],["Interviews","Interviews"]] },
+  { name:"Memes", tag:"Quick win", line:"Clip it, cut it fast, punch in.",
+    body:"Snappy and funny is the whole bar.", drive:"Memes" }
+];
+
+function pad2(n){ return String(n).padStart(2,"0"); }
+
+function tilesFor(key){
+  const items = DRIVE[key] || [];
+  return '<div class="tiles">' + items.map((it,n) => {
+    const cover = it.t === "carousel" ? it.cover : it.id;
+    const href  = it.t === "carousel"
+      ? "https://drive.google.com/drive/folders/" + it.id
+      : "https://drive.google.com/file/d/" + it.id + "/view";
+    return `<a class="tile" href="${href}" target="_blank" rel="noopener" data-grp="${key}" data-idx="${n}">
+      ${cover ? `<img src="${driveThumb(cover)}" alt="" loading="lazy">` : ""}
+      <span class="fb"><span class="pl">&#9654;</span><span class="sn">${pad2(n+1)}</span></span>
+      <span class="bd">${it.t === "carousel" ? it.n + " slides" : "Reel"}</span>
+      <span class="lv">Play</span>
+    </a>`;
+  }).join("") + '</div>';
+}
+
+document.getElementById("fmts").innerHTML = FORMATS.map(f => {
+  const media = f.groups
+    ? f.groups.map(g => `<div class="grp">${g[0]}</div>` + tilesFor(g[1])).join("")
+    : tilesFor(f.drive);
+  return `<div class="fmt">
+    <div><div class="kick">${f.name} &mdash; ${f.tag}</div><h3>${f.line}</h3><p>${f.body}</p></div>
+    <div>${media}</div>
+  </div>`;
+}).join("");
+
+document.querySelectorAll("img[data-drive]").forEach(i => { i.src = driveThumb(i.dataset.drive, 600); });
+
+/* player */
+const lb = () => document.getElementById("lb");
+let SHOW = null;
+function lbRender(){
+  const fr = document.getElementById("lbFrame"), ft = document.getElementById("lbFoot");
+  document.getElementById("lbTitle").textContent = SHOW.name;
+  if (SHOW.type === "video"){
+    fr.className = "lb-frame";
+    fr.innerHTML = `<iframe src="https://drive.google.com/file/d/${SHOW.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    ft.innerHTML = "";
+    document.getElementById("lbOpen").href = "https://drive.google.com/file/d/" + SHOW.id + "/view";
+  } else {
+    fr.className = "lb-frame wide";
+    fr.innerHTML = `<img src="${driveThumb(SHOW.slides[SHOW.i], 1400)}" alt="">`;
+    ft.innerHTML = `<button class="lb-btn" type="button" data-step="-1">&larr; Prev</button>
+      <span class="lb-count">${SHOW.i+1} / ${SHOW.slides.length}</span>
+      <button class="lb-btn" type="button" data-step="1">Next &rarr;</button>`;
+    document.getElementById("lbOpen").href = "https://drive.google.com/drive/folders/" + SHOW.id;
+  }
+}
+function closeP(){ lb().hidden = true; document.getElementById("lbFrame").innerHTML = ""; document.body.style.overflow = ""; SHOW = null; }
+function step(d){ if (SHOW && SHOW.type === "carousel"){ SHOW.i = (SHOW.i + d + SHOW.slides.length) % SHOW.slides.length; lbRender(); } }
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.tile");
+  if (a){
+    const it = (DRIVE[a.dataset.grp] || [])[+a.dataset.idx];
+    if (it){ e.preventDefault();
+      SHOW = it.t === "carousel" ? {type:"carousel",id:it.id,slides:it.slides,i:0,name:it.name} : {type:"video",id:it.id,name:it.name};
+      lb().hidden = false; document.body.style.overflow = "hidden"; lbRender();
+    }
+    return;
+  }
+  const b = e.target.closest("button[data-step]");
+  if (b) step(+b.dataset.step);
+  if (e.target === lb()) closeP();
+});
+document.getElementById("lbClose").addEventListener("click", closeP);
+document.addEventListener("keydown", e => {
+  if (lb().hidden) return;
+  if (e.key === "Escape") closeP();
+  if (e.key === "ArrowRight") step(1);
+  if (e.key === "ArrowLeft") step(-1);
+});
+
+/* pages */
+const PAGES = [
+  { id:"start", label:"Start here" },
+  { id:"look",  label:"The look" },
+  { id:"make",  label:"What to make" },
+  { id:"rules", label:"Rules & delivery" }
+];
+const tabsEl = document.getElementById("tabs");
+tabsEl.innerHTML = PAGES.map((p,i) => `<button role="tab" id="tab-${p.id}" aria-controls="page-${p.id}" aria-selected="false" type="button"><span class="tn">${pad2(i+1)}</span>${p.label}</button>`).join("");
+function pagerFor(i){
+  const pv = PAGES[i-1], nx = PAGES[i+1];
+  return (pv ? `<button type="button" data-go="${pv.id}"><small>&larr; Previous</small>${pv.label}</button>` : '<span class="spacer"></span>')
+       + (nx ? `<button type="button" data-go="${nx.id}"><small>Next &rarr;</small>${nx.label}</button>` : "");
+}
+PAGES.forEach(p => {
+  const body = document.querySelector("#page-" + p.id + " .page-body");
+  body.insertAdjacentHTML("beforeend", '<div class="pager"></div>');
+});
+function show(id, push){
+  const i = Math.max(0, PAGES.findIndex(p => p.id === id)), pg = PAGES[i];
+  PAGES.forEach(p => {
+    const on = p.id === pg.id;
+    document.getElementById("page-" + p.id).hidden = !on;
+    document.getElementById("tab-" + p.id).setAttribute("aria-selected", String(on));
+  });
+  document.querySelector("#page-" + pg.id + " .pager").innerHTML = pagerFor(i);
+  if (push && location.hash !== "#" + pg.id) history.replaceState(null, "", "#" + pg.id);
+  window.scrollTo({ top:0, behavior:"instant" });
+}
+tabsEl.addEventListener("click", e => { const b = e.target.closest("button[role=tab]"); if (b) show(b.id.replace("tab-",""), true); });
+tabsEl.addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const cur = PAGES.findIndex(p => document.getElementById("tab-"+p.id).getAttribute("aria-selected") === "true");
+  const nxt = (cur + (e.key === "ArrowRight" ? 1 : PAGES.length-1)) % PAGES.length;
+  show(PAGES[nxt].id, true); document.getElementById("tab-"+PAGES[nxt].id).focus(); e.preventDefault();
+});
+document.addEventListener("click", e => { const b = e.target.closest("button[data-go]"); if (b) show(b.dataset.go, true); });
+window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
+show(location.hash.slice(1) || PAGES[0].id, false);
+</script>
