@@ -15,6 +15,135 @@
 @font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
 @font-face{font-family:'PP Editorial New';src:url('assets/PPEditorialNew-Ultrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+.censor{border:var(--bd);box-shadow:8px 8px 0 var(--ink);background:var(--pink-loud);color:#fff;padding:26px 24px;margin-bottom:30px}
+.cx{display:grid;gap:12px;margin-top:20px}
+.cxrow{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:3px solid var(--ink);background:#fff;color:var(--ink);padding:13px 16px;
+}
+.cxrow .lbl{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.cxrow .w{font-family:var(--helv);font-weight:700;font-size:23px;letter-spacing:-.01em}
+.cxrow .w.cens{color:var(--pink-loud)}
+.cxrow .arrow{font-family:var(--display);font-weight:800;font-size:19px;color:var(--ink-soft)}
+.cxrule{margin-top:14px;border:3px solid var(--ink);background:var(--yellow);color:var(--ink);padding:14px 16px;font-size:14.5px;line-height:1.55}
+.cxlist{margin-top:18px;border:3px solid var(--ink);background:var(--ink);color:#CFC7DD;padding:14px 16px;font-size:14px}
+.cxlist p{font-size:13.5px;margin:0}
+.cxlist b{color:var(--yellow)}
+.cxdl{
+  display:inline-flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none;
+  font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink);
+  background:var(--yellow);border:3px solid var(--paper);padding:12px 16px;justify-self:start;
+}
+.cxdl:hover{background:#fff}
+.music{border:var(--bd);background:var(--yellow);padding:19px 21px;margin-bottom:26px}
+.music .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.music h4{font-family:var(--display);font-weight:800;font-size:clamp(19px,3.2vw,26px);margin:9px 0 10px}
+.music p{font-size:14.5px;max-width:64ch;margin:0;color:var(--ink)}
+.swatches{display:grid;gap:12px}
+.swatches.two{grid-template-columns:1fr}
+.sw{border:var(--bd);overflow:hidden}
+.sw .m{padding:9px 11px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sw.tbd .chipc{background:repeating-linear-gradient(45deg,var(--paper),var(--paper) 8px,var(--lilac-soft) 8px,var(--lilac-soft) 16px)}
+.faces{display:grid;gap:14px;margin-bottom:20px}
+.face{border:var(--bd);padding:17px;display:flex;flex-direction:column;gap:10px}
+.face .fn{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.face .big{font-size:clamp(30px,5vw,46px);line-height:.95}
+.face .big.ppe{font-family:var(--ppe);font-weight:400}
+.face .big.fra{font-family:var(--fraunces);font-weight:600}
+.face .big.hel{font-family:var(--helv);font-weight:700;letter-spacing:-.02em}
+.face .j{font-size:13px;color:var(--ink-soft);margin-top:auto}
+.fdl{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;text-decoration:none;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink);border:2px solid var(--ink);background:#fff;padding:8px 11px;justify-self:start;
+}
+a.fdl:hover{background:var(--yellow)}
+.fdl.none{background:transparent;border-style:dashed;color:var(--ink-soft);cursor:default}
+.lic{
+  display:inline-block;margin-left:7px;font-family:var(--mono);font-size:8.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);
+  background:var(--pink-loud);color:#fff;padding:2px 6px;vertical-align:middle;
+}
+.scale{border:var(--bd);background:#fff}
+.sr{display:grid;grid-template-columns:1fr;gap:6px 20px;padding:15px 18px;border-bottom:2px solid var(--ink)}
+.sr .n{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.sr .n b{display:block;font-family:var(--display);font-size:21px;color:var(--ink);margin-top:2px}
+.sr .s{font-family:var(--helv);font-weight:700;text-transform:uppercase;letter-spacing:-.03em;line-height:1.08}
+.sr .s.a{font-size:23px}
+.sr .s.b{font-size:15px}
+.sr .s.c{font-size:9px;letter-spacing:.02em}
+.szframe{position:relative;width:min(300px,76vw);aspect-ratio:9/16;border:var(--bd);background:#1B2026;overflow:hidden}
+.szframe .band{
+  position:absolute;left:0;right:0;
+  background:repeating-linear-gradient(45deg,rgba(255,48,204,.30),rgba(255,48,204,.30) 5px,transparent 5px,transparent 11px);
+}
+.szframe .band.top{top:0;height:13%}
+.szframe .band.bottom{bottom:0;height:21%}
+.szframe .band span,.szframe .actions span{
+  position:absolute;font-family:var(--mono);font-size:7.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:#FFB8EC;
+}
+.szframe .band.top span{left:7px;top:5px}
+.szframe .band.bottom span{left:7px;bottom:5px}
+.szframe .zone{position:absolute;left:7%;right:7%;top:13%;bottom:21%;border:2px dashed rgba(255,255,255,.75)}
+.szframe .zlab{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:#fff;white-space:nowrap;
+}
+.szwrap{max-width:300px}
+.szwrap figcaption{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--ink-soft)}
+.sample{display:grid;gap:22px;margin-top:18px}
+.callouts{display:grid;gap:10px}
+.co{border:var(--bd);background:#fff;padding:13px 15px}
+.co .n{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+.co h4{font-size:15px;margin-bottom:5px}
+.co p{font-size:13px;color:var(--ink-soft);margin:0}
+.co .sz{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;border:2px solid var(--ink);background:var(--yellow);padding:1px 5px;margin-left:5px;vertical-align:middle}
+.sh{font-family:var(--display);font-weight:800;font-size:clamp(19px,3vw,25px);margin:30px 0 10px}
+.plain{font-size:16px;line-height:1.65;max-width:66ch;margin:0 0 18px;color:var(--ink)}
+.plain b{font-weight:700}
+.need{border:var(--bd);border-left:10px solid var(--pink-loud);background:#fff;padding:15px 18px;margin-top:20px;font-size:14px;color:var(--ink-soft)}
+.need b{color:var(--ink)}
+.chip{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:2px solid var(--ink);background:var(--paper);padding:2px 6px;vertical-align:middle;margin-left:6px}
+.ticker{border:var(--bd);background:var(--ink);color:var(--yellow);overflow:hidden;margin-bottom:20px}
+.tick-track{
+  display:inline-block;white-space:nowrap;padding:10px 0;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  animation:tick 30s linear infinite;
+}
+.tick-track span{padding:0 22px}
+.tick-track b{color:#fff}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-33.333%)}
+.rail{
+  display:grid;grid-auto-flow:column;grid-auto-columns:min(268px,80vw);gap:14px;
+  overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory;
+}
+.rail::-webkit-scrollbar{height:10px}
+.dcard{border:var(--bd);background:#fff;scroll-snap-align:start;display:grid;align-content:start}
+.dc-head{background:var(--ink);color:var(--paper);padding:14px 16px}
+.dc-n{display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--pink-loud)}
+.dc-date{display:block;font-family:var(--display);font-weight:800;font-size:34px;line-height:1;letter-spacing:-.03em;margin-top:5px}
+.dc-dow{display:block;font-family:var(--display);font-weight:800;font-size:15px;color:#B9AFCC}
+.dc-time{
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;
+  background:var(--pink-loud);color:var(--ink);padding:7px 16px;
+}
+.dc-name{font-family:var(--display);font-weight:800;font-size:18px;padding:14px 16px 8px}
+.dc-shots{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 16px}
+.railhint{
+  margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);
+}
+.phasecard{
+  flex:0 0 auto;align-self:stretch;border:var(--bd);background:var(--yellow);
+  padding:16px 14px;display:grid;align-content:center;gap:5px;writing-mode:horizontal-tb;min-width:132px;
+}
+.phasecard.now{background:var(--pink-loud);color:#fff}
+.ph-tag{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.05}
+.ph-span{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.ph-now{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:2px solid currentColor;padding:3px 7px;justify-self:start;margin-top:4px}
+.ph-n{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
 </style>
 
 <style>
@@ -588,112 +717,108 @@ footer p{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.
 
   <!-- ============ 02 TYPOGRAPHY ============ -->
   <section class="page" id="page-type" role="tabpanel" aria-labelledby="tab-type" hidden>
-    <div class="page-head"><span class="pnum">02</span><h2>Typography</h2></div>
+    <div class="page-head"><span class="pnum">02</span><h2>Brand &amp; type</h2></div>
     <div class="page-body">
-      <p class="page-lede">
-        Three faces, and each one has a job. Type on screen is the part of an edit people
-        actually read, so it is the part they judge fastest.
-      </p>
+      <div class="censor">
+        <div class="k">Before anything goes out</div>
+        <h3>Censoring words</h3>
+        <p>
+          Instagram and TikTok quietly limit posts carrying certain words. Censoring keeps the reach
+          without changing what we say. Do it in <b>on-screen text, captions and subtitles</b> &mdash;
+          all three get scanned.
+        </p>
 
+        <div class="cx">
+          <div class="cxrow"><span class="lbl">Word</span><span class="w">sex</span><span class="arrow" aria-hidden="true">&rarr;</span><span class="w cens">s*x</span><span class="lbl">Censored</span></div>
+          <div class="cxrow"><span class="lbl">Word</span><span class="w">vibrator</span><span class="arrow" aria-hidden="true">&rarr;</span><span class="w cens">vibr*tor</span><span class="lbl">Censored</span></div>
+        </div>
+
+        <div class="cxrule">
+          <b>How:</b> swap the vowel for an asterisk. Asterisks only &mdash; no 3 for e, no 4 for a.
+        </div>
+
+        <div class="cxlist">
+          <a class="cxdl" href="https://content-nine-topaz.vercel.app/brand-guide/assets/nancy-word-censoring-guide.docx" target="_blank" rel="noopener">Download the full word list <span aria-hidden="true">&#8595;</span></a>
+          <p>
+            Every term we censor. No need to go further &mdash; pleasure, intimacy, wellness and lube are
+            fine as they are. Unsure about a word? Just ask.
+          </p>
+        </div>
+      </div>
+
+      <div class="music">
+        <div class="k">Same idea, different filter</div>
+        <h4>A note on music</h4>
+        <p>
+          A claim can mute or pull a post, usually once the work is finished. <b>Worth checking a
+          track is cleared before you build around it.</b>
+        </p>
+      </div>
+
+      <h3 class="sh">Colour</h3>
+      <div class="swatches two">
+        <div class="sw"><div class="chipc" style="background:#FF30CC"></div><div class="m"><b>Tickled Pink</b>#FF30CC</div></div>
+        <div class="sw"><div class="chipc" style="background:#FFFFFF;border-bottom:3px solid var(--ink)"></div><div class="m"><b>White</b>#FFFFFF</div></div>
+      </div>
+      <div class="need">
+        <b>On-screen type is white or Tickled Pink</b> &mdash; whichever reads better against the lighting.
+      </div>
+
+      <h3 class="sh">Type</h3>
+      <p class="lede">Three faces. The sizes below are what goes on screen, at their real size relative to each other.</p>
       <div class="faces">
         <div class="face">
-          <div class="fname">Display</div>
+          <div class="fn">Display</div>
           <div class="big ppe">PP Editorial New</div>
-          <div class="job"><b>The brand face.</b> Titles, covers, anything that has to feel like us before it is read. Set it large and let it be quiet.</div>
+          <div class="j">Titles and covers. Set large, kept quiet.<span class="lic">Licensed</span></div>
+          <a class="fdl" href="https://content-nine-topaz.vercel.app/brand-guide/assets/PPEditorialNew.zip" target="_blank" rel="noopener">Download &mdash; 4 cuts <span aria-hidden="true">&#8595;</span></a>
         </div>
         <div class="face">
-          <div class="fname">Secondary</div>
+          <div class="fn">Secondary</div>
           <div class="big fra">Fraunces</div>
-          <div class="job"><b>The workhorse serif.</b> Where Editorial is too fine to hold up &mdash; smaller headings, longer runs of display text.</div>
+          <div class="j">Where Editorial is too fine to hold up. Free and open.</div>
+          <a class="fdl" href="https://fonts.google.com/specimen/Fraunces" target="_blank" rel="noopener">Get it free on Google Fonts <span aria-hidden="true">&#8599;</span></a>
         </div>
         <div class="face">
-          <div class="fname">Body &amp; on-screen</div>
+          <div class="fn">On screen</div>
           <div class="big hel">Helvetica</div>
-          <div class="job"><b>Body copy, and what we put in the edit.</b> It is Instagram's native font, so it reads as part of the platform rather than as a graphic laid on top.</div>
+          <div class="j"><b>What goes on screen.</b> Already on every machine, and Instagram&rsquo;s own font.</div>
+          <span class="fdl none">Already on your Mac &mdash; nothing to install</span>
         </div>
       </div>
-
-      <div class="cuts">
-        <div class="cut"><div class="cn">Editorial &mdash; Ultralight</div><div class="cs ul">Out of Office</div></div>
-        <div class="cut"><div class="cn">Editorial &mdash; Regular</div><div class="cs rg">Out of Office</div></div>
-        <div class="cut"><div class="cn">Editorial &mdash; Italic</div><div class="cs it">Out of Office</div></div>
-        <div class="cut"><div class="cn">Editorial &mdash; Ultrabold</div><div class="cs ub">Out of Office</div></div>
+      <div class="need">
+        <b>Helvetica is the default on screen.</b> PP Editorial New is licensed to us &mdash; keep it to Nancy work.
       </div>
 
-      <div class="scale-h">The scale <span class="chip">Highlights</span></div>
-      <div class="roles">
-        <div class="role">
-          <div class="rname">Header<b>40&ndash;50</b></div>
-          <div class="samp hd">The first line they read</div>
-        </div>
-        <div class="role">
-          <div class="rname">Subheader<b>20&ndash;30</b></div>
-          <div class="samp sh">The point of the shot, in six words</div>
-        </div>
-        <div class="role">
-          <div class="rname">Body<b>8&ndash;10</b></div>
-          <div class="samp bd">Supporting detail that can be skipped</div>
-        </div>
+      <div class="scale">
+        <div class="sr"><div class="n">Header<b>20&ndash;25</b></div><div class="s a">Lorem ipsum dolor sit amet</div></div>
+        <div class="sr"><div class="n">Subheader<b>15</b></div><div class="s b">Lorem ipsum dolor sit amet</div></div>
+        <div class="sr"><div class="n">Body<b>8&ndash;10</b></div><div class="s c">Lorem ipsum dolor sit amet consectetur</div></div>
       </div>
 
-      <div class="logo-rule">
-        <div class="k">The logo is a type element, not a fixed stamp</div>
-        <p>
-          It takes the size of whatever job it is doing on that frame &mdash; there is no single
-          logo size. Set it to the role it is playing.
-        </p>
-        <div class="lr-grid">
-          <div class="lr"><span class="lr-n">40&ndash;50</span><span class="lr-l">As a header</span></div>
-          <div class="lr"><span class="lr-n">20&ndash;30</span><span class="lr-l">As a subheader</span></div>
-          <div class="lr"><span class="lr-n">10</span><span class="lr-l">As body text</span></div>
-        </div>
-      </div>
-
-      <h3 style="font-size:20px;margin-bottom:6px">In the edit</h3>
-      <p style="font-size:14.5px;color:var(--ink-soft);margin-bottom:18px;max-width:62ch">
-        Three things go on a frame, and that is all. Hero text, the campaign title, the logo.
-      </p>
-
-      <div class="onscreen">
-        <div class="shot">
-          <img class="shotbg" data-drive="1Pp0dGZSwSKhCf7b-grc8w_VtSej_I-1G" alt="">
-          <div class="heroT">Every setup has motion</div>
-          <div class="lockup">
-            <img class="logo-mark" src="assets/nancy-logo-cream.svg" alt="Nancy">
-            <span class="campaign">Out of Office</span>
+      <h3 class="sh">The safe zone</h3>
+      <p class="lede">Apps cover the edges of a 9:16 frame. Keep anything that needs reading in the middle.</p>
+      <div class="sample">
+        <div class="szwrap">
+          <div class="szframe">
+            <div class="band top"><span>Platform chrome</span></div>
+            <div class="band bottom"><span>Caption, handle, buttons</span></div>
+            <div class="actions"><span>Action buttons</span></div>
+            <div class="zone"><span class="zlab">Safe zone</span></div>
           </div>
+          <figcaption>9:16. The hatched areas are covered or cropped by the app, and it varies by phone.</figcaption>
         </div>
         <div class="callouts">
-          <div class="callout">
-            <div class="cnum">Middle of frame</div>
-            <h3>Hero text &mdash; Helvetica, adjusted<span class="chip">Your numbers</span></h3>
-            <p>Helvetica with the measurements pulled in from default &mdash; tighter tracking, tighter leading. That adjustment is what stops it looking like a stock caption.</p>
-            <div class="measures"><span>Header 40&ndash;50</span><span>Subheader 20&ndash;30</span><span>Body 8&ndash;10</span><span class="q">Tracking TBC</span></div>
-          </div>
-          <div class="callout">
-            <div class="cnum">Bottom of frame</div>
-            <h3>The lockup &mdash; logo, then campaign</h3>
-            <p>Logo centred at the bottom in cream, with the campaign title sitting under it. They travel together as one block, in the same place on every frame &mdash; that repetition is what makes a grid of posts read as one campaign.</p>
-          </div>
-          <div class="callout">
-            <div class="cnum">Nothing else</div>
-            <h3>Three things, and that is all</h3>
-            <p>Hero text, logo, campaign title. If a fourth element wants on to the frame, it is either replacing one of these or it is not going on.</p>
-          </div>
+          <div class="co"><div class="n">The rule</div><h4>Type lives in the middle</h4><p>Headers, captions and the logo sit inside the safe zone. Footage can fill the whole frame.</p></div>
+          <div class="co"><div class="n">When unsure</div><h4>Pull it in</h4><p>Cut-offs move between apps and phones, so tighter is safer.</p></div>
         </div>
       </div>
 
-      <div class="neednote bot">
-        <b>Still open:</b> tracking and leading, and whether hero text is caps or sentence
-        case. The sizes above are the highlights scale as you gave it &mdash; worth confirming
-        they are CapCut type sizes rather than pixels on a 1080-wide frame, since 8&ndash;10px
-        at full frame size would be unreadable.
-      </div>
-    <div class="pager"></div>
+      <div class="need">Tracking and leading numbers to follow.<span class="chip">Awaiting spec</span></div>
+
     </div>
   </section>
 
-  <!-- ============ 03 OUR EDITING STYLE ============ -->
   <section class="page" id="page-style" role="tabpanel" aria-labelledby="tab-style" hidden>
     <div class="page-head"><span class="pnum">03</span><h2>Our editing style</h2></div>
     <div class="page-body">
@@ -878,6 +1003,25 @@ footer p{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.
   </div>
   <div class="lb-stage"><div class="lb-frame" id="lbFrame"></div></div>
   <div class="lb-foot" id="lbFoot"></div>
+
+  <!-- 06 SCHEDULE & ASSETS -->
+  <section class="page" id="page-days" role="tabpanel" aria-labelledby="tab-days" hidden>
+    <div class="page-head"><span class="pnum">06</span><h2>Schedule &amp; assets</h2></div>
+    <div class="page-body">
+      <div class="ticker"><div class="tick-track" id="tickTrack"></div></div>
+
+      <p class="plain">
+        Four days in New York. Scroll sideways for what is shot each day. Most of it is filmed
+        <b>twice</b>, once properly and once rough on purpose &mdash; <b>both get used.</b>
+      </p>
+
+      <div class="rail" id="rail"></div>
+      <div class="railhint">Drag or scroll sideways &rarr;</div>
+
+      <div class="need">Each day&rsquo;s folder goes up as it is pulled, so start on it rather than waiting for the set.<span class="chip">Some end times TBC</span></div>
+    </div>
+  </section>
+
 </div>
 
 <footer>
@@ -1294,16 +1438,84 @@ function renderCaptions(){
 
 renderCaptions();
 
+/* ---- the shoot ----
+   Three phases. Shot names shortened to the type of thing, not the slate code.
+   Weekdays are the real 2026 calendar; the shot list's own day names run a day
+   early. */
+const PHASES = [
+  { tag:"New York", span:"28 \u2013 31 Aug", now:true, days:[
+    { n:"Day 1", date:"28 Aug", dow:"Friday", time:"11:00 AM \u2013 10:00 PM", name:"Brunch + Soho",
+      shots:["Brunch hero","Tablescape","Arrivals","Pours &amp; cheers","Unboxing","SMASH in hand","Soho street style","Tote motion","Taxi moment"] },
+    { n:"Day 2", date:"29 Aug", dow:"Saturday", time:"10:00 AM \u2013 10:00 PM", name:"Central Park + Times Square",
+      shots:["Capsule hero","Courtside flat-lay","Rally slow-mo","Park lifestyle","Times Square night","Crowd blur","Walk-through"] },
+    { n:"Day 3", date:"30 Aug", dow:"Sunday", time:"From 8:30 AM", tbc:true, name:"US Open",
+      shots:["Gate + outfits","Stands candids","Concessions","Walk-in POV","Street after"] },
+    { n:"Day 4", date:"31 Aug", dow:"Monday", time:"From 9:00 AM", tbc:true, name:"Iconic NY",
+      shots:["Pickups","Charging Bull","Fearless Girl","The Oculus","Katz\u2019s","Grand Central","Museum of Sex + LOVE","Met steps","Rooftop"] }
+  ]},
+  { tag:"Miami", span:"1 \u2013 5 Sep", days:[
+    { n:"Day 0", date:"1 Sep", dow:"Tuesday", name:"Travel day",
+      shots:["Travel story dump","Kit + product check"] },
+    { n:"Day 1", date:"2 Sep", dow:"Wednesday", name:"Pool",
+      shots:["Pool hero","Overhead float","Cocktail with product","Food flags","Server delivery","Teaser motion","Signage in situ","Golden hour portraits"] },
+    { n:"Day 2", date:"3 Sep", dow:"Thursday", name:"Sauna + courts",
+      shots:["Sauna steam","Sweat detail","Jacuzzi","Fruit + water motion","Tennis hero","Court motion","Gym / stretch"] },
+    { n:"Day 3", date:"4 Sep", dow:"Friday", name:"Car day",
+      shots:["Car hero","Newspaper read","Driving motion","Interior detail","Roadside stop","Newspaper motion"] },
+    { n:"Day 4", date:"5 Sep", dow:"Saturday", name:"Hotel + market",
+      shots:["Pickups","Arrival, DND sign","Bed scene","Hotel light","Fruit market","End card plate"] }
+  ]},
+  { tag:"Canc\u00fan villa", span:"7 \u2013 12 Sep", days:[
+    { n:"Day 0", date:"7 Sep", dow:"Monday", name:"Set-up",
+      shots:["Set-up time-lapse","Signage install","Light test, every room"] },
+    { n:"Day 1", date:"8 Sep", dow:"Tuesday", name:"Villa dressed",
+      shots:["Villa exterior","Pool clean plate","Guest rooms","Welcome-box unboxing","Workshop spaces","Tablescape","Detail sweep","Sunset drone"] },
+    { n:"Day 2", date:"9 Sep", dow:"Wednesday", name:"Arrivals",
+      shots:["Arrivals","Guest portraits","Group hero","Poolside candids","Welcome dinner","Day One recap"] },
+    { n:"Day 3", date:"10 Sep", dow:"Thursday", name:"Talk + workshop",
+      shots:["Pleasure Talk wide","Cutaways","Host portrait","Bling overhead","Process macro","Workshop motion","Finished pieces","Day Two recap"] },
+    { n:"Day 4", date:"11 Sep", dow:"Friday", name:"Boat day",
+      shots:["Dock departure","Boat hero","In the water","Drone overhead","Deck details","Final dinner","Testimonials","Day Three recap"] },
+    { n:"Day 5", date:"12 Sep", dow:"Saturday", name:"Departure",
+      shots:["Departure stories","Strike + wrap"] }
+  ]}
+];
+
+const ALLDAYS = PHASES.flatMap(p => p.days);
+
+document.getElementById("tickTrack").innerHTML =
+  (ALLDAYS.map(d => `<span><b>${d.date}</b> ${d.name}</span>`).join("") + "&nbsp;").repeat(2);
+
+document.getElementById("rail").innerHTML = PHASES.map(ph => `
+  <div class="phasecard${ph.now ? " now" : ""}">
+    <span class="ph-tag">${ph.tag}</span>
+    <span class="ph-span">${ph.span}</span>
+    ${ph.now ? '<span class="ph-now">Now</span>' : ""}
+    <span class="ph-n">${ph.days.length} days</span>
+  </div>
+  ` + ph.days.map(d => `
+  <div class="dcard">
+    <div class="dc-head">
+      <span class="dc-n">${d.n}</span>
+      <span class="dc-date">${d.date}</span>
+      <span class="dc-dow">${d.dow}</span>
+      ${d.time ? `<span class="dc-time">${d.time}${d.tbc ? ' <em>end TBC</em>' : ""}</span>` : ""}
+    </div>
+    <div class="dc-name">${d.name}</div>
+    <div class="dc-shots">${d.shots.map(x => `<span>${x}</span>`).join("")}</div>
+  </div>`).join("")).join("");
+
 /* ---- page routing ----
    Each page is a panel; only one is ever in the document flow. The hash keeps
    a page linkable and survives a reload, so someone can be sent straight to
    Typography rather than "scroll down a bit". */
 const PAGES = [
   { id:"dodont",  label:"Do's and Don'ts" },
-  { id:"type",    label:"Typography" },
+  { id:"type",    label:"Brand & type" },
   { id:"style",   label:"Our editing style" },
   { id:"outlier", label:"Understanding outliers" },
-  { id:"caption",  label:"Captions & overlays" }
+  { id:"caption",  label:"Captions & overlays" },
+  { id:"days",     label:"Schedule & assets" }
 ];
 
 const tabsEl = document.getElementById("tabs");
