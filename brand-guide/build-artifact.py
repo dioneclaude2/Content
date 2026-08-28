@@ -35,6 +35,12 @@ if cache.exists():
         html = html.replace("const THUMBS = {};", "const THUMBS = " + json.dumps(thumbs) + ";", 1)
         print("  inlined %d thumbnails" % len(thumbs))
 
+# An unsubstituted placeholder silently becomes a 404 image request, so fail
+# the build rather than ship one.
+holes = re.findall(r"__[A-Z_]+__", html)
+if holes:
+    raise SystemExit("unsubstituted placeholders: %s" % sorted(set(holes)))
+
 leftover = re.findall(r'(?:url\(\'|src=")assets/[^\'"]+', html)
 if leftover:
     raise SystemExit("un-inlined asset refs remain: %s" % leftover)
