@@ -114,6 +114,12 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
 }
 .share:hover{background:#333}
 .share.done{background:#1B9E4B}
+.linkbox{
+  width:min(408px,100%);font-family:var(--sans);font-size:12.5px;color:#555;
+  padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;
+  text-align:center;text-overflow:ellipsis;
+}
+.linkbox:focus{outline:none;border-color:#111}
 .sharenote{font-size:12.5px;color:#A8A5A2;text-align:center;max-width:34ch;line-height:1.45}
 .addrow{display:flex;gap:18px;margin-top:16px}
 .add{font-size:13px;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer}
@@ -179,7 +185,8 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
   </div>
 </div>
 <div class="sharerow" id="sharerow" hidden>
-  <button class="share" id="share">Share this view</button>
+  <button class="share" id="share">Copy share link</button>
+  <input class="linkbox" id="linkbox" readonly>
   <p class="sharenote" id="sharenote"></p>
 </div>
 
@@ -198,7 +205,7 @@ const stage=$('#stage'), dots=$('#dots'), idxEl=$('#idx'), cap=$('#cap'),
       addmore=$('#addmore'), addrow=$('#addrow'),
       shareBtn=$('#share'), shareRow=$('#sharerow'), shareNote=$('#sharenote'),
       driveBox=$('#drivebox'), driveForm=$('#driveform'), driveUrl=$('#driveurl'), errEl=$('#err'),
-      picker=$('#picker'), back=$('#back'), playBtn=$('#playbtn');
+      picker=$('#picker'), back=$('#back'), playBtn=$('#playbtn'), linkBox=$('#linkbox');
 let appendNext=false;
 let driveMode=false, driveFolder=null;
 
@@ -386,7 +393,7 @@ async function loadDrive(fid,{push=true}={}){
   driveMode=true; driveFolder=fid;
   i=0; drop.hidden=true; driveBox.hidden=true; picker.hidden=true; back.hidden=false;
   phone.hidden=false; addrow.hidden=true; shareRow.hidden=false;
-  render(); shareNoteText();
+  render(); shareNoteText(); refreshLink();
 
   if(push){
     const u=new URL(location.href); u.searchParams.set('f',fid);
@@ -406,20 +413,19 @@ driveForm.addEventListener('submit',e=>{
    uploaded. So the link carries what IS portable -- title and caption, packed
    into the hash -- and says so under the button rather than quietly
    half-working. */
-function b64(str){
-  const bytes=new TextEncoder().encode(str);
-  return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-function unb64(str){
-  const bin=atob(str.replace(/-/g,'+').replace(/_/g,'/'));
-  return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));
-}
+/* A plain, readable web link -- no packed hash blob. The folder is the
+   carousel; title and caption ride along as ordinary query params, and only
+   when they have been written. */
 function shareURL(){
-  const u=new URL(location.href);
+  const u=new URL(driveFolder ? location.origin+'/carousel' : location.href);
   if(driveFolder) u.searchParams.set('f',driveFolder);
-  u.hash='s='+b64(JSON.stringify({t:title.textContent.trim(),c:cap.textContent}));
+  const t=title.textContent.trim(), c=cap.textContent.trim();
+  if(t && t!=='Untitled carousel') u.searchParams.set('t',t);
+  if(c) u.searchParams.set('c',c);
   return u.toString();
 }
+function refreshLink(){ linkBox.value=shareURL(); }
+
 async function doShare(){
   const url=shareURL();
   const data={title:title.textContent.trim()||'Carousel review',text:cap.textContent.slice(0,180),url};
@@ -429,7 +435,7 @@ async function doShare(){
   try{ await navigator.clipboard.writeText(url); }
   catch(e){ prompt('Copy this link:',url); return; }
   const was=shareBtn.textContent;
-  shareBtn.textContent='Link copied';
+  shareBtn.textContent='Copied';
   shareBtn.classList.add('done');
   setTimeout(()=>{shareBtn.textContent=was;shareBtn.classList.remove('done')},1800);
 }
@@ -442,14 +448,16 @@ function shareNoteText(){
 /* title + caption persist locally */
 const K='carousel-review';
 let saved=JSON.parse(localStorage.getItem(K)||'{}');
-const hash=new URLSearchParams(location.hash.slice(1)).get('s');
-if(hash){ try{ const h=JSON.parse(unb64(hash)); saved={title:h.t,cap:h.c}; }catch(e){} }
+const q=new URLSearchParams(location.search);
+if(q.get('t')||q.get('c')) saved={title:q.get('t')||'',cap:q.get('c')||''};
 if(saved.title){ title.textContent=saved.title; handle.textContent=saved.title; }
 if(saved.cap) cap.textContent=saved.cap;
 const save=()=>localStorage.setItem(K,JSON.stringify({title:title.textContent.trim(),cap:cap.textContent}));
-title.addEventListener('input',()=>{handle.textContent=title.textContent.trim()||'Untitled carousel';save()});
-cap.addEventListener('input',save);
+title.addEventListener('input',()=>{handle.textContent=title.textContent.trim()||'Untitled carousel';save();refreshLink()});
+cap.addEventListener('input',()=>{save();refreshLink()});
 shareBtn.onclick=doShare;
+linkBox.onclick=()=>linkBox.select();
+refreshLink();
 shareNoteText();
 
 /* A visitor arriving on a shared link gets the carousel, not the uploader. */
