@@ -60,6 +60,19 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
 
 .hint{margin-top:22px;font-size:14px;color:#A8A5A2}
 
+.picker{width:min(408px,100%);display:flex;flex-direction:column;gap:12px;margin-bottom:26px}
+.cardlink{
+  display:flex;align-items:center;gap:14px;padding:10px;background:#fff;border:1px solid var(--line);
+  border-radius:20px;text-decoration:none;color:inherit;transition:border-color .15s ease;
+}
+.cardlink:hover{border-color:#111}
+.thumb{width:66px;height:82px;border-radius:13px;overflow:hidden;background:#EDEAE7;flex:none}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cardmeta{display:flex;flex-direction:column;gap:3px}
+.cardmeta b{font-size:16px}
+.cardmeta i{font-style:normal;font-size:13px;color:var(--muted)}
+.back{margin-top:16px;font-size:13px;color:var(--muted);text-decoration:underline}
+
 .drive{width:min(408px,100%);margin-top:18px;text-align:center}
 .drive b{display:block;font-size:15px;margin-bottom:6px}
 .drive span{font-size:13px;color:var(--muted);line-height:1.5;display:block;max-width:38ch;margin:0 auto}
@@ -102,6 +115,17 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
 <p class="eyebrow">Nancy Hub</p>
 <h1 id="title" contenteditable spellcheck="false">Untitled carousel</h1>
 <p class="count" id="count">0 slides</p>
+
+<div class="picker" id="picker">
+  <a class="cardlink" href="?f=1fMjmRO_Xo-Rm2SVqIkD-bhsNflcYQ7k-">
+    <span class="thumb"><img src="/api/drive-video?id=1lNg9nucUwa_i8KSLlGtwaArmDGFwl1OH" alt=""></span>
+    <span class="cardmeta"><b>Carousel 1</b><i>10 slides</i></span>
+  </a>
+  <a class="cardlink" href="?f=1xv_RvN0SGpR6l31RordKccxohKWwHDTJ">
+    <span class="thumb"><img src="/api/drive-video?id=1QuYbNd9jNgzSae072bO2kytWavU_NOe6" alt=""></span>
+    <span class="cardmeta"><b>Carousel 2</b><i>6 slides</i></span>
+  </a>
+</div>
 
 <label class="drop" id="drop">
   <b>Drop photos &amp; videos here</b>
@@ -155,6 +179,7 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
   <button class="add" id="addmore">add more</button>
   <button class="add" id="replace">start over</button>
 </div>
+<a class="back" id="back" href="./carousel" hidden>← all carousels</a>
 <p class="hint">← → to navigate</p>
 
 <script>
@@ -164,7 +189,8 @@ const stage=$('#stage'), dots=$('#dots'), idxEl=$('#idx'), cap=$('#cap'),
       phone=$('#phone'), drop=$('#drop'), fileIn=$('#file'), dirIn=$('#dir'),
       addmore=$('#addmore'), addrow=$('#addrow'),
       shareBtn=$('#share'), shareRow=$('#sharerow'), shareNote=$('#sharenote'),
-      driveBox=$('#drivebox'), driveForm=$('#driveform'), driveUrl=$('#driveurl'), errEl=$('#err');
+      driveBox=$('#drivebox'), driveForm=$('#driveform'), driveUrl=$('#driveurl'), errEl=$('#err'),
+      picker=$('#picker'), back=$('#back');
 let appendNext=false;
 let driveMode=false, driveFolder=null;
 
@@ -203,7 +229,7 @@ function load(fileList,{append=false}={}){
   slides.sort((a,b)=>coll.compare(a.name,b.name));
   slides.forEach(s=>stage.appendChild(s.el));
 
-  i=0; drop.hidden=true; driveBox.hidden=true;
+  i=0; drop.hidden=true; driveBox.hidden=true; picker.hidden=true;
   phone.hidden=false; addrow.hidden=false; shareRow.hidden=false;
   render();
 }
@@ -316,7 +342,7 @@ async function loadDrive(fid,{push=true}={}){
   });
 
   driveMode=true; driveFolder=fid;
-  i=0; drop.hidden=true; driveBox.hidden=true;
+  i=0; drop.hidden=true; driveBox.hidden=true; picker.hidden=true; back.hidden=false;
   phone.hidden=false; addrow.hidden=true; shareRow.hidden=false;
   render(); shareNoteText();
 
