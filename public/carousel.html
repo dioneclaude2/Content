@@ -58,6 +58,19 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
 
 .hint{margin-top:22px;font-size:14px;color:#A8A5A2}
 
+.drive{width:min(408px,100%);margin-top:18px;text-align:center}
+.drive b{display:block;font-size:15px;margin-bottom:6px}
+.drive span{font-size:13px;color:var(--muted);line-height:1.5;display:block;max-width:38ch;margin:0 auto}
+.driveform{display:flex;gap:8px;margin-top:14px}
+.driveform input{
+  flex:1;min-width:0;font-family:var(--sans);font-size:13.5px;padding:10px 14px;
+  border:1px solid #D8D4D0;border-radius:999px;background:#fff;color:#111;
+}
+.driveform input:focus{outline:none;border-color:#111}
+.pick.solid{background:#111;color:#fff;border-color:#111}
+.err{margin:12px 0 0;font-size:13px;color:#C4362F;line-height:1.45}
+.loading{width:min(408px,100%);text-align:center;color:var(--muted);font-size:14px;padding:30px 0}
+
 /* ---- drop zone ---- */
 .drop{
   width:min(408px,100%);border:1.5px dashed #CFCBC7;border-radius:28px;background:#FBFAF9;
@@ -72,6 +85,14 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
   border:1px solid #D8D4D0;background:#fff;color:#111;cursor:pointer;
 }
 .pick:hover{border-color:#111}
+.sharerow{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:20px}
+.share{
+  font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 22px;border-radius:999px;
+  border:0;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;gap:8px;
+}
+.share:hover{background:#333}
+.share.done{background:#1B9E4B}
+.sharenote{font-size:12.5px;color:#A8A5A2;text-align:center;max-width:34ch;line-height:1.45}
 .addrow{display:flex;gap:18px;margin-top:16px}
 .add{font-size:13px;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer}
 </style>
@@ -90,6 +111,16 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
   <input type="file" id="file" accept="image/*,video/*" multiple hidden>
   <input type="file" id="dir" webkitdirectory directory multiple hidden>
 </label>
+
+<div class="drive" id="drivebox">
+  <b>Or paste a Google Drive folder link</b>
+  <span>The folder must be shared &ldquo;anyone with the link&rdquo;. One folder = one carousel, and the link you get back works for everyone.</span>
+  <form class="driveform" id="driveform">
+    <input type="text" id="driveurl" placeholder="https://drive.google.com/drive/folders/…" spellcheck="false">
+    <button class="pick solid" type="submit">Load</button>
+  </form>
+  <p class="err" id="err" hidden></p>
+</div>
 
 <div class="phone" id="phone" hidden>
   <div class="notch"></div>
@@ -113,6 +144,11 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
     <div class="acts">♡ &nbsp;✉ &nbsp;🔖</div>
   </div>
 </div>
+<div class="sharerow" id="sharerow" hidden>
+  <button class="share" id="share">Share this view</button>
+  <p class="sharenote" id="sharenote"></p>
+</div>
+
 <div class="addrow" id="addrow" hidden>
   <button class="add" id="addmore">add more</button>
   <button class="add" id="replace">start over</button>
@@ -124,8 +160,11 @@ const $ = s => document.querySelector(s);
 const stage=$('#stage'), dots=$('#dots'), idxEl=$('#idx'), cap=$('#cap'),
       title=$('#title'), handle=$('#handle'), countEl=$('#count'),
       phone=$('#phone'), drop=$('#drop'), fileIn=$('#file'), dirIn=$('#dir'),
-      addmore=$('#addmore'), addrow=$('#addrow');
+      addmore=$('#addmore'), addrow=$('#addrow'),
+      shareBtn=$('#share'), shareRow=$('#sharerow'), shareNote=$('#sharenote'),
+      driveBox=$('#drivebox'), driveForm=$('#driveform'), driveUrl=$('#driveurl'), errEl=$('#err');
 let appendNext=false;
+let driveMode=false, driveFolder=null;
 
 let slides=[], i=0;
 
@@ -140,7 +179,7 @@ function load(fileList,{append=false}={}){
   if(!files.length) return;
 
   if(!append){
-    slides.forEach(s=>URL.revokeObjectURL(s.src));
+    slides.forEach(s=>{ if(s.blob) URL.revokeObjectURL(s.src); });
     [...stage.querySelectorAll('img,video')].forEach(n=>n.remove());
     slides=[];
   }else{
@@ -155,14 +194,15 @@ function load(fileList,{append=false}={}){
     el.src=url;
     if(el.tagName==='VIDEO'){ el.muted=true; el.loop=true; el.playsInline=true; el.controls=true; }
     stage.appendChild(el);
-    slides.push({el,src:url,name:nameOf(f)});
+    slides.push({el,src:url,name:nameOf(f),blob:true});
   });
 
   /* one ascending sort by file name across everything loaded so far */
   slides.sort((a,b)=>coll.compare(a.name,b.name));
   slides.forEach(s=>stage.appendChild(s.el));
 
-  i=0; drop.hidden=true; phone.hidden=false; addrow.hidden=false;
+  i=0; drop.hidden=true; driveBox.hidden=true;
+  phone.hidden=false; addrow.hidden=false; shareRow.hidden=false;
   render();
 }
 
@@ -225,12 +265,124 @@ drop.addEventListener('drop',e=>load(e.dataTransfer.files));
 addEventListener('dragover',e=>e.preventDefault());
 addEventListener('drop',e=>{e.preventDefault(); if(!phone.hidden) return; load(e.dataTransfer.files)});
 
+/* ---- drive ----
+   A local file has no URL anyone else can open, so a shared link can only
+   carry the media when the media already lives somewhere public. Drive is
+   that somewhere: the folder id travels in the link, the listing is read at
+   view time, and the bytes come back through our own origin because Drive
+   sends same-site CORP (see api/drive-video.js). Nothing is uploaded or
+   stored here -- one folder is one carousel, and there can be as many as
+   there are folders. */
+function folderId(input){
+  const t=(input||'').trim();
+  const m=t.match(/\/folders\/([\w-]{10,})/) || t.match(/[?&]id=([\w-]{10,})/);
+  if(m) return m[1];
+  return /^[\w-]{10,}$/.test(t) ? t : null;
+}
+
+function showErr(msg){ errEl.textContent=msg; errEl.hidden=!msg; }
+
+async function loadDrive(fid,{push=true}={}){
+  showErr('');
+  driveForm.querySelector('button').textContent='Loading…';
+  let data;
+  try{
+    const r=await fetch(`/api/drive-folder?id=${encodeURIComponent(fid)}`);
+    data=await r.json();
+    if(!r.ok) throw new Error(data.error||'failed');
+  }catch(e){
+    driveForm.querySelector('button').textContent='Load';
+    showErr(e.message==='not-shared'
+      ? 'That folder is not shared publicly. In Drive: Share → General access → Anyone with the link, then try again.'
+      : 'Could not read that folder. Check the link and try again.');
+    return;
+  }
+  driveForm.querySelector('button').textContent='Load';
+
+  if(!data.files.length){ showErr('No photos or videos in that folder.'); return; }
+
+  slides.forEach(s=>{ if(s.blob) URL.revokeObjectURL(s.src); });
+  [...stage.querySelectorAll('img,video')].forEach(n=>n.remove());
+  slides=[];
+
+  data.files.forEach(f=>{
+    const el=document.createElement(f.kind==='video'?'video':'img');
+    el.src=`/api/drive-video?id=${f.id}`;
+    if(el.tagName==='VIDEO'){ el.muted=true; el.loop=true; el.playsInline=true; el.controls=true; el.preload='metadata'; }
+    stage.appendChild(el);
+    slides.push({el,src:el.src,name:f.name});
+  });
+
+  driveMode=true; driveFolder=fid;
+  i=0; drop.hidden=true; driveBox.hidden=true;
+  phone.hidden=false; addrow.hidden=true; shareRow.hidden=false;
+  render(); shareNoteText();
+
+  if(push){
+    const u=new URL(location.href); u.searchParams.set('f',fid);
+    history.replaceState(null,'',u);
+  }
+}
+
+driveForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const fid=folderId(driveUrl.value);
+  if(!fid){ showErr('That does not look like a Drive folder link.'); return; }
+  loadDrive(fid);
+});
+
+/* ---- share ----
+   The media is local: object URLs are dead outside this tab and nothing is
+   uploaded. So the link carries what IS portable -- title and caption, packed
+   into the hash -- and says so under the button rather than quietly
+   half-working. */
+function b64(str){
+  const bytes=new TextEncoder().encode(str);
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function unb64(str){
+  const bin=atob(str.replace(/-/g,'+').replace(/_/g,'/'));
+  return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));
+}
+function shareURL(){
+  const u=new URL(location.href);
+  if(driveFolder) u.searchParams.set('f',driveFolder);
+  u.hash='s='+b64(JSON.stringify({t:title.textContent.trim(),c:cap.textContent}));
+  return u.toString();
+}
+async function doShare(){
+  const url=shareURL();
+  const data={title:title.textContent.trim()||'Carousel review',text:cap.textContent.slice(0,180),url};
+  if(navigator.share && (!navigator.canShare || navigator.canShare(data))){
+    try{ await navigator.share(data); return; }catch(e){ if(e.name==='AbortError') return; }
+  }
+  try{ await navigator.clipboard.writeText(url); }
+  catch(e){ prompt('Copy this link:',url); return; }
+  const was=shareBtn.textContent;
+  shareBtn.textContent='Link copied';
+  shareBtn.classList.add('done');
+  setTimeout(()=>{shareBtn.textContent=was;shareBtn.classList.remove('done')},1800);
+}
+function shareNoteText(){
+  shareNote.textContent = driveMode
+    ? 'Anyone with the link sees these slides and this caption.'
+    : 'The link carries the title and caption. Your files stay on this machine \u2014 send the folder alongside it, or load from Drive for a link that shows the slides too.';
+}
+
 /* title + caption persist locally */
 const K='carousel-review';
-const saved=JSON.parse(localStorage.getItem(K)||'{}');
+let saved=JSON.parse(localStorage.getItem(K)||'{}');
+const hash=new URLSearchParams(location.hash.slice(1)).get('s');
+if(hash){ try{ const h=JSON.parse(unb64(hash)); saved={title:h.t,cap:h.c}; }catch(e){} }
 if(saved.title){ title.textContent=saved.title; handle.textContent=saved.title; }
 if(saved.cap) cap.textContent=saved.cap;
 const save=()=>localStorage.setItem(K,JSON.stringify({title:title.textContent.trim(),cap:cap.textContent}));
 title.addEventListener('input',()=>{handle.textContent=title.textContent.trim()||'Untitled carousel';save()});
 cap.addEventListener('input',save);
+shareBtn.onclick=doShare;
+shareNoteText();
+
+/* A visitor arriving on a shared link gets the carousel, not the uploader. */
+const boot=new URLSearchParams(location.search).get('f');
+if(boot) loadDrive(boot,{push:false});
 </script>
