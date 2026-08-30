@@ -263,6 +263,11 @@ function render(){
     const go=()=>s.el.play().catch(()=>{});
     go(); s.el.addEventListener('loadeddata',go,{once:true});
   });
+  /* warm the next video while this slide is being looked at */
+  const nx=slides[i+1];
+  if(nx && nx.el.tagName==='VIDEO' && nx.el.dataset.src && !nx.el.src){
+    nx.el.preload='auto'; nx.el.src=nx.el.dataset.src;
+  }
   dots.innerHTML = slides.map((_,n)=>`<i class="dot${n===i?' on':''}"></i>`).join('');
   idxEl.textContent = `${i+1}/${slides.length}`;
   countEl.textContent = `${slides.length} slide${slides.length===1?'':'s'}`;
