@@ -255,7 +255,13 @@ function render(){
   slides.forEach((s,n)=>{
     const on = n===i;
     s.el.classList.toggle('on',on);
-    if(s.el.tagName==='VIDEO'){ on ? s.el.play().catch(()=>{}) : s.el.pause(); }
+    if(s.el.tagName!=='VIDEO') return;
+    if(!on){ s.el.pause(); return; }
+    if(s.el.dataset.src && !s.el.src){ s.el.preload='auto'; s.el.src=s.el.dataset.src; }
+    /* play() before the first frame decodes rejects and leaves the poster
+       area blank, so try again when there is something to paint. */
+    const go=()=>s.el.play().catch(()=>{});
+    go(); s.el.addEventListener('loadeddata',go,{once:true});
   });
   dots.innerHTML = slides.map((_,n)=>`<i class="dot${n===i?' on':''}"></i>`).join('');
   idxEl.textContent = `${i+1}/${slides.length}`;
@@ -335,8 +341,14 @@ async function loadDrive(fid,{push=true}={}){
 
   data.files.forEach(f=>{
     const el=document.createElement(f.kind==='video'?'video':'img');
-    el.src=`/api/drive-video?id=${f.id}`;
-    if(el.tagName==='VIDEO'){ el.muted=true; el.loop=true; el.playsInline=true; el.controls=true; el.preload='metadata'; }
+    const src=`/api/drive-video?id=${f.id}`;
+    if(el.tagName==='VIDEO'){
+      /* Six videos all pulling ranges at once made Drive abort most of them,
+         and the aborted ones came back as a blank frame. Each src is attached
+         when its slide is reached instead. */
+      el.dataset.src=src; el.preload='none';
+      el.muted=true; el.loop=true; el.playsInline=true; el.controls=true;
+    }else{ el.src=src; }
     stage.appendChild(el);
     slides.push({el,src:el.src,name:f.name});
   });
