@@ -393,7 +393,7 @@ async function loadDrive(fid,{push=true}={}){
   driveMode=true; driveFolder=fid;
   i=0; drop.hidden=true; driveBox.hidden=true; picker.hidden=true; back.hidden=false;
   phone.hidden=false; addrow.hidden=true; shareRow.hidden=false;
-  render(); shareNoteText(); refreshLink();
+  render(); shareNoteText(); applySaved();
 
   if(push){
     const u=new URL(location.href); u.searchParams.set('f',fid);
@@ -445,22 +445,34 @@ function shareNoteText(){
     : 'The link carries the title and caption. Your files stay on this machine \u2014 send the folder alongside it, or load from Drive for a link that shows the slides too.';
 }
 
-/* title + caption persist locally */
-const K='carousel-review';
-let saved=JSON.parse(localStorage.getItem(K)||'{}');
+/* Title and caption persist per carousel, not per browser: each folder gets
+   its own key, so carousel 2's caption never shows up on carousel 1. A link
+   carrying t=/c= wins over whatever is stored, since that is what the sender
+   meant to show. */
 const q=new URLSearchParams(location.search);
-if(q.get('t')||q.get('c')) saved={title:q.get('t')||'',cap:q.get('c')||''};
-if(saved.title){ title.textContent=saved.title; handle.textContent=saved.title; }
-if(saved.cap) cap.textContent=saved.cap;
-const save=()=>localStorage.setItem(K,JSON.stringify({title:title.textContent.trim(),cap:cap.textContent}));
+const storeKey=()=>'carousel-review:'+(driveFolder||'local');
+
+function applySaved(){
+  let v={};
+  try{ v=JSON.parse(localStorage.getItem(storeKey())||'{}'); }catch(e){}
+  if(q.get('t')||q.get('c')) v={title:q.get('t')||'',cap:q.get('c')||''};
+  title.textContent = v.title || 'Untitled carousel';
+  handle.textContent = v.title || 'Untitled carousel';
+  cap.textContent = v.cap || '';
+  refreshLink();
+}
+
+const save=()=>localStorage.setItem(storeKey(),
+  JSON.stringify({title:title.textContent.trim(),cap:cap.textContent}));
+
 title.addEventListener('input',()=>{handle.textContent=title.textContent.trim()||'Untitled carousel';save();refreshLink()});
 cap.addEventListener('input',()=>{save();refreshLink()});
 shareBtn.onclick=doShare;
 linkBox.onclick=()=>linkBox.select();
-refreshLink();
+applySaved();
 shareNoteText();
 
 /* A visitor arriving on a shared link gets the carousel, not the uploader. */
-const boot=new URLSearchParams(location.search).get('f');
+const boot=q.get('f');
 if(boot) loadDrive(boot,{push:false});
 </script>
