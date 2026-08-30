@@ -44,6 +44,13 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
 .stage .on{display:block}
 .hit{position:absolute;top:0;bottom:0;width:34%;cursor:pointer}
 .hit.prev{left:0} .hit.next{right:0}
+.playbtn{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;
+  width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(0,0,0,.55);color:#fff;font-size:22px;padding-left:4px;
+  display:flex;align-items:center;justify-content:center;
+}
+.playbtn:hover{background:rgba(0,0,0,.72)}
 
 .bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid #F0EEEC}
 .arrow{background:none;border:0;font-size:20px;color:#9A9A9A;cursor:pointer;padding:0 2px;line-height:1}
@@ -159,6 +166,7 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
     <div class="stage" id="stage">
       <div class="hit prev" id="hprev"></div>
       <div class="hit next" id="hnext"></div>
+      <button class="playbtn" id="playbtn" hidden aria-label="Play">&#9654;</button>
     </div>
     <div class="bar">
       <button class="arrow" id="prev">&#10094;</button>
@@ -190,7 +198,7 @@ const stage=$('#stage'), dots=$('#dots'), idxEl=$('#idx'), cap=$('#cap'),
       addmore=$('#addmore'), addrow=$('#addrow'),
       shareBtn=$('#share'), shareRow=$('#sharerow'), shareNote=$('#sharenote'),
       driveBox=$('#drivebox'), driveForm=$('#driveform'), driveUrl=$('#driveurl'), errEl=$('#err'),
-      picker=$('#picker'), back=$('#back');
+      picker=$('#picker'), back=$('#back'), playBtn=$('#playbtn');
 let appendNext=false;
 let driveMode=false, driveFolder=null;
 
@@ -221,6 +229,7 @@ function load(fileList,{append=false}={}){
     const el=document.createElement(f.type.startsWith('video/')?'video':'img');
     el.src=url;
     if(el.tagName==='VIDEO'){ el.muted=true; el.loop=true; el.playsInline=true; el.controls=true; }
+    if(el.tagName==='VIDEO') ['play','pause','ended'].forEach(ev=>el.addEventListener(ev,syncPlayBtn));
     stage.appendChild(el);
     slides.push({el,src:url,name:nameOf(f),blob:true});
   });
@@ -258,8 +267,10 @@ function render(){
     if(s.el.tagName!=='VIDEO') return;
     if(!on){ s.el.pause(); return; }
     if(s.el.dataset.src && !s.el.src){ s.el.preload='auto'; s.el.src=s.el.dataset.src; }
-    /* play() before the first frame decodes rejects and leaves the poster
-       area blank, so try again when there is something to paint. */
+    /* Autoplay is not dependable -- Chrome rejects it outright for muted
+       video-only media ("paused to save power"), and mobile has its own
+       rules. So: try, and when it is refused show a play button rather than
+       leaving a still frame that looks broken. */
     const go=()=>s.el.play().catch(()=>{});
     go(); s.el.addEventListener('loadeddata',go,{once:true});
   });
@@ -273,7 +284,20 @@ function render(){
   countEl.textContent = `${slides.length} slide${slides.length===1?'':'s'}`;
   $('#prev').disabled = i===0;
   $('#next').disabled = i===slides.length-1;
+  syncPlayBtn();
 }
+function syncPlayBtn(){
+  const cur=slides[i];
+  playBtn.hidden = !(cur && cur.el.tagName==='VIDEO' && cur.el.paused);
+}
+playBtn.onclick=e=>{
+  e.stopPropagation();
+  const cur=slides[i];
+  if(!cur || cur.el.tagName!=='VIDEO') return;
+  cur.el.muted=false;           /* a click is a gesture: sound can come on */
+  cur.el.play().catch(()=>{ cur.el.muted=true; cur.el.play().catch(()=>{}); });
+};
+
 const go = d => { i=Math.min(slides.length-1,Math.max(0,i+d)); render(); };
 
 $('#prev').onclick=()=>go(-1); $('#next').onclick=()=>go(1);
@@ -354,8 +378,9 @@ async function loadDrive(fid,{push=true}={}){
       el.dataset.src=src; el.preload='none';
       el.muted=true; el.loop=true; el.playsInline=true; el.controls=true;
     }else{ el.src=src; }
+    ['play','pause','ended'].forEach(ev=>el.addEventListener(ev,syncPlayBtn));
     stage.appendChild(el);
-    slides.push({el,src:el.src,name:f.name});
+    slides.push({el,src,name:f.name});
   });
 
   driveMode=true; driveFolder=fid;
