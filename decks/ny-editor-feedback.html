@@ -1,0 +1,505 @@
+<title>NY Editor Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+/* Presented live, so one idea per slide and nothing that needs squinting at
+   from the back of a call. Same pastel system as the guides. */
+:root{
+  --pink:#FFB3D4; --pink-soft:#FFE2EE; --loud:#FF30CC;
+  --yellow:#FFE459; --yellow-soft:#FFF6C4;
+  --lilac:#D9CCFF; --lilac-soft:#EDE7FF;
+  --paper:#FFFCF5; --ink:#151021; --ink-soft:#4A4159;
+  --disp:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --sans:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Space Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--ink);font-family:var(--sans);
+     -webkit-font-smoothing:antialiased;overflow:hidden}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:800;letter-spacing:-.025em;line-height:1;margin:0;text-wrap:balance}
+
+.deck{position:fixed;inset:0}
+.slide{
+  position:absolute;inset:0;display:none;padding:clamp(26px,5vw,64px);
+  background:var(--paper);overflow-y:auto;
+}
+.slide.on{display:grid;align-content:center}
+.slide.p{background:var(--pink-soft)} .slide.y{background:var(--yellow-soft)} .slide.l{background:var(--lilac-soft)}
+.inner{width:100%;max-width:1120px;margin:0 auto}
+
+.k{font-family:var(--mono);font-size:clamp(10px,1.1vw,12px);font-weight:700;
+   letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+h1{font-size:clamp(34px,6.6vw,76px)}
+h2{font-size:clamp(28px,5vw,56px)}
+.sub{font-size:clamp(15px,1.7vw,21px);color:var(--ink-soft);max-width:60ch;margin-top:18px;line-height:1.5}
+.hl{background:var(--yellow);padding:0 .1em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+/* two columns of feedback */
+.cols{display:grid;gap:16px;margin-top:26px}
+@media (min-width:820px){.cols{grid-template-columns:1fr 1fr}}
+.col{border:3px solid var(--ink);background:#fff;overflow:hidden}
+.col .h{padding:12px 16px;border-bottom:3px solid var(--ink);font-family:var(--disp);font-weight:800;font-size:clamp(17px,2vw,22px)}
+.col.good .h{background:var(--yellow)}
+.col.fix .h{background:var(--loud);color:#fff}
+.col ul{margin:0;padding:0;list-style:none}
+.col li{padding:10px 16px 10px 40px;border-bottom:2px solid var(--ink);position:relative;
+        font-size:clamp(13px,1.4vw,15.5px);line-height:1.4;color:var(--ink-soft)}
+.col li:last-child{border-bottom:0}
+.col li b{color:var(--ink)}
+.col li:before{position:absolute;left:15px;top:9px;font-family:var(--disp);font-weight:800;font-size:15px}
+.col.good li:before{content:"\2713";color:var(--ink)}
+.col.fix li:before{content:"\2715";color:var(--loud)}
+
+/* rules / lists */
+.rules{display:grid;gap:12px;margin-top:28px}
+.rule{border:3px solid var(--ink);background:#fff;padding:15px 18px;display:grid;grid-template-columns:38px 1fr;gap:0 14px}
+.rule .n{font-family:var(--disp);font-weight:800;font-size:22px;line-height:1;color:var(--loud)}
+.rule h4{font-size:clamp(16px,1.9vw,20px);margin-bottom:5px}
+.rule p{margin:0;font-size:clamp(13px,1.4vw,15px);color:var(--ink-soft);line-height:1.45}
+
+/* font table */
+.fonts{display:grid;gap:14px;margin-top:26px}
+@media (min-width:860px){.fonts{grid-template-columns:1fr 1fr}}
+.fcard{border:3px solid var(--ink);background:#fff;padding:18px 20px}
+.fcard.wide{grid-column:1/-1;background:var(--yellow)}
+.fcard .fn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.fcard .fname{font-size:clamp(24px,3.4vw,38px);font-weight:700;letter-spacing:-.02em;margin:6px 0 8px}
+.fcard .fname.serif{font-family:"Bricolage Grotesque",Georgia,serif}
+.fcard p{margin:0;font-size:clamp(13px,1.4vw,15px);color:var(--ink-soft);line-height:1.45}
+.fcard.wide p{color:var(--ink)}
+.fcard b{color:var(--ink)}
+
+.split{display:grid;gap:14px;margin-top:26px}
+@media (min-width:820px){.split{grid-template-columns:1fr 1fr}}
+.box{border:3px solid var(--ink);padding:18px 20px}
+.box.a{background:var(--yellow)} .box.b{background:var(--ink);color:var(--paper)}
+.box h4{font-size:clamp(18px,2.2vw,24px);margin-bottom:10px}
+.box.b h4{color:var(--paper)}
+.box ul{margin:0;padding-left:18px}
+.box li{font-size:clamp(13px,1.4vw,15px);line-height:1.5;padding-bottom:5px}
+.box.b li{color:#CFC7DD}
+
+.pending{border:3px dashed var(--ink);background:#fff;padding:26px;text-align:center;margin-top:26px}
+.pending .t{font-family:var(--disp);font-weight:800;font-size:clamp(19px,2.4vw,26px);margin-bottom:8px}
+.pending p{margin:0;font-size:15px;color:var(--ink-soft)}
+
+/* chrome */
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
+     padding:10px clamp(16px,3vw,32px);background:var(--ink);color:var(--paper);z-index:5}
+.bar .who{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+.bar .sp{flex:1}
+.bar button{font-family:var(--disp);font-weight:800;font-size:13px;border:2px solid var(--paper);
+            background:transparent;color:var(--paper);padding:6px 12px;cursor:pointer}
+.bar button:hover{background:var(--paper);color:var(--ink)}
+.bar .num{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em}
+.dots{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(21,16,33,.12);z-index:5}
+.dots i{display:block;height:100%;background:var(--loud);transition:width .18s ease}
+
+/* the four reels, shown without comment */
+.reels{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
+@media (min-width:760px){.reels{grid-template-columns:repeat(4,1fr)}}
+.reel{border:3px solid var(--ink);background:#fff;overflow:hidden}
+.reel .sh{position:relative;aspect-ratio:9/16;background:#20262c;overflow:hidden}
+.reel .sh img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.reel .n{position:absolute;left:0;top:0;z-index:2;font-family:var(--mono);font-size:9px;font-weight:700;
+         letter-spacing:.1em;background:var(--ink);color:var(--yellow);padding:4px 7px}
+.reel .cap{padding:9px 11px;font-size:clamp(11px,1.15vw,13px);line-height:1.35;color:var(--ink-soft)}
+.ask{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.ask span{font-family:var(--mono);font-size:clamp(10px,1.15vw,12px);font-weight:700;letter-spacing:.08em;
+          text-transform:uppercase;border:3px solid var(--ink);background:var(--yellow);padding:7px 11px}
+a.reel{display:block;text-decoration:none;color:inherit;transition:transform .12s ease}
+a.reel:hover{transform:translate(-2px,-2px)}
+.reel .pl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:38px;height:38px;border:3px solid var(--ink);background:var(--yellow);color:var(--ink);
+  display:grid;place-items:center;font-size:13px}
+.play[hidden]{display:none}
+.play{position:fixed;inset:0;z-index:20;background:rgba(10,7,17,.94);display:grid;
+      grid-template-rows:auto 1fr;gap:12px;padding:14px}
+.play-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.play-bar .pt{flex:1;min-width:0;font-family:var(--mono);font-size:11px;font-weight:700;
+              letter-spacing:.12em;text-transform:uppercase;color:var(--yellow)}
+.pb{font-family:var(--disp);font-weight:800;font-size:14px;text-decoration:none;cursor:pointer;
+    border:3px solid var(--paper);background:transparent;color:var(--paper);padding:8px 14px}
+.pb.solid{background:var(--paper);color:var(--ink)}
+.pb:hover{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.play-stage{display:grid;place-items:center;min-height:0}
+.play-frame{position:relative;height:100%;aspect-ratio:9/16;border:3px solid var(--paper);background:#000;overflow:hidden}
+.play-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ostep{display:grid;gap:10px;margin-top:20px}
+@media (min-width:820px){.ostep{grid-template-columns:repeat(3,1fr)}}
+.os{border:3px solid var(--ink);background:#fff;padding:13px 15px;display:grid;grid-template-columns:30px 1fr;gap:0 11px}
+.os .on{font-family:var(--disp);font-weight:800;font-size:20px;line-height:1;color:var(--loud)}
+.os h4{font-size:clamp(14px,1.6vw,17px);margin-bottom:3px}
+.os p{margin:0;font-size:clamp(12px,1.3vw,14px);color:var(--ink-soft);line-height:1.4}
+.ocharts{display:grid;gap:12px;margin-top:16px}
+@media (min-width:700px){.ocharts{grid-template-columns:1fr 1fr}}
+.oc{border:3px solid var(--ink);background:#fff;overflow:hidden}
+.oc .oh{padding:9px 13px;border-bottom:3px solid var(--ink);font-family:var(--disp);font-weight:800;font-size:15px}
+.oc .oh.no{background:var(--ink);color:var(--paper)}
+.oc .oh.yes{background:var(--yellow)}
+.bars{display:flex;align-items:flex-end;gap:4px;height:86px;padding:12px 13px 0}
+.bars i{flex:1;background:var(--lilac);border:2px solid var(--ink);border-bottom:0;min-height:4px;display:block}
+.bars i.post{background:var(--loud)}
+.oc p{margin:0;padding:10px 13px 13px;font-size:clamp(12px,1.3vw,14px);color:var(--ink-soft);line-height:1.4}
+.oend{margin-top:16px;border:3px solid var(--ink);background:var(--ink);color:var(--paper);
+      padding:14px 18px;font-family:var(--disp);font-weight:800;font-size:clamp(17px,2.2vw,24px)}
+.people{display:grid;gap:14px;margin-top:22px}
+@media (min-width:820px){.people{grid-template-columns:1fr 1fr}}
+@media (min-width:1120px){.people{grid-template-columns:repeat(3,1fr)}}
+.person{border:3px solid var(--ink);background:#fff;overflow:hidden}
+.person .pn{background:var(--ink);color:var(--paper);padding:11px 16px;
+            font-family:var(--disp);font-weight:800;font-size:clamp(19px,2.3vw,25px)}
+.person .ph{padding:7px 16px;font-family:var(--mono);font-size:9.5px;font-weight:700;
+            letter-spacing:.16em;text-transform:uppercase;border-bottom:2px solid var(--ink)}
+.person .ph.good{background:var(--yellow)}
+.person .ph.fix{background:var(--loud);color:#fff;border-top:2px solid var(--ink)}
+.person ul{margin:0;padding:0;list-style:none}
+.person li{padding:8px 16px 8px 34px;border-bottom:1px solid rgba(21,16,33,.13);position:relative;
+           font-size:clamp(12px,1.3vw,14.5px);line-height:1.4;color:var(--ink-soft)}
+.person li:last-child{border-bottom:0}
+.person li b{color:var(--ink)}
+.person li:before{content:"\2022";position:absolute;left:16px;top:7px;font-size:15px;color:var(--loud)}
+.tmeta{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.tmeta span{font-family:var(--mono);font-size:clamp(10px,1.15vw,12px);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;border:3px solid var(--ink);
+  background:var(--yellow);padding:8px 13px}
+.person .pn .tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;border:2px solid var(--paper);padding:2px 6px;margin-left:8px;vertical-align:middle}
+</style>
+
+<div class="dots"><i id="prog"></i></div>
+<div class="deck" id="deck">
+
+  <section class="slide">
+    <div class="inner">
+      <div class="k">Hello Nancy &middot; New York</div>
+      <h1>What we made, and <span class="hl">what happens next.</span></h1>
+      <p class="sub">
+        A look back at the first round of edits &mdash; what is working, a few things to change,
+        and how to find the next hook.
+      </p>
+      <div class="tmeta">
+        <span>Editor session</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="k">Before anything else</div>
+      <h2>Watch these four back.</h2>
+      <p class="sub">
+        New York gave us the strongest material we have had. Before we say anything, we want to
+        hear from you first &mdash; what would you change, and what do you think worked?
+      </p>
+      <div class="reels" id="reels"></div>
+      <div class="ask">
+        <span>What would you change?</span>
+        <span>What works?</span>
+        <span>Why that clip?</span>
+        <span>Does the text match the footage?</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide y">
+    <div class="inner">
+      <div class="k">Feedback</div>
+      <h2>Where each of you is at</h2>
+      <div class="people">
+        <div class="person">
+          <div class="pn">Jodi</div>
+          <div class="pg">
+            <div class="ph good">Working</div>
+            <ul>
+              <li><b>A good instinct for hooks.</b> She thinks about them properly.</li>
+              <li>&ldquo;A little Nancy moment in NYC&rdquo; and &ldquo;Do you think we can bring our own tennis balls to the US Open?&rdquo; &mdash; both land, and <b>both match the footage.</b></li>
+              <li>Cuts sit on the beat, and they are not repeated.</li>
+              <li>Asks for feedback. Keep doing that.</li>
+            </ul>
+            <div class="ph fix">To fix</div>
+            <ul>
+              <li><b>Hooks are set in Fraunces.</b> Text hooks use the basic font. Save Fraunces and PP Editorial for event highlight titles.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="person">
+          <div class="pn">Remo <span class="tag">Internal</span></div>
+          <div class="pg">
+            <div class="ph good">Working</div>
+            <ul>
+              <li><b>Knows Nancy best.</b> Longest with us, and it shows in the work.</li>
+              <li><b>Event highlights are genuinely good.</b></li>
+              <li>Adaptive &mdash; picked up Hot or Cold, the templates, sound effects, the cuts and the beats quickly.</li>
+              <li>Takes direction well. The work is improving over time.</li>
+            </ul>
+            <div class="ph fix">To fix</div>
+            <ul>
+              <li><b>Flag it rather than work around it.</b> If an asset is not colour graded, say so before using it &mdash; &ldquo;this one is not graded yet, I will start on these instead.&rdquo;</li>
+              <li>Caption writing, and finding text hooks.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="person">
+          <div class="pn">Mark</div>
+          <div class="pg">
+            <div class="ph good">Working</div>
+            <ul>
+              <li>Edits on the beat.</li>
+              <li>Trying to work out how to use hooks.</li>
+              <li><b>Receptive.</b> Revises, keeps things organised, checks in.</li>
+            </ul>
+            <div class="ph fix">To fix</div>
+            <ul>
+              <li><b>Hooks that do not match the footage.</b> A checkout with no checkout. A fan with no fan.</li>
+              <li><b>The same clip reused.</b> The box being carried turns up across about five pieces.</li>
+              <li><b>Everyday words censored.</b> &ldquo;Spot&rdquo; does not need an asterisk.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="k">Overall</div>
+      <h2>Crystal and Susan&rsquo;s feedback</h2>
+      <div class="rules">
+        <div class="rule"><div class="n">01</div><div>
+          <h4>Sound effects, balanced</h4>
+          <p>We are using them, which is good. Now the levels. Enough to make the video interesting, never enough to sit on top of it &mdash; they belong <b>behind</b> the edit, not in front of it.</p></div></div>
+        <div class="rule"><div class="n">02</div><div>
+          <h4>Use more of the footage</h4>
+          <p>There is a lot from <b>28 to 30 August</b> nobody has touched. Be holistic about it &mdash; go through the whole folder before deciding what to cut.</p></div></div>
+        <div class="rule"><div class="n">03</div><div>
+          <h4>Stickers, images, props</h4>
+          <p>Adding <b>clothing or props onto the interviewer</b> worked really well &mdash; more of that. Stickers and images make an interview fun rather than flat.</p></div></div>
+        <div class="rule"><div class="n">04</div><div>
+          <h4>Be mindful of colour correction</h4>
+          <p>Some clips come in needing a grade. <b>Notice it before you build the edit around it</b> and raise it &mdash; a finished piece cut from ungraded footage is a re-do.</p></div></div>
+        <div class="rule"><div class="n">05</div><div>
+          <h4>Work to a target</h4>
+          <p>Each batch should have a goal, not just a count. Decide what a day of footage is <b>for</b> before you start cutting it.</p></div></div>
+      </div>
+      <div class="oend">Five really good pieces beat fifteen rushed ones.</div>
+    </div>
+  </section>
+
+  <section class="slide l">
+    <div class="inner">
+      <div class="k">Fonts</div>
+      <h2>Three fonts. One of them does most of the work.</h2>
+      <p class="sub" style="margin-top:12px">We all stay on the same fonts, so the grid does not read as four different editors.</p>
+      <div class="fonts">
+        <div class="fcard wide">
+          <div class="fn">Default</div>
+          <div class="fname">Helvetica</div>
+          <p><b>Text hooks, memes, street interviews, captions &mdash; all Helvetica.</b> As close to Instagram&rsquo;s own font as possible. Clean and uniform beats decorated.</p>
+        </div>
+        <div class="fcard">
+          <div class="fn">Event highlight titles</div>
+          <div class="fname serif">Fraunces &middot; PP Editorial</div>
+          <p>Only on event highlight titles &mdash; &ldquo;A little Nancy moment in NYC&rdquo; is one. Around <b>20px</b>. <b>Not</b> on memes, street interviews or text hooks.</p>
+        </div>
+        <div class="fcard">
+          <div class="fn">The exception</div>
+          <div class="fname" style="font-size:clamp(18px,2.3vw,25px)">When a look is requested</div>
+          <p>If Susan asks for a specific font or a current vibe, that wins. Google it, use Google Images to match it, replicate the treatment. Case by case.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="k">Choosing clips</div>
+      <h2>Watch it all before you cut any of it.</h2>
+      <div class="rules">
+        <div class="rule"><div class="n">01</div><div>
+          <h4>Go through the whole day</h4>
+          <p>The strongest moments are being missed because the folder was never watched to the end.</p></div></div>
+        <div class="rule"><div class="n">02</div><div>
+          <h4>Do not reuse a clip</h4>
+          <p>If it has already been used, find another one. The same shot with a new caption is not a new post.</p></div></div>
+        <div class="rule"><div class="n">03</div><div>
+          <h4>Five strong beats ten filler</h4>
+          <p>We would rather have fewer edits that were each chosen on purpose.</p></div></div>
+        <div class="rule"><div class="n">04</div><div>
+          <h4>Some clips just need a straight cut</h4>
+          <p>Short and direct works. Not everything needs building.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide l">
+    <div class="inner">
+      <div class="k">Music</div>
+      <h2>Keep it simple, and keep it safe.</h2>
+      <div class="rules">
+        <div class="rule"><div class="n">01</div><div>
+          <h4>Avoid very popular pop songs</h4>
+          <p>Sounds, instrumentals, or a section of a track where the vocal is not carrying it.</p></div></div>
+        <div class="rule"><div class="n">02</div><div>
+          <h4>If you want a pop song, check first</h4>
+          <p>Tag <b>Rahul</b> or look into it before you build the edit around it. A claim lands after the work is done.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide p">
+    <div class="inner">
+      <div class="k">The one that saves everyone time</div>
+      <h1>If you are unsure, <span class="hl">ask before you cut.</span></h1>
+      <div class="split">
+        <div class="box a">
+          <h4>Already happening</h4>
+          <ul>
+            <li><b>Jodi</b> asking for feedback</li>
+            <li><b>Mark</b> checking in on revisions</li>
+            <li>That is the behaviour. More of it.</li>
+          </ul>
+        </div>
+        <div class="box b">
+          <h4>Why we cannot give it all upfront</h4>
+          <ul>
+            <li>We are working the approach out as we go</li>
+            <li>It gets clearer from what you ask</li>
+            <li>So ask when something is unclear &mdash; that is where it starts</li>
+          </ul>
+        </div>
+      </div>
+      <p class="sub">
+        The patterns come with time &mdash; what works, what does not. But they come <b>after</b> the
+        questions, not instead of them.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide l">
+    <div class="inner">
+      <div class="k">Last thing</div>
+      <h2>CapCut settings</h2>
+      <p class="sub">Everyone works from the same settings so the output is consistent. Screenshots to follow, and we will walk through them on the call.</p>
+      <div class="pending">
+        <div class="t">Settings screenshots go here</div>
+        <p>Fonts, sizes, caption style, sound effects folder</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide p">
+    <div class="inner">
+      <div class="k">Where the next hook comes from</div>
+      <h2>How to spot an outlier</h2>
+      <p class="sub">An outlier is a post that beat <b>its own account&rsquo;s normal</b> by a wide margin. Not the biggest account &mdash; the biggest gap. That gap is what tells you the idea did the work, which means it can be copied.</p>
+      <div class="ostep">
+        <div class="os"><span class="on">1</span><div><h4>Something stops you</h4><p>Loads of comments, or copy that is genuinely good.</p></div></div>
+        <div class="os"><span class="on">2</span><div><h4>Tap the account</h4><p>The number means nothing until you know their normal.</p></div></div>
+        <div class="os"><span class="on">3</span><div><h4>Scroll their last 30 days</h4><p>Just look at the view counts. No maths, no tools.</p></div></div>
+      </div>
+      <div class="ocharts">
+        <div class="oc"><div class="oh no">Not an outlier</div><div class="bars" id="barNo"></div><p>Everything they post does this. The account did the work.</p></div>
+        <div class="oc"><div class="oh yes">Outlier</div><div class="bars" id="barYes"></div><p>Obviously higher than the rest. Take the hook shape and fit it to our footage.</p></div>
+      </div>
+      <div class="oend">If you have to squint to tell, it is a no.</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="play" id="play" hidden>
+  <div class="play-bar">
+    <span class="pt" id="playTitle"></span>
+    <a class="pb" id="playOpen" href="#" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+    <button class="pb solid" type="button" id="playClose">Close &times;</button>
+  </div>
+  <div class="play-stage"><div class="play-frame" id="playFrame"></div></div>
+</div>
+
+<div class="bar">
+  <span class="who">NY editor feedback</span>
+  <span class="sp"></span>
+  <button type="button" id="prev">&larr; Back</button>
+  <span class="num" id="num">1 / 7</span>
+  <button type="button" id="next">Next &rarr;</button>
+</div>
+
+<script>
+const FRAMES = __FRAMES__;
+
+/* Poster frames are inlined so they always render; the id plays the real
+   video from Drive when the viewer can reach it, and links out when not. */
+const REELS = [
+  ["Video 1", "POV: Nancy just found her new favorite sp*t \u{1F62D}\u{1F497}", "1S76JEvSLVFzecLBwKlodvNPPKzugyO2l"],
+  ["Video 2", "POV: You\u2019re trying to act normal at the checkout \u{1F62D}", "1D_ZKRRAS7j27o89q8aB_pXE6-MGep7L3"],
+  ["Video 3", "POV: Nancy just ran into a VERY unexpected fan \u{1F62D}", "1DXkafcX8uE1PtF3xDGwqtlOamePeP1mB"],
+  ["Video 4", "Unboxing Nancy: The tennis-inspired intimate care line \u{1F496}", "1pbSWrPtatlCHG6i10vFm9Lg0I5NONWlY"]
+];
+
+document.getElementById("reels").innerHTML = REELS.map((r, k) => `
+  <a class="reel" href="https://drive.google.com/file/d/${r[2]}/view" target="_blank" rel="noopener" data-play="${r[2]}" data-t="${r[0]}">
+    <div class="sh"><span class="n">${r[0]}</span><img src="${FRAMES[k]}" alt=""><span class="pl">&#9654;</span></div>
+    <div class="cap">${r[1]}</div>
+  </a>`).join("");
+
+/* player */
+const box = document.getElementById("play");
+function openReel(id, title){
+  document.getElementById("playTitle").textContent = title;
+  document.getElementById("playOpen").href = "https://drive.google.com/file/d/" + id + "/view";
+  document.getElementById("playFrame").innerHTML =
+    `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  box.hidden = false;
+}
+function closeReel(){ box.hidden = true; document.getElementById("playFrame").innerHTML = ""; }
+document.getElementById("playClose").addEventListener("click", closeReel);
+box.addEventListener("click", e => { if (e.target === box) closeReel(); });
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.reel");
+  if (!a) return;
+  e.preventDefault();
+  openReel(a.dataset.play, a.dataset.t);
+});
+
+function bars(el, h){
+  document.getElementById(el).innerHTML =
+    h.map((v, k) => `<i class="${k === h.length - 1 ? "post" : ""}" style="height:${v}%"></i>`).join("");
+}
+bars("barNo",  [64, 71, 58, 76, 62, 69, 60, 73, 79]);
+bars("barYes", [15, 19, 12, 22, 16, 14, 20, 13, 97]);
+
+const slides = [...document.querySelectorAll(".slide")];
+let i = 0;
+
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle("on", k === i));
+  document.getElementById("num").textContent = (i + 1) + " / " + slides.length;
+  document.getElementById("prog").style.width = ((i + 1) / slides.length * 100) + "%";
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === slides.length - 1;
+  if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+}
+
+document.getElementById("next").addEventListener("click", () => show(i + 1));
+document.getElementById("prev").addEventListener("click", () => show(i - 1));
+
+document.addEventListener("keydown", e => {
+  if (!box.hidden){ if (e.key === "Escape") closeReel(); return; }
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { show(i + 1); e.preventDefault(); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { show(i - 1); e.preventDefault(); }
+  if (e.key === "Home") show(0);
+  if (e.key === "End") show(slides.length - 1);
+});
+
+/* tapping the right half advances, the left half goes back — for phones */
+document.getElementById("deck").addEventListener("click", e => {
+  if (e.target.closest("a,button") || !box.hidden) return;
+  show(e.clientX > window.innerWidth / 2 ? i + 1 : i - 1);
+});
+
+show(parseInt(location.hash.slice(1), 10) - 1 || 0);
+</script>

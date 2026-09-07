@@ -39,7 +39,14 @@ function parse(page) {
       .replace(/\s+(Shared|Owned by me|Download).*$/, "")
       .trim();
 
-    const kind = IMAGE.test(name) ? "image" : VIDEO.test(name) ? "video" : null;
+    /* Drive labels the row with its own type word before the name -- "Video 3",
+       "Image 4" -- which is the only signal when files are named without an
+       extension, as they are when they come straight off a phone export.
+       Extension is the fallback for rows Drive labels only "File". */
+    const label = /^(Video|Image)\b/.exec(body.replace(/<[^>]+>/g, " ").trim());
+    const kind = label
+      ? label[1].toLowerCase()
+      : IMAGE.test(name) ? "image" : VIDEO.test(name) ? "video" : null;
     if (isFile && kind) items.push({ id, name, kind });
   }
   return items;

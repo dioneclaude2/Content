@@ -138,6 +138,14 @@ h1[contenteditable]:focus{outline:none;border-bottom:1px dashed var(--muted)}
     <span class="thumb"><img src="/api/drive-video?id=1QuYbNd9jNgzSae072bO2kytWavU_NOe6" alt=""></span>
     <span class="cardmeta"><b>Carousel 2</b><i>6 slides</i></span>
   </a>
+  <a class="cardlink" href="?f=1jn9UmpxzKLB5eSRSN_Zr8aNa-lY_V4v0">
+    <span class="thumb"><img src="/api/drive-video?id=1QhRsbzFWCZFC7-pJDoudlMNpcD1V8ltY" alt=""></span>
+    <span class="cardmeta"><b>US Open</b><i>5 slides</i></span>
+  </a>
+  <a class="cardlink" href="?f=1nt9OaAPgopTnPEx8k089GR98TctsO-6c">
+    <span class="thumb"><img src="/api/drive-video?id=1KqVg_bpR70Mfyl758jWY43-vyPO3Bukt" alt=""></span>
+    <span class="cardmeta"><b>Carousel 4</b><i>7 slides</i></span>
+  </a>
 </div>
 
 <label class="drop" id="drop">
@@ -450,11 +458,24 @@ function shareNoteText(){
    carrying t=/c= wins over whatever is stored, since that is what the sender
    meant to show. */
 const q=new URLSearchParams(location.search);
+/* What each carousel says by default. A viewer with no link params and
+   nothing stored still sees the caption that belongs to that folder. */
+const PRESETS={
+  '1jn9UmpxzKLB5eSRSN_Zr8aNa-lY_V4v0':{
+    title:'US Open',
+    cap:'the US Open and Nancy have the same standards: perfect serve, satisfying finish \uD83C\uDFBE'
+  },
+  '1nt9OaAPgopTnPEx8k089GR98TctsO-6c':{
+    title:'Carousel 4',
+    cap:'New York gave us Center Court and several opportunities to test our grip strength \uD83C\uDFBE\uD83C\uDF4B in a city that makes room for every kind of ambition, we made sure women\u2019s pleasure took up space too. loudly, proudly, and right in the middle of it all.'
+  }
+};
+
 const storeKey=()=>'carousel-review:'+(driveFolder||'local');
 
 function applySaved(){
-  let v={};
-  try{ v=JSON.parse(localStorage.getItem(storeKey())||'{}'); }catch(e){}
+  let v=Object.assign({}, PRESETS[driveFolder]||{});
+  try{ Object.assign(v, JSON.parse(localStorage.getItem(storeKey())||'{}')); }catch(e){}
   if(q.get('t')||q.get('c')) v={title:q.get('t')||'',cap:q.get('c')||''};
   title.textContent = v.title || 'Untitled carousel';
   handle.textContent = v.title || 'Untitled carousel';

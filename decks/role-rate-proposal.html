@@ -1,0 +1,305 @@
+<title>Role &amp; Rate Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&display=swap">
+
+<style>
+/* Deliberately not the Nancy house look — this is a business case, presented
+   to founders, and it should read as one. Sober ground, one accent, numbers
+   given room. */
+:root{
+  --paper:#F6F6F4; --ink:#14161A; --soft:#6A7079; --line:#DCDCD6;
+  --accent:#146B54; --accent-soft:#E4EFEA; --warn:#8A5A11; --warn-soft:#F6EEDF;
+  --serif:"Newsreader",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);font-family:var(--sans);color:var(--ink);
+     -webkit-font-smoothing:antialiased;overflow:hidden}
+h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.015em;line-height:1.06;margin:0}
+h3,h4{font-family:var(--sans);font-weight:600;margin:0}
+.num{font-variant-numeric:tabular-nums}
+
+.deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;display:none;background:var(--paper);
+       padding:clamp(30px,5vw,72px) clamp(24px,5vw,72px) 72px;overflow-y:auto}
+.slide.on{display:grid;align-content:center}
+.inner{width:100%;max-width:1060px;margin:0 auto}
+
+.eyebrow{font-size:clamp(10px,1vw,11.5px);font-weight:600;letter-spacing:.16em;
+         text-transform:uppercase;color:var(--soft);margin-bottom:16px}
+h1{font-size:clamp(32px,5.4vw,62px)}
+h2{font-size:clamp(26px,4vw,44px)}
+.lede{font-size:clamp(15px,1.6vw,19px);line-height:1.55;color:var(--soft);max-width:62ch;margin-top:18px}
+.lede b{color:var(--ink);font-weight:600}
+em.g{font-style:normal;color:var(--accent)}
+
+/* then / now */
+.two{display:grid;gap:16px;margin-top:28px}
+@media (min-width:820px){.two{grid-template-columns:1fr 1fr}}
+.pane{border:1px solid var(--line);background:#fff;padding:20px 22px}
+.pane.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pane h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:14px}
+.pane.now h4{color:var(--accent)}
+.pane ul{margin:0;padding:0;list-style:none}
+.pane li{font-size:clamp(13px,1.4vw,15px);line-height:1.5;padding:5px 0 5px 18px;position:relative;color:var(--soft)}
+.pane li:before{content:"";position:absolute;left:0;top:12px;width:7px;height:1px;background:var(--soft)}
+.pane li.new{color:var(--ink);font-weight:600}
+.pane li.new:before{background:var(--accent);height:2px;top:11px}
+.note{margin-top:18px;font-size:clamp(13px,1.4vw,15px);color:var(--soft)}
+.note b{color:var(--ink)}
+
+/* evidence */
+.ev{display:grid;gap:10px;margin-top:26px}
+@media (min-width:760px){.ev{grid-template-columns:1fr 1fr}}
+.ei{border-left:2px solid var(--accent);background:#fff;padding:13px 16px}
+.ei h4{font-size:clamp(14px,1.5vw,16px);margin-bottom:4px}
+.ei p{margin:0;font-size:clamp(12.5px,1.35vw,14px);color:var(--soft);line-height:1.45}
+
+/* market table */
+.tbl{margin-top:24px;border:1px solid var(--line);background:#fff}
+.tr{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);align-items:baseline}
+.tr:last-child{border-bottom:0}
+.tr .l{font-size:clamp(13px,1.45vw,15.5px)}
+.tr .l small{display:block;color:var(--soft);font-size:12.5px;margin-top:2px}
+.tr .v{font-weight:600;font-size:clamp(14px,1.6vw,17px);white-space:nowrap}
+.tr.here{background:var(--warn-soft)}
+.tr.here .v{color:var(--warn)}
+.tr.cap{background:var(--accent-soft)}
+.tr.cap .v{color:var(--accent)}
+
+/* the numbers */
+.ask{display:grid;gap:16px;margin-top:26px}
+@media (min-width:760px){.ask{grid-template-columns:auto 1fr;align-items:center}}
+.bignum{border:1px solid var(--accent);background:#fff;padding:22px 26px;text-align:center}
+.bignum .from{font-size:clamp(17px,2vw,22px);color:var(--soft);text-decoration:line-through}
+.bignum .to{font-family:var(--serif);font-weight:600;font-size:clamp(46px,8vw,84px);line-height:1;color:var(--accent);margin-top:4px}
+.bignum .unit{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:8px}
+.facts{display:grid;gap:9px}
+.fact{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:9px}
+.fact .fk{flex:1;font-size:clamp(13px,1.4vw,15px);color:var(--soft)}
+.fact .fv{font-weight:600;font-size:clamp(14px,1.6vw,17px)}
+
+/* path */
+.path{display:grid;gap:12px;margin-top:26px}
+@media (min-width:700px){.path{grid-template-columns:repeat(3,1fr)}}
+.step{border:1px solid var(--line);background:#fff;padding:18px 20px}
+.step.on{border-color:var(--accent);background:var(--accent-soft)}
+.step .when{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.step .r{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,46px);line-height:1;margin:8px 0 6px}
+.step.on .r{color:var(--accent)}
+.step p{margin:0;font-size:12.5px;color:var(--soft);line-height:1.4}
+
+/* asks */
+.checks{display:grid;gap:11px;margin-top:26px}
+.chk{display:grid;grid-template-columns:30px 1fr;gap:0 12px;border:1px solid var(--line);background:#fff;padding:16px 18px}
+.chk .cn{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1;color:var(--accent)}
+.chk h4{font-size:clamp(15px,1.7vw,18px);margin-bottom:4px}
+.chk p{margin:0;font-size:clamp(12.5px,1.35vw,14px);color:var(--soft);line-height:1.45}
+
+.pend{margin-top:20px;border:1px solid var(--line);border-left:3px solid var(--warn);
+      background:#fff;padding:13px 16px;font-size:clamp(12.5px,1.35vw,14px);color:var(--soft);line-height:1.5}
+.pend b{color:var(--ink)}
+
+/* chrome */
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
+     padding:10px clamp(18px,4vw,40px);background:var(--ink);color:var(--paper);z-index:5}
+.bar .who{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9AA1A8}
+.bar .sp{flex:1}
+.bar button{font-family:var(--sans);font-weight:600;font-size:12.5px;border:1px solid #454B54;
+            background:transparent;color:var(--paper);padding:7px 13px;cursor:pointer;border-radius:2px}
+.bar button:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.bar button:disabled{opacity:.35;cursor:not-allowed}
+.bar .n{font-size:11.5px;font-weight:600;letter-spacing:.1em;color:#9AA1A8}
+.prog{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(20,22,26,.1);z-index:5}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .2s ease}
+</style>
+
+<div class="prog"><i id="pg"></i></div>
+<div class="deck" id="deck">
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Role &amp; rate &middot; prepared for Rahul and Crystal</div>
+      <h1>The role has grown into five new functions.<br>This is a proposal to bring the rate with it.</h1>
+      <p class="lede">
+        Two steps. <b>A 20% correction now</b> that formalises scope already being carried, and a
+        review path that reaches the market range for the role over roughly eight months.
+        No change to hours, and no change to what I am already doing.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Scope</div>
+      <h2>What was hired, and what it became</h2>
+      <div class="two">
+        <div class="pane">
+          <h4>Original scope</h4>
+          <ul>
+            <li>Assistant support</li>
+            <li>Operations tracking</li>
+            <li>Ambassador programme</li>
+            <li>Research and planning</li>
+            <li>Scheduling and logistics</li>
+          </ul>
+        </div>
+        <div class="pane now">
+          <h4>Carried today</h4>
+          <ul>
+            <li>Everything on the left, still</li>
+            <li>Social media management and posting cadence</li>
+            <li>Content direction and approvals</li>
+            <li class="new">Creator and influencer relations</li>
+            <li class="new">Event support</li>
+            <li class="new">Community management</li>
+            <li class="new">External coordination</li>
+            <li class="new">Leading the editing team</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note"><b>Five of these did not exist in the role before.</b> They were not handed over from anyone; they were built as the work required them.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Recent evidence</div>
+      <h2>What that has looked like in practice</h2>
+      <div class="ev">
+        <div class="ei"><h4>Led the editing team through New York</h4><p>Briefed external editors, reviewed their cuts, wrote and delivered the feedback session.</p></div>
+        <div class="ei"><h4>Built the crew and brand guides</h4><p>Two live sites: an internal guide for the team and an external one for editors and creators. Both in use.</p></div>
+        <div class="ei"><h4>Set the caption and censoring standards</h4><p>Documented the voice, the word list and the on-screen type rules so output is consistent without supervision.</p></div>
+        <div class="ei"><h4>Kept content going during the shoot</h4><p>Scheduled and published across the shoot window while the team travelled.</p></div>
+        <div class="ei"><h4>Coordinated videographers, creators and post</h4><p>Chased colour correction, organised footage by day, briefed on deliverables.</p></div>
+        <div class="ei"><h4>Covered two time zones</h4><p>Worked HKT and EST across the New York window to keep the shoot supported live.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Benchmarks</div>
+      <h2>Where the rate sits against the market</h2>
+      <p class="lede">The local market sets the floor, since that is the market I am priced in. The international and agency figures are a sanity check on the ceiling, not part of the ask.</p>
+      <div class="tbl">
+        <div class="tr here"><div class="l">Current rate<small>Assistant scope, unchanged since the role began</small></div><div class="v num">$7.50 / hr</div></div>
+        <div class="tr"><div class="l">Social media manager<small>Local market range</small></div><div class="v num">$7.50 &ndash; 9.00</div></div>
+        <div class="tr"><div class="l">Marketing specialist<small>Local market range</small></div><div class="v num">$8.50 &ndash; 15.00</div></div>
+        <div class="tr"><div class="l">Executive assistant<small>Local market range</small></div><div class="v num">$10.00 &ndash; 16.00</div></div>
+        <div class="tr cap"><div class="l">Agency doing this work<small>Roughly $3,000 a month, full service</small></div><div class="v num">&asymp; $18.75 / hr</div></div>
+      </div>
+      <p class="note">The current rate sits at the <b>floor of the narrowest band</b>, while the role now spans all three.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Step one &middot; the ask</div>
+      <h2>A 20% correction, effective now</h2>
+      <div class="ask">
+        <div class="bignum">
+          <div class="from num">$7.50</div>
+          <div class="to num">$9.00</div>
+          <div class="unit">per hour</div>
+        </div>
+        <div class="facts">
+          <div class="fact"><span class="fk">Increase</span><span class="fv num">+20%</span></div>
+          <div class="fact"><span class="fk">Monthly cost at 160 hours</span><span class="fv num">$1,200 &rarr; $1,440</span></div>
+          <div class="fact"><span class="fk">Additional per month</span><span class="fv num">+$240</span></div>
+          <div class="fact"><span class="fk">Additional per year</span><span class="fv num">+$2,880</span></div>
+          <div class="fact"><span class="fk">Still below the agency equivalent by</span><span class="fv num">$9.75 / hr</span></div>
+        </div>
+      </div>
+      <p class="note">This does not add hours or scope. It <b>formalises what is already being carried</b>, and it sits inside Crystal&rsquo;s discretion.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Step two &middot; the path</div>
+      <h2>Reviews every four months, to the market range</h2>
+      <div class="path">
+        <div class="step on"><div class="when">Now</div><div class="r num">$9.00</div><p>Step one. Scope already carried, formalised.</p></div>
+        <div class="step"><div class="when">+ 4 months</div><div class="r num">$10.80</div><p>Reviewed against agreed goals. Up to 20%.</p></div>
+        <div class="step"><div class="when">+ 8 months</div><div class="r num">$12.96</div><p>Inside the benchmark range for the role.</p></div>
+      </div>
+      <p class="note">
+        Each step is <b>earned at a review, not automatic</b> &mdash; up to 20%, against goals we set together.
+        At $12.96 the monthly cost is $2,074, still <b>$926 a month under</b> the agency alternative.
+      </p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Overtime</div>
+      <h2>Weekend and shoot hours</h2>
+      <div class="tbl">
+        <div class="tr"><div class="l">Saturday 15 August<small>Logged</small></div><div class="v num">13 hours</div></div>
+        <div class="tr"><div class="l">Saturday 29 &ndash; Sunday 30 August<small>Shoot weekend</small></div><div class="v num">To be logged</div></div>
+      </div>
+      <p class="lede">
+        Proposal: <b>time off in lieu, hour for hour.</b> Anything not taken by year end is paid as a
+        bonus at whatever rate is in effect at that point.
+      </p>
+      <div class="pend"><b>Final numbers to follow.</b> The August weekend hours will be submitted as logged totals rather than estimates, and this slide updates when they land.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The ask</div>
+      <h2>Three decisions</h2>
+      <div class="checks">
+        <div class="chk"><div class="cn">1</div><div>
+          <h4>Approve $9.00 / hr, effective this month</h4>
+          <p>+$240 a month. Formalises current scope, no change to hours.</p></div></div>
+        <div class="chk"><div class="cn">2</div><div>
+          <h4>Agree a four-month review cadence</h4>
+          <p>Up to 20% per review against goals we set together, until the role reaches its benchmark range.</p></div></div>
+        <div class="chk"><div class="cn">3</div><div>
+          <h4>Confirm the overtime approach</h4>
+          <p>Time off in lieu hour for hour, with anything unused paid out at year end.</p></div></div>
+      </div>
+      <p class="note">Happy to walk through any of the numbers, or work them through together.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="bar">
+  <span class="who">Role &amp; rate proposal</span>
+  <span class="sp"></span>
+  <button type="button" id="prev">&larr; Back</button>
+  <span class="n" id="n">1 / 8</span>
+  <button type="button" id="next">Next &rarr;</button>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+let i = 0;
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle("on", k === i));
+  document.getElementById("n").textContent = (i + 1) + " / " + slides.length;
+  document.getElementById("pg").style.width = ((i + 1) / slides.length * 100) + "%";
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === slides.length - 1;
+  if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+}
+document.getElementById("next").addEventListener("click", () => show(i + 1));
+document.getElementById("prev").addEventListener("click", () => show(i - 1));
+document.addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { show(i + 1); e.preventDefault(); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { show(i - 1); e.preventDefault(); }
+  if (e.key === "Home") show(0);
+  if (e.key === "End") show(slides.length - 1);
+});
+document.getElementById("deck").addEventListener("click", e => {
+  if (e.target.closest("a,button")) return;
+  show(e.clientX > window.innerWidth / 2 ? i + 1 : i - 1);
+});
+show(parseInt(location.hash.slice(1), 10) - 1 || 0);
+</script>

@@ -1,0 +1,530 @@
+<title>Editor Team Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap">
+<style>
+@font-face{font-family:'PP Editorial New';src:url('__PPE_UL__') format('opentype');font-weight:200;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('__PPE_RG__') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('__PPE_IT__') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'PP Editorial New';src:url('__PPE_UB__') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+</style>
+
+<style>
+/* Same sober system as the rate proposal — same presenter, same room.
+   Built for 30-60 minutes: one argument per slide, nothing to read aloud. */
+:root{
+  --paper:#FDF7F5; --ink:#151021; --soft:#6E6579; --line:#E4D8DC;
+  --accent:#FF30CC; --accent-soft:#FFEAFA; --warn:#8A5A11; --warn-soft:#FBF1E4;
+  --serif:"PP Editorial New","Fraunces",Georgia,serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --alt:"Fraunces",Georgia,serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);font-family:var(--sans);color:var(--ink);
+     -webkit-font-smoothing:antialiased;overflow:hidden}
+h1,h2{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.04;margin:0}
+h3,h4{font-family:var(--sans);font-weight:600;margin:0}
+.num{font-variant-numeric:tabular-nums}
+
+.deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;display:none;background:var(--paper);
+       padding:clamp(28px,4.5vw,64px) clamp(24px,5vw,72px) 70px;overflow-y:auto}
+.slide.on{display:grid;align-content:center}
+.inner{width:100%;max-width:1060px;margin:0 auto}
+.eyebrow{font-family:var(--alt);font-size:clamp(10px,1vw,12px);font-weight:600;letter-spacing:.16em;
+         text-transform:uppercase;color:var(--soft);margin-bottom:14px}
+h1{font-size:clamp(30px,5vw,58px)}
+h2{font-size:clamp(24px,3.7vw,42px)}
+.lede{font-size:clamp(14.5px,1.55vw,18px);line-height:1.55;color:var(--soft);max-width:64ch;margin-top:16px}
+.lede b{color:var(--ink);font-weight:600}
+.note{margin-top:16px;font-size:clamp(12.5px,1.35vw,14.5px);color:var(--soft);line-height:1.5}
+.note b{color:var(--ink)}
+
+.two{display:grid;gap:14px;margin-top:24px}
+@media (min-width:820px){.two{grid-template-columns:1fr 1fr}}
+.pane{border:1px solid var(--line);background:#fff;padding:18px 20px}
+.pane.go{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pane h4{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+.pane.go h4{color:var(--accent)}
+.pane ul{margin:0;padding:0;list-style:none}
+.pane li{font-size:clamp(12.5px,1.4vw,15px);line-height:1.5;padding:5px 0 5px 17px;position:relative;color:var(--soft)}
+.pane li:before{content:"";position:absolute;left:0;top:12px;width:7px;height:1px;background:var(--soft)}
+.pane li b{color:var(--ink);font-weight:600}
+
+.steps{display:grid;gap:8px;margin-top:22px}
+.st{display:grid;grid-template-columns:26px 1fr;gap:0 12px;border:1px solid var(--line);
+    background:#fff;padding:11px 15px;align-items:baseline}
+.st .sn{font-family:var(--serif);font-weight:700;font-size:19px;color:var(--accent)}
+.st h4{font-size:clamp(13.5px,1.45vw,15.5px);display:inline}
+.st span{font-size:clamp(12.5px,1.35vw,14px);color:var(--soft);line-height:1.45}
+.st.opt{background:var(--warn-soft);border-color:#E8DCC4}
+.st.opt .sn{color:var(--warn)}
+
+.tbl{margin-top:20px;border:1px solid var(--line);background:#fff}
+.tr{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 17px;
+    border-bottom:1px solid var(--line);align-items:baseline}
+.tr:last-child{border-bottom:0}
+.tr .l{font-size:clamp(12.5px,1.4vw,15px)}
+.tr .l small{display:block;color:var(--soft);font-size:12px;margin-top:2px}
+.tr .v{font-weight:600;font-size:clamp(13px,1.5vw,16px);white-space:nowrap}
+.tr.head{background:#F0F0EC}
+.tr.head .l,.tr.head .v{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:600}
+.tr.spend .v{color:var(--warn)}
+.tr.us .v{color:var(--accent)}
+.blank{display:inline-block;min-width:150px;border-bottom:1px solid var(--line)}
+
+.cols3{display:grid;gap:12px;margin-top:22px}
+@media (min-width:760px){.cols3{grid-template-columns:repeat(3,1fr)}}
+.cd{border-left:2px solid var(--accent);background:#fff;padding:13px 16px}
+.cd h4{font-size:clamp(13.5px,1.5vw,16px);margin-bottom:4px}
+.cd p{margin:0;font-size:clamp(12px,1.3vw,13.5px);color:var(--soft);line-height:1.45}
+
+.quote{border-left:2px solid var(--accent);padding:2px 0 2px 18px;margin-top:22px;
+       font-family:var(--serif);font-style:italic;font-size:clamp(17px,2.1vw,25px);line-height:1.35;max-width:56ch}
+
+.terms{display:grid;gap:14px;margin-top:22px}
+@media (min-width:820px){.terms{grid-template-columns:1fr 1fr}}
+.tcard{border:1px solid var(--line);background:#fff;overflow:hidden}
+.tcard .th{padding:10px 16px;border-bottom:1px solid var(--line);font-size:11.5px;
+           font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.tcard.fixed .th{background:var(--ink);color:var(--paper)}
+.tcard.open .th{background:var(--accent-soft);color:var(--accent)}
+.tcard ul{margin:0;padding:8px 16px 12px 30px}
+.tcard li{font-size:clamp(12.5px,1.35vw,14px);line-height:1.45;padding:3px 0;color:var(--soft)}
+.tcard li b{color:var(--ink)}
+
+.legal{margin-top:20px;border:1px solid var(--line);background:#fff;padding:18px 20px;
+       max-height:46vh;overflow-y:auto;font-size:12.5px;line-height:1.6;color:var(--soft)}
+.legal h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:14px 0 4px}
+.legal h4:first-child{margin-top:0}
+.legal .sig{display:grid;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
+     padding:9px clamp(18px,4vw,40px);background:var(--ink);color:var(--paper);z-index:5}
+.bar .who{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9AA1A8}
+.bar .sp{flex:1}
+.bar button{font-family:var(--sans);font-weight:600;font-size:12.5px;border:1px solid #454B54;
+            background:transparent;color:var(--paper);padding:6px 13px;cursor:pointer;border-radius:2px}
+.bar button:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.bar button:disabled{opacity:.35;cursor:not-allowed}
+.bar .n{font-size:11.5px;font-weight:600;letter-spacing:.1em;color:#9AA1A8}
+.prog{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(20,22,26,.1);z-index:5}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .2s ease}
+
+/* real work, used as texture rather than decoration */
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:30px}
+.strip img{width:100%;aspect-ratio:9/16;object-fit:cover;border:1px solid var(--line);display:block}
+@media (max-width:700px){.strip{grid-template-columns:repeat(3,1fr)}}
+.mark{margin-top:22px}
+.mark img{height:clamp(26px,3vw,36px);width:auto;display:block;
+          filter:brightness(0) saturate(100%) invert(9%) sepia(24%) saturate(1900%) hue-rotate(232deg)}
+
+/* the compounding argument, drawn */
+.chart{display:grid;gap:14px;margin-top:22px}
+@media (min-width:820px){.chart{grid-template-columns:1fr 1fr}}
+.ch{border:1px solid var(--line);background:#fff;padding:14px 16px}
+.ch.on{border-color:var(--accent)}
+.ch .chh{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+.ch.on .chh{color:var(--accent)}
+.ch svg{width:100%;height:96px;display:block}
+.ch p{margin:8px 0 0;font-size:12.5px;color:var(--soft)}
+.ch.on p{color:var(--ink);font-weight:600}
+
+/* bottleneck */
+.flowpair{display:grid;gap:14px;margin-top:20px}
+@media (min-width:760px){.flowpair{grid-template-columns:1fr 1fr}}
+.fl{border:1px solid var(--line);background:#fff;padding:14px 16px}
+.fl.on{border-color:var(--accent)}
+.fl .flh{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:8px}
+.fl.on .flh{color:var(--accent)}
+.fl svg{width:100%;height:78px;display:block}
+.fl p{margin:6px 0 0;font-size:12.5px;color:var(--soft)}
+
+/* event history */
+.hist{display:grid;gap:11px;margin-top:22px}
+@media (min-width:900px){.hist{grid-template-columns:repeat(3,1fr)}}
+.hi{border:1px solid var(--line);background:#fff;padding:0;overflow:hidden;display:grid;grid-template-rows:auto auto 1fr}
+.hi .hw{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
+        padding:11px 16px;border-bottom:1px solid var(--line);background:#FBF3F6}
+.hi .then,.hi .now{padding:12px 16px}
+.hi .now{background:var(--accent-soft);border-top:1px solid var(--line)}
+.hi span{display:block;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+         color:var(--soft);margin-bottom:5px}
+.hi .now span{color:var(--accent)}
+.hi p{margin:0;font-size:clamp(12.5px,1.35vw,14px);line-height:1.5;color:var(--soft)}
+.hi .now p{color:var(--ink)}
+.hi p b{color:var(--ink);font-weight:600}
+
+/* lead-in timeline */
+.tl{display:grid;gap:12px;margin-top:22px}
+.tlrow{display:grid;gap:6px 16px;align-items:center}
+@media (min-width:820px){.tlrow{grid-template-columns:168px 1fr}}
+.tll{font-size:clamp(13px,1.5vw,16px);font-weight:600}
+.tll span{display:block;font-family:var(--alt);font-size:11.5px;font-weight:500;color:var(--soft);margin-top:2px}
+.tlbar{display:flex;gap:5px}
+.tlbar i{flex:1;font-style:normal;font-size:10.5px;font-weight:600;letter-spacing:.04em;
+         text-align:center;padding:11px 4px;border:1px solid var(--line);background:#fff;color:var(--soft);
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tlbar i.ev{flex:1.5;background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+
+.oh{margin:26px 0 12px;font-size:clamp(13px,1.5vw,16px);color:var(--ink)}
+.opts{display:grid;gap:14px}
+@media (min-width:760px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);background:#fff;padding:16px 18px;border-top:3px solid var(--accent)}
+.opt .ol{font-family:var(--alt);font-size:11px;font-weight:600;letter-spacing:.16em;
+         text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.opt h4{font-size:clamp(14.5px,1.6vw,17px);margin-bottom:5px}
+.opt p{margin:0;font-size:clamp(12.5px,1.35vw,14px);line-height:1.5;color:var(--soft)}
+</style>
+
+<div class="prog"><i id="pg"></i></div>
+<div class="deck" id="deck">
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Proposal</div>
+      <h1>A small editing team,<br>instead of rehiring one every event.</h1>
+      <p class="lede">
+        A small editing team working alongside me. I would handle the sourcing, the training and
+        the standards, and keep supporting Crystal as I do now.
+      </p>
+      <div class="strip" id="strip"></div>
+      <div class="mark"><img src="__LOGO__" alt="Nancy"></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The problem</div>
+      <h2>It is not a workload problem.<br>It is a knowledge problem.</h2>
+      <p class="lede">
+        We rotate through different editors event to event. Every one of them starts from zero:
+        no understanding of our events, our editing style, or what we count as a strong reference.
+        <b>All of it gets re-explained every time.</b>
+      </p>
+      <div class="chart">
+        <div class="ch">
+          <div class="chh">Rotating editors</div>
+          <svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-label="Understanding resets to zero at each event">
+            <line x1="0" y1="110" x2="320" y2="110" stroke="#E4D8DC" stroke-width="2"/>
+            <path d="M8 110 L48 74 M88 110 L128 74 M168 110 L208 74 M248 110 L288 74"
+                  fill="none" stroke="#6E6579" stroke-width="4" stroke-linecap="round"/>
+            <g fill="#6E6579" font-size="11" font-family="Helvetica">
+              <text x="8" y="10">event 1</text><text x="88" y="10">event 2</text>
+              <text x="168" y="10">event 3</text><text x="248" y="10">event 4</text>
+            </g>
+          </svg>
+          <p>Back to zero every time.</p>
+        </div>
+        <div class="ch on">
+          <div class="chh">A standing team</div>
+          <svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-label="Understanding compounds across events">
+            <line x1="0" y1="110" x2="320" y2="110" stroke="#E4D8DC" stroke-width="2"/>
+            <path d="M8 110 L48 86 M88 86 L128 62 M168 62 L208 38 M248 38 L288 14"
+                  fill="none" stroke="#FF30CC" stroke-width="4" stroke-linecap="round"/>
+            <path d="M48 86 L88 86 M128 62 L168 62 M208 38 L248 38"
+                  fill="none" stroke="#FF30CC" stroke-width="4" stroke-linecap="round" opacity=".35"/>
+            <g fill="#6E6579" font-size="11" font-family="Helvetica">
+              <text x="8" y="10">event 1</text><text x="88" y="10">event 2</text>
+              <text x="168" y="10">event 3</text><text x="248" y="10">event 4</text>
+            </g>
+          </svg>
+          <p>Each event starts where the last one finished.</p>
+        </div>
+      </div>
+      <div class="two">
+        <div class="pane">
+          <h4>What that costs us</h4>
+          <ul>
+            <li>Output slows while people are brought up to speed</li>
+            <li>Quality swings event to event</li>
+            <li>Revision rounds repeat the same corrections</li>
+            <li>The learning leaves when the editor does</li>
+          </ul>
+        </div>
+        <div class="pane go">
+          <h4>What a standing team changes</h4>
+          <ul>
+            <li><b>Understanding compounds</b> instead of resetting</li>
+            <li>Second event is faster than the first</li>
+            <li>Corrections are made once, not every event</li>
+            <li>Quality becomes predictable</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What we already spend</div>
+      <h2>We are buying this capacity anyway</h2>
+      <div class="tbl">
+        <div class="tr head"><div class="l">Engagement</div><div class="v">Fee</div></div>
+        <div class="tr spend"><div class="l">Veydris Production &mdash; Nancy x ASAP<small>Videography and photography, flat rate</small></div><div class="v num">HK$18,000 &asymp; $2,308</div></div>
+        <div class="tr spend"><div class="l">Filmed by Harrison &mdash; Nancy Goes to Brighton<small>Filming and editing</small></div><div class="v num">&pound;850 &asymp; $1,139</div></div>
+        <div class="tr spend"><div class="l">Same engagement, with travel and expenses<small>Total invoiced</small></div><div class="v num">&pound;1,172.90 &asymp; $1,572</div></div>
+      </div>
+      <p class="note">
+        <b>Said honestly:</b> both of these bundle filming with editing, so a team does not replace
+        them outright. What it does replace is <b>buying editing capacity ad hoc, at agency rates,
+        from people who do not know the brand.</b>
+      </p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Approach</div>
+      <h2>Local, and proven before we commit</h2>
+      <div class="two">
+        <div class="pane go">
+          <h4>Why a Filipino team</h4>
+          <ul>
+            <li><b>Cultural and communication alignment</b> we already have</li>
+            <li>Shorter onboarding, less friction per brief</li>
+            <li>More cost-effective at the same standard</li>
+          </ul>
+        </div>
+        <div class="pane">
+          <h4>Why test first, either way</h4>
+          <ul>
+            <li>We should not commit to anyone &mdash; local or international &mdash; <b>before seeing their output</b></li>
+            <li>A paid one-day trial shows more than any interview</li>
+            <li>The process below is built to find that out cheaply</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">The geography argument is secondary. <b>The argument for testing before hiring holds regardless.</b></p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Hiring</div>
+      <h2>Six steps, deliberately light</h2>
+      <div class="steps">
+        <div class="st"><span class="sn">1</span><span><h4>Source talent.</h4> Referrals, portfolios, freelance platforms.</span></div>
+        <div class="st"><span class="sn">2</span><span><h4>Sign the confidentiality agreement.</h4> Before any paid work begins. Draft in the appendix.</span></div>
+        <div class="st"><span class="sn">3</span><span><h4>First interview &mdash; Dion&eacute; and Ally.</h4> Experience, availability, working style. Screening only.</span></div>
+        <div class="st"><span class="sn">4</span><span><h4>Paid one-day trial.</h4> A set of clips, minimal direction. How much they finish, and how they read the assets. <b>This is the real signal.</b></span></div>
+        <div class="st"><span class="sn">5</span><span><h4>Review and short report.</h4> I assess the output and write it up for you.</span></div>
+        <div class="st"><span class="sn">6</span><span><h4>Decide together.</h4> Event partner or not. No second interview &mdash; the role is an event partnership, not a full-time hire.</span></div>
+        <div class="st opt"><span class="sn">+</span><span><h4>Optional.</h4> A secondary review with Crystal and Susan if useful. Skipped by default so candidates are not pushed through more process than the role warrants.</span></div>
+      </div>
+      <p class="note"><b>Later, selectively:</b> anyone who shows a consistently strong eye across several events converts to full-time, with scope widening beyond events into regular social content.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Engagement shape</div>
+      <h2>What the partnership looks like</h2>
+      <p class="lede">
+        Editors come in <b>before</b> the event, not on the day. That single change fixes most of
+        what went wrong at the US Open &mdash; briefing and strategy happen while there is still
+        time to act on them.
+      </p>
+
+      <div class="tl">
+        <div class="tlrow">
+          <div class="tll">Smaller events<span>2&ndash;3 days ahead</span></div>
+          <div class="tlbar">
+            <i class="b">Brief</i><i class="b">Strategy</i><i class="b">Prep</i><i class="ev">Event day</i>
+          </div>
+        </div>
+        <div class="tlrow">
+          <div class="tll">Bigger events<span>5&ndash;7 days ahead</span></div>
+          <div class="tlbar">
+            <i class="b">Brief</i><i class="b">Strategy</i><i class="b">Refs</i><i class="b">Prep</i><i class="b">Prep</i><i class="b">Check</i><i class="b">Ready</i><i class="ev">Event day</i>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="oh">Two ways to price the lead-in &mdash; open to either, or a mix</h4>
+      <div class="opts">
+        <div class="opt">
+          <div class="ol">Option A</div>
+          <h4>Lower rate on briefing days</h4>
+          <p>Full days, priced below the event-day rate. Simple to plan around, and they are available for the whole day if something moves.</p>
+        </div>
+        <div class="opt">
+          <div class="ol">Option B</div>
+          <h4>Shorter briefing days</h4>
+          <p>Same rate, but briefing runs as a half day rather than eight hours. Briefing rarely needs a full day anyway.</p>
+        </div>
+      </div>
+      <p class="note"><b>Initial thinking, not a fixed position.</b> What matters is that the lead-in is planned and paid for, rather than squeezed into the night before.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What I build, and who we look for</div>
+      <h2>The team only works if two things are true</h2>
+      <div class="two">
+        <div class="pane go">
+          <h4>What I build</h4>
+          <ul>
+            <li><b>Brand editing standards</b>, written from scratch</li>
+            <li>Training on <b>reading outliers</b> &mdash; and sourcing them independently</li>
+            <li>Training on <b>Nancy captions</b> and on-screen text</li>
+          </ul>
+        </div>
+        <div class="pane">
+          <h4>Who we hire for</h4>
+          <ul>
+            <li>We move fast, and briefs get built on the fly</li>
+            <li>The requirement is not a flawless brief &mdash; it is <b>people who work well inside an evolving one</b></li>
+            <li>Adaptive, not passive. Invested in improving, not just executing</li>
+            <li><b>Culture, adaptability and a genuinely good eye</b> &mdash; scouted properly, not sourced out of scarcity once an event is already on us</li>
+          </ul>
+        </div>
+      </div>
+      <div class="quote">&ldquo;That is how I learned. I was lost at first, and I adapted as I went rather than waiting to be walked through it. That is the exact quality this team needs.&rdquo;</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Looking back</div>
+      <h2>What hurt, and what we have already fixed</h2>
+      <div class="hist">
+        <div class="hi">
+          <div class="hw">Before ASAP HK and the US Open</div>
+          <div class="then"><span>Then</span><p>The production team edited without hooks. Finding the hook and adding the captions came back to me afterwards &mdash; the wrong order, and it does not scale.</p></div>
+          <div class="now"><span>Now</span><p>We <b>work backwards</b>. The reference, or the music, comes before the edit.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">ASAP HK</div>
+          <div class="then"><span>Then</span><p>Just Remo and me, and I wrote every caption and text overlay myself.</p></div>
+          <div class="now"><span>Now</span><p>The partnership got better as we went, and it became clear <b>he could be trained to write them</b>. A system to support that is in progress.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">US Open</div>
+          <div class="then"><span>Then</span><p>We had editors but had not met them beforehand. Everything landed on the day, and the gaps surfaced there.</p></div>
+          <div class="now"><span>Now</span><p>The standards are <b>written down</b>, and the first proper feedback session with the editors has happened.</p></div>
+        </div>
+      </div>
+      <div class="quote">Each of these got better because we caught it and changed it. A standing team is how that stops being accidental.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Budget</div>
+      <h2>Market rates, and what is still open</h2>
+      <div class="tbl">
+        <div class="tr head"><div class="l">Tier</div><div class="v">Hourly &middot; per deliverable &middot; per event day</div></div>
+        <div class="tr us"><div class="l">Entry level<small>Trial phase</small></div><div class="v num">$5&ndash;7 &middot; $20&ndash;100 &middot; $40&ndash;90</div></div>
+        <div class="tr us"><div class="l">Mid and senior<small>Proven, conversion candidates</small></div><div class="v num">$10&ndash;15+ &middot; $50&ndash;270 &middot; $80&ndash;195</div></div>
+      </div>
+      <div class="tbl">
+        <div class="tr head"><div class="l">Additional costs &mdash; to confirm with the team</div><div class="v">Monthly</div></div>
+        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
+        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
+        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
+        <div class="tr"><div class="l"><b>Total estimated monthly</b></div><div class="v"><span class="blank"></span></div></div>
+      </div>
+      <p class="note">Event-day rates are <b>per editor</b>. The vendor fees on the earlier slide are per engagement and include filming &mdash; not a like-for-like comparison, and I would rather say so than imply a saving that is not there.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Terms</div>
+      <h2>What is fixed, and what we can shape</h2>
+      <div class="terms">
+        <div class="tcard fixed">
+          <div class="th">Nonnegotiable</div>
+          <ul>
+            <li><b>Confidentiality</b> on unreleased footage, event content and brand assets</li>
+            <li><b>Clear scope per engagement</b> &mdash; cutting, captions, overlays and our standards in; filming and licensed music out</li>
+            <li><b>Ownership</b> &mdash; final files and source footage are the company&rsquo;s once paid</li>
+            <li><b>Responsiveness</b> during live event hours</li>
+            <li><b>Firm deadline</b> on event-day deliverables, same or next day</li>
+          </ul>
+        </div>
+        <div class="tcard open">
+          <div class="th">Open to discussion</div>
+          <ul>
+            <li>Pay structure &mdash; hourly, day rate or per deliverable</li>
+            <li>Revision rounds before extra charges</li>
+            <li>Turnaround on evergreen content</li>
+            <li>Exclusivity between events</li>
+            <li>Conversion criteria and timeline</li>
+            <li>Equipment and software provided or self-supplied</li>
+            <li>Payment schedule</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Appendix &mdash; not for reading aloud</div>
+      <h2>Confidentiality and non-use agreement</h2>
+      <p class="note"><b>Starting draft only.</b> To be reviewed by whoever handles contracts before it is used.</p>
+      <div class="legal">
+        <p>Between <b>[Company/Brand Name]</b> (&ldquo;Company&rdquo;) and <b>[Editor Name]</b> (&ldquo;Editor&rdquo;). Effective date: ____________</p>
+        <h4>1. Confidential materials</h4>
+        <p>Editor may be given access to unreleased footage, event content, brand assets, captions, editing standards and other materials (&ldquo;Materials&rdquo;) for the purpose of a trial task or event-partner engagement.</p>
+        <h4>2. Non-disclosure</h4>
+        <p>Editor agrees not to share, publish, post or disclose any Materials, in whole or in part, to any third party or platform without Company&rsquo;s prior written consent, including before the associated content is publicly released.</p>
+        <h4>3. Non-use</h4>
+        <p>Editor agrees not to use the Materials for any purpose beyond the assigned tasks, including not using them in a portfolio, reel or promotional materials without written permission.</p>
+        <h4>4. Ownership</h4>
+        <p>All Materials, including raw footage and any edits produced from them, remain the property of Company. No ownership or usage rights are granted beyond the assigned task.</p>
+        <h4>5. Return and deletion</h4>
+        <p>On request or at the end of the engagement, Editor agrees to delete all copies of the Materials from their devices and storage.</p>
+        <h4>6. Duration</h4>
+        <p>Indefinite for unreleased Materials, and [X months/years] after the engagement ends for all other confidentiality obligations.</p>
+        <div class="sig">
+          <p>Editor signature: ______________________ Date: ____________</p>
+          <p>Company representative: ______________________ Date: ____________</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="bar">
+  <span class="who">Editor team proposal</span>
+  <span class="sp"></span>
+  <button type="button" id="prev">&larr; Back</button>
+  <span class="n" id="n">1 / 10</span>
+  <button type="button" id="next">Next &rarr;</button>
+</div>
+
+<script>
+const STRIP = __STRIP__;
+const st = document.getElementById("strip");
+if (st) st.innerHTML = STRIP.map(src => `<img src="${src}" alt="">`).join("");
+
+const slides = [...document.querySelectorAll(".slide")];
+let i = 0;
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.classList.toggle("on", k === i));
+  document.getElementById("n").textContent = (i + 1) + " / " + slides.length;
+  document.getElementById("pg").style.width = ((i + 1) / slides.length * 100) + "%";
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === slides.length - 1;
+  if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+}
+document.getElementById("next").addEventListener("click", () => show(i + 1));
+document.getElementById("prev").addEventListener("click", () => show(i - 1));
+document.addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { show(i + 1); e.preventDefault(); }
+  if (["ArrowLeft", "PageUp"].includes(e.key)) { show(i - 1); e.preventDefault(); }
+  if (e.key === "Home") show(0);
+  if (e.key === "End") show(slides.length - 1);
+});
+document.getElementById("deck").addEventListener("click", e => {
+  if (e.target.closest("a,button") || e.target.closest(".legal")) return;
+  show(e.clientX > window.innerWidth / 2 ? i + 1 : i - 1);
+});
+show(parseInt(location.hash.slice(1), 10) - 1 || 0);
+</script>
