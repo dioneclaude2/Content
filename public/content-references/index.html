@@ -110,7 +110,8 @@ img{max-width:100%}
 .demo{height:clamp(280px,44vh,420px);aspect-ratio:9/16;position:relative;overflow:hidden;
   background:var(--warm) center/cover no-repeat}
 .dm{position:absolute;color:#fff;line-height:1.12;paint-order:stroke fill;white-space:nowrap}
-.dm-card{left:6%;bottom:21%;font-family:var(--serif);font-weight:900;font-size:2.7cqh;
+.dm-lock{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:66%;height:auto;display:block}
+.dm-card{left:6%;bottom:21%;white-space:normal;max-width:88%;font-family:var(--serif);font-weight:900;font-size:2.7cqh;
   -webkit-text-stroke:0.32cqh #FF3EAA}
 .dm-cap{left:50%;transform:translateX(-50%);bottom:11%;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight:700;font-size:1.7cqh;-webkit-text-stroke:0.13cqh rgba(0,0,0,.9)}
@@ -119,6 +120,7 @@ img{max-width:100%}
   -webkit-text-stroke:0.13cqh rgba(0,0,0,.9)}
 .demo{container-type:size}
 .demowrap{display:grid;gap:9px;justify-items:start}
+.demo-sm{height:clamp(220px,30vh,300px)}
 .demowrap .cap{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
   color:var(--muted);max-width:26ch;line-height:1.5}
 .spec{display:grid;align-content:start}
@@ -199,6 +201,7 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <div class="typeset">
     <div class="demowrap">
       <div class="demo" id="demoMM">
+        <img class="dm-lock" id="lockMM" alt="Meet her title card">
         <span class="dm dm-card">Their name, @their handle<br>Doctor, sexologist<br>Nancy x Ray Chu @ London Fashion Week</span>
         <span class="dm dm-cap">and that doesn&rsquo;t mean anything is wrong</span>
       </div>
@@ -222,20 +225,6 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   </div>
   <div class="chips" id="chips3"></div>
   <div class="viewer" data-v="2"></div>
-  <div class="typeset">
-    <div class="demowrap">
-      <div class="demo" id="demoHL">
-        <span class="dm dm-hook">POV: the sound<br>of pleasure</span>
-      </div>
-      <span class="cap">The hook, centred in the top third</span>
-    </div>
-    <div class="spec" style="align-content:start">
-      <span class="mono" style="color:var(--pink);margin-bottom:12px">How it is built</span>
-      <div class="r"><span class="k">Highlights</span><b>Cut from the footage of the day</b></div>
-      <div class="r"><span class="k">Photo reels</span><b>Cut from photos, not footage</b></div>
-      <div class="r"><span class="k">Both</span><b>Fast cuts, one hook at the top, branded throughout</b></div>
-    </div>
-  </div>
 </section>
 
 <footer>
@@ -269,9 +258,13 @@ const MATTERS = [
   "<b>It has to tell a story.</b> That is the part that matters."
 ];
 
+/* a still with nothing burned into it, so the only type on a specimen is ours */
+const clean = (si, i) => THUMBS[SETS[si].slides[i].id];
+
 const MM_SPEC = `
   <span class="k mono">Set the type like this</span>
   <div class="spec">
+    <div class="r"><span class="k">Title card</span><b>Meet Her, top centre. <span class="dim">Pink, white or yellow &mdash; below.</span></b></div>
     <div class="r"><span class="k">Name card</span><b>Fraunces-Blk, bold, <span class="dim">size</span> 10</b></div>
     <div class="r"><span class="k">Its stroke</span><b><span class="sw" style="background:#FF3EAA"></span>FF3EAA at <b>100%</b> thickness, white fill</b></div>
     <div class="r"><span class="k">Line 1</span><b>Their name, @their handle</b></div>
@@ -284,6 +277,12 @@ const MM_SPEC = `
 
 const HL_SPEC = `
   <span class="k mono">Set the type like this</span>
+  <div class="demowrap" style="margin-bottom:18px">
+    <div class="demo demo-sm" style="background-image:url(${clean(0, 3)})">
+      <span class="dm dm-hook">POV: the sound<br>of pleasure</span>
+    </div>
+    <span class="cap">The hook, centred in the top third</span>
+  </div>
   <div class="spec">
     <div class="r"><span class="k">The hook</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9&ndash;10</b></div>
     <div class="r"><span class="k">Its stroke</span><b>White fill, black stroke at <b>40%</b> thickness</b></div>
@@ -365,10 +364,8 @@ chips(0, "chips"); chips(2, "chips3");
 draw(0); draw(1); draw(2);
 
 /* the specimens sit on a real still */
-/* a still with nothing burned into it, so the only type on the specimen is ours */
-const clean = (si, i) => THUMBS[SETS[si].slides[i].id];
 document.getElementById("demoMM").style.backgroundImage = "url(" + clean(1, 3) + ")";
-document.getElementById("demoHL").style.backgroundImage = "url(" + clean(0, 3) + ")";
+document.getElementById("lockMM").src = CARDS.items[0].prev;
 
 /* the site serves the files; without them, point at the Drive folder */
 const zip = document.getElementById("cardZip");
