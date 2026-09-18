@@ -27,11 +27,14 @@ shutil.copy(src / "assets" / "nancy-logo-ink.svg", dest / "assets" / "nancy-logo
 
 vids = dest / "videos"
 vids.mkdir()
-for m in json.loads((SC / "minimic.json").read_text()):
+clips = list(json.loads((SC / "minimic.json").read_text()))
+for group in json.loads((SC / "highlights.json").read_text()).values():
+    clips += group
+for m in clips:
     shutil.copy(m["src"], vids / m["file"])
 
 html = built.read_text()
-for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__", "__VIDEOBASE__"):
+for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__ANAT__", "__VIDEOBASE__"):
     if placeholder in html:
         raise SystemExit("unsubstituted: %s" % placeholder)
 before = html.count('src="assets/')

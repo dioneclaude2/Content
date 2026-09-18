@@ -36,6 +36,14 @@ for m in mm:
     m["poster"] = "data:image/jpeg;base64," + base64.b64encode(f.read_bytes()).decode()
 anat = "data:image/jpeg;base64," + base64.b64encode((SC / "mm" / "anat_big.jpg").read_bytes()).decode()
 
+hl = json.loads((SC / "highlights.json").read_text())
+for group in hl.values():
+    for m in group:
+        f = SC / m["poster"]
+        if not f.exists():
+            raise SystemExit("no poster: %s" % f)
+        m["poster"] = "data:image/jpeg;base64," + base64.b64encode(f.read_bytes()).decode()
+
 html = (here / "public" / "index.html").read_text()
 # the artifact strips our charset meta, so a raw non-ASCII byte in the source
 # is served as latin-1 and shows up as mojibake — keep the page pure ASCII
@@ -48,6 +56,8 @@ if missing:
 html = (html.replace("__THUMBS__", json.dumps(thumbs), 1)
             .replace("__SETS__", json.dumps(sets), 1)
             .replace("__MM__", json.dumps([{k: v for k, v in m.items() if k != "src"} for m in mm]), 1)
+            .replace("__HL__", json.dumps({k: [{a: b for a, b in m.items() if a != "src"} for m in v]
+                                            for k, v in hl.items()}), 1)
             .replace("__ANAT__", anat, 1))
 
 # the artifact has no room for the clips, so it falls back to the Drive embed;
@@ -63,7 +73,7 @@ logo = (here / "public" / "assets" / "nancy-logo-ink.svg").read_bytes()
 art = art.replace('src="assets/nancy-logo-ink.svg"',
                   'src="data:image/svg+xml;base64,%s"' % base64.b64encode(logo).decode())
 if "__" in art.replace("__NANCY", ""):
-    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__", "__VIDEOBASE__") if w in art]
+    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__ANAT__", "__VIDEOBASE__") if w in art]
     if leftover: raise SystemExit("unsubstituted: %s" % leftover)
 out.write_text(art)
 (here / "public" / "index.built.html").write_text(site)

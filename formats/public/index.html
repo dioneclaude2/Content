@@ -71,12 +71,39 @@ h2 em{font-style:italic;color:var(--pink)}
 .frame .pv{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer}
 .frame .pv i{width:52px;height:52px;border-radius:50%;background:rgba(31,18,22,.55);display:grid;
   place-items:center;color:#fff;font-style:normal;font-size:16px;padding-left:3px}
-.info{border-top:1px solid var(--ink);padding-top:13px;max-width:30ch}
-.info .k{display:block;color:var(--muted);margin-bottom:9px}
-.info .doing{font-family:var(--serif);font-size:clamp(24px,2.6vw,34px);font-weight:300;
+.info{border-top:1px solid var(--ink);padding-top:13px;min-width:0}
+.info .k{display:block;color:var(--muted);margin-bottom:11px}
+.info .doing{font-family:var(--serif);font-size:clamp(21px,2.3vw,30px);font-weight:300;
   letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
 .info .doing b{color:var(--pink);font-weight:300}
-.info .nav{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.info .nav{display:flex;align-items:center;gap:9px;margin:18px 0 14px}
+
+/* the kinds of asset a carousel is built from */
+.kinds{display:grid;gap:0;border-top:1px solid var(--line)}
+.kinds div{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:baseline;
+  border-bottom:1px solid var(--line);padding:9px 0;font-size:13px;color:var(--muted)}
+.kinds .nm{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.kinds div[data-on="1"]{color:var(--ink)}
+.kinds div[data-on="1"] .nm{color:var(--pink)}
+
+/* the mini mic breakdown, beside the clip */
+.bd{display:grid;gap:18px}
+.bd .h3{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pink);border-top:1px solid var(--ink);padding-top:11px;margin-bottom:2px}
+.bd .r{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:baseline;padding:8px 0;font-size:13.5px}
+.bd .r+.r{border-top:1px solid var(--line)}
+.bd .r .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.bd .r b{font-weight:500;line-height:1.5}
+.bd .or{color:var(--muted);font-weight:400;font-size:12.5px}
+
+/* the highlight rules, beside the clip */
+.rules{margin:0;padding-left:16px;color:var(--muted);font-size:13.5px;line-height:1.55}
+.rules li{margin-bottom:7px}
+.rules b{color:var(--ink);font-weight:500}
+
+/* the pins ride on the poster so the parts stay named */
+.frame .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
+  text-transform:uppercase;background:var(--ink);color:var(--cream);padding:3px 6px;line-height:1.3}
 .info button{all:unset;cursor:pointer;border:1px solid var(--line);padding:5px 11px;
   font-family:var(--mono);font-size:11px;color:var(--muted)}
 .info button:hover{border-color:var(--pink);color:var(--pink)}
@@ -95,27 +122,6 @@ h2 em{font-style:italic;color:var(--pink)}
 .rail .n.v{background:var(--pink)}
 
 /* ---------- mini mic reference ---------- */
-.mmref{display:grid;grid-template-columns:minmax(0,184px) 1fr;gap:clamp(22px,4vw,52px);
-  align-items:start;margin-bottom:clamp(34px,5vw,52px)}
-.af{position:relative;line-height:0}
-.af img{width:100%;display:block}
-.af .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
-  text-transform:uppercase;background:var(--ink);color:var(--cream);padding:3px 6px;line-height:1.3}
-.sgs{display:grid;gap:clamp(20px,2.6vw,28px)}
-.sg .sh2{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--pink);border-top:1px solid var(--ink);padding-top:11px;margin-bottom:2px}
-.sr{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:baseline;padding:9px 0;font-size:14px}
-.sr+.sr{border-top:1px solid var(--line)}
-.sr .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.sr b{font-weight:500;line-height:1.5}
-.sr .or{color:var(--muted);font-weight:400;font-size:13px}
-.sw{display:inline-block;width:8px;height:8px;margin-right:5px}
-
-.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(22px,4vw,52px)}
-.two .t{display:block;color:var(--pink);border-top:1px solid var(--ink);padding-top:11px}
-.two p{color:var(--muted);margin:9px 0 16px;font-size:14px;max-width:34ch}
-.two .wait{aspect-ratio:4/5;max-width:200px;background:var(--warm);display:grid;place-items:center}
-.two .wait span{color:var(--muted)}
 
 footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);
   padding:clamp(56px,8vw,96px) var(--pad) 42px;margin-top:clamp(44px,6vw,76px);border-top:1px solid var(--line)}
@@ -123,8 +129,6 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
 @media(max-width:760px){
   .hgrid,.head{grid-template-columns:1fr;align-items:start}
   h2{max-width:none}
-  .mmref{grid-template-columns:1fr}
-  .af{max-width:184px}
   .viewer{grid-template-columns:1fr}
   .frame{height:auto;width:100%;max-width:320px}
   .frame img{height:auto;width:100%}
@@ -139,12 +143,8 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <span class="mono r">Any event</span>
 </header>
 
-<section class="hero" style="padding-bottom:clamp(28px,4vw,46px)">
-  <span class="eyebrow mono">Content references</span>
-  <div class="hgrid">
-    <h1>What we <em>make.</em></h1>
-    <p class="stand">Three formats, with the work underneath each one. Every still says what it is doing, so the examples are the brief.</p>
-  </div>
+<section class="hero" style="padding-bottom:clamp(26px,4vw,42px)">
+  <h1>Content <em>references.</em></h1>
 </section>
 
 <nav class="pills" id="nav"><div class="in">
@@ -167,32 +167,6 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
     <h2>One question, <em>everyone answers.</em></h2>
     <p class="lede">Cut back to back so it plays as one conversation. A name card the first time each person appears.</p>
   </div>
-  <div class="mmref">
-    <div class="af">
-      <img src="__ANAT__" alt="A mini mic frame: logo top right, name card lower left, captions at the bottom">
-      <span class="pin" style="top:3%;left:3%">Logo</span>
-      <span class="pin" style="top:56%;right:3%">Name card</span>
-      <span class="pin" style="top:84%;right:3%">Captions</span>
-    </div>
-    <div class="sgs">
-      <div class="sg">
-        <span class="sh2">The name card</span>
-        <div class="sr"><span class="k mono">Says</span>
-          <b>Amanda McCants, @amandamccants<br>Nancy OOO host &nbsp;<span class="or">or</span>&nbsp; Nancy OOO Panelist</b></div>
-        <div class="sr"><span class="k mono">At a collab</span><b>Nancy x Ray Chu @ London Fashion Week</b></div>
-        <div class="sr"><span class="k mono">Set as</span><b>Fraunces-Blk, bold, size 10. White fill,
-          <span class="sw" style="background:#FF3EAA"></span>FF3EAA outline.</b></div>
-      </div>
-      <div class="sg">
-        <span class="sh2">The captions</span>
-        <div class="sr"><span class="k mono">Set as</span><b>Helvetica Neue, bold, size 9</b></div>
-      </div>
-      <div class="sg">
-        <span class="sh2">The logo</span>
-        <div class="sr"><span class="k mono">Set as</span><b>Scale 26%, X 705 / Y 1662</b></div>
-      </div>
-    </div>
-  </div>
   <div class="viewer" data-v="1"></div>
 </section>
 
@@ -201,14 +175,8 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
     <h2>The room, <em>as it felt.</em></h2>
     <p class="lede">Two cuts of the same day. One built from stills, one from footage.</p>
   </div>
-  <div class="two">
-    <div><span class="mono t">A &nbsp;Photo reels</span>
-      <p>The stills, moving. Same shots as a carousel, cut to a track.</p>
-      <div class="wait"><span class="mono">Examples coming</span></div></div>
-    <div><span class="mono t">B &nbsp;Video highlight</span>
-      <p>The footage. The room, the crowd, the moments.</p>
-      <div class="wait"><span class="mono">Examples coming</span></div></div>
-  </div>
+  <div class="chips" id="chips3"></div>
+  <div class="viewer" data-v="2"></div>
 </section>
 
 <footer>
@@ -220,11 +188,45 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
 const THUMBS = __THUMBS__;
 const SETS = __SETS__;
 const MM = __MM__;
+const HL = __HL__;
 const VIDEO_BASE = "__VIDEOBASE__";
 
 /* what each still is doing, so stepping through a set reads as the brief */
 const WORD = { group:"Everyone", solo:"One person", two:"Two of them",
                prop:"Branded object", still:"Still life", video:"Video" };
+const KINDS = [
+  ["group", "Everyone", "Three or more, mid-laugh, nobody looking at the lens."],
+  ["solo", "One person", "Styled, or caught. Overhead, in the water, in the sun."],
+  ["two", "Two of them", "Close together, laughing at each other rather than at us."],
+  ["prop", "Branded object", "The flag, the ring, the cap, the tee. The object is the subject."],
+  ["still", "Still life", "No people, no logo. Tactile and quiet."],
+  ["video", "Video", "A short clip. It wakes the set up."]
+];
+
+const CARD = `
+  <span class="h3">The name card</span>
+  <div class="r"><span class="k">Line 1</span><b>Their name, @their handle</b></div>
+  <div class="r"><span class="k">Line 2</span><b>Nancy OOO host <span class="or">or</span> Nancy OOO Panelist</b></div>
+  <div class="r"><span class="k">At a collab</span><b>Nancy x [brand] @ [event]</b></div>
+  <div class="r"><span class="k">Set as</span><b>Fraunces-Blk, bold, size 10. White fill,
+    <span class="sw" style="background:#FF3EAA"></span>FF3EAA outline at <b>100%</b> thickness.</b></div>`;
+const CAPS = `
+  <span class="h3">The captions</span>
+  <div class="r"><span class="k">Set as</span><b>Helvetica Neue, bold, size 9. Same outline at <b>40%</b> thickness.</b></div>`;
+const LOGO = `
+  <span class="h3">The logo</span>
+  <div class="r"><span class="k">Set as</span><b>Top right. Scale 26%, X 705 / Y 1662.</b></div>`;
+
+const RULES = {
+  "Event highlights": ["<b>Find the music first.</b> The track decides where the cuts land \u2014 never cut first and drop a beat under it after.",
+    "Fast, but balanced against the track. The beat sets the pace, not a stopwatch.",
+    "<b>Branded throughout.</b> Logo, campaign title, the full lockup.",
+    "Take the mechanism from an outlier, then write a text overlay of our own."],
+  "Photo reels": ["<b>Event highlights, except every frame is a still.</b>",
+    "Same rules \u2014 music first, cuts follow, branded the same way.",
+    "<b>Only the source changes.</b> Nothing about the approach does."]
+};
+
 function doing(ty, i, n){
   const w = WORD[ty] || "";
   if (i === 0) return "<b>Opener</b> \u00b7 " + w;
@@ -236,17 +238,36 @@ const VIEWS = [
   { groups: SETS.map(s => ({
       name: s.name,
       items: s.slides.map((x, i) => ({ id: x.id, video: x.t === "video", thumb: THUMBS[x.id],
-                                       lb: doing(x.ty, i, s.slides.length) })) })) },
+                                       ty: x.ty, lb: doing(x.ty, i, s.slides.length) })) })) },
   { groups: [{ name: "Mini mic",
-      items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file,
-                            lb: "Host asks \u00b7 Panel answers" })) }] }
+      items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: true,
+                            lb: "Host asks \u00b7 Panel answers" })) }] },
+  { groups: [
+      { name: "Event highlights", items: HL.highlights.map(m => ({ id: m.id, video: true,
+          thumb: m.poster, file: m.file, lb: m.lb })) },
+      { name: "Photo reels", items: HL.reels.map(m => ({ id: m.id, video: true,
+          thumb: m.poster, file: m.file, lb: m.lb })) }] }
 ];
 VIEWS.forEach(v => { v.g = 0; v.i = 0; v.playing = false; v.el = document.querySelector('.viewer[data-v="' + VIEWS.indexOf(v) + '"]'); });
 
-function chips(){
-  const v = VIEWS[0];
-  document.getElementById("chips").innerHTML = v.groups.map((g, k) =>
-    `<button aria-selected="${k === v.g}" data-g="${k}">${g.name}</button>`).join("");
+function chips(vi, host){
+  const v = VIEWS[vi];
+  document.getElementById(host).innerHTML = v.groups.map((g, k) =>
+    `<button aria-selected="${k === v.g}" data-g="${k}" data-v="${vi}">${g.name}</button>`).join("");
+}
+
+function right(vi, v, g, it){
+  if (vi === 0) return `
+    <span class="k mono">Slide ${String(v.i + 1).padStart(2, "0")} is doing</span>
+    <p class="doing">${it.lb}</p>
+    <span class="k mono">What a carousel is built from</span>
+    <div class="kinds">${KINDS.map(k =>
+      `<div data-on="${k[0] === it.ty ? 1 : 0}"><span class="nm">${k[1]}</span><span>${k[2]}</span></div>`).join("")}</div>`;
+  if (vi === 1) return `<div class="bd">${CARD}${CAPS}${LOGO}</div>`;
+  return `
+    <span class="k mono">${g.name}</span>
+    <p class="doing">${it.lb}</p>
+    <ul class="rules">${(RULES[g.name] || []).map(r => `<li>${r}</li>`).join("")}</ul>`;
 }
 
 function draw(vi){
@@ -258,7 +279,11 @@ function draw(vi){
     : `<iframe src="https://drive.google.com/file/d/${it.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
   const stage = it.video && v.playing
     ? player
-    : `<img src="${it.thumb || ""}" alt="">` + (it.video ? `<span class="pv" data-play="1"><i>&#9654;</i></span>` : "");
+    : `<img src="${it.thumb || ""}" alt="">`
+      + (it.pins ? `<span class="pin" style="top:3%;left:3%">Logo</span>
+                    <span class="pin" style="top:56%;right:3%">Name card</span>
+                    <span class="pin" style="top:82%;right:3%">Captions</span>` : "")
+      + (it.video ? `<span class="pv" data-play="1"><i>&#9654;</i></span>` : "");
   v.el.innerHTML = `
     <div class="frame${it.video && v.playing ? " playing" : ""}">${stage}</div>
     <div class="rail">
@@ -267,15 +292,13 @@ function draw(vi){
         <span class="n${t.video ? " v" : ""}">${String(k + 1).padStart(2, "0")}</span></a>`).join("")}
     </div>
     <div class="info">
-      <span class="k mono">Slide ${String(v.i + 1).padStart(2, "0")} is doing</span>
-      <p class="doing">${it.lb}</p>
+      ${right(vi, v, g, it)}
       <div class="nav">
         <button data-step="-1">&larr;</button>
         <span class="ct">${String(v.i + 1).padStart(2, "0")} / ${g.items.length}</span>
         <button data-step="1">&rarr;</button>
       </div>
       <a href="https://drive.google.com/file/d/${it.id}/view" target="_blank" rel="noopener">Open in Drive &#8599;</a>
-      <p class="hint">${it.video ? (v.playing ? "Playing." : "Press play to watch it.") : "Step through the strip to see the order."}</p>
     </div>`;
   const on = v.el.querySelector('.rail a[aria-selected="true"]');
   if (on) on.scrollIntoView({ block: "nearest" });
@@ -287,8 +310,10 @@ function step(vi, d){
 }
 
 document.addEventListener("click", e => {
-  const c = e.target.closest("#chips button");
-  if (c){ const v = VIEWS[0]; v.g = +c.dataset.g; v.i = 0; v.playing = false; chips(); draw(0); return; }
+  const c = e.target.closest(".chips button");
+  if (c){ const vi = +c.dataset.v, v = VIEWS[vi];
+    v.g = +c.dataset.g; v.i = 0; v.playing = false;
+    chips(vi, vi === 0 ? "chips" : "chips3"); draw(vi); return; }
   const host = e.target.closest(".viewer");
   if (!host) return;
   const vi = +host.dataset.v;
@@ -299,7 +324,7 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-play]")){ VIEWS[vi].playing = true; draw(vi); }
 });
 
-chips(); draw(0); draw(1);
+chips(0, "chips"); chips(2, "chips3"); draw(0); draw(1); draw(2);
 
 /* the pills jump, and follow you down */
 const links = [...document.querySelectorAll(".pills a")];
