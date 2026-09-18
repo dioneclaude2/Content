@@ -79,12 +79,9 @@ h2 em{font-style:italic;color:var(--pink)}
 .info .nav{display:flex;align-items:center;gap:9px;margin:18px 0 14px}
 
 /* the kinds of asset a carousel is built from */
-.kinds{display:grid;gap:0;border-top:1px solid var(--line)}
-.kinds div{display:grid;grid-template-columns:118px 1fr;gap:14px;align-items:baseline;
-  border-bottom:1px solid var(--line);padding:9px 0;font-size:13px;color:var(--muted)}
-.kinds .nm{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase}
-.kinds div[data-on="1"]{color:var(--ink)}
-.kinds div[data-on="1"] .nm{color:var(--pink)}
+.kinds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.kinds span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:6px 11px}
 
 /* the mini mic breakdown, beside the clip */
 .bd{display:grid;gap:18px}
@@ -192,15 +189,15 @@ const HL = __HL__;
 const VIDEO_BASE = "__VIDEOBASE__";
 
 /* what each still is doing, so stepping through a set reads as the brief */
-const WORD = { group:"Everyone", solo:"One person", two:"Two of them",
+const WORD = { group:"Group shot", solo:"Solo", two:"Pair",
                prop:"Branded object", still:"Still life", video:"Video" };
-const KINDS = [
-  ["group", "Everyone", "Three or more, mid-laugh, nobody looking at the lens."],
-  ["solo", "One person", "Styled, or caught. Overhead, in the water, in the sun."],
-  ["two", "Two of them", "Close together, laughing at each other rather than at us."],
-  ["prop", "Branded object", "The flag, the ring, the cap, the tee. The object is the subject."],
-  ["still", "Still life", "No people, no logo. Tactile and quiet."],
-  ["video", "Video", "A short clip. It wakes the set up."]
+const KINDS = ["Group shots", "Candids", "Solo portraits", "Pairs", "Product shots",
+               "Branded objects", "Still lifes", "A video or two"];
+
+const MATTERS = [
+  "<b>The first photo sets the vibe</b> for the whole set.",
+  "They should feel connected \u2014 colours carrying from one to the next.",
+  "<b>It has to tell a story.</b> That is the part that matters."
 ];
 
 const CARD = `
@@ -260,9 +257,10 @@ function right(vi, v, g, it){
   if (vi === 0) return `
     <span class="k mono">Slide ${String(v.i + 1).padStart(2, "0")} is doing</span>
     <p class="doing">${it.lb}</p>
-    <span class="k mono">What a carousel is built from</span>
-    <div class="kinds">${KINDS.map(k =>
-      `<div data-on="${k[0] === it.ty ? 1 : 0}"><span class="nm">${k[1]}</span><span>${k[2]}</span></div>`).join("")}</div>`;
+    <span class="k mono">Anything can go in</span>
+    <div class="kinds">${KINDS.map(k => `<span>${k}</span>`).join("")}</div>
+    <span class="k mono" style="margin-top:20px">What matters</span>
+    <ul class="rules">${MATTERS.map(m => `<li>${m}</li>`).join("")}</ul>`;
   if (vi === 1) return `<div class="bd">${CARD}${CAPS}${LOGO}</div>`;
   return `
     <span class="k mono">${g.name}</span>
