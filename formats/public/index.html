@@ -4,16 +4,16 @@
 <title>Content References</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,900;1,9..144,300&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#FAF6EF; --ink:#1F1216; --warm:#F1E9DD;
-  --pink:#D61F78; --muted:#7A6A6F; --line:rgba(31,18,22,.12);
+  --pink:#D61F78; --muted:#7A6A6F; --line:rgba(31,18,22,.13); --hair:rgba(31,18,22,.28);
   --serif:"Fraunces",Georgia,serif;
   --sans:"Inter",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
-  --pad:clamp(20px,5vw,70px);
-  --shot:clamp(300px,56vh,520px);
+  --pad:clamp(20px,5.5vw,84px);
+  --shot:clamp(300px,58vh,540px);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -21,117 +21,144 @@ body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);f
   line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 [hidden]{display:none!important}
-.mono{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase}
 
-.mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:18px var(--pad)}
+/* ---------- masthead ---------- */
+.mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;
+  padding:20px var(--pad) 18px}
 .mast .mono{color:var(--muted)}
 .mast .r{text-align:right}
-.mast img{height:32px;width:auto;display:block}
+.mast img{height:30px;width:auto;display:block}
 
-.hero{padding:clamp(34px,7vw,76px) var(--pad) clamp(32px,5vw,60px)}
-.eyebrow{display:block;color:var(--pink);margin-bottom:clamp(20px,3vw,32px)}
-.hgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,5vw,64px);align-items:end}
-h1{font-family:var(--serif);font-size:clamp(52px,10.5vw,132px);font-weight:300;line-height:.88;
-  letter-spacing:-.04em;margin:0}
-h1 em{font-style:italic;color:var(--pink)}
-.stand{font-family:var(--serif);font-size:clamp(17px,1.7vw,21px);font-weight:300;font-style:italic;
-  line-height:1.45;margin:0 0 10px;max-width:32ch}
+/* ---------- cover ---------- */
+.cover{padding:clamp(30px,6vw,64px) var(--pad) clamp(30px,5vw,54px);border-top:1px solid var(--hair)}
+.cover h1{font-family:var(--serif);font-size:clamp(54px,12vw,168px);font-weight:300;line-height:.84;
+  letter-spacing:-.045em;margin:0 0 clamp(22px,3.5vw,40px);max-width:11ch}
+.cover h1 em{font-style:italic;color:var(--pink)}
+.idx{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:0 clamp(20px,4vw,48px);border-top:1px solid var(--line)}
+.idx a{text-decoration:none;color:inherit;display:grid;grid-template-columns:auto 1fr;gap:12px;
+  align-items:baseline;padding:16px 0 18px;border-bottom:1px solid var(--line)}
+.idx .n{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--pink)}
+.idx .t{font-family:var(--serif);font-size:clamp(20px,2.3vw,27px);font-weight:300;letter-spacing:-.02em;line-height:1.1}
+.idx .s{grid-column:2;color:var(--muted);font-size:13px;margin-top:3px}
+.idx a:hover .t{color:var(--pink)}
 
-.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap}
-.pills .in{display:flex;gap:8px;padding:14px var(--pad)}
+/* ---------- sticky pills ---------- */
+.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-bottom:1px solid var(--hair);
+  overflow-x:auto;white-space:nowrap}
+.pills .in{display:flex;gap:8px;padding:13px var(--pad)}
 .pills a{text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
   text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1px solid var(--line);
   color:var(--muted);transition:background .15s,color .15s,border-color .15s}
 .pills a:hover{border-color:var(--pink);color:var(--pink)}
 .pills a[aria-current="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
 
-section{padding:clamp(52px,8vw,100px) var(--pad) 0;scroll-margin-top:58px}
-.head{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(20px,5vw,64px);align-items:end;
-  margin-bottom:clamp(26px,4vw,40px)}
-h2{font-family:var(--serif);font-size:clamp(34px,6vw,76px);font-weight:300;line-height:.95;
-  letter-spacing:-.035em;margin:0;max-width:15ch}
-h2 em{font-style:italic;color:var(--pink)}
-.lede{color:var(--muted);margin:0 0 6px;max-width:40ch}
+/* ---------- spreads ---------- */
+.spread{padding:clamp(56px,9vw,120px) var(--pad) 0;scroll-margin-top:56px}
+.sh{display:grid;grid-template-columns:auto minmax(0,1.1fr) minmax(0,.9fr);
+  gap:clamp(16px,3vw,46px);align-items:end;border-bottom:1px solid var(--hair);
+  padding-bottom:clamp(18px,2.5vw,26px);margin-bottom:clamp(26px,4vw,44px)}
+.sh .fig{font-family:var(--serif);font-size:clamp(30px,4.5vw,62px);font-weight:300;line-height:.8;
+  color:var(--pink);letter-spacing:-.03em}
+.sh h2{font-family:var(--serif);font-size:clamp(30px,5.2vw,64px);font-weight:300;line-height:.95;
+  letter-spacing:-.035em;margin:0}
+.sh h2 em{font-style:italic;color:var(--pink)}
+.sh .lede{color:var(--muted);margin:0;font-size:14px;max-width:38ch}
 
-/* ---------- set chips ---------- */
-.chips{display:flex;flex-wrap:wrap;gap:7px;border-top:1px solid var(--ink);padding-top:14px;margin-bottom:18px}
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:clamp(16px,2.4vw,22px)}
 .chips button{all:unset;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
-  text-transform:uppercase;padding:7px 13px;border:1px solid var(--line);color:var(--muted)}
+  text-transform:uppercase;padding:7px 14px;border:1px solid var(--line);color:var(--muted)}
+.chips button:hover{border-color:var(--pink);color:var(--pink)}
 .chips button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
 
-/* ---------- one frame, side toggle ---------- */
-.viewer{display:grid;grid-template-columns:max-content 84px minmax(0,1fr);
-  gap:clamp(14px,2.5vw,34px);align-items:start}
+/* ---------- the viewer ---------- */
+.viewer{display:grid;grid-template-columns:max-content 92px minmax(0,1fr);
+  gap:clamp(14px,2.6vw,38px);align-items:start}
 .frame{height:var(--shot);background:var(--warm);position:relative;overflow:hidden;
-  width:max-content;max-width:100%;cursor:default}
+  width:max-content;max-width:100%}
 .frame img{height:100%;width:auto;display:block}
 .frame.playing{aspect-ratio:9/16;width:auto}
 .frame iframe,.frame video{width:100%;height:100%;border:0;display:block;background:#000}
 .frame .pv{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer}
-.frame .pv i{width:52px;height:52px;border-radius:50%;background:rgba(31,18,22,.55);display:grid;
-  place-items:center;color:#fff;font-style:normal;font-size:16px;padding-left:3px}
-.info{border-top:1px solid var(--ink);padding-top:13px;min-width:0}
-.info .k{display:block;color:var(--muted);margin-bottom:11px}
-.info .doing{font-family:var(--serif);font-size:clamp(21px,2.3vw,30px);font-weight:300;
-  letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
-.info .doing b,.info .doing em{color:var(--pink);font-weight:300;font-style:normal}
-.info .doing em{font-style:italic}
-.info .nav{display:flex;align-items:center;gap:9px;margin:18px 0 14px}
-
-/* the kinds of asset a carousel is built from */
-.kinds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
-.kinds span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);border:1px solid var(--line);padding:6px 11px}
-
-/* the mini mic breakdown, beside the clip */
-.bd{display:grid;gap:18px}
-.bd .h3{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--pink);border-top:1px solid var(--ink);padding-top:11px;margin-bottom:2px}
-.bd .r{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:baseline;padding:8px 0;font-size:13.5px}
-.bd .r+.r{border-top:1px solid var(--line)}
-.bd .r .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-.bd .r b{font-weight:500;line-height:1.5}
-.bd .or{color:var(--muted);font-weight:400;font-size:12.5px}
-
-/* the highlight rules, beside the clip */
-.rules{margin:0;padding-left:16px;color:var(--muted);font-size:13.5px;line-height:1.55}
-.rules li{margin-bottom:7px}
-.rules b{color:var(--ink);font-weight:500}
-
-/* the pins ride on the poster so the parts stay named */
+.frame .pv i{width:54px;height:54px;border-radius:50%;background:rgba(31,18,22,.5);display:grid;
+  place-items:center;color:#fff;font-style:normal;font-size:16px;padding-left:3px;
+  backdrop-filter:blur(2px)}
 .frame .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
   text-transform:uppercase;background:var(--ink);color:var(--cream);padding:3px 6px;line-height:1.3}
-.info button{all:unset;cursor:pointer;border:1px solid var(--line);padding:5px 11px;
-  font-family:var(--mono);font-size:11px;color:var(--muted)}
-.info button:hover{border-color:var(--pink);color:var(--pink)}
-.info .ct{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--muted)}
-.info a{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--pink);text-decoration:none}
-.info .hint{color:var(--muted);font-size:13px;margin:14px 0 0}
-
-.rail{height:var(--shot);overflow-y:auto;display:grid;gap:6px;align-content:start;padding-right:4px}
+.rail{height:var(--shot);overflow-y:auto;display:grid;gap:7px;align-content:start;padding-right:5px}
 .rail a{display:block;position:relative;aspect-ratio:4/5;background:var(--warm);
   outline:1px solid transparent;outline-offset:-1px}
 .rail img{width:100%;height:100%;object-fit:cover;display:block}
 .rail a[aria-selected="true"]{outline-color:var(--pink)}
-.rail .n{position:absolute;left:2px;top:2px;font-family:var(--mono);font-size:8px;
-  background:rgba(31,18,22,.6);color:#fff;padding:1px 3px}
+.rail .n{position:absolute;left:3px;top:3px;font-family:var(--mono);font-size:8px;
+  background:rgba(31,18,22,.6);color:#fff;padding:1px 4px}
 .rail .n.v{background:var(--pink)}
 
-/* ---------- mini mic reference ---------- */
+/* ---------- the right-hand column ---------- */
+.info{min-width:0;display:grid;align-content:start}
+.info .k{display:block;color:var(--muted);margin-bottom:10px}
+.info .k+.k{margin-top:26px}
+.info .doing{font-family:var(--serif);font-size:clamp(23px,2.6vw,34px);font-weight:300;
+  letter-spacing:-.025em;line-height:1.08;margin:0 0 4px}
+.info .doing b,.info .doing em{color:var(--pink);font-weight:300}
+.info .doing em{font-style:italic}
+.info .nav{display:flex;align-items:center;gap:9px;margin-top:26px}
+.info button{all:unset;cursor:pointer;border:1px solid var(--line);padding:6px 12px;
+  font-family:var(--mono);font-size:11px;color:var(--muted)}
+.info button:hover{border-color:var(--pink);color:var(--pink)}
+.info .ct{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--muted)}
+
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line);padding:6px 11px}
+.rules{margin:0;padding-left:16px;color:var(--muted);font-size:14px;line-height:1.55}
+.rules li{margin-bottom:7px}
+.rules b{color:var(--ink);font-weight:500}
+
+/* ---------- type specimen ---------- */
+.typeset{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:clamp(20px,4vw,52px);
+  align-items:start;border-top:1px solid var(--hair);margin-top:clamp(40px,5vw,66px);
+  padding-top:clamp(20px,3vw,30px)}
+.demo{height:clamp(300px,48vh,450px);aspect-ratio:9/16;position:relative;overflow:hidden;
+  background:var(--warm) center/cover no-repeat}
+.dm{position:absolute;color:#fff;line-height:1.12;paint-order:stroke fill;white-space:nowrap}
+.dm-card{left:6%;bottom:21%;font-family:var(--serif);font-weight:900;font-size:2.7cqh;
+  -webkit-text-stroke:0.32cqh #FF3EAA}
+.dm-cap{left:50%;transform:translateX(-50%);bottom:11%;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight:700;font-size:1.7cqh;-webkit-text-stroke:0.13cqh rgba(0,0,0,.9)}
+.dm-hook{left:50%;transform:translateX(-50%);top:16%;text-align:center;
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:700;font-size:3.2cqh;
+  -webkit-text-stroke:0.22cqh rgba(0,0,0,.9)}
+.demo{container-type:size}
+.demowrap{display:grid;gap:9px;justify-items:start}
+.demowrap .cap{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);max-width:26ch;line-height:1.5}
+.spec{display:grid;align-content:start}
+.spec .r{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:baseline;
+  border-bottom:1px solid var(--line);padding:11px 0;font-size:14px}
+.spec .r:first-of-type{border-top:1px solid var(--line)}
+.spec .r .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spec .r b{font-weight:500;line-height:1.5}
+.spec .r .or,.spec .r .dim{color:var(--muted);font-weight:400}
+.sw{display:inline-block;width:8px;height:8px;margin-right:5px;vertical-align:baseline}
 
 footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);
-  padding:clamp(56px,8vw,96px) var(--pad) 42px;margin-top:clamp(44px,6vw,76px);border-top:1px solid var(--line)}
+  padding:clamp(60px,9vw,110px) var(--pad) 46px;margin-top:clamp(50px,7vw,90px);
+  border-top:1px solid var(--hair)}
 
-@media(max-width:760px){
-  .hgrid,.head{grid-template-columns:1fr;align-items:start}
-  h2{max-width:none}
+@media(max-width:860px){
+  .sh{grid-template-columns:auto 1fr;align-items:start}
+  .sh .lede{grid-column:2;margin-top:10px}
   .viewer{grid-template-columns:1fr}
   .frame{height:auto;width:100%;max-width:320px}
   .frame img{height:auto;width:100%}
-  .info{max-width:none}
-  .rail{height:auto;grid-auto-flow:column;grid-auto-columns:56px;overflow-x:auto;max-width:100%}
+  .rail{height:auto;grid-auto-flow:column;grid-auto-columns:60px;overflow-x:auto;max-width:100%;
+    padding-bottom:4px}
+  .info{margin-top:6px}
+  .typeset{grid-template-columns:1fr}
+  .demo{height:auto;width:100%;max-width:250px}
 }
 </style>
 
@@ -141,8 +168,16 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <span class="mono r">Any event</span>
 </header>
 
-<section class="hero" style="padding-bottom:clamp(26px,4vw,42px)">
+<section class="cover">
   <h1>Content <em>references.</em></h1>
+  <nav class="idx">
+    <a href="#f1"><span class="n">01</span><span class="t">Carousels</span>
+      <span class="s">Three sets, step through any of them.</span></a>
+    <a href="#f2"><span class="n">02</span><span class="t">Mini mic</span>
+      <span class="s">One question, everyone answers.</span></a>
+    <a href="#f3"><span class="n">03</span><span class="t">Highlights</span>
+      <span class="s">Event highlights and photo reels.</span></a>
+  </nav>
 </section>
 
 <nav class="pills" id="nav"><div class="in">
@@ -151,30 +186,70 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <a href="#f3">Highlights</a>
 </div></nav>
 
-<section id="f1">
-  <div class="head">
+<section class="spread" id="f1">
+  <div class="sh">
+    <span class="fig">01</span>
     <h2>An event, <em>told in stills.</em></h2>
-    <p class="lede">Open wide, get closer, break the faces up with an object, close back on everyone. Step through a set and the shape reads itself.</p>
+    <p class="lede">Step through a set. The frame shows what it is, the column beside it says what it is doing.</p>
   </div>
   <div class="chips" id="chips"></div>
   <div class="viewer" data-v="0"></div>
 </section>
 
-<section id="f2">
-  <div class="head">
+<section class="spread" id="f2">
+  <div class="sh">
+    <span class="fig">02</span>
     <h2>One question, <em>everyone answers.</em></h2>
     <p class="lede">Cut back to back so it plays as one conversation. A name card the first time each person appears.</p>
   </div>
   <div class="viewer" data-v="1"></div>
+  <div class="typeset">
+    <div class="demowrap">
+      <div class="demo" id="demoMM">
+        <span class="dm dm-card">Their name, @their handle<br>Nancy OOO host</span>
+        <span class="dm dm-cap">and that doesn&rsquo;t mean anything is wrong</span>
+      </div>
+      <span class="cap">The name card, with the captions under it</span>
+    </div>
+    <div class="spec">
+      <span class="mono" style="color:var(--pink);margin-bottom:12px">Set the type like this</span>
+      <div class="r"><span class="k">Name card</span><b>Fraunces-Blk, bold, <span class="dim">size</span> 10</b></div>
+      <div class="r"><span class="k">Its stroke</span><b><span class="sw" style="background:#FF3EAA"></span>FF3EAA at <b>100%</b> thickness, white fill</b></div>
+      <div class="r"><span class="k">It says</span><b>Their name, @their handle<br>
+        <span class="dim">then</span> Nancy OOO host <span class="or">or</span> Nancy OOO Panelist<br>
+        <span class="dim">at a collab</span> Nancy x [brand] @ [event]</b></div>
+      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9</b></div>
+      <div class="r"><span class="k">Their stroke</span><b>Same colour at <b>40%</b> thickness</b></div>
+      <div class="r"><span class="k">Logo</span><b>Top right. <span class="dim">Scale</span> 26%, <span class="dim">X</span> 705 <span class="dim">/ Y</span> 1662</b></div>
+    </div>
+  </div>
 </section>
 
-<section id="f3">
-  <div class="head">
+<section class="spread" id="f3">
+  <div class="sh">
+    <span class="fig">03</span>
     <h2>The room, <em>as it felt.</em></h2>
-    <p class="lede">Two cuts of the same day. One built from stills, one from footage.</p>
+    <p class="lede">Event highlights are cut from footage, photo reels from stills. The type is the same in both.</p>
   </div>
   <div class="chips" id="chips3"></div>
   <div class="viewer" data-v="2"></div>
+  <div class="typeset">
+    <div class="demowrap">
+      <div class="demo" id="demoHL">
+        <span class="dm dm-hook">POV: the sound<br>of pleasure</span>
+      </div>
+      <span class="cap">The hook, centred in the top third</span>
+    </div>
+    <div class="spec">
+      <span class="mono" style="color:var(--pink);margin-bottom:12px">Set the type like this</span>
+      <div class="r"><span class="k">The hook</span><b>Helvetica Neue, bold, <span class="dim">size</span> 12</b></div>
+      <div class="r"><span class="k">Its stroke</span><b>Black at <b>100%</b> thickness, white fill</b></div>
+      <div class="r"><span class="k">Where</span><b>Centred, in the top third. <span class="dim">Two lines, never three.</span></b></div>
+      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9 <span class="dim">&mdash; same as mini mic</span></b></div>
+      <div class="r"><span class="k">Logo</span><b>Top right, the full lockup</b></div>
+      <div class="r"><span class="k">Photo reels</span><b>Identical type. <span class="dim">Only the source changes.</span></b></div>
+    </div>
+  </div>
 </section>
 
 <footer>
@@ -189,52 +264,22 @@ const MM = __MM__;
 const HL = __HL__;
 const VIDEO_BASE = "__VIDEOBASE__";
 
-/* what each still is doing, so stepping through a set reads as the brief */
 const WORD = { group:"Group shot", solo:"Solo", two:"Pair",
                prop:"Branded object", still:"Still life", video:"Video" };
-const KINDS = ["Group shots", "Candids", "Solo portraits", "Pairs", "Product shots",
-               "Branded objects", "Still lifes", "A video or two"];
-
-const MATTERS = [
-  "<b>The first photo sets the vibe</b> for the whole set.",
-  "They should feel connected \u2014 colours carrying from one to the next.",
-  "<b>It has to tell a story.</b> That is the part that matters."
-];
-
-const CARD = `
-  <span class="h3">The name card</span>
-  <div class="r"><span class="k">Line 1</span><b>Their name, @their handle</b></div>
-  <div class="r"><span class="k">Line 2</span><b>Nancy OOO host <span class="or">or</span> Nancy OOO Panelist</b></div>
-  <div class="r"><span class="k">At a collab</span><b>Nancy x [brand] @ [event]</b></div>
-  <div class="r"><span class="k">Set as</span><b>Fraunces-Blk, bold, size 10. White fill,
-    <span class="sw" style="background:#FF3EAA"></span>FF3EAA outline at <b>100%</b> thickness.</b></div>`;
-const CAPS = `
-  <span class="h3">The captions</span>
-  <div class="r"><span class="k">Set as</span><b>Helvetica Neue, bold, size 9. Same outline at <b>40%</b> thickness.</b></div>`;
-const LOGO = `
-  <span class="h3">The logo</span>
-  <div class="r"><span class="k">Set as</span><b>Top right. Scale 26%, X 705 / Y 1662.</b></div>`;
-
-const RULES = {
-  "Event highlights": {
-    head: "Find the <em>music first.</em>",
-    list: ["The track decides where the cuts land \u2014 never cut first and drop a beat under it after.",
-           "Fast, but balanced against the track. The beat sets the pace, not a stopwatch.",
-           "<b>Branded throughout.</b> Logo, campaign title, the full lockup.",
-           "Take the mechanism from an outlier, then write a text overlay of our own."] },
-  "Photo reels": {
-    head: "The same edit, <em>every frame a still.</em>",
-    list: ["Music first, cuts follow, branded the same way.",
-           "<b>Only the source changes.</b> Nothing about the approach does.",
-           "Built out of the static assets a carousel is made from."] }
-};
-
 function doing(ty, i, n){
   const w = WORD[ty] || "";
   if (i === 0) return "<b>Opener</b> \u00b7 " + w;
   if (i === n - 1) return "<b>Close</b> \u00b7 " + w;
   return w;
 }
+
+const KINDS = ["Group shots", "Candids", "Solo portraits", "Pairs", "Product shots",
+               "Branded objects", "Still lifes", "A video or two"];
+const MATTERS = [
+  "<b>The first photo sets the vibe</b> for the whole set.",
+  "They should feel connected \u2014 colours carrying from one to the next.",
+  "<b>It has to tell a story.</b> That is the part that matters."
+];
 
 const VIEWS = [
   { groups: SETS.map(s => ({
@@ -245,12 +290,11 @@ const VIEWS = [
       items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: true,
                             lb: "Host asks \u00b7 Panel answers" })) }] },
   { groups: [
-      { name: "Event highlights", items: HL.highlights.map(m => ({ video: true,
-          thumb: m.poster, file: m.file })) },
-      { name: "Photo reels", items: HL.reels.map(m => ({ video: true,
-          thumb: m.poster, file: m.file })) }] }
+      { name: "Event highlights", items: HL.highlights.map(m => ({ video: true, thumb: m.poster, file: m.file })) },
+      { name: "Photo reels", items: HL.reels.map(m => ({ video: true, thumb: m.poster, file: m.file })) }] }
 ];
-VIEWS.forEach(v => { v.g = 0; v.i = 0; v.playing = false; v.el = document.querySelector('.viewer[data-v="' + VIEWS.indexOf(v) + '"]'); });
+VIEWS.forEach((v, k) => { v.g = 0; v.i = 0; v.playing = false;
+  v.el = document.querySelector('.viewer[data-v="' + k + '"]'); });
 
 function chips(vi, host){
   const v = VIEWS[vi];
@@ -263,21 +307,33 @@ function right(vi, v, g, it){
     <span class="k mono">Slide ${String(v.i + 1).padStart(2, "0")} is doing</span>
     <p class="doing">${it.lb}</p>
     <span class="k mono">Anything can go in</span>
-    <div class="kinds">${KINDS.map(k => `<span>${k}</span>`).join("")}</div>
-    <span class="k mono" style="margin-top:20px">What matters</span>
+    <div class="tags">${KINDS.map(k => `<span>${k}</span>`).join("")}</div>
+    <span class="k mono">What matters</span>
     <ul class="rules">${MATTERS.map(m => `<li>${m}</li>`).join("")}</ul>`;
-  if (vi === 1) return `<div class="bd">${CARD}${CAPS}${LOGO}</div>`;
-  const r = RULES[g.name] || { head: g.name, list: [] };
+  if (vi === 1) return `
+    <span class="k mono">What you are watching</span>
+    <p class="doing">${it.lb}</p>
+    <span class="k mono">How it is built</span>
+    <ul class="rules">
+      <li>Everyone gets asked the <b>same question</b>.</li>
+      <li>The answers are cut back to back, so it plays as one conversation.</li>
+      <li>A name card the <b>first time each person appears</b>, then off.</li>
+    </ul>`;
   return `
-    <span class="k mono">${g.name}</span>
-    <p class="doing">${r.head}</p>
-    <ul class="rules">${r.list.map(x => `<li>${x}</li>`).join("")}</ul>`;
+    <span class="k mono">What you are watching</span>
+    <p class="doing">${g.name === "Photo reels" ? "Stills, <em>cut to a track.</em>" : "Footage, <em>cut to a track.</em>"}</p>
+    <span class="k mono">How it is built</span>
+    <ul class="rules">
+      <li>${g.name === "Photo reels"
+            ? "Built from the same stills a carousel is made from."
+            : "Built from the footage of the day."}</li>
+      <li>Fast cuts, one hook at the top, branded throughout.</li>
+      <li><b>The type below is the part to get right.</b></li>
+    </ul>`;
 }
 
 function draw(vi){
   const v = VIEWS[vi], g = v.groups[v.g], it = g.items[v.i];
-  /* the site serves the clips itself; the artifact build falls back to Drive,
-     whose embed only plays for people with access to the folder */
   const player = VIDEO_BASE && it.file
     ? `<video src="${VIDEO_BASE}${it.file}" poster="${it.thumb || ""}" controls autoplay playsinline></video>`
     : `<iframe src="https://drive.google.com/file/d/${it.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
@@ -302,7 +358,6 @@ function draw(vi){
         <span class="ct">${String(v.i + 1).padStart(2, "0")} / ${g.items.length}</span>
         <button data-step="1">&rarr;</button>
       </div>
-      ${it.id ? `<a href="https://drive.google.com/file/d/${it.id}/view" target="_blank" rel="noopener">Open in Drive &#8599;</a>` : ""}
     </div>`;
   const on = v.el.querySelector('.rail a[aria-selected="true"]');
   if (on) on.scrollIntoView({ block: "nearest" });
@@ -328,15 +383,21 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-play]")){ VIEWS[vi].playing = true; draw(vi); }
 });
 
-chips(0, "chips"); chips(2, "chips3"); draw(0); draw(1); draw(2);
+chips(0, "chips"); chips(2, "chips3");
+draw(0); draw(1); draw(2);
 
-/* the pills jump, and follow you down */
+/* the specimens sit on a real still */
+/* a still with nothing burned into it, so the only type on the specimen is ours */
+const clean = (si, i) => THUMBS[SETS[si].slides[i].id];
+document.getElementById("demoMM").style.backgroundImage = "url(" + clean(1, 3) + ")";
+document.getElementById("demoHL").style.backgroundImage = "url(" + clean(0, 3) + ")";
+
 const links = [...document.querySelectorAll(".pills a")];
 const obs = new IntersectionObserver(es => {
   es.forEach(en => {
     if (!en.isIntersecting) return;
     links.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + en.target.id));
   });
-}, { rootMargin: "-18% 0px -72% 0px" });
+}, { rootMargin: "-16% 0px -74% 0px" });
 ["f1", "f2", "f3"].forEach(id => obs.observe(document.getElementById(id)));
 </script>
