@@ -13,7 +13,7 @@
   --sans:"Inter",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   --pad:clamp(20px,5.5vw,84px);
-  --shot:clamp(300px,58vh,540px);
+  --shot:clamp(320px,66vh,640px);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -44,18 +44,8 @@ img{max-width:100%}
 .idx .s{grid-column:2;color:var(--muted);font-size:13px;margin-top:3px}
 .idx a:hover .t{color:var(--pink)}
 
-/* ---------- sticky pills ---------- */
-.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-bottom:1px solid var(--hair);
-  overflow-x:auto;white-space:nowrap}
-.pills .in{display:flex;gap:8px;padding:13px var(--pad)}
-.pills a{text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
-  text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1px solid var(--line);
-  color:var(--muted);transition:background .15s,color .15s,border-color .15s}
-.pills a:hover{border-color:var(--pink);color:var(--pink)}
-.pills a[aria-current="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
-
 /* ---------- spreads ---------- */
-.spread{padding:clamp(56px,9vw,120px) var(--pad) 0;scroll-margin-top:56px}
+.spread{padding:clamp(56px,9vw,120px) var(--pad) 0;scroll-margin-top:18px}
 .sh{display:grid;grid-template-columns:auto minmax(0,1.1fr) minmax(0,.9fr);
   gap:clamp(16px,3vw,46px);align-items:end;border-bottom:1px solid var(--hair);
   padding-bottom:clamp(18px,2.5vw,26px);margin-bottom:clamp(26px,4vw,44px)}
@@ -74,8 +64,11 @@ img{max-width:100%}
 .chips button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
 
 /* ---------- the viewer ---------- */
-.viewer{display:grid;grid-template-columns:max-content 92px minmax(0,1fr);
-  gap:clamp(14px,2.6vw,38px);align-items:start}
+/* the work takes roughly seven tenths of the row; the words take the rest */
+.viewer{display:grid;grid-template-columns:minmax(0,68fr) minmax(0,32fr);
+  gap:clamp(18px,3vw,44px);align-items:start}
+.stage{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:clamp(8px,1.2vw,14px);
+  align-items:start;min-width:0}
 .frame{height:var(--shot);background:var(--warm);position:relative;overflow:hidden;
   width:max-content;max-width:100%}
 .frame img{height:100%;width:auto;display:block}
@@ -87,7 +80,8 @@ img{max-width:100%}
   backdrop-filter:blur(2px)}
 .frame .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
   text-transform:uppercase;background:var(--ink);color:var(--cream);padding:3px 6px;line-height:1.3}
-.rail{height:var(--shot);overflow-y:auto;display:grid;gap:7px;align-content:start;padding-right:5px}
+.rail{height:var(--shot);overflow-y:auto;display:grid;align-content:start;gap:7px;
+  grid-template-columns:repeat(auto-fill,minmax(86px,1fr));padding-right:4px}
 .rail a{display:block;position:relative;aspect-ratio:4/5;background:var(--warm);
   outline:1px solid transparent;outline-offset:-1px}
 .rail img{width:100%;height:100%;object-fit:cover;display:block}
@@ -121,7 +115,7 @@ img{max-width:100%}
 .typeset{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:clamp(20px,4vw,52px);
   align-items:start;border-top:1px solid var(--hair);margin-top:clamp(40px,5vw,66px);
   padding-top:clamp(20px,3vw,30px)}
-.demo{height:clamp(300px,48vh,450px);aspect-ratio:9/16;position:relative;overflow:hidden;
+.demo{height:clamp(320px,56vh,520px);aspect-ratio:9/16;position:relative;overflow:hidden;
   background:var(--warm) center/cover no-repeat}
 .dm{position:absolute;color:#fff;line-height:1.12;paint-order:stroke fill;white-space:nowrap}
 .dm-card{left:6%;bottom:21%;font-family:var(--serif);font-weight:900;font-size:2.7cqh;
@@ -129,14 +123,14 @@ img{max-width:100%}
 .dm-cap{left:50%;transform:translateX(-50%);bottom:11%;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight:700;font-size:1.7cqh;-webkit-text-stroke:0.13cqh rgba(0,0,0,.9)}
 .dm-hook{left:50%;transform:translateX(-50%);top:16%;text-align:center;
-  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:700;font-size:3.2cqh;
-  -webkit-text-stroke:0.22cqh rgba(0,0,0,.9)}
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:700;font-size:2.4cqh;
+  -webkit-text-stroke:0.13cqh rgba(0,0,0,.9)}
 .demo{container-type:size}
 .demowrap{display:grid;gap:9px;justify-items:start}
 .demowrap .cap{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
   color:var(--muted);max-width:26ch;line-height:1.5}
 .spec{display:grid;align-content:start}
-.spec .r{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:baseline;
+.spec .r{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:baseline;
   border-bottom:1px solid var(--line);padding:11px 0;font-size:14px}
 .spec .r:first-of-type{border-top:1px solid var(--line)}
 .spec .r .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
@@ -144,18 +138,39 @@ img{max-width:100%}
 .spec .r .or,.spec .r .dim{color:var(--muted);font-weight:400}
 .sw{display:inline-block;width:8px;height:8px;margin-right:5px;vertical-align:baseline}
 
+/* ---------- downloadable title cards ---------- */
+.cards{background:var(--ink);color:var(--cream);align-self:stretch;display:grid;align-content:start;
+  padding:clamp(18px,2.6vw,26px) clamp(18px,2.6vw,26px) clamp(22px,3vw,30px)}
+.cards .ch{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  flex-wrap:wrap;margin-bottom:clamp(14px,2vw,20px)}
+.cards .ch .l{color:var(--pink)}
+.cards .dl{color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(250,246,239,.4);
+  padding-bottom:2px}
+.cards .dl:hover{color:var(--pink);border-color:var(--pink)}
+.crow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:clamp(12px,2vw,20px)}
+.cc{display:grid;gap:10px;text-decoration:none;color:inherit}
+.cc .im{display:grid;place-items:center;background:#2A1B20;padding:clamp(16px,3vw,28px) 16px;min-height:96px}
+.cc img{width:100%;height:auto;display:block}
+.cc .nm{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
+  color:rgba(250,246,239,.6)}
+.cc:hover .nm{color:var(--pink)}
+
 footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);
   padding:clamp(60px,9vw,110px) var(--pad) 46px;margin-top:clamp(50px,7vw,90px);
   border-top:1px solid var(--hair)}
 
+@media(max-width:1000px){
+  .viewer{grid-template-columns:1fr}
+  .rail{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}
+}
 @media(max-width:860px){
   .sh{grid-template-columns:auto 1fr;align-items:start}
   .sh .lede{grid-column:2;margin-top:10px}
-  .viewer{grid-template-columns:1fr}
-  .frame{height:auto;width:100%;max-width:320px}
+  .stage{grid-template-columns:1fr}
+  .frame{height:auto;width:100%;max-width:340px}
   .frame img{height:auto;width:100%}
-  .rail{height:auto;grid-auto-flow:column;grid-auto-columns:60px;overflow-x:auto;max-width:100%;
-    padding-bottom:4px}
+  .rail{height:auto;grid-auto-flow:column;grid-auto-columns:64px;grid-template-columns:none;
+    overflow-x:auto;max-width:100%;padding-bottom:4px}
   .info{margin-top:6px}
   .typeset{grid-template-columns:1fr}
   .demo{height:auto;width:100%;max-width:250px}
@@ -180,12 +195,6 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   </nav>
 </section>
 
-<nav class="pills" id="nav"><div class="in">
-  <a href="#f1">Carousels</a>
-  <a href="#f2">Mini mic</a>
-  <a href="#f3">Highlights</a>
-</div></nav>
-
 <section class="spread" id="f1">
   <div class="sh">
     <span class="fig">01</span>
@@ -206,21 +215,17 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <div class="typeset">
     <div class="demowrap">
       <div class="demo" id="demoMM">
-        <span class="dm dm-card">Their name, @their handle<br>Nancy OOO host</span>
+        <span class="dm dm-card">Their name, @their handle<br>Doctor, sexologist<br>Nancy x Ray Chiu</span>
         <span class="dm dm-cap">and that doesn&rsquo;t mean anything is wrong</span>
       </div>
-      <span class="cap">The name card, with the captions under it</span>
+      <span class="cap">Three lines, lower left, with the captions under them</span>
     </div>
-    <div class="spec">
-      <span class="mono" style="color:var(--pink);margin-bottom:12px">Set the type like this</span>
-      <div class="r"><span class="k">Name card</span><b>Fraunces-Blk, bold, <span class="dim">size</span> 10</b></div>
-      <div class="r"><span class="k">Its stroke</span><b><span class="sw" style="background:#FF3EAA"></span>FF3EAA at <b>100%</b> thickness, white fill</b></div>
-      <div class="r"><span class="k">It says</span><b>Their name, @their handle<br>
-        <span class="dim">then</span> Nancy OOO host <span class="or">or</span> Nancy OOO Panelist<br>
-        <span class="dim">at a collab</span> Nancy x [brand] @ [event]</b></div>
-      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9</b></div>
-      <div class="r"><span class="k">Their stroke</span><b>Same colour at <b>40%</b> thickness</b></div>
-      <div class="r"><span class="k">Logo</span><b>Top right. <span class="dim">Scale</span> 26%, <span class="dim">X</span> 705 <span class="dim">/ Y</span> 1662</b></div>
+    <div class="cards">
+    <div class="ch">
+      <span class="mono l">Mini mic title cards</span>
+      <a class="dl mono" id="cardZip" target="_blank" rel="noopener">Download all &#8595;</a>
+    </div>
+    <div class="crow" id="cardRow"></div>
     </div>
   </div>
 </section>
@@ -240,14 +245,11 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
       </div>
       <span class="cap">The hook, centred in the top third</span>
     </div>
-    <div class="spec">
-      <span class="mono" style="color:var(--pink);margin-bottom:12px">Set the type like this</span>
-      <div class="r"><span class="k">The hook</span><b>Helvetica Neue, bold, <span class="dim">size</span> 12</b></div>
-      <div class="r"><span class="k">Its stroke</span><b>Black at <b>100%</b> thickness, white fill</b></div>
-      <div class="r"><span class="k">Where</span><b>Centred, in the top third. <span class="dim">Two lines, never three.</span></b></div>
-      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9 <span class="dim">&mdash; same as mini mic</span></b></div>
-      <div class="r"><span class="k">Logo</span><b>Top right, the full lockup</b></div>
-      <div class="r"><span class="k">Photo reels</span><b>Identical type. <span class="dim">Only the source changes.</span></b></div>
+    <div class="spec" style="align-content:start">
+      <span class="mono" style="color:var(--pink);margin-bottom:12px">How it is built</span>
+      <div class="r"><span class="k">Highlights</span><b>Cut from the footage of the day</b></div>
+      <div class="r"><span class="k">Photo reels</span><b>Cut from the same stills a carousel is made from</b></div>
+      <div class="r"><span class="k">Both</span><b>Fast cuts, one hook at the top, branded throughout</b></div>
     </div>
   </div>
 </section>
@@ -262,6 +264,8 @@ const THUMBS = __THUMBS__;
 const SETS = __SETS__;
 const MM = __MM__;
 const HL = __HL__;
+const CARDS = __CARDS__;
+const CARD_BASE = "__CARDBASE__";
 const VIDEO_BASE = "__VIDEOBASE__";
 
 const WORD = { group:"Group shot", solo:"Solo", two:"Pair",
@@ -310,26 +314,25 @@ function right(vi, v, g, it){
     <div class="tags">${KINDS.map(k => `<span>${k}</span>`).join("")}</div>
     <span class="k mono">What matters</span>
     <ul class="rules">${MATTERS.map(m => `<li>${m}</li>`).join("")}</ul>`;
-  if (vi === 1) return `
-    <span class="k mono">What you are watching</span>
-    <p class="doing">${it.lb}</p>
-    <span class="k mono">How it is built</span>
-    <ul class="rules">
-      <li>Everyone gets asked the <b>same question</b>.</li>
-      <li>The answers are cut back to back, so it plays as one conversation.</li>
-      <li>A name card the <b>first time each person appears</b>, then off.</li>
-    </ul>`;
-  return `
-    <span class="k mono">What you are watching</span>
-    <p class="doing">${g.name === "Photo reels" ? "Stills, <em>cut to a track.</em>" : "Footage, <em>cut to a track.</em>"}</p>
-    <span class="k mono">How it is built</span>
-    <ul class="rules">
-      <li>${g.name === "Photo reels"
-            ? "Built from the same stills a carousel is made from."
-            : "Built from the footage of the day."}</li>
-      <li>Fast cuts, one hook at the top, branded throughout.</li>
-      <li><b>The type below is the part to get right.</b></li>
-    </ul>`;
+  if (vi === 1) return `<span class="k mono">Set the type like this</span>
+    <div class="spec">
+      <div class="r"><span class="k">Name card</span><b>Fraunces-Blk, bold, <span class="dim">size</span> 10</b></div>
+      <div class="r"><span class="k">Its stroke</span><b><span class="sw" style="background:#FF3EAA"></span>FF3EAA at <b>100%</b> thickness, white fill</b></div>
+      <div class="r"><span class="k">Line 1</span><b>Their name, @their handle</b></div>
+      <div class="r"><span class="k">Line 2</span><b>Their title. <span class="dim">Model, doctor, founder.</span></b></div>
+      <div class="r"><span class="k">Line 3</span><b>Nancy x Ray Chiu <span class="dim">&mdash; the event, so it changes.</span></b></div>
+      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9</b></div>
+      <div class="r"><span class="k">Their stroke</span><b>Same colour at <b>40%</b> thickness</b></div>
+      <div class="r"><span class="k">Logo</span><b>Top right. <span class="dim">Scale</span> 26%, <span class="dim">X</span> 705 <span class="dim">/ Y</span> 1662</b></div>
+    </div>`;
+  return `<span class="k mono">Set the type like this</span>
+    <div class="spec">
+      <div class="r"><span class="k">The hook</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9&ndash;10</b></div>
+      <div class="r"><span class="k">Its stroke</span><b>White fill, black stroke at <b>40%</b> thickness</b></div>
+      <div class="r"><span class="k">Where</span><b>Centred, in the top third. <span class="dim">Two lines, never three.</span></b></div>
+      <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9</b></div>
+      <div class="r"><span class="k">Photo reels</span><b>Identical type. <span class="dim">Only the source changes.</span></b></div>
+    </div>`;
 }
 
 function draw(vi){
@@ -345,11 +348,13 @@ function draw(vi){
                     <span class="pin" style="top:82%;right:3%">Captions</span>` : "")
       + (it.video ? `<span class="pv" data-play="1"><i>&#9654;</i></span>` : "");
   v.el.innerHTML = `
-    <div class="frame${it.video && v.playing ? " playing" : ""}">${stage}</div>
-    <div class="rail">
+    <div class="stage">
+      <div class="frame${it.video && v.playing ? " playing" : ""}">${stage}</div>
+      <div class="rail" style="grid-template-columns:repeat(${g.items.length > 6 ? 3 : 2},minmax(0,1fr))">
       ${g.items.map((t, k) => `<a href="#" data-i="${k}" aria-selected="${k === v.i}">
         <img src="${t.thumb || ""}" alt="" loading="lazy">
         <span class="n${t.video ? " v" : ""}">${String(k + 1).padStart(2, "0")}</span></a>`).join("")}
+      </div>
     </div>
     <div class="info">
       ${right(vi, v, g, it)}
@@ -392,12 +397,15 @@ const clean = (si, i) => THUMBS[SETS[si].slides[i].id];
 document.getElementById("demoMM").style.backgroundImage = "url(" + clean(1, 3) + ")";
 document.getElementById("demoHL").style.backgroundImage = "url(" + clean(0, 3) + ")";
 
-const links = [...document.querySelectorAll(".pills a")];
-const obs = new IntersectionObserver(es => {
-  es.forEach(en => {
-    if (!en.isIntersecting) return;
-    links.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + en.target.id));
-  });
-}, { rootMargin: "-16% 0px -74% 0px" });
-["f1", "f2", "f3"].forEach(id => obs.observe(document.getElementById(id)));
+/* the site serves the files; without them, point at the Drive folder */
+const zip = document.getElementById("cardZip");
+zip.href = CARD_BASE ? CARD_BASE + CARDS.zipname : CARDS.drive;
+if (CARD_BASE) zip.setAttribute("download", CARDS.zipname);
+document.getElementById("cardRow").innerHTML = CARDS.items.map(c => `
+  <a class="cc" href="${CARD_BASE ? CARD_BASE + c.file : CARDS.drive}" target="_blank" rel="noopener"
+     ${CARD_BASE ? `download="${c.file}"` : ""}>
+    <span class="im"><img src="${c.prev}" alt="Meet her title card, ${c.colour.toLowerCase()}"></span>
+    <span class="nm">${c.colour} &middot; transparent PNG</span></a>`).join("");
+
+
 </script>

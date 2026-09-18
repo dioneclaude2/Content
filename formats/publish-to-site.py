@@ -33,8 +33,15 @@ for group in json.loads((SC / "highlights.json").read_text()).values():
 for m in clips:
     shutil.copy(m["src"], vids / m["file"])
 
+cards = json.loads((SC / "cards.json").read_text())
+cdir = dest / "title-cards"
+cdir.mkdir()
+for c in cards["items"]:
+    shutil.copy(c["src"], cdir / c["file"])
+shutil.copy(cards["zip"], cdir / cards["zipname"])
+
 html = built.read_text()
-for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__ANAT__", "__VIDEOBASE__"):
+for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__CARDS__", "__ANAT__", "__VIDEOBASE__", "__CARDBASE__"):
     if placeholder in html:
         raise SystemExit("unsubstituted: %s" % placeholder)
 before = html.count('src="assets/')

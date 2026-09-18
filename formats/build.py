@@ -36,6 +36,13 @@ for m in mm:
     m["poster"] = "data:image/jpeg;base64," + base64.b64encode(f.read_bytes()).decode()
 anat = "data:image/jpeg;base64," + base64.b64encode((SC / "mm" / "anat_big.jpg").read_bytes()).decode()
 
+cards = json.loads((SC / "cards.json").read_text())
+for c in cards["items"]:
+    f = SC / c["prev"]
+    if not f.exists():
+        raise SystemExit("no preview: %s" % f)
+    c["prev"] = "data:image/png;base64," + base64.b64encode(f.read_bytes()).decode()
+
 hl = json.loads((SC / "highlights.json").read_text())
 for group in hl.values():
     for m in group:
@@ -56,14 +63,18 @@ if missing:
 html = (html.replace("__THUMBS__", json.dumps(thumbs), 1)
             .replace("__SETS__", json.dumps(sets), 1)
             .replace("__MM__", json.dumps([{k: v for k, v in m.items() if k != "src"} for m in mm]), 1)
+            .replace("__CARDS__", json.dumps({
+                 "items": [{k: v for k, v in c.items() if k != "src"} for c in cards["items"]],
+                 "zipname": cards["zipname"], "drive": cards["drive"]}), 1)
             .replace("__HL__", json.dumps({k: [{a: b for a, b in m.items() if a != "src"} for m in v]
                                             for k, v in hl.items()}), 1)
             .replace("__ANAT__", anat, 1))
 
 # the artifact has no room for the clips, so it falls back to the Drive embed;
 # the site copy serves them itself and plays for anyone with the link
-site = html.replace("__VIDEOBASE__", "/content-references/videos/", 1)
-html = html.replace("__VIDEOBASE__", "", 1)
+site = (html.replace("__VIDEOBASE__", "/content-references/videos/", 1)
+            .replace("__CARDBASE__", "/content-references/title-cards/", 1))
+html = html.replace("__VIDEOBASE__", "", 1).replace("__CARDBASE__", "", 1)
 
 # the artifact host supplies doctype/head; drop ours and inline the wordmark
 art = "\n".join(l for l in html.splitlines()
@@ -73,7 +84,7 @@ logo = (here / "public" / "assets" / "nancy-logo-ink.svg").read_bytes()
 art = art.replace('src="assets/nancy-logo-ink.svg"',
                   'src="data:image/svg+xml;base64,%s"' % base64.b64encode(logo).decode())
 if "__" in art.replace("__NANCY", ""):
-    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__ANAT__", "__VIDEOBASE__") if w in art]
+    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__CARDS__", "__ANAT__", "__VIDEOBASE__", "__CARDBASE__") if w in art]
     if leftover: raise SystemExit("unsubstituted: %s" % leftover)
 out.write_text(art)
 (here / "public" / "index.built.html").write_text(site)
