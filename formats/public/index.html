@@ -165,16 +165,17 @@ img{max-width:100%}
 
 /* ---------- downloadable title cards ---------- */
 .cards{background:var(--ink);color:var(--cream);align-self:start;
-  padding:clamp(18px,2.6vw,26px) clamp(18px,2.6vw,26px) clamp(22px,3vw,30px)}
+  padding:clamp(16px,2.2vw,22px) clamp(16px,2.2vw,22px) clamp(18px,2.4vw,24px)}
 .cards .ch{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
   flex-wrap:wrap;margin-bottom:clamp(14px,2vw,20px)}
 .cards .ch .l{color:var(--pink)}
 .cards .dl{color:var(--cream);text-decoration:none;border-bottom:1px solid rgba(250,246,239,.4);
   padding-bottom:2px}
 .cards .dl:hover{color:var(--pink);border-color:var(--pink)}
-.crow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:clamp(12px,2vw,20px)}
+.crow{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,176px));
+  gap:clamp(10px,1.5vw,16px);justify-content:start}
 .cc{display:grid;gap:10px;text-decoration:none;color:inherit}
-.cc .im{display:grid;place-items:center;background:#2A1B20;padding:clamp(14px,2.4vw,22px) 14px}
+.cc .im{display:grid;place-items:center;background:#2A1B20;padding:16px 14px}
 .cc img{width:100%;height:auto;display:block}
 .cc .nm{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
   color:rgba(250,246,239,.6)}
