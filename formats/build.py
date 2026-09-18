@@ -37,6 +37,11 @@ for m in mm:
 anat = "data:image/jpeg;base64," + base64.b64encode((SC / "mm" / "anat_big.jpg").read_bytes()).decode()
 
 html = (here / "public" / "index.html").read_text()
+# the artifact strips our charset meta, so a raw non-ASCII byte in the source
+# is served as latin-1 and shows up as mojibake — keep the page pure ASCII
+raw = sorted({c for c in html if ord(c) > 127})
+if raw:
+    raise SystemExit("non-ASCII in source, use an entity or \\u escape: %r" % raw)
 missing = [s["id"] for st in sets for s in st["slides"] if s["id"] not in thumbs]
 if missing:
     raise SystemExit("no thumbnail for: %s" % missing[:5])
