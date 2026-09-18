@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Content References</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF6EF; --ink:#1F1216; --warm:#F2EBE0;
+  --pink:#D61F78; --muted:#6B5B60; --line:rgba(31,18,22,.14);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --pad:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:15px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase}
+
+/* ---------- masthead ---------- */
+.mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;
+  padding:18px var(--pad);border-bottom:1px solid var(--line)}
+.mast .mono{color:var(--muted)}
+.mast .r{text-align:right}
+.mast img{height:34px;width:auto;display:block}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(30px,6vw,64px) var(--pad) 0}
+.eyebrow{display:block;color:var(--pink);margin-bottom:clamp(18px,3vw,30px)}
+.hgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,5vw,60px);align-items:end}
+h1{font-family:var(--serif);font-size:clamp(50px,10vw,128px);font-weight:300;line-height:.9;
+  letter-spacing:-.035em;margin:0}
+h1 em{font-style:italic;color:var(--pink)}
+.stand{font-family:var(--serif);font-size:clamp(16px,1.6vw,20px);font-weight:300;font-style:italic;
+  line-height:1.45;color:var(--ink);margin:0 0 10px;max-width:34ch}
+
+/* ---------- facts ---------- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(18px,4vw,50px);
+  padding:clamp(26px,4vw,40px) var(--pad) clamp(30px,4vw,44px)}
+.facts .v{font-family:var(--serif);font-size:clamp(26px,3.2vw,38px);font-weight:300;letter-spacing:-.02em;line-height:1.05}
+.facts .k{color:var(--muted);margin-top:4px}
+
+/* ---------- panel of stills ---------- */
+.panel{background:var(--ink);color:var(--cream);padding:14px 0 16px;margin:clamp(26px,4vw,44px) var(--pad) 0}
+.panel .ph{display:flex;justify-content:space-between;gap:14px;padding:0 14px 12px}
+.panel .ph .l{color:var(--pink)}
+.panel .ph .r{color:rgba(250,246,239,.5)}
+.rowscroll{display:flex;gap:10px;overflow-x:auto;padding:0 14px 2px;scrollbar-width:thin}
+.tile{flex:0 0 auto;display:block;text-decoration:none;color:inherit}
+.tile .im{height:clamp(150px,20vw,210px);background:#2A1B20;position:relative;overflow:hidden}
+.tile .im img{height:100%;width:auto;display:block}
+.tile .cap{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(250,246,239,.62);margin-top:7px}
+.tile .pl{position:absolute;inset:0;display:grid;place-items:center}
+.tile .pl i{width:36px;height:36px;border-radius:50%;background:rgba(31,18,22,.55);display:grid;
+  place-items:center;color:#fff;font-style:normal;font-size:12px;padding-left:2px}
+.hint{color:var(--muted);padding:9px var(--pad) 0}
+
+/* ---------- sticky section nav ---------- */
+.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap}
+.pills .in{display:flex;gap:9px;padding:13px var(--pad)}
+.pills button{all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;padding:8px 17px;border-radius:999px;border:1px solid var(--line);
+  color:var(--muted);transition:background .15s,color .15s,border-color .15s}
+.pills button:hover{border-color:var(--pink);color:var(--pink)}
+.pills button[aria-selected="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+
+/* ---------- sections ---------- */
+section{padding:clamp(44px,7vw,92px) var(--pad) 0;scroll-margin-top:60px}
+.kick{display:flex;align-items:center;gap:10px;color:var(--pink);margin-bottom:clamp(14px,2vw,22px)}
+.kick i{display:block;width:26px;height:1px;background:var(--pink)}
+h2{font-family:var(--serif);font-size:clamp(32px,6vw,76px);font-weight:300;line-height:.95;
+  letter-spacing:-.03em;margin:0 0 14px;max-width:16ch}
+h2 em{font-style:italic;color:var(--pink)}
+.lede{color:var(--muted);max-width:52ch;margin:0}
+section .panel{margin-left:0;margin-right:0}
+
+/* ---------- spec ---------- */
+.mmref{display:grid;grid-template-columns:minmax(0,190px) 1fr;gap:clamp(20px,4vw,44px);
+  align-items:start;margin-top:clamp(24px,3.5vw,36px)}
+.af{position:relative;line-height:0}
+.af img{width:100%;display:block}
+.af .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
+  text-transform:uppercase;background:var(--ink);color:var(--cream);padding:3px 6px;line-height:1.3}
+.sgs{display:grid;gap:clamp(18px,2.5vw,26px)}
+.sg .sh{display:block;color:var(--pink);border-top:1px solid var(--line);padding-top:11px;margin-bottom:2px}
+.sr{display:grid;grid-template-columns:86px 1fr;gap:14px;align-items:baseline;padding:8px 0;font-size:14px}
+.sr+.sr{border-top:1px solid var(--line)}
+.sr .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.sr b{font-weight:500;line-height:1.5}
+.sr .or{color:var(--muted);font-weight:400;font-size:13px}
+.sw{display:inline-block;width:8px;height:8px;margin-right:5px}
+@media(max-width:700px){.mmref{grid-template-columns:1fr}.af{max-width:190px}}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(20px,4vw,44px);
+  margin-top:clamp(24px,3.5vw,38px)}
+.two .t{display:block;color:var(--pink);border-top:1px solid var(--line);padding-top:12px}
+.two p{color:var(--muted);margin:8px 0 14px;font-size:14px}
+.soon{background:var(--warm);border:1px dashed rgba(31,18,22,.3);padding:clamp(26px,4vw,44px);
+  text-align:center;color:var(--muted)}
+.soon .mono{color:var(--muted)}
+
+/* ---------- footer ---------- */
+footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);
+  padding:clamp(50px,7vw,90px) var(--pad) 40px;margin-top:clamp(40px,6vw,70px);border-top:1px solid var(--line)}
+
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:90;background:rgba(21,12,15,.95);display:grid;
+  grid-template-rows:auto 1fr auto;padding:14px}
+.lb .h{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--cream)}
+.lb .h a,.lb .h button{all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--cream);border:1px solid rgba(250,246,239,.35);padding:5px 10px}
+.lb .b{display:grid;place-items:center;min-height:0;padding:12px 0}
+.lb .b img{max-height:100%;max-width:100%;object-fit:contain}
+.lb .b iframe{width:min(92vw,calc(78vh * 9 / 16));height:78vh;border:0}
+.lb .f{display:flex;justify-content:center;align-items:center;gap:14px;color:rgba(250,246,239,.7);
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.lb .f button{all:unset;cursor:pointer;border:1px solid rgba(250,246,239,.35);padding:5px 10px;color:var(--cream)}
+
+@media(max-width:760px){
+  .hgrid{grid-template-columns:1fr;align-items:start}
+  .facts{gap:18px}
+  h2{max-width:none}
+}
+</style>
+
+<header class="mast">
+  <span class="mono">Nancy OOO &middot; Formats</span>
+  <img src="assets/nancy-logo-ink.svg" alt="Nancy">
+  <span class="mono r">Any event</span>
+</header>
+
+<section class="hero" style="padding-bottom:0">
+  <span class="eyebrow mono">The format issue &middot; What we make</span>
+  <div class="hgrid">
+    <h1>Content <em>references.</em></h1>
+    <p class="stand">Three formats that work for any event. The examples underneath are from one we already made &mdash; take the idea, not the location.</p>
+  </div>
+</section>
+
+<div class="panel" id="cover"></div>
+
+<div class="facts">
+  <div><div class="v">Three formats</div><div class="k mono">Carousels &middot; Mini mic &middot; Highlights</div></div>
+  <div><div class="v">35 slides</div><div class="k mono">Three carousels to pull from</div></div>
+  <div><div class="v">Two mini mics</div><div class="k mono">One question, everyone answers</div></div>
+</div>
+
+<nav class="pills" id="nav"><div class="in" role="tablist">
+  <button role="tab" data-t="f1" aria-selected="true">Carousels</button>
+  <button role="tab" data-t="f2" aria-selected="false">Mini mic</button>
+  <button role="tab" data-t="f3" aria-selected="false">Highlights</button>
+</div></nav>
+
+<section id="f1">
+  <h2>An event, <em>told in stills.</em></h2>
+  <p class="lede">Group shots, single portraits, a branded object, a still life, and a clip or two in the middle. Colour is worn, not added, and nothing carries text.</p>
+  <div id="sets"></div>
+</section>
+
+<section id="f2">
+  <h2>One question, <em>everyone answers.</em></h2>
+  <p class="lede">Cut back to back so it plays as one conversation. A name card the first time each person appears.</p>
+  <div class="mmref">
+    <div class="af">
+      <img src="__ANAT__" alt="A mini mic frame: logo top right, name card lower left, captions at the bottom">
+      <span class="pin" style="top:3%;left:3%">Logo</span>
+      <span class="pin" style="top:56%;right:3%">Name card</span>
+      <span class="pin" style="top:84%;right:3%">Captions</span>
+    </div>
+    <div class="sgs">
+      <div class="sg">
+        <span class="sh mono">The name card</span>
+        <div class="sr"><span class="k mono">Says</span>
+          <b>Amanda McCants, @amandamccants<br>Nancy OOO host &nbsp;<span class="or">or</span>&nbsp; Nancy OOO Panelist</b></div>
+        <div class="sr"><span class="k mono">At a collab</span><b>Nancy x Ray Chu @ London Fashion Week</b></div>
+        <div class="sr"><span class="k mono">Set as</span><b>Fraunces-Blk, bold, size 10. White fill,
+          <span class="sw" style="background:#FF3EAA"></span>FF3EAA outline.</b></div>
+      </div>
+      <div class="sg">
+        <span class="sh mono">The captions</span>
+        <div class="sr"><span class="k mono">Set as</span><b>Helvetica Neue, bold, size 9</b></div>
+      </div>
+      <div class="sg">
+        <span class="sh mono">The logo</span>
+        <div class="sr"><span class="k mono">Set as</span><b>Scale 26%, X 705 / Y 1662</b></div>
+      </div>
+    </div>
+  </div>
+  <div id="mm"></div>
+</section>
+
+<section id="f3">
+  <h2>The room, <em>as it felt.</em></h2>
+  <p class="lede">Two cuts of the same day. Photo reels are the stills moving; the video highlight is the footage.</p>
+  <div class="two">
+    <div><span class="mono t">A &nbsp;Photo reels</span><p>The stills, moving. Same shots as a carousel, cut to a track.</p>
+      <div class="soon"><span class="mono">Examples coming</span></div></div>
+    <div><span class="mono t">B &nbsp;Video highlight</span><p>The footage. The room, the crowd, the moments.</p>
+      <div class="soon"><span class="mono">Examples coming</span></div></div>
+  </div>
+</section>
+
+<footer>
+  <span class="mono">Nancy OOO &middot; Formats</span>
+  <span class="mono">Carousels &middot; Mini mic &middot; Highlights</span>
+</footer>
+
+<div class="lb" id="lb" hidden>
+  <div class="h"><span class="mono" id="lbT"></span>
+    <span><a id="lbOpen" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+    <button type="button" id="lbX">Close &times;</button></span></div>
+  <div class="b" id="lbB"></div>
+  <div class="f" id="lbF"></div>
+</div>
+
+<script>
+const THUMBS = __THUMBS__;
+const SETS = __SETS__;
+const MM = __MM__;
+
+const norm = s => s.slides.map((x, i) => ({ id: x.id, video: x.t === "video", thumb: THUMBS[x.id] }));
+const GROUPS = SETS.map(s => ({ name: s.name, kind: "Carousel", items: norm(s) }));
+GROUPS.push({ name: "Mini mic", kind: "Two examples",
+  items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster })) });
+
+function panel(gi, host, cls){
+  const g = GROUPS[gi];
+  host.insertAdjacentHTML("beforeend", `
+    <div class="panel${cls || ""}">
+      <div class="ph"><span class="mono l">${g.name}</span>
+        <span class="mono r">${g.items.length} &middot; ${g.kind}</span></div>
+      <div class="rowscroll">
+        ${g.items.map((it, i) => `
+          <a class="tile" href="https://drive.google.com/file/d/${it.id}/view" target="_blank"
+             rel="noopener" data-g="${gi}" data-i="${i}">
+            <span class="im"><img src="${it.thumb || ""}" alt="" loading="lazy">
+              ${it.video ? '<span class="pl"><i>&#9654;</i></span>' : ""}</span>
+            <span class="cap">${String(i + 1).padStart(2, "0")}${it.video ? " &middot; Video" : ""}</span>
+          </a>`).join("")}
+      </div>
+    </div>`);
+}
+
+const sets = document.getElementById("sets");
+[0, 1, 2].forEach(i => panel(i, sets));
+panel(3, document.getElementById("mm"));
+
+/* hero strip: one cover per group */
+document.getElementById("cover").innerHTML = `
+  <div class="ph"><span class="mono l">The work</span>
+    <span class="mono r">Reference examples</span></div>
+  <div class="rowscroll">
+    ${GROUPS.map((g, gi) => `
+      <a class="tile" href="https://drive.google.com/file/d/${g.items[0].id}/view" target="_blank"
+         rel="noopener" data-g="${gi}" data-i="0">
+        <span class="im"><img src="${g.items[0].thumb || ""}" alt="">
+          ${g.items[0].video ? '<span class="pl"><i>&#9654;</i></span>' : ""}</span>
+        <span class="cap">${g.name} &middot; ${g.kind}</span></a>`).join("")}
+  </div>`;
+
+/* lightbox */
+const lb = document.getElementById("lb");
+let cur = null;
+function open_(gi, i){
+  cur = { gi, i };
+  const g = GROUPS[gi], it = g.items[i];
+  document.getElementById("lbT").textContent = `${g.name} \u2014 ${i + 1} / ${g.items.length}`;
+  document.getElementById("lbOpen").href = "https://drive.google.com/file/d/" + it.id + "/view";
+  document.getElementById("lbB").innerHTML = it.video
+    ? `<iframe src="https://drive.google.com/file/d/${it.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+    : `<img src="${it.thumb || ""}" alt="">`;
+  document.getElementById("lbF").innerHTML =
+    `<button type="button" data-step="-1">&larr;</button><span>${i + 1} / ${g.items.length}</span>
+     <button type="button" data-step="1">&rarr;</button>`;
+  lb.hidden = false; document.body.style.overflow = "hidden";
+}
+function close_(){ lb.hidden = true; document.getElementById("lbB").innerHTML = ""; document.body.style.overflow = ""; cur = null; }
+function step(d){ if (!cur) return; const n = GROUPS[cur.gi].items.length; open_(cur.gi, (cur.i + d + n) % n); }
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("a.tile");
+  if (t){ e.preventDefault(); open_(+t.dataset.g, +t.dataset.i); return; }
+  const s = e.target.closest("#lbF button[data-step]");
+  if (s){ step(+s.dataset.step); return; }
+  if (e.target.closest("#lbX") || e.target === lb) close_();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") close_();
+  if (!lb.hidden && e.key === "ArrowRight") step(1);
+  if (!lb.hidden && e.key === "ArrowLeft") step(-1);
+});
+
+/* the pills are the toggle: one format at a time */
+const TABS = ["f1", "f2", "f3"];
+function show(id, scroll){
+  TABS.forEach(t => document.getElementById(t).hidden = t !== id);
+  document.querySelectorAll(".pills button").forEach(b =>
+    b.setAttribute("aria-selected", b.dataset.t === id));
+  if (scroll){
+    const nav = document.getElementById("nav");
+    const y = nav.getBoundingClientRect().top + window.scrollY;
+    if (window.scrollY > y) window.scrollTo({ top: y, behavior: "instant" });
+  }
+}
+document.getElementById("nav").addEventListener("click", e => {
+  const b = e.target.closest("button[data-t]");
+  if (b) show(b.dataset.t, true);
+});
+show("f1", false);
+</script>
