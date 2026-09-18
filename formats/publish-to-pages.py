@@ -20,7 +20,7 @@ if dest.exists():
     shutil.rmtree(dest)
 (dest / "assets").mkdir(parents=True)
 (dest / "videos").mkdir()
-(dest / "title-cards").mkdir()
+(dest / "downloads").mkdir()
 
 shutil.copy(here / "public" / "assets" / "nancy-logo-ink.svg", dest / "assets" / "nancy-logo-ink.svg")
 
@@ -30,10 +30,12 @@ for group in json.loads((SC / "highlights.json").read_text()).values():
 for m in clips:
     shutil.copy(m["src"], dest / "videos" / m["file"])
 
-cards = json.loads((SC / "cards.json").read_text())
-for c in cards["items"]:
-    shutil.copy(c["src"], dest / "title-cards" / c["file"])
-shutil.copy(cards["zip"], dest / "title-cards" / cards["zipname"])
+for src in (json.loads((SC / "logos.json").read_text()),
+            json.loads((SC / "cards.json").read_text())):
+    for c in src["items"]:
+        shutil.copy(c["src"], (dest / "downloads") / c["file"])
+    shutil.copy(src["zip"], (dest / "downloads") / src["zipname"])
+
 
 html = built.read_text()
 for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__HL__", "__CARDS__",
