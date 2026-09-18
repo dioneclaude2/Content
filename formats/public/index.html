@@ -75,7 +75,8 @@ h2 em{font-style:italic;color:var(--pink)}
 .info .k{display:block;color:var(--muted);margin-bottom:11px}
 .info .doing{font-family:var(--serif);font-size:clamp(21px,2.3vw,30px);font-weight:300;
   letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
-.info .doing b{color:var(--pink);font-weight:300}
+.info .doing b,.info .doing em{color:var(--pink);font-weight:300;font-style:normal}
+.info .doing em{font-style:italic}
 .info .nav{display:flex;align-items:center;gap:9px;margin:18px 0 14px}
 
 /* the kinds of asset a carousel is built from */
@@ -215,13 +216,17 @@ const LOGO = `
   <div class="r"><span class="k">Set as</span><b>Top right. Scale 26%, X 705 / Y 1662.</b></div>`;
 
 const RULES = {
-  "Event highlights": ["<b>Find the music first.</b> The track decides where the cuts land \u2014 never cut first and drop a beat under it after.",
-    "Fast, but balanced against the track. The beat sets the pace, not a stopwatch.",
-    "<b>Branded throughout.</b> Logo, campaign title, the full lockup.",
-    "Take the mechanism from an outlier, then write a text overlay of our own."],
-  "Photo reels": ["<b>Event highlights, except every frame is a still.</b>",
-    "Same rules \u2014 music first, cuts follow, branded the same way.",
-    "<b>Only the source changes.</b> Nothing about the approach does."]
+  "Event highlights": {
+    head: "Find the <em>music first.</em>",
+    list: ["The track decides where the cuts land \u2014 never cut first and drop a beat under it after.",
+           "Fast, but balanced against the track. The beat sets the pace, not a stopwatch.",
+           "<b>Branded throughout.</b> Logo, campaign title, the full lockup.",
+           "Take the mechanism from an outlier, then write a text overlay of our own."] },
+  "Photo reels": {
+    head: "The same edit, <em>every frame a still.</em>",
+    list: ["Music first, cuts follow, branded the same way.",
+           "<b>Only the source changes.</b> Nothing about the approach does.",
+           "Built out of the static assets a carousel is made from."] }
 };
 
 function doing(ty, i, n){
@@ -240,10 +245,10 @@ const VIEWS = [
       items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: true,
                             lb: "Host asks \u00b7 Panel answers" })) }] },
   { groups: [
-      { name: "Event highlights", items: HL.highlights.map(m => ({ id: m.id, video: true,
-          thumb: m.poster, file: m.file, lb: m.lb })) },
-      { name: "Photo reels", items: HL.reels.map(m => ({ id: m.id, video: true,
-          thumb: m.poster, file: m.file, lb: m.lb })) }] }
+      { name: "Event highlights", items: HL.highlights.map(m => ({ video: true,
+          thumb: m.poster, file: m.file })) },
+      { name: "Photo reels", items: HL.reels.map(m => ({ video: true,
+          thumb: m.poster, file: m.file })) }] }
 ];
 VIEWS.forEach(v => { v.g = 0; v.i = 0; v.playing = false; v.el = document.querySelector('.viewer[data-v="' + VIEWS.indexOf(v) + '"]'); });
 
@@ -262,10 +267,11 @@ function right(vi, v, g, it){
     <span class="k mono" style="margin-top:20px">What matters</span>
     <ul class="rules">${MATTERS.map(m => `<li>${m}</li>`).join("")}</ul>`;
   if (vi === 1) return `<div class="bd">${CARD}${CAPS}${LOGO}</div>`;
+  const r = RULES[g.name] || { head: g.name, list: [] };
   return `
     <span class="k mono">${g.name}</span>
-    <p class="doing">${it.lb}</p>
-    <ul class="rules">${(RULES[g.name] || []).map(r => `<li>${r}</li>`).join("")}</ul>`;
+    <p class="doing">${r.head}</p>
+    <ul class="rules">${r.list.map(x => `<li>${x}</li>`).join("")}</ul>`;
 }
 
 function draw(vi){
@@ -296,7 +302,7 @@ function draw(vi){
         <span class="ct">${String(v.i + 1).padStart(2, "0")} / ${g.items.length}</span>
         <button data-step="1">&rarr;</button>
       </div>
-      <a href="https://drive.google.com/file/d/${it.id}/view" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+      ${it.id ? `<a href="https://drive.google.com/file/d/${it.id}/view" target="_blank" rel="noopener">Open in Drive &#8599;</a>` : ""}
     </div>`;
   const on = v.el.querySelector('.rail a[aria-selected="true"]');
   if (on) on.scrollIntoView({ block: "nearest" });
