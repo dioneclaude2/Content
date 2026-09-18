@@ -245,7 +245,7 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
     </div>
     <div class="cards">
     <div class="ch">
-      <span class="mono l">Mini mic title cards</span>
+      <span class="mono l">Meet Her title cards</span>
       <a class="dl mono" id="cardZip" target="_blank" rel="noopener">Download all &#8595;</a>
     </div>
     <div class="crow" id="cardRow"></div>
@@ -306,7 +306,7 @@ const clean = (si, i) => THUMBS[SETS[si].slides[i].id];
 const MM_SPEC = `
   <span class="k mono">Set the type like this</span>
   <div class="spec">
-    <div class="r"><span class="k">Title card</span><b>Meet Her, top centre. <span class="dim">Pink, white or yellow &mdash; below.</span></b></div>
+    <div class="r"><span class="k">Title card</span><b>The series lockup, top centre. <span class="dim">Meet Her, Pass the Lem, Cozy with Nancy.</span></b></div>
     <div class="r"><span class="k">Name card</span><b>Fraunces-Blk, bold, <span class="dim">size</span> 10</b></div>
     <div class="r"><span class="k">Its stroke</span><b><span class="sw" style="background:#FF3EAA"></span>FF3EAA at <b>100%</b> thickness, white fill</b></div>
     <div class="r"><span class="k">Line 1</span><b>Their name, @their handle</b></div>
@@ -340,7 +340,7 @@ const VIEWS = [
       items: s.slides.map((x, i) => ({ id: x.id, video: x.t === "video", thumb: THUMBS[x.id],
                                        ty: x.ty, lb: doing(x.ty, i, s.slides.length) })) })) },
   { groups: [{ name: "Mini mic",
-      items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: true })) }] },
+      items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: m.pins })) }] },
   { groups: [{ name: "Event highlights",
       items: HL.highlights.map(m => ({ video: true, thumb: m.poster, file: m.file })) }] },
   { groups: [{ name: "Photo reels",
