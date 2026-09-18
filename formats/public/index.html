@@ -400,10 +400,9 @@ document.getElementById("demoHL").style.backgroundImage = "url(" + clean(0, 3) +
 /* the site serves the files; without them, point at the Drive folder */
 const zip = document.getElementById("cardZip");
 zip.href = CARD_BASE ? CARD_BASE + CARDS.zipname : CARDS.drive;
-if (CARD_BASE) zip.setAttribute("download", CARDS.zipname);
 document.getElementById("cardRow").innerHTML = CARDS.items.map(c => `
   <a class="cc" href="${CARD_BASE ? CARD_BASE + c.file : CARDS.drive}" target="_blank" rel="noopener"
-     ${CARD_BASE ? `download="${c.file}"` : ""}>
+     >
     <span class="im"><img src="${c.prev}" alt="Meet her title card, ${c.colour.toLowerCase()}"></span>
     <span class="nm">${c.colour} &middot; transparent PNG</span></a>`).join("");
 
