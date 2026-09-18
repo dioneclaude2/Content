@@ -57,6 +57,10 @@ img{max-width:100%}
 .sh .lede{color:var(--muted);margin:.4em 0 0;font-size:14px;max-width:38ch}
 
 /* ---------- chips ---------- */
+.sub+.sub{margin-top:clamp(40px,5.5vw,68px)}
+.lab{display:block;color:var(--pink);border-top:1px solid var(--ink);padding-top:12px;
+  margin-bottom:clamp(14px,2vw,20px)}
+
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:clamp(16px,2.4vw,22px)}
 .chips button{all:unset;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
   text-transform:uppercase;padding:7px 14px;border:1px solid var(--line);color:var(--muted)}
@@ -253,10 +257,16 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <div class="sh">
     <span class="fig">03</span>
     <h2>The room, <em>as it felt.</em></h2>
-    <p class="lede">Event highlights are cut from footage, photo reels from stills. The type is the same in both.</p>
+    <p class="lede">Two cuts of the same day. Highlights come from the footage, photo reels from the stills.</p>
   </div>
-  <div class="chips" id="chips3"></div>
-  <div class="viewer" data-v="2"></div>
+  <div class="sub">
+    <span class="lab mono">A &nbsp;Event highlights</span>
+    <div class="viewer" data-v="2"></div>
+  </div>
+  <div class="sub">
+    <span class="lab mono">B &nbsp;Photo reels</span>
+    <div class="viewer" data-v="3"></div>
+  </div>
 </section>
 
 <footer>
@@ -307,13 +317,21 @@ const MM_SPEC = `
     <div class="r"><span class="k">Logo</span><b>Top right. <span class="dim">Scale</span> 26%, <span class="dim">X</span> 705 <span class="dim">/ Y</span> 1662</b></div>
   </div>`;
 
+const PR_SPEC = `
+  <span class="k mono">Set the type like this</span>
+  <div class="spec">
+    <div class="r"><span class="k">No hook</span><b>A photo reel does not need one. <span class="dim">Let the stills carry it.</span></b></div>
+    <div class="r"><span class="k">Title card</span><b>Fraunces <span class="or">or</span> PP Editorial New</b></div>
+    <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9, <span class="dim">if you use them</span></b></div>
+    <div class="r"><span class="k">Source</span><b>Cut from photos, not footage</b></div>
+  </div>`;
+
 const HL_SPEC = `
   <span class="k mono">Set the type like this</span>
   <div class="spec">
     <div class="r"><span class="k">The hook</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9&ndash;10</b></div>
     <div class="r"><span class="k">Its stroke</span><b>White fill, black stroke at <b>40%</b> thickness</b></div>
     <div class="r"><span class="k">Captions</span><b>Helvetica Neue, bold, <span class="dim">size</span> 9</b></div>
-    <div class="r"><span class="k">Photo reels</span><b>Identical type. <span class="dim">Only the source changes.</span></b></div>
   </div>`;
 
 const VIEWS = [
@@ -323,9 +341,10 @@ const VIEWS = [
                                        ty: x.ty, lb: doing(x.ty, i, s.slides.length) })) })) },
   { groups: [{ name: "Mini mic",
       items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file, pins: true })) }] },
-  { groups: [
-      { name: "Event highlights", items: HL.highlights.map(m => ({ video: true, thumb: m.poster, file: m.file })) },
-      { name: "Photo reels", items: HL.reels.map(m => ({ video: true, thumb: m.poster, file: m.file })) }] }
+  { groups: [{ name: "Event highlights",
+      items: HL.highlights.map(m => ({ video: true, thumb: m.poster, file: m.file })) }] },
+  { groups: [{ name: "Photo reels",
+      items: HL.reels.map(m => ({ video: true, thumb: m.poster, file: m.file })) }] }
 ];
 VIEWS.forEach((v, k) => { v.g = 0; v.i = 0; v.playing = k === 0 ? false : -1;
   v.el = document.querySelector('.viewer[data-v="' + k + '"]'); });
@@ -343,7 +362,8 @@ function right(vi, g){
     <span class="k mono">What matters</span>
     <ul class="rules">${MATTERS.map(m => `<li>${m}</li>`).join("")}</ul>`;
   if (vi === 1) return MM_SPEC;
-  return HL_SPEC;
+  if (vi === 2) return HL_SPEC;
+  return PR_SPEC;
 }
 
 function drawSet(vi){
@@ -408,7 +428,7 @@ document.addEventListener("click", e => {
   const c = e.target.closest(".chips button");
   if (c){ const vi = +c.dataset.v, v = VIEWS[vi];
     v.g = +c.dataset.g; v.i = 0; v.playing = vi === 0 ? false : -1;
-    chips(vi, vi === 0 ? "chips" : "chips3"); draw(vi); return; }
+    chips(vi, "chips"); draw(vi); return; }
   const shot = e.target.closest(".shot");
   if (shot){ const vi = +shot.closest(".viewer").dataset.v;
     VIEWS[vi].playing = +shot.dataset.i; draw(vi); return; }
@@ -422,8 +442,8 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-play]")){ VIEWS[0].playing = true; draw(0); }
 });
 
-chips(0, "chips"); chips(2, "chips3");
-draw(0); draw(1); draw(2);
+chips(0, "chips");
+draw(0); draw(1); draw(2); draw(3);
 
 /* the specimens sit on a real still */
 document.getElementById("demoMM").style.backgroundImage = "url(" + clean(1, 3) + ")";
