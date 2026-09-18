@@ -47,8 +47,13 @@ if missing:
     raise SystemExit("no thumbnail for: %s" % missing[:5])
 html = (html.replace("__THUMBS__", json.dumps(thumbs), 1)
             .replace("__SETS__", json.dumps(sets), 1)
-            .replace("__MM__", json.dumps(mm), 1)
+            .replace("__MM__", json.dumps([{k: v for k, v in m.items() if k != "src"} for m in mm]), 1)
             .replace("__ANAT__", anat, 1))
+
+# the artifact has no room for the clips, so it falls back to the Drive embed;
+# the site copy serves them itself and plays for anyone with the link
+site = html.replace("__VIDEOBASE__", "/content-references/videos/", 1)
+html = html.replace("__VIDEOBASE__", "", 1)
 
 # the artifact host supplies doctype/head; drop ours and inline the wordmark
 art = "\n".join(l for l in html.splitlines()
@@ -58,9 +63,9 @@ logo = (here / "public" / "assets" / "nancy-logo-ink.svg").read_bytes()
 art = art.replace('src="assets/nancy-logo-ink.svg"',
                   'src="data:image/svg+xml;base64,%s"' % base64.b64encode(logo).decode())
 if "__" in art.replace("__NANCY", ""):
-    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__") if w in art]
+    leftover = [w for w in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__", "__VIDEOBASE__") if w in art]
     if leftover: raise SystemExit("unsubstituted: %s" % leftover)
 out.write_text(art)
-(here / "public" / "index.built.html").write_text(html)
+(here / "public" / "index.built.html").write_text(site)
 print("artifact %s (%.1f MB) · %d thumbnails · %d sets · %d mini mic" %
       (out.name, out.stat().st_size / 1048576, len(thumbs), len(sets), len(mm)))

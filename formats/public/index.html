@@ -13,88 +13,90 @@
   --sans:"Inter",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   --pad:clamp(20px,5vw,70px);
+  --shot:clamp(300px,56vh,520px);
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:15px;
   line-height:1.6;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 [hidden]{display:none!important}
 .mono{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
 
-/* ---------- masthead ---------- */
-.mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;
-  padding:18px var(--pad)}
+.mast{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:18px var(--pad)}
 .mast .mono{color:var(--muted)}
 .mast .r{text-align:right}
 .mast img{height:32px;width:auto;display:block}
 
-/* ---------- hero ---------- */
-.hero{padding:clamp(34px,7vw,80px) var(--pad) clamp(30px,5vw,56px)}
-.eyebrow{display:block;color:var(--pink);margin-bottom:clamp(20px,3vw,34px)}
+.hero{padding:clamp(34px,7vw,76px) var(--pad) clamp(32px,5vw,60px)}
+.eyebrow{display:block;color:var(--pink);margin-bottom:clamp(20px,3vw,32px)}
 .hgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(24px,5vw,64px);align-items:end}
-h1{font-family:var(--serif);font-size:clamp(52px,10.5vw,136px);font-weight:300;line-height:.88;
+h1{font-family:var(--serif);font-size:clamp(52px,10.5vw,132px);font-weight:300;line-height:.88;
   letter-spacing:-.04em;margin:0}
 h1 em{font-style:italic;color:var(--pink)}
 .stand{font-family:var(--serif);font-size:clamp(17px,1.7vw,21px);font-weight:300;font-style:italic;
-  line-height:1.45;margin:0 0 10px;max-width:32ch;color:var(--ink)}
+  line-height:1.45;margin:0 0 10px;max-width:32ch}
 
-/* ---------- the one dark band ---------- */
-.band{background:var(--ink);color:var(--cream);padding:clamp(20px,3vw,30px) var(--pad) clamp(24px,3vw,34px)}
-.band .bh{display:flex;justify-content:space-between;gap:14px;margin-bottom:16px}
-.band .bh .l{color:var(--pink)}
-.band .bh .r{color:rgba(250,246,239,.45)}
-.band .row{display:grid;align-items:start;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.4vw,16px)}
-.band .cell{display:block;text-decoration:none;color:inherit}
-.band .cell .im{display:block;aspect-ratio:4/5;background:#2A1B20;overflow:hidden;position:relative}
-.band .cell img{width:100%;height:100%;object-fit:cover;display:block}
-.band .cell .cp{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;
-  color:rgba(250,246,239,.6);margin-top:9px;display:block}
-@media(max-width:700px){.band .row{grid-template-columns:repeat(2,1fr)}}
-
-/* ---------- pills ---------- */
-.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-bottom:1px solid var(--line);
-  overflow-x:auto;white-space:nowrap}
-.pills .in{display:flex;gap:8px;padding:15px var(--pad)}
-.pills button{all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+.pills{position:sticky;top:0;z-index:40;background:var(--cream);border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap}
+.pills .in{display:flex;gap:8px;padding:14px var(--pad)}
+.pills a{text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
   text-transform:uppercase;padding:9px 18px;border-radius:999px;border:1px solid var(--line);
   color:var(--muted);transition:background .15s,color .15s,border-color .15s}
-.pills button:hover{border-color:var(--pink);color:var(--pink)}
-.pills button[aria-selected="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.pills a:hover{border-color:var(--pink);color:var(--pink)}
+.pills a[aria-current="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
 
-/* ---------- sections ---------- */
-section{padding:clamp(48px,8vw,104px) var(--pad) 0}
+section{padding:clamp(52px,8vw,100px) var(--pad) 0;scroll-margin-top:58px}
 .head{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(20px,5vw,64px);align-items:end;
-  margin-bottom:clamp(34px,5vw,58px)}
-h2{font-family:var(--serif);font-size:clamp(34px,6vw,78px);font-weight:300;line-height:.95;
+  margin-bottom:clamp(26px,4vw,40px)}
+h2{font-family:var(--serif);font-size:clamp(34px,6vw,76px);font-weight:300;line-height:.95;
   letter-spacing:-.035em;margin:0;max-width:15ch}
 h2 em{font-style:italic;color:var(--pink)}
 .lede{color:var(--muted);margin:0 0 6px;max-width:40ch}
 
-/* ---------- contact sheets ---------- */
-.set{margin-bottom:clamp(38px,5vw,64px)}
-.set .sh{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
-  border-top:1px solid var(--ink);padding-top:11px;margin-bottom:16px}
-.set .sh h3{font-family:var(--serif);font-size:clamp(19px,2.2vw,26px);font-weight:300;
-  letter-spacing:-.02em;margin:0}
-.set .sh .c{color:var(--muted)}
-.set.few .sheet{grid-template-columns:repeat(2,minmax(0,1fr));max-width:440px}
-.sheet{display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:clamp(9px,1.3vw,15px)}
-.cl{display:block;text-decoration:none;color:inherit}
-.cl .im{display:block;aspect-ratio:4/5;background:var(--warm);overflow:hidden;position:relative}
-.cl img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .15s}
-.cl:hover img{opacity:.85}
-.cl .ix{position:absolute;left:0;top:0;font-family:var(--mono);font-size:9px;letter-spacing:.06em;
-  background:rgba(31,18,22,.6);color:#fff;padding:2px 5px}
-.cl .pv{position:absolute;inset:0;display:grid;place-items:center}
-.cl .pv i{width:34px;height:34px;border-radius:50%;background:rgba(31,18,22,.55);display:grid;
-  place-items:center;color:#fff;font-style:normal;font-size:11px;padding-left:2px}
-.cl .lb{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--muted);margin-top:8px;line-height:1.4}
-.cl .lb b{color:var(--pink);font-weight:400}
+/* ---------- set chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:7px;border-top:1px solid var(--ink);padding-top:14px;margin-bottom:18px}
+.chips button{all:unset;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
+  text-transform:uppercase;padding:7px 13px;border:1px solid var(--line);color:var(--muted)}
+.chips button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+
+/* ---------- one frame, side toggle ---------- */
+.viewer{display:grid;grid-template-columns:max-content 84px minmax(0,1fr);
+  gap:clamp(14px,2.5vw,34px);align-items:start}
+.frame{height:var(--shot);background:var(--warm);position:relative;overflow:hidden;
+  width:max-content;max-width:100%;cursor:default}
+.frame img{height:100%;width:auto;display:block}
+.frame.playing{aspect-ratio:9/16;width:auto}
+.frame iframe,.frame video{width:100%;height:100%;border:0;display:block;background:#000}
+.frame .pv{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer}
+.frame .pv i{width:52px;height:52px;border-radius:50%;background:rgba(31,18,22,.55);display:grid;
+  place-items:center;color:#fff;font-style:normal;font-size:16px;padding-left:3px}
+.info{border-top:1px solid var(--ink);padding-top:13px;max-width:30ch}
+.info .k{display:block;color:var(--muted);margin-bottom:9px}
+.info .doing{font-family:var(--serif);font-size:clamp(24px,2.6vw,34px);font-weight:300;
+  letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
+.info .doing b{color:var(--pink);font-weight:300}
+.info .nav{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.info button{all:unset;cursor:pointer;border:1px solid var(--line);padding:5px 11px;
+  font-family:var(--mono);font-size:11px;color:var(--muted)}
+.info button:hover{border-color:var(--pink);color:var(--pink)}
+.info .ct{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:var(--muted)}
+.info a{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--pink);text-decoration:none}
+.info .hint{color:var(--muted);font-size:13px;margin:14px 0 0}
+
+.rail{height:var(--shot);overflow-y:auto;display:grid;gap:6px;align-content:start;padding-right:4px}
+.rail a{display:block;position:relative;aspect-ratio:4/5;background:var(--warm);
+  outline:1px solid transparent;outline-offset:-1px}
+.rail img{width:100%;height:100%;object-fit:cover;display:block}
+.rail a[aria-selected="true"]{outline-color:var(--pink)}
+.rail .n{position:absolute;left:2px;top:2px;font-family:var(--mono);font-size:8px;
+  background:rgba(31,18,22,.6);color:#fff;padding:1px 3px}
+.rail .n.v{background:var(--pink)}
 
 /* ---------- mini mic reference ---------- */
-.mmref{display:grid;grid-template-columns:minmax(0,186px) 1fr;gap:clamp(22px,4vw,52px);
-  align-items:start;margin-bottom:clamp(38px,5vw,58px)}
+.mmref{display:grid;grid-template-columns:minmax(0,184px) 1fr;gap:clamp(22px,4vw,52px);
+  align-items:start;margin-bottom:clamp(34px,5vw,52px)}
 .af{position:relative;line-height:0}
 .af img{width:100%;display:block}
 .af .pin{position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.09em;
@@ -109,34 +111,25 @@ h2 em{font-style:italic;color:var(--pink)}
 .sr .or{color:var(--muted);font-weight:400;font-size:13px}
 .sw{display:inline-block;width:8px;height:8px;margin-right:5px}
 
-/* ---------- waiting ---------- */
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(22px,4vw,52px)}
 .two .t{display:block;color:var(--pink);border-top:1px solid var(--ink);padding-top:11px}
 .two p{color:var(--muted);margin:9px 0 16px;font-size:14px;max-width:34ch}
-.two .wait{aspect-ratio:4/5;max-width:210px;background:var(--warm);display:grid;place-items:center}
+.two .wait{aspect-ratio:4/5;max-width:200px;background:var(--warm);display:grid;place-items:center}
 .two .wait span{color:var(--muted)}
 
 footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);
-  padding:clamp(56px,8vw,100px) var(--pad) 42px;margin-top:clamp(44px,6vw,80px);border-top:1px solid var(--line)}
-
-/* ---------- lightbox ---------- */
-.lb2{position:fixed;inset:0;z-index:90;background:rgba(21,12,15,.96);display:grid;
-  grid-template-rows:auto 1fr auto;padding:14px}
-.lb2 .h{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--cream)}
-.lb2 .h a,.lb2 .h button{all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--cream);border:1px solid rgba(250,246,239,.3);padding:5px 10px}
-.lb2 .b{display:grid;place-items:center;min-height:0;padding:12px 0}
-.lb2 .b img{max-height:100%;max-width:100%;object-fit:contain}
-.lb2 .b iframe{width:min(92vw,calc(78vh * 9 / 16));height:78vh;border:0}
-.lb2 .f{display:flex;justify-content:center;align-items:center;gap:14px;color:rgba(250,246,239,.7);
-  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-.lb2 .f button{all:unset;cursor:pointer;border:1px solid rgba(250,246,239,.3);padding:5px 10px;color:var(--cream)}
+  padding:clamp(56px,8vw,96px) var(--pad) 42px;margin-top:clamp(44px,6vw,76px);border-top:1px solid var(--line)}
 
 @media(max-width:760px){
   .hgrid,.head{grid-template-columns:1fr;align-items:start}
   h2{max-width:none}
   .mmref{grid-template-columns:1fr}
-  .af{max-width:186px}
+  .af{max-width:184px}
+  .viewer{grid-template-columns:1fr}
+  .frame{height:auto;width:100%;max-width:320px}
+  .frame img{height:auto;width:100%}
+  .info{max-width:none}
+  .rail{height:auto;grid-auto-flow:column;grid-auto-columns:56px;overflow-x:auto;max-width:100%}
 }
 </style>
 
@@ -146,31 +139,30 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <span class="mono r">Any event</span>
 </header>
 
-<section class="hero">
+<section class="hero" style="padding-bottom:clamp(28px,4vw,46px)">
   <span class="eyebrow mono">Content references</span>
   <div class="hgrid">
     <h1>What we <em>make.</em></h1>
-    <p class="stand">Three formats, with the work underneath each one. Every still is labelled with what it is doing, so the examples are the brief.</p>
+    <p class="stand">Three formats, with the work underneath each one. Every still says what it is doing, so the examples are the brief.</p>
   </div>
 </section>
 
-<div class="band" id="band"></div>
-
-<nav class="pills" id="nav"><div class="in" role="tablist">
-  <button role="tab" data-t="f1" aria-selected="true">Carousels</button>
-  <button role="tab" data-t="f2" aria-selected="false">Mini mic</button>
-  <button role="tab" data-t="f3" aria-selected="false">Highlights</button>
+<nav class="pills" id="nav"><div class="in">
+  <a href="#f1">Carousels</a>
+  <a href="#f2">Mini mic</a>
+  <a href="#f3">Highlights</a>
 </div></nav>
 
 <section id="f1">
   <div class="head">
     <h2>An event, <em>told in stills.</em></h2>
-    <p class="lede">Open wide, get closer, break the faces up with an object, and close back on everyone. Read the labels down a set and you have the shape.</p>
+    <p class="lede">Open wide, get closer, break the faces up with an object, close back on everyone. Step through a set and the shape reads itself.</p>
   </div>
-  <div id="sets"></div>
+  <div class="chips" id="chips"></div>
+  <div class="viewer" data-v="0"></div>
 </section>
 
-<section id="f2" hidden>
+<section id="f2">
   <div class="head">
     <h2>One question, <em>everyone answers.</em></h2>
     <p class="lede">Cut back to back so it plays as one conversation. A name card the first time each person appears.</p>
@@ -201,10 +193,10 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
       </div>
     </div>
   </div>
-  <div id="mm"></div>
+  <div class="viewer" data-v="1"></div>
 </section>
 
-<section id="f3" hidden>
+<section id="f3">
   <div class="head">
     <h2>The room, <em>as it felt.</em></h2>
     <p class="lede">Two cuts of the same day. One built from stills, one from footage.</p>
@@ -224,121 +216,98 @@ footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:
   <span class="mono">Carousels &middot; Mini mic &middot; Highlights</span>
 </footer>
 
-<div class="lb2" id="lb" hidden>
-  <div class="h"><span class="mono" id="lbT"></span>
-    <span><a id="lbOpen" target="_blank" rel="noopener">Open in Drive &#8599;</a>
-    <button type="button" id="lbX">Close &times;</button></span></div>
-  <div class="b" id="lbB"></div>
-  <div class="f" id="lbF"></div>
-</div>
-
 <script>
 const THUMBS = __THUMBS__;
 const SETS = __SETS__;
 const MM = __MM__;
+const VIDEO_BASE = "__VIDEOBASE__";
 
-/* what each still is doing, so the sheet reads as the brief */
+/* what each still is doing, so stepping through a set reads as the brief */
 const WORD = { group:"Everyone", solo:"One person", two:"Two of them",
                prop:"Branded object", still:"Still life", video:"Video" };
-
-function label(ty, i, n){
+function doing(ty, i, n){
   const w = WORD[ty] || "";
   if (i === 0) return "<b>Opener</b> \u00b7 " + w;
   if (i === n - 1) return "<b>Close</b> \u00b7 " + w;
   return w;
 }
 
-const GROUPS = SETS.map(s => ({
-  name: s.name, kind: "Carousel",
-  items: s.slides.map((x, i) => ({
-    id: x.id, video: x.t === "video", thumb: THUMBS[x.id],
-    lb: label(x.ty, i, s.slides.length)
-  }))
-}));
-GROUPS.push({ name: "Mini mic", kind: "Two examples",
-  items: MM.map((m, i) => ({ id: m.id, video: true, thumb: m.poster,
-    lb: "Host asks \u00b7 Panel answers" })) });
+const VIEWS = [
+  { groups: SETS.map(s => ({
+      name: s.name,
+      items: s.slides.map((x, i) => ({ id: x.id, video: x.t === "video", thumb: THUMBS[x.id],
+                                       lb: doing(x.ty, i, s.slides.length) })) })) },
+  { groups: [{ name: "Mini mic",
+      items: MM.map(m => ({ id: m.id, video: true, thumb: m.poster, file: m.file,
+                            lb: "Host asks \u00b7 Panel answers" })) }] }
+];
+VIEWS.forEach(v => { v.g = 0; v.i = 0; v.playing = false; v.el = document.querySelector('.viewer[data-v="' + VIEWS.indexOf(v) + '"]'); });
 
-function sheet(gi){
-  const g = GROUPS[gi];
-  const vids = g.items.filter(x => x.video).length;
-  return `
-    <div class="set${g.items.length <= 4 ? " few" : ""}">
-      <div class="sh"><h3>${g.name}</h3>
-        <span class="c mono">${g.items.length} slides${vids ? " &middot; " + vids + " video" : ""}</span></div>
-      <div class="sheet">
-        ${g.items.map((it, i) => `
-          <a class="cl" href="https://drive.google.com/file/d/${it.id}/view" target="_blank"
-             rel="noopener" data-g="${gi}" data-i="${i}">
-            <span class="im"><img src="${it.thumb || ""}" alt="" loading="lazy">
-              <span class="ix">${String(i + 1).padStart(2, "0")}</span>
-              ${it.video ? '<span class="pv"><i>&#9654;</i></span>' : ""}</span>
-            <span class="lb">${it.lb}</span>
-          </a>`).join("")}
+function chips(){
+  const v = VIEWS[0];
+  document.getElementById("chips").innerHTML = v.groups.map((g, k) =>
+    `<button aria-selected="${k === v.g}" data-g="${k}">${g.name}</button>`).join("");
+}
+
+function draw(vi){
+  const v = VIEWS[vi], g = v.groups[v.g], it = g.items[v.i];
+  /* the site serves the clips itself; the artifact build falls back to Drive,
+     whose embed only plays for people with access to the folder */
+  const player = VIDEO_BASE && it.file
+    ? `<video src="${VIDEO_BASE}${it.file}" poster="${it.thumb || ""}" controls autoplay playsinline></video>`
+    : `<iframe src="https://drive.google.com/file/d/${it.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  const stage = it.video && v.playing
+    ? player
+    : `<img src="${it.thumb || ""}" alt="">` + (it.video ? `<span class="pv" data-play="1"><i>&#9654;</i></span>` : "");
+  v.el.innerHTML = `
+    <div class="frame${it.video && v.playing ? " playing" : ""}">${stage}</div>
+    <div class="rail">
+      ${g.items.map((t, k) => `<a href="#" data-i="${k}" aria-selected="${k === v.i}">
+        <img src="${t.thumb || ""}" alt="" loading="lazy">
+        <span class="n${t.video ? " v" : ""}">${String(k + 1).padStart(2, "0")}</span></a>`).join("")}
+    </div>
+    <div class="info">
+      <span class="k mono">Slide ${String(v.i + 1).padStart(2, "0")} is doing</span>
+      <p class="doing">${it.lb}</p>
+      <div class="nav">
+        <button data-step="-1">&larr;</button>
+        <span class="ct">${String(v.i + 1).padStart(2, "0")} / ${g.items.length}</span>
+        <button data-step="1">&rarr;</button>
       </div>
+      <a href="https://drive.google.com/file/d/${it.id}/view" target="_blank" rel="noopener">Open in Drive &#8599;</a>
+      <p class="hint">${it.video ? (v.playing ? "Playing." : "Press play to watch it.") : "Step through the strip to see the order."}</p>
     </div>`;
+  const on = v.el.querySelector('.rail a[aria-selected="true"]');
+  if (on) on.scrollIntoView({ block: "nearest" });
 }
 
-document.getElementById("sets").innerHTML = [0, 1, 2].map(sheet).join("");
-document.getElementById("mm").innerHTML = sheet(3);
-
-/* the band: four openers, one per set */
-document.getElementById("band").innerHTML = `
-  <div class="bh"><span class="mono l">The work</span>
-    <span class="mono r">Reference examples</span></div>
-  <div class="row">
-    ${GROUPS.map((g, gi) => `
-      <a class="cell" href="https://drive.google.com/file/d/${g.items[0].id}/view" target="_blank"
-         rel="noopener" data-g="${gi}" data-i="0">
-        <span class="im"><img src="${g.items[0].thumb || ""}" alt=""></span>
-        <span class="cp">${g.name} &middot; ${g.kind}</span></a>`).join("")}
-  </div>`;
-
-/* lightbox */
-const lb = document.getElementById("lb");
-let cur = null;
-function open_(gi, i){
-  cur = { gi, i };
-  const g = GROUPS[gi], it = g.items[i];
-  document.getElementById("lbT").textContent = `${g.name} \u2014 ${i + 1} / ${g.items.length}`;
-  document.getElementById("lbOpen").href = "https://drive.google.com/file/d/" + it.id + "/view";
-  document.getElementById("lbB").innerHTML = it.video
-    ? `<iframe src="https://drive.google.com/file/d/${it.id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`
-    : `<img src="${it.thumb || ""}" alt="">`;
-  document.getElementById("lbF").innerHTML =
-    `<button type="button" data-step="-1">&larr;</button><span>${it.lb.replace(/<[^>]+>/g, "")}</span>
-     <button type="button" data-step="1">&rarr;</button>`;
-  lb.hidden = false; document.body.style.overflow = "hidden";
+function step(vi, d){
+  const v = VIEWS[vi], n = v.groups[v.g].items.length;
+  v.i = (v.i + d + n) % n; v.playing = false; draw(vi);
 }
-function close_(){ lb.hidden = true; document.getElementById("lbB").innerHTML = ""; document.body.style.overflow = ""; cur = null; }
-function step(d){ if (!cur) return; const n = GROUPS[cur.gi].items.length; open_(cur.gi, (cur.i + d + n) % n); }
 
 document.addEventListener("click", e => {
-  const t = e.target.closest("a.cl, a.cell");
-  if (t){ e.preventDefault(); open_(+t.dataset.g, +t.dataset.i); return; }
-  const s = e.target.closest("#lbF button[data-step]");
-  if (s){ step(+s.dataset.step); return; }
-  if (e.target.closest("#lbX") || e.target === lb) close_();
-});
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") close_();
-  if (!lb.hidden && e.key === "ArrowRight") step(1);
-  if (!lb.hidden && e.key === "ArrowLeft") step(-1);
+  const c = e.target.closest("#chips button");
+  if (c){ const v = VIEWS[0]; v.g = +c.dataset.g; v.i = 0; v.playing = false; chips(); draw(0); return; }
+  const host = e.target.closest(".viewer");
+  if (!host) return;
+  const vi = +host.dataset.v;
+  const t = e.target.closest(".rail a");
+  if (t){ e.preventDefault(); VIEWS[vi].i = +t.dataset.i; VIEWS[vi].playing = false; draw(vi); return; }
+  const s = e.target.closest(".info button[data-step]");
+  if (s){ step(vi, +s.dataset.step); return; }
+  if (e.target.closest("[data-play]")){ VIEWS[vi].playing = true; draw(vi); }
 });
 
-/* pills */
-const TABS = ["f1", "f2", "f3"];
-function show(id, scroll){
-  TABS.forEach(t => document.getElementById(t).hidden = t !== id);
-  document.querySelectorAll(".pills button").forEach(b =>
-    b.setAttribute("aria-selected", b.dataset.t === id));
-  if (scroll){
-    const y = document.getElementById("nav").getBoundingClientRect().top + window.scrollY;
-    if (window.scrollY > y) window.scrollTo({ top: y, behavior: "instant" });
-  }
-}
-document.getElementById("nav").addEventListener("click", e => {
-  const b = e.target.closest("button[data-t]");
-  if (b) show(b.dataset.t, true);
-});
+chips(); draw(0); draw(1);
+
+/* the pills jump, and follow you down */
+const links = [...document.querySelectorAll(".pills a")];
+const obs = new IntersectionObserver(es => {
+  es.forEach(en => {
+    if (!en.isIntersecting) return;
+    links.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + en.target.id));
+  });
+}, { rootMargin: "-18% 0px -72% 0px" });
+["f1", "f2", "f3"].forEach(id => obs.observe(document.getElementById(id)));
 </script>

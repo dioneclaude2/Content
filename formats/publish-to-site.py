@@ -8,7 +8,9 @@ no trailing slash, so relative asset paths resolve against the domain root and
 
 Run build.py first, then this, then commit and push.
 """
-import pathlib, shutil
+import json, pathlib, shutil
+
+SC = pathlib.Path("/private/tmp/claude-502/-Users-dione-Desktop-Content/45cb1241-63e0-47be-bf03-e170a95f33a6/scratchpad")
 
 here = pathlib.Path(__file__).parent
 src  = here / "public"
@@ -23,8 +25,13 @@ if dest.exists():
 (dest / "assets").mkdir(parents=True)
 shutil.copy(src / "assets" / "nancy-logo-ink.svg", dest / "assets" / "nancy-logo-ink.svg")
 
+vids = dest / "videos"
+vids.mkdir()
+for m in json.loads((SC / "minimic.json").read_text()):
+    shutil.copy(m["src"], vids / m["file"])
+
 html = built.read_text()
-for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__"):
+for placeholder in ("__THUMBS__", "__SETS__", "__MM__", "__ANAT__", "__VIDEOBASE__"):
     if placeholder in html:
         raise SystemExit("unsubstituted: %s" % placeholder)
 before = html.count('src="assets/')
