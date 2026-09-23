@@ -427,7 +427,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
     </div>
     <div class="spanbar" id="spanbar"></div>
     <div id="calBody"></div>
-    <p class="note">A dashed chip means the date isn't confirmed. <a href="nancy-socials.ics" download>Download the calendar file</a> to add every moment to Google Calendar or Apple Calendar, with a reminder 7 days before each big moment.</p>
+    <p class="note">A dashed chip means the date isn't confirmed. <a href="/nancy-socials/nancy-socials.ics" download>Download the calendar file</a> to add every moment to Google Calendar or Apple Calendar, with a reminder 7 days before each big moment.</p>
   </section>
 
   <!-- INTEL -->
@@ -1132,7 +1132,7 @@ function showTab(id){
 }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
 
-fetch("moments.json").then(r => r.json()).then(data => {
+fetch("/nancy-socials/moments.json").then(r => r.json()).then(data => {
   MOMENTS = data.moments;
   $("#momentSelect").innerHTML += MOMENTS.filter(m => m.date >= todayIso || (m.end && m.end >= todayIso))
     .map(m => `<option value="${m.id}">${fmt(m.date)} · ${esc(m.name)}</option>`).join("");
@@ -1143,7 +1143,7 @@ fetch("moments.json").then(r => r.json()).then(data => {
   document.querySelector("main").innerHTML = `<p class="empty">Couldn't load moments.json. Open this page through the site, not straight from the file.</p>`;
 });
 /* The week builder uses Intel trends, so it waits for intel.json (or its failure). */
-const intelReady = fetch("intel.json").then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
+const intelReady = fetch("/nancy-socials/intel.json").then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
   $("#news").innerHTML = `<div class="empty">No intel yet.</div>`;
 });
 </script>
