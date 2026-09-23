@@ -12,12 +12,18 @@ Each moment gets its date one of three ways:
   nth    (month, weekday, n) e.g. (5, 6, 2) = 2nd Sunday of May; n=-1 = last
   dates  {2026: "YYYY-MM-DD", 2027: ...}  moving dates, looked up per year
 Month-long moments use md "MM-01" plus span="month".
+
+Researched content (why, stat, hooks, ideas, hashtags, refs, start) lives in
+scripts/socials_research.json, keyed by moment name, and is merged in here.
+Research hooks win over the starter hooks written below.
 """
 import calendar, datetime as dt, json, pathlib, re
 
 START, END = dt.date(2026, 9, 1), dt.date(2027, 12, 31)
 YEARS = (2026, 2027)
-OUT = pathlib.Path(__file__).resolve().parent.parent / "public" / "nancy-socials"
+HERE = pathlib.Path(__file__).resolve().parent
+OUT = HERE.parent / "public" / "nancy-socials"
+RESEARCH = HERE / "socials_research.json"
 
 # layer: intimacy | identity | holiday | retail | culture | industry
 # tier:  tentpole | strong | minor
@@ -72,7 +78,7 @@ MOMENTS = [
     dict(name="National Lingerie Day", md="04-24", layer="intimacy", region="US", tier="minor", tone="go",
          angle="Confidence & dressing for yourself. Styling collab."),
     dict(name="International Clitoris Awareness Week", dates={2027: "2027-05-02"}, layer="intimacy", region="Global", tier="strong", tone="go", verified=False,
-         angle="First full week of May (Clitoraid). Anatomy education, pleasure gap stats, 3D clitoris visuals.",
+         angle="First full week of May. Organiser Clitoraid is tied to the Raëlian movement: talk about the week, don't partner with the org. Anatomy education, pleasure gap stats, 3D clitoris visuals.",
          hooks=dict(x="Fun fact: the clitoris has ~10,000 nerve endings. You're welcome.", ig="Carousel: clit anatomy 101 with illustrations", tt="'Things I learned about the clitoris at 30'", yt="Short: the clitoris is way bigger than you think")),
     dict(name="Masturbation May", md="05-01", span="month", layer="intimacy", region="Global", tier="tentpole", tone="go",
          angle="THE month for this brand. Daily series, solo-play guides, bundles, creator challenges.",
@@ -260,7 +266,7 @@ YEARLY = [
     dict(name="Academy Awards", dates={2027: "2027-03-14"}, layer="culture", region="US", tier="minor", tone="go",
          angle="Live-post, 'best performance' puns."),
     dict(name="Met Gala", nth=(5, 0, 1), layer="culture", region="US", tier="minor", tone="go",
-         angle="First Monday of May. Fashion meme reactions."),
+         angle="First Monday of May. Fashion meme reactions. 2027 theme was cancelled; recheck date and theme.", verified=False),
     dict(name="Eurovision final", dates={2027: "2027-05-15"}, layer="culture", region="EU", tier="minor", tone="go",
          angle="Camp! Big EU/UK queer audience."),
     dict(name="Amazon Prime Big Deal Days", dates={2026: "2026-10-06"}, layer="retail", region="Global", tier="minor", tone="go",
@@ -282,8 +288,6 @@ YEARLY = [
          angle="22–25 Oct, Messe Berlin. Watch for competitor drops."),
     dict(name="XBIZ Show (LA)", dates={2027: "2027-01-07"}, layer="industry", region="US", tier="strong", tone="go",
          angle="7–10 Jan. Awards & industry news cycle."),
-    dict(name="ANME Founders Show", dates={2027: "2027-01-17"}, layer="industry", region="US", tier="minor", tone="go", verified=False,
-         angle="17–19 Jan, Burbank. Retailer/buyer show."),
     dict(name="AVN Expo (Las Vegas)", dates={2027: "2027-01-20"}, layer="industry", region="US", tier="minor", tone="go",
          angle="20–23 Jan. Industry news cycle; mostly monitor, don't post."),
     dict(name="XBIZ Miami", dates={2027: "2027-05-10"}, layer="industry", region="US", tier="minor", tone="go", verified=False,
@@ -345,9 +349,24 @@ def ics(moments):
     return "\r\n".join(lines) + "\r\n"
 
 
+def enrich(moments):
+    if not RESEARCH.exists():
+        return
+    research = json.loads(RESEARCH.read_text())
+    for m in moments:
+        r = research.get(m["name"])
+        if not r:
+            continue
+        m["hooks"] = {**m["hooks"], **{k: v for k, v in r.get("hooks", {}).items() if v}}
+        for k in ("why", "stat", "ideas", "hashtags", "refs", "start"):
+            if r.get(k):
+                m[k] = r[k]
+
+
 if __name__ == "__main__":
     moments = sorted((x for m in MOMENTS + YEARLY for x in expand(m)),
                      key=lambda m: (m["date"], ["tentpole", "strong", "minor"].index(m["tier"])))
+    enrich(moments)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "moments.json").write_text(json.dumps(
         dict(updated=dt.date.today().isoformat(), moments=moments), indent=1, ensure_ascii=False))
