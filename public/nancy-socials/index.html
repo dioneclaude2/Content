@@ -284,12 +284,6 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .load-row{display:grid;grid-template-columns:110px 1fr 28px;gap:10px;align-items:center;font-size:12.5px}
 .load-row .bar{height:8px}
 .load-row b{text-align:right}
-.cadence{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cad{background:var(--surface-2);border-radius:12px;padding:8px 4px;text-align:center}
-.cad span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--dim)}
-.cad div{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px}
-.cad b{font-size:18px;font-weight:900;min-width:16px}
-.cad button{background:var(--surface-3);border:0;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:13px;line-height:1;color:var(--muted)}
 .weekgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:start}
 @media (max-width:1100px){.weekgrid{grid-template-columns:1fr}}
 .wday{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:10px;display:grid;gap:8px;min-width:0}
@@ -344,8 +338,32 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .platpick button[aria-pressed=true]{color:var(--text);border-color:var(--muted);background:var(--surface-3)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .wk-sum > *{min-width:0}
-.cadence{gap:4px}.cad{padding:6px 2px}.cad div{flex-direction:column-reverse;gap:3px}
 @media (max-width:600px){.two{grid-template-columns:1fr}}
+.wk-sum{margin:18px 0 0}
+@media (min-width:1000px){.wk-sum{grid-template-columns:1fr 1fr}}
+.tray{position:sticky;top:69px;z-index:6;background:rgba(11,7,9,.9);backdrop-filter:blur(12px);border:1px solid var(--line-soft);border-radius:20px;padding:12px 12px 10px;margin:0 0 14px}
+@media (max-width:640px){.tray{top:112px}}
+.tray-hint{margin:0 4px 10px;font-size:12.5px;color:var(--muted)}
+.tray-hint b{color:var(--pink)}
+.tray-chips{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow-y:auto}
+.tgroup{font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;align-self:center;padding:0 4px 0 2px}
+.tgroup:not(:first-child){margin-left:8px;padding-left:12px;border-left:1px solid var(--line)}
+.tchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:700;cursor:grab;user-select:none;-webkit-user-select:none}
+.tchip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--pc)}
+.tchip:hover{border-color:var(--pc)}
+.tchip.armed{background:var(--pc);color:#140a0f;border-color:var(--pc)}
+.tchip.armed::before{background:#140a0f}
+.weekgrid.arming .wday{cursor:copy;outline:2px dashed color-mix(in srgb,var(--pink) 55%,transparent);outline-offset:-2px}
+.wday.drop{outline:2px solid var(--pink)!important;outline-offset:-2px;background:var(--surface-2)}
+.wday{min-height:180px;align-content:start}
+.wday-empty{border:1px dashed var(--line);border-radius:12px;padding:16px 8px;text-align:center;font-size:11.5px;color:var(--dim)}
+.slot[draggable=true]{cursor:grab}
+.slot.dragging{opacity:.4}
+.slot-count{font-size:11px;font-weight:800;color:var(--dim)}
+.typegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.typegrid button{text-align:left;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--pc);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px;font-weight:700}
+.typegrid button span{display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.35}
+.typegrid button:hover{background:var(--surface-2)}
 </style>
 
 <header class="topbar"><div class="topbar-in">
@@ -370,17 +388,20 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
         <button class="btn ghost" id="wkCopy">Copy for Slack</button>
-        <button class="btn ghost" id="wkReset">Rebuild week</button>
+        <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
     </div>
+    <div class="tray" id="tray">
+      <p class="tray-hint" id="trayHint">Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.</p>
+      <div class="tray-chips" id="trayChips"></div>
+    </div>
+    <div class="weekgrid" id="weekgrid"></div>
     <div class="wk-sum">
       <div class="panel"><p class="eyebrow">Status · <span id="wkTotal"></span></p><div class="stbar" id="stbar"></div><div class="stlegend" id="stlegend"></div></div>
       <div class="panel"><p class="eyebrow">Who's doing what this week</p><div class="load" id="load"></div></div>
-      <div class="panel"><p class="eyebrow">Posts per day</p><div class="cadence" id="cadence"></div></div>
     </div>
-    <div class="weekgrid" id="weekgrid"></div>
     <div class="sec">
-      <h2 class="sec-title">Content <span class="serif">pillars</span></h2>
+      <h2 class="sec-title">Content <span class="serif">types</span></h2>
       <div class="pillars" id="pillars"></div>
     </div>
     <div class="sec">
@@ -882,86 +903,109 @@ const DEFAULT_TEAM = [
 ];
 let TEAM = store.get("ns.team", DEFAULT_TEAM);
 const person = id => TEAM.find(p => p.id === id);
-const pname = id => id ? (person(id)?.name || "—") : "No filming";
+/* film: a person id, "none" (no filming needed) or "" (not assigned yet) */
+const pname = id => id === "none" ? "No filming" : id ? (person(id)?.name || "—") : "Not assigned";
 
-/* film/edit: who by default · status: where it starts · isNew: a pillar to explore */
+/* Content types in the tray. group "core" = what we post today; "more" = formats to try.
+   film/edit/status are only starting defaults; every post can change them. */
 const PILLARS = {
-  evergreen:{label:"Evergreen", c:"#3DDC97", film:"crew", edit:"editor", status:"edit", plats:["ig","tt"],
+  evergreen:{group:"core", label:"Evergreen", c:"#3DDC97", film:"crew", edit:"editor", status:"edit", plats:["ig","tt"],
     desc:"Event footage cut for any day. Already shot, so it only needs editing."},
-  edu:{label:"Educational", c:"#4FB3FF", film:"sarah", edit:"editor", status:"film", plats:["ig","tt","yt"],
-    desc:"Sarah Tan's education series. Tuesdays and Thursdays."},
-  outlier:{label:"Outlier", c:"#FF4F8B", film:"susan", edit:"susan", status:"create", plats:["ig","tt"],
-    desc:"Susan recreates a proven outlier post in Nancy's style. Find the outlier first, then replicate it."},
-  meme:{label:"Meme", c:"#FFB547", film:null, edit:"dione", status:"create", plats:["ig","x"],
+  edu:{group:"core", label:"Educational", c:"#4FB3FF", film:"sarah", edit:"editor", status:"film", plats:["ig","tt","yt"],
+    desc:"Sarah Tan's education series."},
+  outlier:{group:"core", label:"Outlier", c:"#FF4F8B", film:"susan", edit:"susan", status:"create", plats:["ig","tt"],
+    desc:"Susan recreates a proven outlier post in Nancy's style."},
+  meme:{group:"core", label:"Meme", c:"#FFB547", film:"none", edit:"", status:"create", plats:["ig","x"],
     desc:"Fast, relatable, low effort. No filming needed."},
-  trend:{label:"Trending", c:"#A77BFF", film:"dione", edit:"editor", status:"create", plats:["tt","ig"],
-    desc:"What's fun or trending this week: audio, formats, news. From the Intel tab."},
-  moment:{label:"Moment", c:"#FF8A4C", film:"crew", edit:"editor", status:"create", plats:["ig","tt","x"],
-    desc:"Tied to a day on the calendar. Added automatically when one lands this week."},
-  ask:{label:"Ask Nancy", c:"#F06CD8", film:"sarah", edit:"editor", status:"create", plats:["ig","tt"], isNew:true,
-    desc:"Anonymous questions from followers, answered on camera or in Stories. Grows DMs and saves."},
-  street:{label:"Street interviews", c:"#5FD4E0", film:"crew", edit:"editor", status:"film", plats:["tt","ig","yt"], isNew:true,
-    desc:"Vox-pop questions at events or on the street. Shareable and cheap to make."},
-  unbox:{label:"Unboxing & ASMR", c:"#C9A7FF", film:"crew", edit:"editor", status:"film", plats:["tt","ig"], isNew:true,
-    desc:"Sensory product content that stays platform-safe: packaging, textures, sounds."},
-  community:{label:"Community & reviews", c:"#9BE15D", film:null, edit:"dione", status:"create", plats:["ig","x"], isNew:true,
-    desc:"Reposts, reviews and creator stitches. Social proof for almost no effort."},
-  bts:{label:"Behind the scenes", c:"#E8C9A0", film:"dione", edit:"dione", status:"film", plats:["ig","tt"], isNew:true,
-    desc:"The people behind Nancy: packing orders, meetings, the team's opinions."},
-  couples:{label:"Couples corner", c:"#FF9E9E", film:"crew", edit:"editor", status:"create", plats:["ig","tt","yt"], isNew:true,
-    desc:"Relationship tips and couple creators. Opens up a new audience."},
+  trend:{group:"core", label:"Trending", c:"#A77BFF", film:"", edit:"", status:"create", plats:["tt","ig"],
+    desc:"What's fun or trending this week: audio, formats, news."},
+  moment:{group:"core", label:"Moment", c:"#FF8A4C", film:"", edit:"", status:"create", plats:["ig","tt","x"],
+    desc:"Tied to a day on the calendar. Drop it on a day that has a moment and it links automatically."},
+  ask:{group:"more", label:"Ask Nancy", c:"#F06CD8", film:"", edit:"", status:"create", plats:["ig","tt"],
+    desc:"Anonymous follower questions, answered on camera or in Stories."},
+  myth:{group:"more", label:"Myth vs fact", c:"#6FC3FF", film:"", edit:"", status:"create", plats:["ig","tt"],
+    desc:"Quick debunk of one common myth."},
+  howto:{group:"more", label:"How-to", c:"#7DE0C4", film:"", edit:"", status:"create", plats:["ig","tt","yt"],
+    desc:"Step-by-step: product care, first-time tips, set-ups."},
+  carousel:{group:"more", label:"Tips carousel", c:"#B8E986", film:"none", edit:"", status:"create", plats:["ig"],
+    desc:"Swipeable text or illustration tips. Very saveable."},
+  product:{group:"more", label:"Product spotlight", c:"#FFD166", film:"", edit:"", status:"create", plats:["ig","tt","x"],
+    desc:"One product, one reason to love it. Platform-safe visuals."},
+  unbox:{group:"more", label:"Unboxing & ASMR", c:"#C9A7FF", film:"", edit:"", status:"create", plats:["tt","ig"],
+    desc:"Packaging, textures, sounds. Sensory but safe."},
+  launch:{group:"more", label:"Launch / announcement", c:"#FF6B6B", film:"", edit:"", status:"create", plats:["ig","tt","x","yt"],
+    desc:"New product, drop, sale or news."},
+  street:{group:"more", label:"Street interviews", c:"#5FD4E0", film:"", edit:"", status:"create", plats:["tt","ig","yt"],
+    desc:"Vox-pop questions at events or on the street."},
+  community:{group:"more", label:"Community & UGC", c:"#9BE15D", film:"none", edit:"", status:"create", plats:["ig","x"],
+    desc:"Reposts, creator mentions and customer content."},
+  review:{group:"more", label:"Reviews & testimonials", c:"#A3D977", film:"none", edit:"", status:"create", plats:["ig","x"],
+    desc:"Review screenshots, quote cards, customer stories."},
+  collab:{group:"more", label:"Creator collab", c:"#FF9ECF", film:"", edit:"", status:"create", plats:["ig","tt","yt"],
+    desc:"Co-created post with a creator or educator."},
+  stitch:{group:"more", label:"Duet / stitch", c:"#8AB6FF", film:"", edit:"", status:"create", plats:["tt"],
+    desc:"React to or build on someone else's video."},
+  couples:{group:"more", label:"Couples corner", c:"#FF9E9E", film:"", edit:"", status:"create", plats:["ig","tt","yt"],
+    desc:"Relationship tips and couple creators."},
+  bts:{group:"more", label:"Behind the scenes", c:"#E8C9A0", film:"", edit:"", status:"create", plats:["ig","tt"],
+    desc:"The team, packing orders, making the content."},
+  founder:{group:"more", label:"Founder / team story", c:"#D4A5FF", film:"", edit:"", status:"create", plats:["ig","yt","x"],
+    desc:"Why Nancy exists, told by the people behind it."},
+  dump:{group:"more", label:"Photo dump", c:"#F4B183", film:"none", edit:"", status:"create", plats:["ig"],
+    desc:"Casual carousel of recent moments."},
+  quote:{group:"more", label:"Text / quote post", c:"#E6E6E6", film:"none", edit:"", status:"create", plats:["x","ig"],
+    desc:"A one-liner, hot take or quote card."},
+  poll:{group:"more", label:"Poll / Stories Q&A", c:"#7FDBFF", film:"none", edit:"", status:"create", plats:["ig","x"],
+    desc:"Quick engagement: polls, quizzes, question boxes."},
+  giveaway:{group:"more", label:"Giveaway", c:"#FFC75F", film:"", edit:"", status:"create", plats:["ig","tt"],
+    desc:"Contest to grow followers or launch a product."},
+  challenge:{group:"more", label:"Challenge", c:"#C39BFF", film:"", edit:"", status:"create", plats:["tt","ig"],
+    desc:"Start or join a challenge format."},
+  live:{group:"more", label:"Live session", c:"#FF5E8E", film:"", edit:"none", status:"create", plats:["ig","tt","yt"],
+    desc:"Live Q&A or event stream."},
+  longform:{group:"more", label:"Long-form / podcast clip", c:"#FF4444", film:"", edit:"", status:"create", plats:["yt"],
+    desc:"YouTube video or a clip cut from a longer talk."},
 };
-const EXPLORE = Object.keys(PILLARS).filter(k => PILLARS[k].isNew);
 
-/* Which pillars fill each day, in order; the cadence decides how many get used. */
-const DAY_TEMPLATE = [
-  ["evergreen","explore","meme","trend"],        // Mon
-  ["edu","meme","trend","evergreen"],            // Tue
-  ["outlier","trend","evergreen","meme"],        // Wed
-  ["edu","explore","meme","evergreen"],          // Thu
-  ["outlier","trend","evergreen","meme"],        // Fri
-  ["meme","explore","evergreen"],                // Sat
-  ["evergreen","explore","meme"],                // Sun
-];
-let CADENCE = store.get("ns.cadence", [2,2,3,3,2,1,1]);
 const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -((d.getDay() + 6) % 7));
 let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
-const wkKey = () => "ns.week2." + iso(wkStart);
-const weekNo = d => Math.floor(d / (7 * 864e5));
+const wkKey = () => "ns.week3." + iso(wkStart);
 
-function buildWeek(start){
-  const wn = weekNo(start);
-  const slots = [];
-  let ex = wn;
-  for (let i = 0; i < 7; i++){
-    const day = iso(addDays(start, i));
-    const picks = DAY_TEMPLATE[i].slice(0, CADENCE[i]);
-    while (picks.length < CADENCE[i]) picks.push(DAY_TEMPLATE[i][picks.length % DAY_TEMPLATE[i].length]);
-    const daySlots = picks.map((p, j) => {
-      const pillar = p === "explore" ? EXPLORE[ex++ % EXPLORE.length] : p;
-      return mkSlot(day, pillar);
-    });
-    // Big moments that land today take over a flexible slot.
-    const moms = MOMENTS.filter(m => m.date === day && m.tier !== "minor");
-    for (const m of moms){
-      const s = mkSlot(day, "moment");
-      s.moment = m.id;
-      const k = daySlots.findLastIndex(x => !["edu","outlier","moment"].includes(x.pillar));
-      if (k >= 0) daySlots[k] = s; else daySlots.push(s);
-    }
-    slots.push(...daySlots);
-  }
-  return {start: iso(start), slots};
-}
-/* The planner only sets the pillar and who's on it; the idea and reference are Dione's to fill in. */
 function mkSlot(day, pillar){
   const P = PILLARS[pillar];
-  return {id: Math.random().toString(36).slice(2, 9), day, pillar, title: "", ref: "", note: "", plats: [...P.plats],
-          film: P.film, edit: P.edit, status: P.status};
+  const s = {id: Math.random().toString(36).slice(2, 9), day, pillar, title: "", ref: "", note: "", plats: [...P.plats],
+             film: P.film, edit: P.edit, status: P.status};
+  if (pillar === "moment"){
+    const m = MOMENTS.find(x => x.date === day && x.tier !== "minor") || MOMENTS.find(x => x.date === day);
+    if (m) s.moment = m.id;
+  }
+  return s;
 }
 let WEEK = null;
-function loadWeek(){ WEEK = store.get(wkKey(), null) || buildWeek(wkStart); saveWeek(); }
+function loadWeek(){ WEEK = store.get(wkKey(), null) || {start: iso(wkStart), slots: []}; }
 const saveWeek = () => store.set(wkKey(), WEEK);
+let armed = null;   // content type picked in the tray, waiting for a day tap
+
+function addToDay(day, pillar){
+  const s = mkSlot(day, pillar);
+  WEEK.slots.push(s); saveWeek(); renderPlan();
+  toast(`${PILLARS[pillar].label} → ${fmt(day,{weekday:"short"})}`);
+}
+
+function renderTray(){
+  const groups = [["core","Our pillars"],["more","More to try"]];
+  $("#trayChips").innerHTML = groups.map(([g, lbl]) => `<span class="tgroup">${lbl}</span>` +
+    Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
+      `<span class="tchip ${armed === k ? "armed" : ""}" draggable="true" data-type="${k}" style="--pc:${P.c}" title="${esc(P.desc)}">${esc(P.label)}</span>`).join("")).join("");
+  $("#trayHint").innerHTML = armed
+    ? `<b>Tap a day</b> to add ${esc(PILLARS[armed].label)}. Tap it again in the tray to cancel.`
+    : "Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.";
+  $("#weekgrid").classList.toggle("arming", !!armed);
+  $("#trayChips").querySelectorAll("[data-type]").forEach(ch => {
+    ch.onclick = () => { armed = armed === ch.dataset.type ? null : ch.dataset.type; renderTray(); };
+    ch.ondragstart = e => { e.dataTransfer.setData("text/plain", "type:" + ch.dataset.type); e.dataTransfer.effectAllowed = "copy"; };
+  });
+}
 
 function renderPlan(){
   if (!WEEK) loadWeek();
@@ -975,7 +1019,7 @@ function renderPlan(){
   const total = WEEK.slots.length;
   const stc = {create:"#FF4F8B", film:"#FFB547", edit:"#4FB3FF", ready:"#3DDC97", posted:"#5B4F56"};
   const counts = STATUSES.map(([k, l]) => [k, l, WEEK.slots.filter(s => s.status === k).length]);
-  $("#wkTotal").textContent = `${total} posts`;
+  $("#wkTotal").textContent = `${total} post${total === 1 ? "" : "s"}`;
   $("#stbar").innerHTML = counts.filter(c => c[2]).map(([k,,c]) => `<i style="flex:${c};background:${stc[k]}"></i>`).join("");
   $("#stlegend").innerHTML = counts.map(([k,l,c]) => `<span><span class="dot" style="background:${stc[k]};margin-right:5px"></span><b>${c}</b>${l}</span>`).join("");
 
@@ -985,47 +1029,70 @@ function renderPlan(){
     const edit = WEEK.slots.filter(s => s.edit === p.id && ["create","film","edit"].includes(s.status)).length;
     return [p, film, edit];
   }).filter(r => r[1] + r[2]);
+  const unassigned = WEEK.slots.filter(s => s.status !== "posted" && (!s.film || !s.edit)).length;
   const max = Math.max(1, ...load.map(r => r[1] + r[2]));
-  $("#load").innerHTML = load.map(([p, f, e]) => `<div class="load-row"><span>${esc(p.name)}</span>
+  $("#load").innerHTML = (load.map(([p, f, e]) => `<div class="load-row"><span>${esc(p.name)}</span>
     <div class="bar" title="${f} to film · ${e} to edit/create"><i style="width:${(f+e)/max*100}%;background:${f+e >= 8 ? "var(--pink)" : "var(--retail)"}"></i></div><b>${f+e}</b></div>`).join("")
-    || `<p class="note" style="margin:0">Nothing left to make. Just post! 🎉</p>`;
-
-  $("#cadence").innerHTML = DOW.map((d, i) => `<div class="cad"><span>${d}</span><div><button data-cad="${i}" data-d="-1" aria-label="Fewer on ${d}">−</button><b>${CADENCE[i]}</b><button data-cad="${i}" data-d="1" aria-label="More on ${d}">+</button></div></div>`).join("");
-  $("#cadence").querySelectorAll("[data-cad]").forEach(b => b.onclick = () => {
-    const i = +b.dataset.cad; CADENCE[i] = Math.max(0, Math.min(5, CADENCE[i] + +b.dataset.d));
-    store.set("ns.cadence", CADENCE); renderPlan(); toast("Saved. 'Rebuild week' applies it");
-  });
+    + (unassigned ? `<p class="note" style="margin:6px 0 0">${unassigned} post${unassigned === 1 ? " needs" : "s need"} someone assigned. Tap the post to pick who.</p>` : ""))
+    || `<p class="note" style="margin:0">No posts planned yet.</p>`;
 
   // days
   $("#weekgrid").innerHTML = DOW.map((d, i) => {
     const day = iso(addDays(wkStart, i));
-    const moms = MOMENTS.filter(m => m.date === day || (m.end && m.date === day));
+    const moms = MOMENTS.filter(m => m.date === day);
     const slots = WEEK.slots.filter(s => s.day === day);
-    return `<div class="wday ${day === todayIso ? "today" : ""}">
-      <div class="wday-h"><b>${d}</b><span>${parse(day).getDate()}</span></div>
+    return `<div class="wday ${day === todayIso ? "today" : ""}" data-day="${day}">
+      <div class="wday-h"><b>${d}${slots.length ? ` <span class="slot-count">· ${slots.length}</span>` : ""}</b><span>${parse(day).getDate()}</span></div>
       ${moms.length ? `<div class="wday-m">${moms.map(m => `<button data-id="${m.id}" style="--c:${col(m)}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}</button>`).join("")}</div>` : ""}
-      ${slots.map(slotCard).join("")}
-      <button class="addslot" data-add="${day}">+ Add post</button>
+      ${slots.map(slotCard).join("") || `<div class="wday-empty">Drop content here</div>`}
+      <button class="addslot" data-add="${day}">+ Add</button>
     </div>`;
   }).join("");
-  $("#weekgrid").querySelectorAll("[data-slot]").forEach(el => el.onclick = e => {
-    if (e.target.closest("a")) return;
-    const s = WEEK.slots.find(x => x.id === el.dataset.slot);
-    if (e.target.closest(".status")){
-      const i = STATUSES.findIndex(x => x[0] === s.status);
-      s.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
-    }
-    openSlot(s.id);
-  });
-  $("#weekgrid").querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
-    const s = mkSlot(b.dataset.add, "meme"); WEEK.slots.push(s); saveWeek(); renderPlan(); openSlot(s.id);
-  });
 
-  // pillars
+  const grid = $("#weekgrid");
+  grid.querySelectorAll("[data-slot]").forEach(el => {
+    el.onclick = e => {
+      if (e.target.closest("a") || armed) return;
+      e.stopPropagation();
+      const s = WEEK.slots.find(x => x.id === el.dataset.slot);
+      if (e.target.closest(".status")){
+        const i = STATUSES.findIndex(x => x[0] === s.status);
+        s.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
+      }
+      openSlot(s.id);
+    };
+    el.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + el.dataset.slot); e.dataTransfer.effectAllowed = "move"; el.classList.add("dragging"); };
+    el.ondragend = () => el.classList.remove("dragging");
+  });
+  grid.querySelectorAll("[data-day]").forEach(dayEl => {
+    const day = dayEl.dataset.day;
+    dayEl.onclick = e => {
+      if (!armed || e.target.closest("[data-id]")) return;
+      addToDay(day, armed);
+    };
+    dayEl.ondragover = e => { e.preventDefault(); dayEl.classList.add("drop"); };
+    dayEl.ondragleave = e => { if (!dayEl.contains(e.relatedTarget)) dayEl.classList.remove("drop"); };
+    dayEl.ondrop = e => {
+      e.preventDefault(); dayEl.classList.remove("drop");
+      const [kind, val] = e.dataTransfer.getData("text/plain").split(":");
+      if (kind === "type" && PILLARS[val]) addToDay(day, val);
+      if (kind === "slot"){
+        const s = WEEK.slots.find(x => x.id === val);
+        if (s && s.day !== day){ s.day = day; WEEK.slots = [...WEEK.slots.filter(x => x !== s), s]; saveWeek(); renderPlan(); }
+      }
+    };
+  });
+  grid.querySelectorAll("[data-add]").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    if (armed) return addToDay(b.dataset.add, armed);
+    pickType(b.dataset.add);
+  });
+  renderTray();
+
+  // content types reference
   $("#pillars").innerHTML = Object.entries(PILLARS).map(([k, P]) => {
     const c = WEEK.slots.filter(s => s.pillar === k).length;
-    return `<div class="pillar" style="--pc:${P.c}"><h4>${esc(P.label)} ${P.isNew ? `<span class="new">TRY</span>` : ""}<span class="chip" style="margin-left:auto">${c} this week</span></h4>
-      <p>${esc(P.desc)}</p><div class="who">🎥 ${esc(pname(P.film))} · ✂️ ${esc(pname(P.edit))}</div></div>`;
+    return `<div class="pillar" style="--pc:${P.c}"><h4>${esc(P.label)}${c ? `<span class="chip" style="margin-left:auto">${c} this week</span>` : ""}</h4><p>${esc(P.desc)}</p></div>`;
   }).join("");
 
   // team
@@ -1038,68 +1105,89 @@ function renderPlan(){
 }
 
 function slotCard(s){
-  const P = PILLARS[s.pillar];
+  const P = PILLARS[s.pillar] || PILLARS.meme;
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
-  return `<div class="slot ${s.status === "posted" ? "done" : ""}" data-slot="${s.id}" style="--pc:${P.c}">
-    <div class="slot-p">${esc(P.label)}${P.isNew ? `<span class="new">TRY</span>` : ""}</div>
+  return `<div class="slot ${s.status === "posted" ? "done" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
+    <div class="slot-p">${esc(P.label)}</div>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
     ${s.ref ? `<a class="slot-ref" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener">▶ See reference</a>` : `<span class="slot-ref none">No reference yet</span>`}
     <div class="slot-plats">${s.plats.map(p => `<span class="plat ${p}">${PLATFORMS[p]}</span>`).join("")}</div>
-    <div class="slot-who"><span>🎥 <b>${esc(pname(s.film))}</b></span><span>✂️ <b>${esc(pname(s.edit))}</b></span></div>
+    <div class="slot-who"><span>🎥 <b>${esc(pname(s.film))}</b></span><span>✂️ <b>${esc(s.edit === "none" ? "No editing" : pname(s.edit))}</b></span></div>
     <button class="status st-${s.status}" title="Tap to move to the next status">${ST_LABEL[s.status]}</button>
   </div>`;
+}
+
+function openDrawer(color, html){
+  const d = $("#drawer");
+  d.style.setProperty("--c", color);
+  d.innerHTML = html;
+  d.querySelector(".d-close").onclick = closeDrawer;
+  d.classList.add("on"); $("#scrim").classList.add("on"); d.setAttribute("aria-hidden", "false"); d.scrollTop = 0;
+  return d;
+}
+
+function pickType(day){
+  const d = openDrawer("var(--pink)", `
+    <div class="d-hero">
+      <button class="iconbtn d-close" aria-label="Close">✕</button>
+      <div class="d-date">${fmt(day,{weekday:"long", day:"numeric", month:"long"})}</div>
+      <div class="d-name">Add content</div>
+    </div>
+    <div class="d-body">${[["core","Our pillars"],["more","More to try"]].map(([g, lbl]) => `<p class="eyebrow">${lbl}</p>
+      <div class="typegrid" style="margin-bottom:20px">${Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
+        `<button data-pick="${k}" style="--pc:${P.c}">${esc(P.label)}<span>${esc(P.desc)}</span></button>`).join("")}</div>`).join("")}</div>`);
+  d.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { closeDrawer(); addToDay(day, b.dataset.pick); });
 }
 
 function openSlot(id){
   const s = WEEK.slots.find(x => x.id === id); if (!s) return;
   const P = PILLARS[s.pillar];
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
-  const opts = (sel, none) => (none ? `<option value="">${none}</option>` : "") + TEAM.map(p => `<option value="${p.id}" ${sel === p.id ? "selected" : ""}>${esc(p.name)} · ${esc(p.role)}</option>`).join("");
-  const d = $("#drawer");
-  d.style.setProperty("--c", P.c);
-  d.innerHTML = `
+  const opts = (sel, extra) => `<option value="" ${!sel ? "selected" : ""}>Not assigned</option>` + extra +
+    TEAM.map(p => `<option value="${p.id}" ${sel === p.id ? "selected" : ""}>${esc(p.name)} · ${esc(p.role)}</option>`).join("");
+  const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
+  const d = openDrawer(P.c, `
     <div class="d-hero">
       <button class="iconbtn d-close" aria-label="Close">✕</button>
       <div class="d-date">${fmt(s.day,{weekday:"long", day:"numeric", month:"long"})}</div>
-      <div class="d-name">${esc(P.label)}${P.isNew ? ` <span class="new" style="font-size:12px;vertical-align:middle">TRY</span>` : ""}</div>
+      <div class="d-name">${esc(P.label)}</div>
       <p style="margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.5">${esc(P.desc)}</p>
     </div>
     <div class="d-body"><div class="form">
-      <label>Status<div class="seg5" id="fStatus">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
-      <label>Idea<textarea id="fTitle" placeholder="What's the post? e.g. Myth vs fact: lube edition">${esc(s.title)}</textarea></label>
+      <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
+      <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
       <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
       ${s.ref ? `<a class="btn ghost" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener" style="justify-self:start">▶ Open reference</a>` : ""}
-      <label>Pillar<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}${x.isNew ? " (try)" : ""}</option>`).join("")}</select></label>
-      <label>Platforms<div class="platpick" id="fPlats">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
       <div class="two">
-        <label>🎥 Filming<select id="fFilm">${opts(s.film, "No filming needed")}</select></label>
-        <label>✂️ Editing<select id="fEdit">${opts(s.edit, "Nobody yet")}</select></label>
+        <label>Day<select id="fDay">${days.map(x => `<option value="${x}" ${x === s.day ? "selected" : ""}>${fmt(x,{weekday:"long", day:"numeric", month:"short"})}</option>`).join("")}</select></label>
+        <label>Content type<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></label>
+      </div>
+      <label>Platforms<div class="platpick">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
+      <div class="two">
+        <label>🎥 Filming<select id="fFilm">${opts(s.film, `<option value="none" ${s.film === "none" ? "selected" : ""}>No filming needed</option>`)}</select></label>
+        <label>✂️ Editing<select id="fEdit">${opts(s.edit, `<option value="none" ${s.edit === "none" ? "selected" : ""}>No editing needed</option>`)}</select></label>
       </div>
       <label>Notes for the maker<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
       ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
-      <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fDel">Delete post</button></div>
-    </div></div>`;
+      <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fDup">Duplicate</button><button class="btn ghost" id="fDel">Delete</button></div>
+    </div></div>`);
   const upd = () => { saveWeek(); renderPlan(); };
-  d.querySelector(".d-close").onclick = closeDrawer;
   $("#fDone").onclick = closeDrawer;
   $("#fDel").onclick = () => { WEEK.slots = WEEK.slots.filter(x => x !== s); upd(); closeDrawer(); toast("Post removed"); };
+  $("#fDup").onclick = () => { const c = {...s, id: Math.random().toString(36).slice(2, 9), plats: [...s.plats]}; WEEK.slots.push(c); upd(); openSlot(c.id); toast("Duplicated"); };
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
   $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
   $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
-  $("#fFilm").onchange = e => { s.film = e.target.value || null; upd(); };
-  $("#fEdit").onchange = e => { s.edit = e.target.value || null; upd(); };
-  $("#fPillar").onchange = e => {
-    const NP = PILLARS[e.target.value];
-    s.pillar = e.target.value; s.film = NP.film; s.edit = NP.edit; s.plats = [...NP.plats];
-    upd(); openSlot(s.id);
-  };
+  $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
+  $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
+  $("#fDay").onchange = e => { s.day = e.target.value; upd(); openSlot(s.id); };
+  $("#fPillar").onchange = e => { s.pillar = e.target.value; s.plats = [...PILLARS[s.pillar].plats]; upd(); openSlot(s.id); };
   d.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { s.status = b.dataset.st; upd(); openSlot(s.id); });
   d.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
     const p = b.dataset.p; s.plats = s.plats.includes(p) ? s.plats.filter(x => x !== p) : [...s.plats, p];
     b.setAttribute("aria-pressed", s.plats.includes(p)); upd();
   });
-  d.classList.add("on"); $("#scrim").classList.add("on"); d.setAttribute("aria-hidden", "false"); d.scrollTop = 0;
 }
 
 function weekForSlack(){
@@ -1110,7 +1198,7 @@ function weekForSlack(){
     const slots = WEEK.slots.filter(s => s.day === day);
     if (!slots.length) continue;
     lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
-    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
+    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
   }
   return lines.join("\n");
 }
@@ -1118,10 +1206,11 @@ $("#wkPrev").onclick = () => { wkStart = addDays(wkStart, -7); WEEK = null; rend
 $("#wkNext").onclick = () => { wkStart = addDays(wkStart, 7); WEEK = null; renderPlan(); };
 $("#wkJump").querySelectorAll("button").forEach(b => b.onclick = () => { wkStart = addDays(mondayOf(TODAY), 7 * b.dataset.jump); WEEK = null; renderPlan(); });
 $("#wkCopy").onclick = () => copy(weekForSlack());
-$("#wkReset").onclick = () => {
-  if (!confirm("Rebuild this week from scratch? Your edits to this week will be replaced.")) return;
-  WEEK = buildWeek(wkStart); saveWeek(); renderPlan(); toast("Week rebuilt");
+$("#wkClear").onclick = () => {
+  if (!WEEK.slots.length || !confirm("Remove every post from this week?")) return;
+  WEEK.slots = []; saveWeek(); renderPlan(); toast("Week cleared");
 };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && armed){ armed = null; renderTray(); } });
 
 /* ───────── TABS & BOOT ───────── */
 function showTab(id){
