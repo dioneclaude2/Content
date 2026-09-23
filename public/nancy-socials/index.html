@@ -266,12 +266,89 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .empty{color:var(--dim);font-size:14px;padding:20px;background:var(--surface);border-radius:18px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:var(--text);color:var(--bg);font-weight:800;font-size:13px;padding:10px 18px;border-radius:999px;opacity:0;transition:.2s;z-index:40;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ── week planner ── */
+.wk-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:0 0 18px}
+.wk-head h2{margin:0;flex:1;min-width:260px;font-size:clamp(30px,4.4vw,54px);font-weight:900;text-transform:uppercase;letter-spacing:-.035em;line-height:.95}
+.wk-head h2 .serif{color:var(--pink)}
+.wk-head h2 small{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--dim);margin-bottom:8px}
+.wk-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.wk-sum{display:grid;gap:12px;grid-template-columns:1fr;margin:0 0 18px}
+@media (min-width:1000px){.wk-sum{grid-template-columns:1.1fr 1.2fr 1fr}}
+.wk-sum .panel{padding:16px}
+.stbar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--surface-3);margin:4px 0 12px}
+.stbar i{display:block;height:100%}
+.stlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.stlegend b{color:var(--text);font-weight:800;margin-right:3px}
+.load{display:grid;gap:8px}
+.load-row{display:grid;grid-template-columns:110px 1fr 28px;gap:10px;align-items:center;font-size:12.5px}
+.load-row .bar{height:8px}
+.load-row b{text-align:right}
+.cadence{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cad{background:var(--surface-2);border-radius:12px;padding:8px 4px;text-align:center}
+.cad span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--dim)}
+.cad div{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px}
+.cad b{font-size:18px;font-weight:900;min-width:16px}
+.cad button{background:var(--surface-3);border:0;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:13px;line-height:1;color:var(--muted)}
+.weekgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:start}
+@media (max-width:1100px){.weekgrid{grid-template-columns:1fr}}
+.wday{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:10px;display:grid;gap:8px;min-width:0}
+.wday.today{border-color:var(--pink)}
+.wday-h{display:flex;align-items:baseline;justify-content:space-between;padding:4px 4px 2px}
+.wday-h b{font-size:13px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.wday-h span{font-size:26px;font-weight:900;letter-spacing:-.03em;color:var(--muted)}
+.wday.today .wday-h span{color:var(--pink)}
+.wday-m{display:flex;flex-direction:column;gap:4px}
+.wday-m button{border:0;border-radius:8px;text-align:left;font-size:11px;font-weight:700;padding:5px 8px;cursor:pointer;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--text);line-height:1.25}
+.slot{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 11px 10px;cursor:pointer;overflow:hidden;display:grid;gap:7px}
+.slot::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--pc)}
+.slot:hover{border-color:var(--dim)}
+.slot.done{opacity:.55}
+.slot-p{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pc)}
+.new{font-size:9px;font-weight:900;letter-spacing:.08em;background:var(--text);color:var(--bg);padding:2px 5px;border-radius:5px}
+.slot-t{font-size:13px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.slot-plats{display:flex;gap:3px}
+.slot-plats .plat{padding:2px 5px;font-size:9px;border-radius:5px}
+.slot-who{font-size:11.5px;color:var(--muted);display:grid;gap:2px}
+.slot-who b{color:var(--text);font-weight:600}
+.status{border:0;border-radius:999px;font-size:10.5px;font-weight:800;padding:5px 10px;cursor:pointer;justify-self:start;display:inline-flex;align-items:center;gap:6px}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st-create{background:rgba(255,79,139,.15);color:#FF7AA8}
+.st-film{background:rgba(255,181,71,.15);color:#FFC56E}
+.st-edit{background:rgba(79,179,255,.15);color:#7CC7FF}
+.st-ready{background:rgba(61,220,151,.16);color:#5BE6A9}
+.st-posted{background:var(--surface-3);color:var(--muted)}
+.addslot{background:none;border:1px dashed var(--line);border-radius:12px;padding:8px;font-size:12px;font-weight:700;color:var(--dim);cursor:pointer}
+.addslot:hover{color:var(--text);border-color:var(--muted)}
+.pillars{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.pillar{background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:14px;border-top:3px solid var(--pc)}
+.pillar h4{margin:0 0 6px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.pillar p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.pillar .who{margin-top:8px;font-size:11.5px;color:var(--dim)}
+.team{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.team .panel{display:grid;gap:6px;padding:12px}
+.team input{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;width:100%}
+.form{display:grid;gap:14px}
+.form label{display:grid;gap:6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.form select,.form textarea,.form input{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text)}
+.form textarea{min-height:90px}
+.seg5{display:flex;flex-wrap:wrap;gap:6px}
+.seg5 button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;color:var(--muted)}
+.seg5 button[aria-pressed=true]{border-color:transparent}
+.platpick{display:flex;gap:6px}
+.platpick button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;color:var(--dim)}
+.platpick button[aria-pressed=true]{color:var(--text);border-color:var(--muted);background:var(--surface-3)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wk-sum > *{min-width:0}
+.cadence{gap:4px}.cad{padding:6px 2px}.cad div{flex-direction:column-reverse;gap:3px}
+@media (max-width:600px){.two{grid-template-columns:1fr}}
 </style>
 
 <header class="topbar"><div class="topbar-in">
   <div class="brand"><b>Nancy</b><span>socials</span></div>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="week" aria-selected="true">Today</button>
+    <button class="tab" role="tab" data-tab="plan" aria-selected="true">Week</button>
+    <button class="tab" role="tab" data-tab="today">Today</button>
     <button class="tab" role="tab" data-tab="cal">Calendar</button>
     <button class="tab" role="tab" data-tab="intel">Intel</button>
     <button class="tab" role="tab" data-tab="safety">Safety</button>
@@ -280,10 +357,39 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 </div></header>
 
 <main>
+  <!-- WEEK PLANNER -->
+  <section id="plan">
+    <div class="wk-head">
+      <h2 id="wkTitle"></h2>
+      <div class="wk-tools">
+        <button class="iconbtn" id="wkPrev" aria-label="Previous week">‹</button>
+        <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
+        <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
+        <button class="btn ghost" id="wkCopy">Copy for Slack</button>
+        <button class="btn ghost" id="wkReset">Rebuild week</button>
+      </div>
+    </div>
+    <div class="wk-sum">
+      <div class="panel"><p class="eyebrow">Status · <span id="wkTotal"></span></p><div class="stbar" id="stbar"></div><div class="stlegend" id="stlegend"></div></div>
+      <div class="panel"><p class="eyebrow">Who's doing what this week</p><div class="load" id="load"></div></div>
+      <div class="panel"><p class="eyebrow">Posts per day</p><div class="cadence" id="cadence"></div></div>
+    </div>
+    <div class="weekgrid" id="weekgrid"></div>
+    <div class="sec">
+      <h2 class="sec-title">Content <span class="serif">pillars</span></h2>
+      <div class="pillars" id="pillars"></div>
+    </div>
+    <div class="sec">
+      <h2 class="sec-title">The <span class="serif">team</span></h2>
+      <div class="team" id="team"></div>
+      <p class="note">Change a name here and it updates everywhere. Plans are saved in this browser for now; team-wide saving comes next.</p>
+    </div>
+  </section>
+
   <!-- TODAY -->
-  <section id="week">
+  <section id="today" hidden>
     <div class="hero">
-      <div class="today" id="today"></div>
+      <div class="today" id="todayCard"></div>
       <div class="side">
         <div class="kpis" id="kpis"></div>
         <div class="cdbox"><p class="eyebrow">Countdowns</p><div id="countdowns"></div></div>
@@ -439,7 +545,7 @@ function renderWeek(){
   const todays = MOMENTS.filter(m => m.date === todayIso).sort((a,b) => ["tentpole","strong","minor"].indexOf(a.tier) - ["tentpole","strong","minor"].indexOf(b.tier));
   const dateLbl = TODAY.toLocaleDateString("en-US",{weekday:"long", day:"numeric", month:"long"});
   const t = todays[0];
-  const el = $("#today");
+  const el = $("#todayCard");
   if (t){
     el.style.setProperty("--hc", col(t));
     el.innerHTML = `
@@ -757,11 +863,280 @@ $("#addform").onsubmit = e => {
   e.target.reset();
 };
 
+/* ───────── WEEK PLANNER ───────── */
+const STATUSES = [
+  ["create","To create"], ["film","To film"], ["edit","To edit"], ["ready","Ready to post"], ["posted","Posted"],
+];
+const ST_LABEL = Object.fromEntries(STATUSES);
+const DOW = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const DEFAULT_TEAM = [
+  {id:"dione",  name:"Dione",        role:"Social strategist"},
+  {id:"sarah",  name:"Sarah Tan",    role:"Educator"},
+  {id:"susan",  name:"Susan",        role:"Creative director"},
+  {id:"editor", name:"Editor (TBD)", role:"Video editor"},
+  {id:"crew",   name:"Event crew",   role:"Videographers & photographers"},
+];
+let TEAM = store.get("ns.team", DEFAULT_TEAM);
+const person = id => TEAM.find(p => p.id === id);
+const pname = id => id ? (person(id)?.name || "—") : "No filming";
+
+/* film/edit: who by default · status: where it starts · isNew: a pillar to explore */
+const PILLARS = {
+  evergreen:{label:"Evergreen", c:"#3DDC97", film:"crew", edit:"editor", status:"edit", plats:["ig","tt"],
+    desc:"Event footage cut for any day. Already shot, so it only needs editing.",
+    ideas:["Event recap reel: the best 10 seconds from the last event","'POV: you're at a Nancy event' reel","Photo-dump carousel from the last event","Guest one-liners: 'what's your love language?'","Slow-mo detail shots on a trending audio","Best guest quote as text-over-video","Setting up the space: event BTS time-lapse","Crowd-reaction montage"]},
+  edu:{label:"Educational", c:"#4FB3FF", film:"sarah", edit:"editor", status:"film", plats:["ig","tt","yt"],
+    desc:"Sarah Tan's education series. Tuesdays and Thursdays.",
+    ideas:["Myth vs fact: 3 things sex ed got wrong","How to clean your toys, by material","Lube 101: water vs silicone vs oil","Anatomy in 60 seconds","How to bring up toys with a partner","Your cycle and your libido, explained","Consent check-ins that don't kill the mood","Answering your anonymous questions"]},
+  outlier:{label:"Outlier", c:"#FF4F8B", film:"susan", edit:"susan", status:"create", plats:["ig","tt"],
+    desc:"Susan recreates a proven outlier post in Nancy's style. Find the outlier first, then replicate it.",
+    ideas:["Recreate this week's top outlier post in the Nancy style","High-concept visual: the product as an art object","Test an unexpected format, like a mockumentary","Big-swing hook: a 'nobody talks about this' take","Remake a viral wellness-brand ad, Nancy style"]},
+  meme:{label:"Meme", c:"#FFB547", film:null, edit:"dione", status:"create", plats:["ig","x"],
+    desc:"Fast, relatable, low effort. No filming needed.",
+    ideas:["'When the discreet package finally arrives' meme","Cuffing-season meme","Tweet-screenshot meme in the Nancy voice","Group-chat screenshot meme","Starter-pack meme for this week's moment","'Me vs my toy drawer' two-panel meme"]},
+  trend:{label:"Trending", c:"#A77BFF", film:"dione", edit:"editor", status:"create", plats:["tt","ig"],
+    desc:"What's fun or trending this week: audio, formats, news. From the Intel tab.",
+    ideas:["Hop on this week's top TikTok audio","This week's trending format, Nancy style"]},
+  moment:{label:"Moment", c:"#FF8A4C", film:"crew", edit:"editor", status:"create", plats:["ig","tt","x"],
+    desc:"Tied to a day on the calendar. Added automatically when one lands this week.",
+    ideas:[]},
+  ask:{label:"Ask Nancy", c:"#F06CD8", film:"sarah", edit:"editor", status:"create", plats:["ig","tt"], isNew:true,
+    desc:"Anonymous questions from followers, answered on camera or in Stories. Grows DMs and saves.",
+    ideas:["Stories question box → answer the top 3 in a Reel","'Questions you're too shy to ask', answered","Green-screen: answering a real DM"]},
+  street:{label:"Street interviews", c:"#5FD4E0", film:"crew", edit:"editor", status:"film", plats:["tt","ig","yt"], isNew:true,
+    desc:"Vox-pop questions at events or on the street. Shareable and cheap to make.",
+    ideas:["'What's the most romantic thing someone's done for you?'","'Rate these date ideas 1–10'","'What do you wish you learned in sex ed?'"]},
+  unbox:{label:"Unboxing & ASMR", c:"#C9A7FF", film:"crew", edit:"editor", status:"film", plats:["tt","ig"], isNew:true,
+    desc:"Sensory product content that stays platform-safe: packaging, textures, sounds.",
+    ideas:["Discreet-packaging unboxing ASMR","Satisfying charging-case click compilation","Gift-wrapping a Nancy order"]},
+  community:{label:"Community & reviews", c:"#9BE15D", film:null, edit:"dione", status:"create", plats:["ig","x"], isNew:true,
+    desc:"Reposts, reviews and creator stitches. Social proof for almost no effort.",
+    ideas:["Review-screenshot carousel","Repost the best creator mention of the week","'You said it' quote card from a customer"]},
+  bts:{label:"Behind the scenes", c:"#E8C9A0", film:"dione", edit:"dione", status:"film", plats:["ig","tt"], isNew:true,
+    desc:"The people behind Nancy: packing orders, meetings, the team's opinions.",
+    ideas:["A day in the life of the Nancy team","Packing orders on a big sale day","Team rates the new product names"]},
+  couples:{label:"Couples corner", c:"#FF9E9E", film:"crew", edit:"editor", status:"create", plats:["ig","tt","yt"], isNew:true,
+    desc:"Relationship tips and couple creators. Opens up a new audience.",
+    ideas:["Couple-creator collab: 'things we'd never do without'","Date-night idea of the week","How to talk about fantasies with a partner"]},
+};
+const EXPLORE = Object.keys(PILLARS).filter(k => PILLARS[k].isNew);
+
+/* Which pillars fill each day, in order; the cadence decides how many get used. */
+const DAY_TEMPLATE = [
+  ["evergreen","explore","meme","trend"],        // Mon
+  ["edu","meme","trend","evergreen"],            // Tue
+  ["outlier","trend","evergreen","meme"],        // Wed
+  ["edu","explore","meme","evergreen"],          // Thu
+  ["outlier","trend","evergreen","meme"],        // Fri
+  ["meme","explore","evergreen"],                // Sat
+  ["evergreen","explore","meme"],                // Sun
+];
+let CADENCE = store.get("ns.cadence", [2,2,3,3,2,1,1]);
+const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -((d.getDay() + 6) % 7));
+let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
+const wkKey = () => "ns.week." + iso(wkStart);
+const weekNo = d => Math.floor(d / (7 * 864e5));
+
+function buildWeek(start){
+  const wn = weekNo(start);
+  const trends = INTEL?.trends || [];
+  const slots = [];
+  const used = {};                          // per-pillar idea counter, so ideas don't repeat within a week
+  const next = (k, len) => (wn * 3 + (used[k] = (used[k] ?? -1) + 1)) % len;
+  let ex = wn;
+  for (let i = 0; i < 7; i++){
+    const day = iso(addDays(start, i));
+    const picks = DAY_TEMPLATE[i].slice(0, CADENCE[i]);
+    while (picks.length < CADENCE[i]) picks.push(DAY_TEMPLATE[i][picks.length % DAY_TEMPLATE[i].length]);
+    const daySlots = picks.map((p, j) => {
+      const pillar = p === "explore" ? EXPLORE[ex++ % EXPLORE.length] : p;
+      const P = PILLARS[pillar];
+      let title = P.ideas.length ? P.ideas[next(pillar, P.ideas.length)] : "";
+      let note = "";
+      if (pillar === "trend" && trends.length){ const t = trends[next("trends", trends.length)]; title = `Ride the trend: ${t.name}`; note = t.how; }
+      return mkSlot(day, pillar, title, note);
+    });
+    // Big moments that land today take over a flexible slot.
+    const moms = MOMENTS.filter(m => m.date === day && m.tier !== "minor");
+    for (const m of moms){
+      const s = mkSlot(day, "moment", (m.tone === "care" ? "Awareness post: " : "") + `${m.name}: ${m.hooks.ig || m.angle}`, m.angle);
+      s.moment = m.id;
+      const k = daySlots.findLastIndex(x => !["edu","outlier","moment"].includes(x.pillar));
+      if (k >= 0) daySlots[k] = s; else daySlots.push(s);
+    }
+    slots.push(...daySlots);
+  }
+  return {start: iso(start), slots};
+}
+function mkSlot(day, pillar, title, note){
+  const P = PILLARS[pillar];
+  return {id: Math.random().toString(36).slice(2, 9), day, pillar, title, note: note || "", plats: [...P.plats],
+          film: P.film, edit: P.edit, status: P.status};
+}
+let WEEK = null;
+function loadWeek(){ WEEK = store.get(wkKey(), null) || buildWeek(wkStart); saveWeek(); }
+const saveWeek = () => store.set(wkKey(), WEEK);
+
+function renderPlan(){
+  if (!WEEK) loadWeek();
+  const end = addDays(wkStart, 6);
+  const thisMon = iso(mondayOf(TODAY));
+  const tag = iso(wkStart) === thisMon ? "This week" : iso(wkStart) === iso(addDays(mondayOf(TODAY), 7)) ? "Next week" : "Week of";
+  $("#wkTitle").innerHTML = `<small>${tag}</small>${fmt(iso(wkStart),{month:"short",day:"numeric"})} <span class="serif">to</span> ${fmt(iso(end),{month:"short",day:"numeric"})}`;
+  $("#wkJump").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", iso(addDays(mondayOf(TODAY), 7 * b.dataset.jump)) === iso(wkStart)));
+
+  // status summary
+  const total = WEEK.slots.length;
+  const stc = {create:"#FF4F8B", film:"#FFB547", edit:"#4FB3FF", ready:"#3DDC97", posted:"#5B4F56"};
+  const counts = STATUSES.map(([k, l]) => [k, l, WEEK.slots.filter(s => s.status === k).length]);
+  $("#wkTotal").textContent = `${total} posts`;
+  $("#stbar").innerHTML = counts.filter(c => c[2]).map(([k,,c]) => `<i style="flex:${c};background:${stc[k]}"></i>`).join("");
+  $("#stlegend").innerHTML = counts.map(([k,l,c]) => `<span><span class="dot" style="background:${stc[k]};margin-right:5px"></span><b>${c}</b>${l}</span>`).join("");
+
+  // workload: open tasks per person
+  const load = TEAM.map(p => {
+    const film = WEEK.slots.filter(s => s.film === p.id && ["create","film"].includes(s.status)).length;
+    const edit = WEEK.slots.filter(s => s.edit === p.id && ["create","film","edit"].includes(s.status)).length;
+    return [p, film, edit];
+  }).filter(r => r[1] + r[2]);
+  const max = Math.max(1, ...load.map(r => r[1] + r[2]));
+  $("#load").innerHTML = load.map(([p, f, e]) => `<div class="load-row"><span>${esc(p.name)}</span>
+    <div class="bar" title="${f} to film · ${e} to edit/create"><i style="width:${(f+e)/max*100}%;background:${f+e >= 8 ? "var(--pink)" : "var(--retail)"}"></i></div><b>${f+e}</b></div>`).join("")
+    || `<p class="note" style="margin:0">Nothing left to make. Just post! 🎉</p>`;
+
+  $("#cadence").innerHTML = DOW.map((d, i) => `<div class="cad"><span>${d}</span><div><button data-cad="${i}" data-d="-1" aria-label="Fewer on ${d}">−</button><b>${CADENCE[i]}</b><button data-cad="${i}" data-d="1" aria-label="More on ${d}">+</button></div></div>`).join("");
+  $("#cadence").querySelectorAll("[data-cad]").forEach(b => b.onclick = () => {
+    const i = +b.dataset.cad; CADENCE[i] = Math.max(0, Math.min(5, CADENCE[i] + +b.dataset.d));
+    store.set("ns.cadence", CADENCE); renderPlan(); toast("Saved. 'Rebuild week' applies it");
+  });
+
+  // days
+  $("#weekgrid").innerHTML = DOW.map((d, i) => {
+    const day = iso(addDays(wkStart, i));
+    const moms = MOMENTS.filter(m => m.date === day || (m.end && m.date === day));
+    const slots = WEEK.slots.filter(s => s.day === day);
+    return `<div class="wday ${day === todayIso ? "today" : ""}">
+      <div class="wday-h"><b>${d}</b><span>${parse(day).getDate()}</span></div>
+      ${moms.length ? `<div class="wday-m">${moms.map(m => `<button data-id="${m.id}" style="--c:${col(m)}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}</button>`).join("")}</div>` : ""}
+      ${slots.map(slotCard).join("")}
+      <button class="addslot" data-add="${day}">+ Add post</button>
+    </div>`;
+  }).join("");
+  $("#weekgrid").querySelectorAll("[data-slot]").forEach(el => el.onclick = e => {
+    const s = WEEK.slots.find(x => x.id === el.dataset.slot);
+    if (e.target.closest(".status")){
+      const i = STATUSES.findIndex(x => x[0] === s.status);
+      s.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
+    }
+    openSlot(s.id);
+  });
+  $("#weekgrid").querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
+    const s = mkSlot(b.dataset.add, "meme", "", ""); WEEK.slots.push(s); saveWeek(); renderPlan(); openSlot(s.id);
+  });
+
+  // pillars
+  $("#pillars").innerHTML = Object.entries(PILLARS).map(([k, P]) => {
+    const c = WEEK.slots.filter(s => s.pillar === k).length;
+    return `<div class="pillar" style="--pc:${P.c}"><h4>${esc(P.label)} ${P.isNew ? `<span class="new">TRY</span>` : ""}<span class="chip" style="margin-left:auto">${c} this week</span></h4>
+      <p>${esc(P.desc)}</p><div class="who">🎥 ${esc(pname(P.film))} · ✂️ ${esc(pname(P.edit))}</div></div>`;
+  }).join("");
+
+  // team
+  $("#team").innerHTML = TEAM.map(p => `<div class="panel"><input data-team="${p.id}" data-f="name" value="${esc(p.name)}" aria-label="Name"><input data-team="${p.id}" data-f="role" value="${esc(p.role)}" aria-label="Role" style="color:var(--muted)"></div>`).join("")
+    + `<button class="addslot" id="addPerson" style="min-height:90px">+ Add person</button>`;
+  $("#team").querySelectorAll("[data-team]").forEach(inp => inp.onchange = () => {
+    const p = person(inp.dataset.team); p[inp.dataset.f] = inp.value.trim() || p[inp.dataset.f]; store.set("ns.team", TEAM); renderPlan();
+  });
+  $("#addPerson").onclick = () => { TEAM.push({id: "p" + Date.now().toString(36), name: "New person", role: "Role"}); store.set("ns.team", TEAM); renderPlan(); };
+}
+
+function slotCard(s){
+  const P = PILLARS[s.pillar];
+  return `<div class="slot ${s.status === "posted" ? "done" : ""}" data-slot="${s.id}" style="--pc:${P.c}">
+    <div class="slot-p">${esc(P.label)}${P.isNew ? `<span class="new">TRY</span>` : ""}</div>
+    <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">Tap to add an idea</span>`}</div>
+    <div class="slot-plats">${s.plats.map(p => `<span class="plat ${p}">${PLATFORMS[p]}</span>`).join("")}</div>
+    <div class="slot-who"><span>🎥 <b>${esc(pname(s.film))}</b></span><span>✂️ <b>${esc(pname(s.edit))}</b></span></div>
+    <button class="status st-${s.status}" title="Tap to move to the next status">${ST_LABEL[s.status]}</button>
+  </div>`;
+}
+
+function openSlot(id){
+  const s = WEEK.slots.find(x => x.id === id); if (!s) return;
+  const P = PILLARS[s.pillar];
+  const m = s.moment && MOMENTS.find(x => x.id === s.moment);
+  const opts = (sel, none) => (none ? `<option value="">${none}</option>` : "") + TEAM.map(p => `<option value="${p.id}" ${sel === p.id ? "selected" : ""}>${esc(p.name)} · ${esc(p.role)}</option>`).join("");
+  const d = $("#drawer");
+  d.style.setProperty("--c", P.c);
+  d.innerHTML = `
+    <div class="d-hero">
+      <button class="iconbtn d-close" aria-label="Close">✕</button>
+      <div class="d-date">${fmt(s.day,{weekday:"long", day:"numeric", month:"long"})}</div>
+      <div class="d-name">${esc(P.label)}${P.isNew ? ` <span class="new" style="font-size:12px;vertical-align:middle">TRY</span>` : ""}</div>
+      <p style="margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.5">${esc(P.desc)}</p>
+    </div>
+    <div class="d-body"><div class="form">
+      <label>Status<div class="seg5" id="fStatus">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
+      <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
+      <label>Pillar<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}${x.isNew ? " (try)" : ""}</option>`).join("")}</select></label>
+      <label>Platforms<div class="platpick" id="fPlats">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
+      <div class="two">
+        <label>🎥 Filming<select id="fFilm">${opts(s.film, "No filming needed")}</select></label>
+        <label>✂️ Editing<select id="fEdit">${opts(s.edit, "Nobody yet")}</select></label>
+      </div>
+      <label>Notes & reference link<textarea id="fNote" placeholder="Outlier reference, script notes, audio…">${esc(s.note)}</textarea></label>
+      ${P.ideas.length ? `<div><p class="eyebrow">More ${esc(P.label.toLowerCase())} ideas · tap to use</p><div class="tags">${P.ideas.map(i => `<span class="tag" data-idea="${esc(i)}" style="color:var(--text)">${esc(i)}</span>`).join("")}</div></div>` : ""}
+      ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
+      <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fDel">Delete post</button></div>
+    </div></div>`;
+  const upd = () => { saveWeek(); renderPlan(); };
+  d.querySelector(".d-close").onclick = closeDrawer;
+  $("#fDone").onclick = closeDrawer;
+  $("#fDel").onclick = () => { WEEK.slots = WEEK.slots.filter(x => x !== s); upd(); closeDrawer(); toast("Post removed"); };
+  $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
+  $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
+  $("#fFilm").onchange = e => { s.film = e.target.value || null; upd(); };
+  $("#fEdit").onchange = e => { s.edit = e.target.value || null; upd(); };
+  $("#fPillar").onchange = e => {
+    const NP = PILLARS[e.target.value];
+    s.pillar = e.target.value; s.film = NP.film; s.edit = NP.edit; s.plats = [...NP.plats];
+    upd(); openSlot(s.id);
+  };
+  d.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { s.status = b.dataset.st; upd(); openSlot(s.id); });
+  d.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
+    const p = b.dataset.p; s.plats = s.plats.includes(p) ? s.plats.filter(x => x !== p) : [...s.plats, p];
+    b.setAttribute("aria-pressed", s.plats.includes(p)); upd();
+  });
+  d.querySelectorAll("[data-idea]").forEach(t => t.onclick = () => { s.title = t.dataset.idea; $("#fTitle").value = s.title; upd(); });
+  d.classList.add("on"); $("#scrim").classList.add("on"); d.setAttribute("aria-hidden", "false"); d.scrollTop = 0;
+}
+
+function weekForSlack(){
+  const end = addDays(wkStart, 6);
+  const lines = [`*Nancy socials · ${fmt(iso(wkStart),{month:"short",day:"numeric"})} – ${fmt(iso(end),{month:"short",day:"numeric"})}*`];
+  for (let i = 0; i < 7; i++){
+    const day = iso(addDays(wkStart, i));
+    const slots = WEEK.slots.filter(s => s.day === day);
+    if (!slots.length) continue;
+    lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
+    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${pname(s.edit)} · _${ST_LABEL[s.status]}_`);
+  }
+  return lines.join("\n");
+}
+$("#wkPrev").onclick = () => { wkStart = addDays(wkStart, -7); WEEK = null; renderPlan(); };
+$("#wkNext").onclick = () => { wkStart = addDays(wkStart, 7); WEEK = null; renderPlan(); };
+$("#wkJump").querySelectorAll("button").forEach(b => b.onclick = () => { wkStart = addDays(mondayOf(TODAY), 7 * b.dataset.jump); WEEK = null; renderPlan(); });
+$("#wkCopy").onclick = () => copy(weekForSlack());
+$("#wkReset").onclick = () => {
+  if (!confirm("Rebuild this week from scratch? Your edits to this week will be replaced.")) return;
+  WEEK = buildWeek(wkStart); saveWeek(); renderPlan(); toast("Week rebuilt");
+};
+
 /* ───────── TABS & BOOT ───────── */
 function showTab(id){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === id));
   document.querySelectorAll("main > section").forEach(s => s.hidden = s.id !== id);
-  store.set("ns.tab", id);
+  store.set("ns.tab2", id);
   window.scrollTo({top: 0});
 }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
@@ -771,11 +1146,13 @@ fetch("moments.json").then(r => r.json()).then(data => {
   $("#momentSelect").innerHTML += MOMENTS.filter(m => m.date >= todayIso || (m.end && m.end >= todayIso))
     .map(m => `<option value="${m.id}">${fmt(m.date)} · ${esc(m.name)}</option>`).join("");
   renderWeek(); renderFilters(); renderCal(); renderSafety(); renderPipe(); renderIntel();
-  showTab(store.get("ns.tab", "week"));
+  intelReady.then(renderPlan);
+  showTab(store.get("ns.tab2", "plan"));
 }).catch(() => {
   document.querySelector("main").innerHTML = `<p class="empty">Couldn't load moments.json. Open this page through the site, not straight from the file.</p>`;
 });
-fetch("intel.json").then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
+/* The week builder uses Intel trends, so it waits for intel.json (or its failure). */
+const intelReady = fetch("intel.json").then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
   $("#news").innerHTML = `<div class="empty">No intel yet.</div>`;
 });
 </script>
