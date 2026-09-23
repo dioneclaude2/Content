@@ -308,6 +308,10 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .new{font-size:9px;font-weight:900;letter-spacing:.08em;background:var(--text);color:var(--bg);padding:2px 5px;border-radius:5px}
 .slot-t{font-size:13px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .slot-plats{display:flex;gap:3px}
+.slot-for{font-size:11px;color:var(--muted);margin-top:-3px}
+.slot-ref{font-size:11.5px;font-weight:800;color:var(--pink);text-decoration:none;justify-self:start}
+.slot-ref:hover{text-decoration:underline}
+.slot-ref.none{color:var(--dim);font-weight:600}
 .slot-plats .plat{padding:2px 5px;font-size:9px;border-radius:5px}
 .slot-who{font-size:11.5px;color:var(--muted);display:grid;gap:2px}
 .slot-who b{color:var(--text);font-weight:600}
@@ -883,41 +887,29 @@ const pname = id => id ? (person(id)?.name || "—") : "No filming";
 /* film/edit: who by default · status: where it starts · isNew: a pillar to explore */
 const PILLARS = {
   evergreen:{label:"Evergreen", c:"#3DDC97", film:"crew", edit:"editor", status:"edit", plats:["ig","tt"],
-    desc:"Event footage cut for any day. Already shot, so it only needs editing.",
-    ideas:["Event recap reel: the best 10 seconds from the last event","'POV: you're at a Nancy event' reel","Photo-dump carousel from the last event","Guest one-liners: 'what's your love language?'","Slow-mo detail shots on a trending audio","Best guest quote as text-over-video","Setting up the space: event BTS time-lapse","Crowd-reaction montage"]},
+    desc:"Event footage cut for any day. Already shot, so it only needs editing."},
   edu:{label:"Educational", c:"#4FB3FF", film:"sarah", edit:"editor", status:"film", plats:["ig","tt","yt"],
-    desc:"Sarah Tan's education series. Tuesdays and Thursdays.",
-    ideas:["Myth vs fact: 3 things sex ed got wrong","How to clean your toys, by material","Lube 101: water vs silicone vs oil","Anatomy in 60 seconds","How to bring up toys with a partner","Your cycle and your libido, explained","Consent check-ins that don't kill the mood","Answering your anonymous questions"]},
+    desc:"Sarah Tan's education series. Tuesdays and Thursdays."},
   outlier:{label:"Outlier", c:"#FF4F8B", film:"susan", edit:"susan", status:"create", plats:["ig","tt"],
-    desc:"Susan recreates a proven outlier post in Nancy's style. Find the outlier first, then replicate it.",
-    ideas:["Recreate this week's top outlier post in the Nancy style","High-concept visual: the product as an art object","Test an unexpected format, like a mockumentary","Big-swing hook: a 'nobody talks about this' take","Remake a viral wellness-brand ad, Nancy style"]},
+    desc:"Susan recreates a proven outlier post in Nancy's style. Find the outlier first, then replicate it."},
   meme:{label:"Meme", c:"#FFB547", film:null, edit:"dione", status:"create", plats:["ig","x"],
-    desc:"Fast, relatable, low effort. No filming needed.",
-    ideas:["'When the discreet package finally arrives' meme","Cuffing-season meme","Tweet-screenshot meme in the Nancy voice","Group-chat screenshot meme","Starter-pack meme for this week's moment","'Me vs my toy drawer' two-panel meme"]},
+    desc:"Fast, relatable, low effort. No filming needed."},
   trend:{label:"Trending", c:"#A77BFF", film:"dione", edit:"editor", status:"create", plats:["tt","ig"],
-    desc:"What's fun or trending this week: audio, formats, news. From the Intel tab.",
-    ideas:["Hop on this week's top TikTok audio","This week's trending format, Nancy style"]},
+    desc:"What's fun or trending this week: audio, formats, news. From the Intel tab."},
   moment:{label:"Moment", c:"#FF8A4C", film:"crew", edit:"editor", status:"create", plats:["ig","tt","x"],
-    desc:"Tied to a day on the calendar. Added automatically when one lands this week.",
-    ideas:[]},
+    desc:"Tied to a day on the calendar. Added automatically when one lands this week."},
   ask:{label:"Ask Nancy", c:"#F06CD8", film:"sarah", edit:"editor", status:"create", plats:["ig","tt"], isNew:true,
-    desc:"Anonymous questions from followers, answered on camera or in Stories. Grows DMs and saves.",
-    ideas:["Stories question box → answer the top 3 in a Reel","'Questions you're too shy to ask', answered","Green-screen: answering a real DM"]},
+    desc:"Anonymous questions from followers, answered on camera or in Stories. Grows DMs and saves."},
   street:{label:"Street interviews", c:"#5FD4E0", film:"crew", edit:"editor", status:"film", plats:["tt","ig","yt"], isNew:true,
-    desc:"Vox-pop questions at events or on the street. Shareable and cheap to make.",
-    ideas:["'What's the most romantic thing someone's done for you?'","'Rate these date ideas 1–10'","'What do you wish you learned in sex ed?'"]},
+    desc:"Vox-pop questions at events or on the street. Shareable and cheap to make."},
   unbox:{label:"Unboxing & ASMR", c:"#C9A7FF", film:"crew", edit:"editor", status:"film", plats:["tt","ig"], isNew:true,
-    desc:"Sensory product content that stays platform-safe: packaging, textures, sounds.",
-    ideas:["Discreet-packaging unboxing ASMR","Satisfying charging-case click compilation","Gift-wrapping a Nancy order"]},
+    desc:"Sensory product content that stays platform-safe: packaging, textures, sounds."},
   community:{label:"Community & reviews", c:"#9BE15D", film:null, edit:"dione", status:"create", plats:["ig","x"], isNew:true,
-    desc:"Reposts, reviews and creator stitches. Social proof for almost no effort.",
-    ideas:["Review-screenshot carousel","Repost the best creator mention of the week","'You said it' quote card from a customer"]},
+    desc:"Reposts, reviews and creator stitches. Social proof for almost no effort."},
   bts:{label:"Behind the scenes", c:"#E8C9A0", film:"dione", edit:"dione", status:"film", plats:["ig","tt"], isNew:true,
-    desc:"The people behind Nancy: packing orders, meetings, the team's opinions.",
-    ideas:["A day in the life of the Nancy team","Packing orders on a big sale day","Team rates the new product names"]},
+    desc:"The people behind Nancy: packing orders, meetings, the team's opinions."},
   couples:{label:"Couples corner", c:"#FF9E9E", film:"crew", edit:"editor", status:"create", plats:["ig","tt","yt"], isNew:true,
-    desc:"Relationship tips and couple creators. Opens up a new audience.",
-    ideas:["Couple-creator collab: 'things we'd never do without'","Date-night idea of the week","How to talk about fantasies with a partner"]},
+    desc:"Relationship tips and couple creators. Opens up a new audience."},
 };
 const EXPLORE = Object.keys(PILLARS).filter(k => PILLARS[k].isNew);
 
@@ -934,15 +926,12 @@ const DAY_TEMPLATE = [
 let CADENCE = store.get("ns.cadence", [2,2,3,3,2,1,1]);
 const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -((d.getDay() + 6) % 7));
 let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
-const wkKey = () => "ns.week." + iso(wkStart);
+const wkKey = () => "ns.week2." + iso(wkStart);
 const weekNo = d => Math.floor(d / (7 * 864e5));
 
 function buildWeek(start){
   const wn = weekNo(start);
-  const trends = INTEL?.trends || [];
   const slots = [];
-  const used = {};                          // per-pillar idea counter, so ideas don't repeat within a week
-  const next = (k, len) => (wn * 3 + (used[k] = (used[k] ?? -1) + 1)) % len;
   let ex = wn;
   for (let i = 0; i < 7; i++){
     const day = iso(addDays(start, i));
@@ -950,16 +939,12 @@ function buildWeek(start){
     while (picks.length < CADENCE[i]) picks.push(DAY_TEMPLATE[i][picks.length % DAY_TEMPLATE[i].length]);
     const daySlots = picks.map((p, j) => {
       const pillar = p === "explore" ? EXPLORE[ex++ % EXPLORE.length] : p;
-      const P = PILLARS[pillar];
-      let title = P.ideas.length ? P.ideas[next(pillar, P.ideas.length)] : "";
-      let note = "";
-      if (pillar === "trend" && trends.length){ const t = trends[next("trends", trends.length)]; title = `Ride the trend: ${t.name}`; note = t.how; }
-      return mkSlot(day, pillar, title, note);
+      return mkSlot(day, pillar);
     });
     // Big moments that land today take over a flexible slot.
     const moms = MOMENTS.filter(m => m.date === day && m.tier !== "minor");
     for (const m of moms){
-      const s = mkSlot(day, "moment", (m.tone === "care" ? "Awareness post: " : "") + `${m.name}: ${m.hooks.ig || m.angle}`, m.angle);
+      const s = mkSlot(day, "moment");
       s.moment = m.id;
       const k = daySlots.findLastIndex(x => !["edu","outlier","moment"].includes(x.pillar));
       if (k >= 0) daySlots[k] = s; else daySlots.push(s);
@@ -968,9 +953,10 @@ function buildWeek(start){
   }
   return {start: iso(start), slots};
 }
-function mkSlot(day, pillar, title, note){
+/* The planner only sets the pillar and who's on it; the idea and reference are Dione's to fill in. */
+function mkSlot(day, pillar){
   const P = PILLARS[pillar];
-  return {id: Math.random().toString(36).slice(2, 9), day, pillar, title, note: note || "", plats: [...P.plats],
+  return {id: Math.random().toString(36).slice(2, 9), day, pillar, title: "", ref: "", note: "", plats: [...P.plats],
           film: P.film, edit: P.edit, status: P.status};
 }
 let WEEK = null;
@@ -1023,6 +1009,7 @@ function renderPlan(){
     </div>`;
   }).join("");
   $("#weekgrid").querySelectorAll("[data-slot]").forEach(el => el.onclick = e => {
+    if (e.target.closest("a")) return;
     const s = WEEK.slots.find(x => x.id === el.dataset.slot);
     if (e.target.closest(".status")){
       const i = STATUSES.findIndex(x => x[0] === s.status);
@@ -1031,7 +1018,7 @@ function renderPlan(){
     openSlot(s.id);
   });
   $("#weekgrid").querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
-    const s = mkSlot(b.dataset.add, "meme", "", ""); WEEK.slots.push(s); saveWeek(); renderPlan(); openSlot(s.id);
+    const s = mkSlot(b.dataset.add, "meme"); WEEK.slots.push(s); saveWeek(); renderPlan(); openSlot(s.id);
   });
 
   // pillars
@@ -1052,9 +1039,12 @@ function renderPlan(){
 
 function slotCard(s){
   const P = PILLARS[s.pillar];
+  const m = s.moment && MOMENTS.find(x => x.id === s.moment);
   return `<div class="slot ${s.status === "posted" ? "done" : ""}" data-slot="${s.id}" style="--pc:${P.c}">
     <div class="slot-p">${esc(P.label)}${P.isNew ? `<span class="new">TRY</span>` : ""}</div>
-    <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">Tap to add an idea</span>`}</div>
+    ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : ""}
+    <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
+    ${s.ref ? `<a class="slot-ref" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener">▶ See reference</a>` : `<span class="slot-ref none">No reference yet</span>`}
     <div class="slot-plats">${s.plats.map(p => `<span class="plat ${p}">${PLATFORMS[p]}</span>`).join("")}</div>
     <div class="slot-who"><span>🎥 <b>${esc(pname(s.film))}</b></span><span>✂️ <b>${esc(pname(s.edit))}</b></span></div>
     <button class="status st-${s.status}" title="Tap to move to the next status">${ST_LABEL[s.status]}</button>
@@ -1077,15 +1067,16 @@ function openSlot(id){
     </div>
     <div class="d-body"><div class="form">
       <label>Status<div class="seg5" id="fStatus">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
-      <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
+      <label>Idea<textarea id="fTitle" placeholder="What's the post? e.g. Myth vs fact: lube edition">${esc(s.title)}</textarea></label>
+      <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
+      ${s.ref ? `<a class="btn ghost" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener" style="justify-self:start">▶ Open reference</a>` : ""}
       <label>Pillar<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}${x.isNew ? " (try)" : ""}</option>`).join("")}</select></label>
       <label>Platforms<div class="platpick" id="fPlats">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
       <div class="two">
         <label>🎥 Filming<select id="fFilm">${opts(s.film, "No filming needed")}</select></label>
         <label>✂️ Editing<select id="fEdit">${opts(s.edit, "Nobody yet")}</select></label>
       </div>
-      <label>Notes & reference link<textarea id="fNote" placeholder="Outlier reference, script notes, audio…">${esc(s.note)}</textarea></label>
-      ${P.ideas.length ? `<div><p class="eyebrow">More ${esc(P.label.toLowerCase())} ideas · tap to use</p><div class="tags">${P.ideas.map(i => `<span class="tag" data-idea="${esc(i)}" style="color:var(--text)">${esc(i)}</span>`).join("")}</div></div>` : ""}
+      <label>Notes for the maker<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
       ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
       <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fDel">Delete post</button></div>
     </div></div>`;
@@ -1094,6 +1085,7 @@ function openSlot(id){
   $("#fDone").onclick = closeDrawer;
   $("#fDel").onclick = () => { WEEK.slots = WEEK.slots.filter(x => x !== s); upd(); closeDrawer(); toast("Post removed"); };
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
+  $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
   $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
   $("#fFilm").onchange = e => { s.film = e.target.value || null; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value || null; upd(); };
@@ -1107,7 +1099,6 @@ function openSlot(id){
     const p = b.dataset.p; s.plats = s.plats.includes(p) ? s.plats.filter(x => x !== p) : [...s.plats, p];
     b.setAttribute("aria-pressed", s.plats.includes(p)); upd();
   });
-  d.querySelectorAll("[data-idea]").forEach(t => t.onclick = () => { s.title = t.dataset.idea; $("#fTitle").value = s.title; upd(); });
   d.classList.add("on"); $("#scrim").classList.add("on"); d.setAttribute("aria-hidden", "false"); d.scrollTop = 0;
 }
 
@@ -1119,7 +1110,7 @@ function weekForSlack(){
     const slots = WEEK.slots.filter(s => s.day === day);
     if (!slots.length) continue;
     lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
-    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${pname(s.edit)} · _${ST_LABEL[s.status]}_`);
+    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
   }
   return lines.join("\n");
 }
