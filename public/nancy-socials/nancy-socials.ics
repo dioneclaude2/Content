@@ -1,0 +1,1510 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Nancy//Socials//EN
+X-WR-CALNAME:Nancy Socials
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:sexual-health-awareness-month-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260901
+DTEND;VALUE=DATE:20261001
+SUMMARY:Sexual Health Awareness Month
+DESCRIPTION:A month of myth-busting: pleasure is health. Educator collabs\, FAQ series\, product care 101. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Sexual Health Awareness Month
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:world-sexual-health-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260904
+DTEND;VALUE=DATE:20260905
+SUMMARY:World Sexual Health Day
+DESCRIPTION:WAS-backed global day. Lead with education and access\, product as a supporting role. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World Sexual Health Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:labor-day-us-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260907
+DTEND;VALUE=DATE:20260908
+SUMMARY:Labor Day (US)
+DESCRIPTION:End-of-summer sale. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:uk-sexual-health-week-brook-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+SUMMARY:UK Sexual Health Week (Brook)
+DESCRIPTION:14–20 Sep 2026\, theme 'Let's Connect'. 2027 dates TBA. [intimacy · UK · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:bi-visibility-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260923
+DTEND;VALUE=DATE:20260924
+SUMMARY:Bi Visibility Day
+DESCRIPTION:Celebrate bi community voices. Amplify creators\, not the product. [identity · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Bi Visibility Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:world-contraception-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260926
+DTEND;VALUE=DATE:20260927
+SUMMARY:World Contraception Day
+DESCRIPTION:Education-first: know your options. Partner with a clinic or educator. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:erofame-amsterdam-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+SUMMARY:eroFame (Amsterdam)
+DESCRIPTION:30 Sep – 2 Oct\, Amsterdam RAI. Trade show: competitor launches\, BTS content. [industry · EU · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: eroFame (Amsterdam)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:menopause-awareness-month-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261101
+SUMMARY:Menopause Awareness Month
+DESCRIPTION:Month-long series building to World Menopause Day (18 Oct). [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:lgbtq-history-month-us-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261101
+SUMMARY:LGBTQ+ History Month (US)
+DESCRIPTION:Queer history of pleasure: sex-positive pioneers\, the queer-owned shop legacy. [identity · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:cuffing-season-kicks-off-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261002
+SUMMARY:Cuffing season kicks off
+DESCRIPTION:Oct–Feb dating memes\, couples-starter content. [culture · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:amazon-prime-big-deal-days-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261006
+DTEND;VALUE=DATE:20261007
+SUMMARY:Amazon Prime Big Deal Days
+DESCRIPTION:6–7 Oct. Competitor sale window\; run your own counter-offer. [retail · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-coming-out-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261011
+DTEND;VALUE=DATE:20261012
+SUMMARY:National Coming Out Day
+DESCRIPTION:Amplify community stories. No product in the lead image. [identity · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: National Coming Out Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:thanksgiving-canada-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261013
+SUMMARY:Thanksgiving (Canada)
+DESCRIPTION:CA audience only. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:world-menopause-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261019
+SUMMARY:World Menopause Day
+DESCRIPTION:Menopause Awareness Month peak. Pleasure doesn't retire: lube\, arousal changes\, real voices 45+. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World Menopause Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:international-pronouns-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261021
+DTEND;VALUE=DATE:20261022
+SUMMARY:International Pronouns Day
+DESCRIPTION:3rd Wednesday of October. Inclusive language check on product copy. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:venus-berlin-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261022
+DTEND;VALUE=DATE:20261023
+SUMMARY:Venus Berlin
+DESCRIPTION:22–25 Oct\, Messe Berlin. Watch for competitor drops. [industry · EU · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:ace-week-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261025
+DTEND;VALUE=DATE:20261026
+SUMMARY:Ace Week
+DESCRIPTION:Asexual Awareness Week\, 25–31 Oct. Intimacy isn't only sex\; inclusive framing. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:intersex-awareness-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+SUMMARY:Intersex Awareness Day
+DESCRIPTION:Awareness only\; amplify intersex voices. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:halloween-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261031
+DTEND;VALUE=DATE:20261101
+SUMMARY:Halloween
+DESCRIPTION:Spooky-sexy: costume energy\, 'treats' puns\, dark packaging drop. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Halloween
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:no-nut-november-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261201
+SUMMARY:No Nut November
+DESCRIPTION:Meme month. Playful counter-programming: 'self-love November'\, edging jokes\, solo care. [culture · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: No Nut November
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:movember-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261201
+SUMMARY:Movember
+DESCRIPTION:Men's health month. Prostate health\, men's pleasure products\, open conversations. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:day-of-the-dead-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+SUMMARY:Day of the Dead
+DESCRIPTION:Cultural/religious. Skip or honor respectfully\; no product puns. [holiday · LATAM · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:daylight-saving-ends-us-extra-hour-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+SUMMARY:Daylight saving ends (US) — extra hour
+DESCRIPTION:'What will you do with your extra hour?' Easy\, cheeky post. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:bonfire-night-uk-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+SUMMARY:Bonfire Night (UK)
+DESCRIPTION:Fireworks puns for UK audience. [holiday · UK · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:diwali-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261109
+SUMMARY:Diwali
+DESCRIPTION:Religious festival. Greeting only\; no product puns. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:singles-day-11-11-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+SUMMARY:★ Singles Day (11.11)
+DESCRIPTION:World's biggest shopping day. Self-love sale\; perfect brand fit globally. [retail · APAC · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Singles Day (11.11)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:veterans-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+SUMMARY:Veterans Day
+DESCRIPTION:Same day as Singles Day\; keep US posts respectful. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:transgender-awareness-week-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261113
+DTEND;VALUE=DATE:20261114
+SUMMARY:Transgender Awareness Week
+DESCRIPTION:13–19 Nov. Trans-inclusive product education (gender-neutral toys\, language). [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:grammy-nominations-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261116
+DTEND;VALUE=DATE:20261117
+SUMMARY:Grammy nominations
+DESCRIPTION:Reaction content. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-men-s-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261119
+DTEND;VALUE=DATE:20261120
+SUMMARY:International Men's Day
+DESCRIPTION:Men's pleasure and emotional intimacy. Soft tone. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:trans-day-of-remembrance-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261120
+DTEND;VALUE=DATE:20261121
+SUMMARY:Trans Day of Remembrance
+DESCRIPTION:Memorial day. Silence or a respectful post only. Pause all promo. [identity · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Trans Day of Remembrance
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:thanksgiving-us-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261126
+DTEND;VALUE=DATE:20261127
+SUMMARY:Thanksgiving (US)
+DESCRIPTION:Gratitude / 'thankful for' humor\; BFCM teaser. [holiday · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Thanksgiving (US)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:black-friday-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261127
+DTEND;VALUE=DATE:20261128
+SUMMARY:★ Black Friday
+DESCRIPTION:Biggest sales week. Early-access list\, doorbusters\, bundles. [retail · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Black Friday
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:small-business-saturday-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261128
+DTEND;VALUE=DATE:20261129
+SUMMARY:Small Business Saturday
+DESCRIPTION:Shout out indie sex shops that stock us. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:cyber-monday-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261130
+DTEND;VALUE=DATE:20261201
+SUMMARY:★ Cyber Monday
+DESCRIPTION:Online-only deals\; last call for BFCM. [retail · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Cyber Monday
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:world-aids-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261202
+SUMMARY:World AIDS Day
+DESCRIPTION:Awareness only. Red ribbon\, testing resources\, donate/partner. No product selling today. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World AIDS Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:giving-tuesday-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261202
+SUMMARY:Giving Tuesday
+DESCRIPTION:Donate % to a sexual health/LGBTQ+ nonprofit. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:hanukkah-begins-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261204
+DTEND;VALUE=DATE:20261205
+SUMMARY:Hanukkah begins
+DESCRIPTION:Greeting only. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:12-12-sale-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261212
+DTEND;VALUE=DATE:20261213
+SUMMARY:12.12 sale
+DESCRIPTION:APAC double-12 sale day. [retail · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:green-monday-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261214
+DTEND;VALUE=DATE:20261215
+SUMMARY:Green Monday
+DESCRIPTION:Mid-December last shipping push. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:holiday-shipping-cutoff-approx-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261217
+DTEND;VALUE=DATE:20261218
+SUMMARY:Holiday shipping cutoff (approx.)
+DESCRIPTION:Order-by-for-Christmas reminder. Confirm exact cutoff with ops. [retail · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Holiday shipping cutoff (approx.)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:global-orgasm-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261221
+DTEND;VALUE=DATE:20261222
+SUMMARY:Global Orgasm Day
+DESCRIPTION:Solstice 'Global Orgasm for Peace'. Quirky\, niche — good for X and TikTok humor. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-eve-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261225
+SUMMARY:Christmas Eve
+DESCRIPTION:Last-minute digital gift cards\; 'stocking stuffer' humor. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Christmas Eve
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261225
+DTEND;VALUE=DATE:20261226
+SUMMARY:Christmas Day
+DESCRIPTION:Light\, cozy post. 'Unwrap something nice' puns. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Christmas Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:boxing-day-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261226
+DTEND;VALUE=DATE:20261227
+SUMMARY:Boxing Day
+DESCRIPTION:UK/CA/AU sale day. [retail · UK · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Boxing Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:new-year-s-eve-2026@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20261231
+DTEND;VALUE=DATE:20270101
+SUMMARY:New Year's Eve
+DESCRIPTION:Midnight kiss\, 'new year same me'\, resolutions humor. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: New Year's Eve
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:cervical-health-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270201
+SUMMARY:Cervical Health Awareness Month
+DESCRIPTION:Screening reminders and education. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:new-year-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270102
+SUMMARY:New Year's Day
+DESCRIPTION:'New year\, new O' resolutions content. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:dry-january-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270201
+SUMMARY:Dry January
+DESCRIPTION:'Dry January\, wet everything else' (lube angle). [culture · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:xbiz-show-la-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270107
+DTEND;VALUE=DATE:20270108
+SUMMARY:XBIZ Show (LA)
+DESCRIPTION:7–10 Jan. Awards & industry news cycle. [industry · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: XBIZ Show (LA)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:national-bubble-bath-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270108
+DTEND;VALUE=DATE:20270109
+SUMMARY:National Bubble Bath Day
+DESCRIPTION:Self-care night-in content\; waterproof toys\, bath rituals. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:anme-founders-show-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270117
+DTEND;VALUE=DATE:20270118
+SUMMARY:ANME Founders Show
+DESCRIPTION:17–19 Jan\, Burbank. Retailer/buyer show. [industry · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:blue-monday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270118
+DTEND;VALUE=DATE:20270119
+SUMMARY:Blue Monday
+DESCRIPTION:'Most depressing day' — self-care & mood-boost angle. [culture · UK · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:avn-expo-las-vegas-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+SUMMARY:AVN Expo (Las Vegas)
+DESCRIPTION:20–23 Jan. Industry news cycle\; mostly monitor\, don't post. [industry · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:black-history-month-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270201
+DTEND;VALUE=DATE:20270301
+SUMMARY:Black History Month (US)
+DESCRIPTION:Amplify Black sex educators and founders\; pay creators\; no promo tie-ins. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:lunar-new-year-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270207
+SUMMARY:Lunar New Year
+DESCRIPTION:Year of the Goat. Greeting\; red-packaging edit at most. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:grammy-awards-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270207
+DTEND;VALUE=DATE:20270208
+SUMMARY:Grammy Awards
+DESCRIPTION:Live-post red carpet & performances. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:valentine-s-shipping-cutoff-approx-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270208
+DTEND;VALUE=DATE:20270209
+SUMMARY:Valentine's shipping cutoff (approx.)
+DESCRIPTION:Order-by reminder. Confirm exact cutoff with ops. [retail · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Valentine's shipping cutoff (approx.)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ramadan-begins-approx-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270208
+DTEND;VALUE=DATE:20270209
+SUMMARY:Ramadan begins (approx.)
+DESCRIPTION:Pause or geo-exclude adult content targeting to MENA audiences during Ramadan. [holiday · MENA · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:mardi-gras-carnival-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270209
+DTEND;VALUE=DATE:20270210
+SUMMARY:Mardi Gras / Carnival
+DESCRIPTION:Rio Carnival & New Orleans. Color\, glitter\, party energy. [holiday · LATAM · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Mardi Gras / Carnival
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:sexual-reproductive-health-awareness-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270212
+DTEND;VALUE=DATE:20270213
+SUMMARY:Sexual & Reproductive Health Awareness Day
+DESCRIPTION:Education lead-in to Valentine's week. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:galentine-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270213
+DTEND;VALUE=DATE:20270214
+SUMMARY:Galentine's Day
+DESCRIPTION:Friends' self-love gifting\, girls' night content. [holiday · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Galentine's Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:international-condom-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270213
+DTEND;VALUE=DATE:20270214
+SUMMARY:International Condom Day
+DESCRIPTION:Safer sex is sexy. Bundle ideas with lube/condoms. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:valentine-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270214
+DTEND;VALUE=DATE:20270215
+SUMMARY:★ Valentine's Day
+DESCRIPTION:Biggest gifting moment of the year. Shipping-cutoff countdown\, couples & solo angles\, gift guides. [holiday · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Valentine's Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:super-bowl-lxi-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270214
+DTEND;VALUE=DATE:20270215
+SUMMARY:Super Bowl LXI
+DESCRIPTION:Lands on Valentine's Day in 2027 — 'half-time' and 'score' jokes write themselves. [culture · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Super Bowl LXI
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:national-condom-week-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270214
+DTEND;VALUE=DATE:20270215
+SUMMARY:National Condom Week
+DESCRIPTION:Runs 14–21 Feb. Safer-sex education\, pairs with Valentine's. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:singles-awareness-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270215
+DTEND;VALUE=DATE:20270216
+SUMMARY:Singles Awareness Day
+DESCRIPTION:Solo celebration\, post-Valentine's discount. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:endometriosis-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270301
+DTEND;VALUE=DATE:20270401
+SUMMARY:Endometriosis Awareness Month
+DESCRIPTION:Painful sex is common and not your fault. Educator-led\, gentle. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:women-s-history-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270301
+DTEND;VALUE=DATE:20270401
+SUMMARY:Women's History Month
+DESCRIPTION:Women who changed sexual health history. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:mothering-sunday-uk-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270307
+DTEND;VALUE=DATE:20270308
+SUMMARY:Mothering Sunday (UK)
+DESCRIPTION:Skip product\; brand-safe acknowledgement at most. [holiday · UK · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-women-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270308
+DTEND;VALUE=DATE:20270309
+SUMMARY:International Women's Day
+DESCRIPTION:Women founders/team\, pleasure equity. Avoid pinkwashing — tie to action. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: International Women's Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:eid-al-fitr-approx-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+SUMMARY:Eid al-Fitr (approx.)
+DESCRIPTION:Greeting only\; no product. [holiday · MENA · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:white-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270314
+DTEND;VALUE=DATE:20270315
+SUMMARY:White Day
+DESCRIPTION:Japan/Korea return-gift day\, a month after Valentine's. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:daylight-saving-starts-us-lose-an-hour-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270314
+DTEND;VALUE=DATE:20270315
+SUMMARY:Daylight saving starts (US) — lose an hour
+DESCRIPTION:'Make the hour you lost count'. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:academy-awards-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270314
+DTEND;VALUE=DATE:20270315
+SUMMARY:Academy Awards
+DESCRIPTION:Live-post\, 'best performance' puns. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:holi-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270322
+DTEND;VALUE=DATE:20270323
+SUMMARY:Holi
+DESCRIPTION:Color festival. Greeting only. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:easter-sunday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270328
+DTEND;VALUE=DATE:20270329
+SUMMARY:Easter Sunday
+DESCRIPTION:Light 'egg' puns only if the brand voice allows\; conservative audiences. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:trans-day-of-visibility-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270331
+DTEND;VALUE=DATE:20270401
+SUMMARY:Trans Day of Visibility
+DESCRIPTION:Celebration day. Feature trans creators and paid collabs. [identity · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Trans Day of Visibility
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:sti-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270401
+DTEND;VALUE=DATE:20270501
+SUMMARY:STI Awareness Month
+DESCRIPTION:Get tested\, destigmatize. Toy hygiene & cleaning content fits here. [intimacy · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: STI Awareness Month
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:sexual-assault-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270401
+DTEND;VALUE=DATE:20270501
+SUMMARY:Sexual Assault Awareness Month
+DESCRIPTION:Consent education and resources only. Never tie to promotions. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:april-fools-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270401
+DTEND;VALUE=DATE:20270402
+SUMMARY:April Fools' Day
+DESCRIPTION:Fake product launch prank (be ready to make it real if it pops). [culture · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:coachella-weekend-1-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270409
+DTEND;VALUE=DATE:20270410
+SUMMARY:Coachella weekend 1
+DESCRIPTION:Festival fits\, 'festival essentials' edit (weekend 2: 16–18 Apr). [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-lingerie-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270424
+DTEND;VALUE=DATE:20270425
+SUMMARY:National Lingerie Day
+DESCRIPTION:Confidence & dressing for yourself. Styling collab. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:lesbian-visibility-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270426
+DTEND;VALUE=DATE:20270427
+SUMMARY:Lesbian Visibility Day
+DESCRIPTION:Sapphic creators\, lesbian-focused product education. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:masturbation-may-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270501
+DTEND;VALUE=DATE:20270601
+SUMMARY:★ Masturbation May
+DESCRIPTION:THE month for this brand. Daily series\, solo-play guides\, bundles\, creator challenges. [intimacy · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Masturbation May
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:international-clitoris-awareness-week-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270502
+DTEND;VALUE=DATE:20270503
+SUMMARY:International Clitoris Awareness Week
+DESCRIPTION:First full week of May (Clitoraid). Anatomy education\, pleasure gap stats\, 3D clitoris visuals. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: International Clitoris Awareness Week
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:met-gala-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270503
+DTEND;VALUE=DATE:20270504
+SUMMARY:Met Gala
+DESCRIPTION:First Monday of May. Fashion meme reactions. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:mother-s-day-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270509
+DTEND;VALUE=DATE:20270510
+SUMMARY:Mother's Day (US)
+DESCRIPTION:Mostly skip. If anything: 'moms deserve pleasure too'\, no gifting-from-kids framing. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:xbiz-miami-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270510
+DTEND;VALUE=DATE:20270511
+SUMMARY:XBIZ Miami
+DESCRIPTION:10–13 May. Creator/industry conference. [industry · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:eurovision-final-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270515
+DTEND;VALUE=DATE:20270516
+SUMMARY:Eurovision final
+DESCRIPTION:Camp! Big EU/UK queer audience. [culture · EU · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:idahobit-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+SUMMARY:IDAHOBIT
+DESCRIPTION:International Day Against Homophobia\, Biphobia & Transphobia. Advocacy\, not sales. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:pansexual-visibility-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270524
+DTEND;VALUE=DATE:20270525
+SUMMARY:Pansexual Visibility Day
+DESCRIPTION:Community spotlight. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-masturbation-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270528
+DTEND;VALUE=DATE:20270529
+SUMMARY:★ International Masturbation Day
+DESCRIPTION:Peak of Masturbation May. Hero drop\, biggest promo of spring. [intimacy · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: International Masturbation Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:menstrual-hygiene-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270528
+DTEND;VALUE=DATE:20270529
+SUMMARY:Menstrual Hygiene Day
+DESCRIPTION:Period sex\, cramp relief\, and cycle-aware pleasure. Shares the day with Intl Masturbation Day. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:pride-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270601
+DTEND;VALUE=DATE:20270701
+SUMMARY:★ Pride Month
+DESCRIPTION:Only if the brand gives back: donation %\, queer-created campaign\, year-round receipts. Avoid rainbow-washing. [identity · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Pride Month
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:69-day-national-sex-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270609
+DTEND;VALUE=DATE:20270610
+SUMMARY:69 Day (National Sex Day)
+DESCRIPTION:6/9. Cheeky meme day. Couples toys\, playful copy. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: 69 Day (National Sex Day)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:dia-dos-namorados-brazil-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270612
+DTEND;VALUE=DATE:20270613
+SUMMARY:Dia dos Namorados (Brazil)
+DESCRIPTION:Brazil's Valentine's Day. Big for LATAM audience. [holiday · LATAM · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Dia dos Namorados (Brazil)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:juneteenth-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270619
+DTEND;VALUE=DATE:20270620
+SUMMARY:Juneteenth
+DESCRIPTION:Honor\, don't sell. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:father-s-day-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270620
+DTEND;VALUE=DATE:20270621
+SUMMARY:Father's Day (US)
+DESCRIPTION:Mostly skip\; maybe 'gift for your partner who's a dad' in couples framing. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:hot-girl-summer-kickoff-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270621
+DTEND;VALUE=DATE:20270622
+SUMMARY:Hot Girl Summer kickoff
+DESCRIPTION:Summer solstice\, summer-vibe product edits. [culture · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:nyc-pride-march-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270627
+DTEND;VALUE=DATE:20270628
+SUMMARY:NYC Pride March
+DESCRIPTION:Last Sunday of June. On-the-ground content\, float or activation if possible. [identity · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: NYC Pride March
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:independence-day-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270704
+DTEND;VALUE=DATE:20270705
+SUMMARY:Independence Day (US)
+DESCRIPTION:Fireworks puns\, summer sale. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-kissing-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270706
+DTEND;VALUE=DATE:20270707
+SUMMARY:International Kissing Day
+DESCRIPTION:Romance & foreplay tips. Light\, sweet\, shareable. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:tanabata-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270707
+DTEND;VALUE=DATE:20270708
+SUMMARY:Tanabata
+DESCRIPTION:Japan's star-crossed lovers festival. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:prime-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270713
+DTEND;VALUE=DATE:20270714
+SUMMARY:Prime Day
+DESCRIPTION:Mid-July competitor sale window. [retail · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-nude-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270714
+DTEND;VALUE=DATE:20270715
+SUMMARY:National Nude Day
+DESCRIPTION:Body confidence. Mind nudity rules on every platform: no skin\, use illustration/text. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-non-binary-people-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270714
+DTEND;VALUE=DATE:20270715
+SUMMARY:International Non-Binary People's Day
+DESCRIPTION:Gender-neutral product language and design. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-orgasm-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270731
+DTEND;VALUE=DATE:20270801
+SUMMARY:★ National Orgasm Day
+DESCRIPTION:Summer tentpole. Orgasm gap stats\, 'types of orgasm' education\, flash sale. [intimacy · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: National Orgasm Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:national-romance-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270801
+DTEND;VALUE=DATE:20270901
+SUMMARY:National Romance Awareness Month
+DESCRIPTION:Date-night series\, couples content. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-underwear-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270805
+DTEND;VALUE=DATE:20270806
+SUMMARY:National Underwear Day
+DESCRIPTION:Wearable toys\, playful fashion tie-in. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-female-orgasm-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270808
+DTEND;VALUE=DATE:20270809
+SUMMARY:★ International Female Orgasm Day
+DESCRIPTION:Pleasure-gap storytelling\, women's voices\, strongest-performing product push. [intimacy · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: International Female Orgasm Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:qixi-chinese-valentine-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270808
+DTEND;VALUE=DATE:20270809
+SUMMARY:Qixi (Chinese Valentine's Day)
+DESCRIPTION:China's Valentine's Day. Same day as Intl Female Orgasm Day in 2027. [holiday · APAC · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Qixi (Chinese Valentine's Day)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:national-kiss-and-make-up-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270825
+DTEND;VALUE=DATE:20270826
+SUMMARY:National Kiss and Make Up Day
+DESCRIPTION:Make-up sex jokes\, couples communication tips. [intimacy · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:sexual-health-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270901
+DTEND;VALUE=DATE:20271001
+SUMMARY:Sexual Health Awareness Month
+DESCRIPTION:A month of myth-busting: pleasure is health. Educator collabs\, FAQ series\, product care 101. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Sexual Health Awareness Month
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:world-sexual-health-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270904
+DTEND;VALUE=DATE:20270905
+SUMMARY:World Sexual Health Day
+DESCRIPTION:WAS-backed global day. Lead with education and access\, product as a supporting role. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World Sexual Health Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:labor-day-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270906
+DTEND;VALUE=DATE:20270907
+SUMMARY:Labor Day (US)
+DESCRIPTION:End-of-summer sale. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:bi-visibility-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270923
+DTEND;VALUE=DATE:20270924
+SUMMARY:Bi Visibility Day
+DESCRIPTION:Celebrate bi community voices. Amplify creators\, not the product. [identity · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Bi Visibility Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:world-contraception-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20270926
+DTEND;VALUE=DATE:20270927
+SUMMARY:World Contraception Day
+DESCRIPTION:Education-first: know your options. Partner with a clinic or educator. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:menopause-awareness-month-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271001
+DTEND;VALUE=DATE:20271101
+SUMMARY:Menopause Awareness Month
+DESCRIPTION:Month-long series building to World Menopause Day (18 Oct). [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:lgbtq-history-month-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271001
+DTEND;VALUE=DATE:20271101
+SUMMARY:LGBTQ+ History Month (US)
+DESCRIPTION:Queer history of pleasure: sex-positive pioneers\, the queer-owned shop legacy. [identity · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:cuffing-season-kicks-off-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271001
+DTEND;VALUE=DATE:20271002
+SUMMARY:Cuffing season kicks off
+DESCRIPTION:Oct–Feb dating memes\, couples-starter content. [culture · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:national-coming-out-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271011
+DTEND;VALUE=DATE:20271012
+SUMMARY:National Coming Out Day
+DESCRIPTION:Amplify community stories. No product in the lead image. [identity · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: National Coming Out Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:thanksgiving-canada-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271011
+DTEND;VALUE=DATE:20271012
+SUMMARY:Thanksgiving (Canada)
+DESCRIPTION:CA audience only. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:world-menopause-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271018
+DTEND;VALUE=DATE:20271019
+SUMMARY:World Menopause Day
+DESCRIPTION:Menopause Awareness Month peak. Pleasure doesn't retire: lube\, arousal changes\, real voices 45+. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World Menopause Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:international-pronouns-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271020
+DTEND;VALUE=DATE:20271021
+SUMMARY:International Pronouns Day
+DESCRIPTION:3rd Wednesday of October. Inclusive language check on product copy. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:intersex-awareness-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271026
+DTEND;VALUE=DATE:20271027
+SUMMARY:Intersex Awareness Day
+DESCRIPTION:Awareness only\; amplify intersex voices. [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:diwali-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271029
+DTEND;VALUE=DATE:20271030
+SUMMARY:Diwali
+DESCRIPTION:Religious festival. Greeting only\; no product puns. [holiday · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:halloween-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271031
+DTEND;VALUE=DATE:20271101
+SUMMARY:Halloween
+DESCRIPTION:Spooky-sexy: costume energy\, 'treats' puns\, dark packaging drop. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Halloween
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:no-nut-november-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271101
+DTEND;VALUE=DATE:20271201
+SUMMARY:No Nut November
+DESCRIPTION:Meme month. Playful counter-programming: 'self-love November'\, edging jokes\, solo care. [culture · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: No Nut November
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:movember-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271101
+DTEND;VALUE=DATE:20271201
+SUMMARY:Movember
+DESCRIPTION:Men's health month. Prostate health\, men's pleasure products\, open conversations. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:day-of-the-dead-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271101
+DTEND;VALUE=DATE:20271102
+SUMMARY:Day of the Dead
+DESCRIPTION:Cultural/religious. Skip or honor respectfully\; no product puns. [holiday · LATAM · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:bonfire-night-uk-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271105
+DTEND;VALUE=DATE:20271106
+SUMMARY:Bonfire Night (UK)
+DESCRIPTION:Fireworks puns for UK audience. [holiday · UK · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:daylight-saving-ends-us-extra-hour-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271107
+DTEND;VALUE=DATE:20271108
+SUMMARY:Daylight saving ends (US) — extra hour
+DESCRIPTION:'What will you do with your extra hour?' Easy\, cheeky post. [culture · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:singles-day-11-11-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271111
+DTEND;VALUE=DATE:20271112
+SUMMARY:★ Singles Day (11.11)
+DESCRIPTION:World's biggest shopping day. Self-love sale\; perfect brand fit globally. [retail · APAC · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Singles Day (11.11)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:veterans-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271111
+DTEND;VALUE=DATE:20271112
+SUMMARY:Veterans Day
+DESCRIPTION:Same day as Singles Day\; keep US posts respectful. [holiday · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:transgender-awareness-week-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271113
+DTEND;VALUE=DATE:20271114
+SUMMARY:Transgender Awareness Week
+DESCRIPTION:13–19 Nov. Trans-inclusive product education (gender-neutral toys\, language). [identity · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:international-men-s-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271119
+DTEND;VALUE=DATE:20271120
+SUMMARY:International Men's Day
+DESCRIPTION:Men's pleasure and emotional intimacy. Soft tone. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:trans-day-of-remembrance-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271120
+DTEND;VALUE=DATE:20271121
+SUMMARY:Trans Day of Remembrance
+DESCRIPTION:Memorial day. Silence or a respectful post only. Pause all promo. [identity · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Trans Day of Remembrance
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:thanksgiving-us-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271125
+DTEND;VALUE=DATE:20271126
+SUMMARY:Thanksgiving (US)
+DESCRIPTION:Gratitude / 'thankful for' humor\; BFCM teaser. [holiday · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Thanksgiving (US)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:black-friday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271126
+DTEND;VALUE=DATE:20271127
+SUMMARY:★ Black Friday
+DESCRIPTION:Biggest sales week. Early-access list\, doorbusters\, bundles. [retail · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Black Friday
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:small-business-saturday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271127
+DTEND;VALUE=DATE:20271128
+SUMMARY:Small Business Saturday
+DESCRIPTION:Shout out indie sex shops that stock us. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:cyber-monday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271129
+DTEND;VALUE=DATE:20271130
+SUMMARY:★ Cyber Monday
+DESCRIPTION:Online-only deals\; last call for BFCM. [retail · Global · tentpole]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Cyber Monday
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:giving-tuesday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271130
+DTEND;VALUE=DATE:20271201
+SUMMARY:Giving Tuesday
+DESCRIPTION:Donate % to a sexual health/LGBTQ+ nonprofit. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:world-aids-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271201
+DTEND;VALUE=DATE:20271202
+SUMMARY:World AIDS Day
+DESCRIPTION:Awareness only. Red ribbon\, testing resources\, donate/partner. No product selling today. [intimacy · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: World AIDS Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:12-12-sale-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271212
+DTEND;VALUE=DATE:20271213
+SUMMARY:12.12 sale
+DESCRIPTION:APAC double-12 sale day. [retail · APAC · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:green-monday-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271213
+DTEND;VALUE=DATE:20271214
+SUMMARY:Green Monday
+DESCRIPTION:Mid-December last shipping push. [retail · US · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:holiday-shipping-cutoff-approx-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271217
+DTEND;VALUE=DATE:20271218
+SUMMARY:Holiday shipping cutoff (approx.)
+DESCRIPTION:Order-by-for-Christmas reminder. Confirm exact cutoff with ops. [retail · US · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Holiday shipping cutoff (approx.)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:global-orgasm-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271222
+DTEND;VALUE=DATE:20271223
+SUMMARY:Global Orgasm Day
+DESCRIPTION:Solstice 'Global Orgasm for Peace'. Quirky\, niche — good for X and TikTok humor. [intimacy · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-eve-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271224
+DTEND;VALUE=DATE:20271225
+SUMMARY:Christmas Eve
+DESCRIPTION:Last-minute digital gift cards\; 'stocking stuffer' humor. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Christmas Eve
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:hanukkah-begins-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271224
+DTEND;VALUE=DATE:20271225
+SUMMARY:Hanukkah begins
+DESCRIPTION:Greeting only. [holiday · Global · minor]
+END:VEVENT
+BEGIN:VEVENT
+UID:christmas-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271225
+DTEND;VALUE=DATE:20271226
+SUMMARY:Christmas Day
+DESCRIPTION:Light\, cozy post. 'Unwrap something nice' puns. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Christmas Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:boxing-day-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271226
+DTEND;VALUE=DATE:20271227
+SUMMARY:Boxing Day
+DESCRIPTION:UK/CA/AU sale day. [retail · UK · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: Boxing Day
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:new-year-s-eve-2027@nancy-socials
+DTSTAMP:20260923T080842Z
+DTSTART;VALUE=DATE:20271231
+DTEND;VALUE=DATE:20280101
+SUMMARY:New Year's Eve
+DESCRIPTION:Midnight kiss\, 'new year same me'\, resolutions humor. [holiday · Global · strong]
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P7D
+DESCRIPTION:7 days: New Year's Eve
+END:VALARM
+END:VEVENT
+END:VCALENDAR
