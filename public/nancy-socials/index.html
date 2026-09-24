@@ -19,6 +19,7 @@
 }
 @media (min-width:900px){:root{--pad:40px}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--bg)}
 body{margin:0;color:var(--text);font-family:'Archivo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:70vw;height:70vw;background:radial-gradient(circle,rgba(255,79,139,.16),transparent 60%);pointer-events:none;z-index:0}
@@ -431,6 +432,15 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .slot[draggable=true]{cursor:grab}
 .slot.dragging{opacity:.4}
 .slot-count{font-size:11px;font-weight:800;color:var(--dim)}
+.peoplegrid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px;align-items:start}
+@media (max-width:760px){.peoplegrid{grid-auto-flow:row;grid-auto-columns:auto}}
+.pcol{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:12px;display:grid;gap:8px;align-content:start}
+.pcol-h{display:flex;align-items:center;gap:10px}
+.pcol-h b{display:block;font-size:15px}
+.pcol-h span:not(.avatar){font-size:11.5px;color:var(--muted)}
+.pcol-stats{font-size:11.5px;color:var(--dim);padding:0 2px 4px;border-bottom:1px solid var(--line-soft)}
+.pjob{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.pjob b{color:var(--text);font-size:11px}
 .typegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
 .typegrid button{text-align:left;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--pc);border-radius:12px;padding:10px 12px;cursor:pointer;font-size:13px;font-weight:700}
 .typegrid button span{display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.35}
@@ -460,6 +470,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
         <button class="btn ghost" id="wkCopy">Copy for Slack</button>
+        <div class="seg" id="planViewSeg"><button data-pv="days">By day</button><button data-pv="people">By person</button></div>
         <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
     </div>
@@ -468,6 +479,10 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <div class="tray-chips" id="trayChips"></div>
     </div>
     <div class="weekgrid" id="weekgrid"></div>
+    <div id="peopleWrap" hidden>
+      <div class="filters" id="personFilter"></div>
+      <div class="peoplegrid" id="peoplegrid"></div>
+    </div>
     <div class="wk-sum">
       <div class="panel"><p class="eyebrow">Status · <span id="wkTotal"></span></p><div class="stbar" id="stbar"></div><div class="stlegend" id="stlegend"></div></div>
       <div class="panel"><p class="eyebrow">Who's doing what this week</p><div class="load" id="load"></div></div>
@@ -1452,6 +1467,7 @@ function renderPlan(){
     pickType(b.dataset.add);
   });
   renderTray();
+  renderPeople();
 
   // content types reference
   $("#pillars").innerHTML = Object.entries(PILLARS).map(([k, P]) => {
@@ -1471,6 +1487,53 @@ function planMoment(id){
   if (!s){ s = mkSlot(m.date, "moment"); s.moment = id; WEEK.slots.push(s); saveWeek(); }
   closeDrawer(); showTab("plan"); renderPlan(); openSlot(s.id);
 }
+
+/* ───────── BY PERSON ─────────
+   The same week, grouped by who's on each post: one column per teammate (filming or
+   editing), plus Unassigned for posts still missing someone. */
+let planView = store.get("ns.planView", "days");
+let personOnly = "all";
+function renderPeople(){
+  const people = planView === "people";
+  $("#planViewSeg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.pv === planView));
+  $("#weekgrid").hidden = people; $("#tray").hidden = people; $("#peopleWrap").hidden = !people;
+  if (!people) return;
+  const byDay = (a, b) => a.day.localeCompare(b.day);
+  const cols = TEAM.map(p => ({id: p.id, name: p.name, role: p.role,
+    slots: WEEK.slots.filter(x => x.film === p.id || x.edit === p.id).sort(byDay)}))
+    .filter(c => c.slots.length);
+  const open = WEEK.slots.filter(x => !x.film || !x.edit).sort(byDay);
+  if (open.length) cols.push({id: "", name: "Unassigned", role: "Needs someone", slots: open});
+  $("#personFilter").innerHTML = [["all", "Everyone"], ...cols.map(c => [c.id || "_none", c.name])].map(([k, l]) =>
+    `<button class="filter" data-pf2="${esc(k)}" aria-pressed="${personOnly === k}">${esc(l)}</button>`).join("");
+  $("#personFilter").querySelectorAll("[data-pf2]").forEach(b => b.onclick = () => { personOnly = b.dataset.pf2; renderPeople(); });
+  const shown = cols.filter(c => personOnly === "all" || (c.id || "_none") === personOnly);
+  $("#peoplegrid").innerHTML = shown.map(c => {
+    const film = c.slots.filter(x => x.film === c.id).length, edit = c.slots.filter(x => x.edit === c.id).length;
+    const done = c.slots.filter(x => x.status === "ready" || x.status === "posted").length;
+    return `<div class="pcol">
+      <div class="pcol-h"><span class="avatar">${c.id ? esc(c.name.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase()) : "?"}</span>
+        <div><b>${esc(c.name)}</b><span>${esc(c.role)}</span></div></div>
+      <div class="pcol-stats">${c.id ? `🎥 ${film} to film · ✂️ ${edit} to edit · ✓ ${done} done` : `${c.slots.length} post${c.slots.length === 1 ? "" : "s"} missing a filmer or editor`}</div>
+      ${c.slots.map(x => {
+        const jobs = c.id ? [x.film === c.id ? "🎥 Filming" : "", x.edit === c.id ? "✂️ Editing" : ""].filter(Boolean).join(" + ")
+                          : [!x.film ? "🎥 No filmer" : "", !x.edit ? "✂️ No editor" : ""].filter(Boolean).join(" · ");
+        return `<div class="pjob"><span>${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span><b>${jobs}</b></div>${slotCard(x)}`;
+      }).join("")}
+    </div>`;
+  }).join("") || `<div class="empty">Nobody is assigned to anything this week yet.</div>`;
+  $("#peoplegrid").querySelectorAll("[data-slot]").forEach(el => el.onclick = e => {
+    if (e.target.closest("a")) return;
+    const x = WEEK.slots.find(y => y.id === el.dataset.slot);
+    if (e.target.closest("[data-x]")) return removeSlot(x);
+    if (e.target.closest(".status")){
+      const i = STATUSES.findIndex(y => y[0] === x.status);
+      x.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
+    }
+    openSlot(x.id);
+  });
+}
+$("#planViewSeg").querySelectorAll("button").forEach(b => b.onclick = () => { planView = b.dataset.pv; store.set("ns.planView", planView); renderPlan(); });
 
 /* ───────── TEAM ───────── */
 const saveTeam = () => store.set("ns.team", TEAM);
