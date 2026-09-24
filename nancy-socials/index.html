@@ -432,6 +432,19 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .slot[draggable=true]{cursor:grab}
 .slot.dragging{opacity:.4}
 .slot-count{font-size:11px;font-weight:800;color:var(--dim)}
+.grid-note{margin:0 auto 10px;max-width:560px;font-size:12.5px;color:var(--muted);text-align:center}
+.iggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:560px;margin:0 auto;background:var(--bg)}
+.igtile{position:relative;aspect-ratio:3/4;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--surface-2)}
+.igtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.igtile iframe{position:absolute;left:0;border:0;pointer-events:none}
+.ig-tt{position:absolute;inset:0;background:linear-gradient(160deg,#25F4EE33,#FE2C5533),#111}
+.ig-poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;
+  background:radial-gradient(120% 90% at 30% 0%,color-mix(in srgb,var(--pc) 85%,#fff 15%),var(--pc) 45%,color-mix(in srgb,var(--pc) 55%,#000));color:#160b10}
+.ig-poster b{font-size:clamp(13px,3.2vw,19px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;line-height:1}
+.ig-poster span{font-size:11px;font-weight:600;line-height:1.3;opacity:.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ig-day{position:absolute;top:6px;left:6px;font-size:10px;font-weight:800;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:2px 7px}
+.ig-st{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
+.igtile:hover{filter:brightness(1.08)}
 .peoplegrid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px;align-items:start}
 @media (max-width:760px){.peoplegrid{grid-auto-flow:row;grid-auto-columns:auto}}
 .pcol{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:12px;display:grid;gap:8px;align-content:start}
@@ -469,7 +482,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <button class="iconbtn" id="wkPrev" aria-label="Previous week">‹</button>
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
-        <div class="seg" id="planViewSeg"><button data-pv="days">By day</button><button data-pv="people">By person</button></div>
+        <div class="seg" id="planViewSeg"><button data-pv="days">By day</button><button data-pv="people">By person</button><button data-pv="grid">IG grid</button></div>
         <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
     </div>
@@ -478,6 +491,10 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <div class="tray-chips" id="trayChips"></div>
     </div>
     <div class="weekgrid" id="weekgrid"></div>
+    <div id="gridWrap" hidden>
+      <p class="grid-note" id="gridNote"></p>
+      <div class="iggrid" id="iggrid"></div>
+    </div>
     <div id="peopleWrap" hidden>
       <div class="filters" id="personFilter"></div>
       <div class="peoplegrid" id="peoplegrid"></div>
@@ -1493,9 +1510,11 @@ function planMoment(id){
 let planView = store.get("ns.planView", "days");
 let personOnly = "all";
 function renderPeople(){
-  const people = planView === "people";
+  const people = planView === "people", grid = planView === "grid";
   $("#planViewSeg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.pv === planView));
-  $("#weekgrid").hidden = people; $("#tray").hidden = people; $("#peopleWrap").hidden = !people;
+  $("#weekgrid").hidden = people || grid; $("#tray").hidden = people || grid;
+  $("#peopleWrap").hidden = !people; $("#gridWrap").hidden = !grid;
+  if (grid) return renderGrid();
   if (!people) return;
   const byDay = (a, b) => a.day.localeCompare(b.day);
   const cols = TEAM.map(p => ({id: p.id, name: p.name, role: p.role,
@@ -1532,6 +1551,60 @@ function renderPeople(){
     openSlot(x.id);
   });
 }
+/* ───────── IG GRID ─────────
+   How the Instagram profile will look this week: newest post top-left, 3 across,
+   3:4 tiles. A post with a reference shows that post; otherwise a poster in its
+   pillar colour. */
+function renderGrid(){
+  const ig = WEEK.slots.filter(x => x.plats.includes("ig"))
+    .sort((a, b) => b.day.localeCompare(a.day) || WEEK.slots.indexOf(b) - WEEK.slots.indexOf(a));
+  const other = WEEK.slots.length - ig.length;
+  $("#gridNote").textContent = `${ig.length} Instagram post${ig.length === 1 ? "" : "s"} this week · newest first` +
+    (other ? ` · ${other} not going to Instagram` : "");
+  $("#iggrid").innerHTML = ig.map(x => {
+    const P = PILLARS[x.pillar] || PILLARS.meme;
+    const src = x.ref && embedSrc(x.ref);
+    const yt = x.ref && ytId(x.ref);
+    const face = yt ? `<img src="https://i.ytimg.com/vi/${esc(yt)}/hqdefault.jpg" alt="">`
+      : src && /instagram\.com/.test(src) ? `<iframe data-crop src="${esc(src)}" scrolling="no" loading="lazy" tabindex="-1"></iframe>`
+      : src ? `<div class="ig-tt" data-tt="${esc(x.ref)}"></div>`
+      : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b>${x.title ? `<span>${esc(x.title)}</span>` : ""}</div>`;
+    return `<button class="igtile" data-slot="${x.id}" title="${esc(P.label)}${x.title ? " · " + esc(x.title) : ""}">
+      ${face}
+      <span class="ig-day">${x.star ? "★ " : ""}${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span>
+      <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
+    </button>`;
+  }).join("") || `<div class="empty" style="grid-column:1/-1">No Instagram posts planned this week.</div>`;
+  $("#iggrid").querySelectorAll(".igtile").forEach(t => t.onclick = () => openSlot(t.dataset.slot));
+  cropGrid();
+  // TikTok references: show the video's cover image (TikTok's oEmbed allows this without a key).
+  $("#iggrid").querySelectorAll("[data-tt]").forEach(async el => {
+    try {
+      const j = await (await fetch("https://www.tiktok.com/oembed?url=" + encodeURIComponent(el.dataset.tt))).json();
+      if (j.thumbnail_url) el.innerHTML = `<img src="${esc(j.thumbnail_url)}" alt="">`;
+    } catch {}
+  });
+}
+/* Instagram's embed has a header and footer; size and shift it so only the media fills the tile. */
+function cropGrid(){
+  $("#iggrid").querySelectorAll("iframe[data-crop]").forEach(f => {
+    const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight;
+    f.style.width = w + "px";
+    if (/\/reels?\//.test(f.src)){
+      // Reels sit as a narrow 9:16 video (about 70% of the embed's width) under a 54px
+      // header: zoom that video until it covers the 3:4 tile, like the real grid crops it.
+      f.style.height = (w * 1.26 + 330) + "px"; f.style.top = "-54px";
+      f.style.transformOrigin = `${w * 0.49}px ${54 + w * 0.63}px`;
+      f.style.transform = `translateY(${h / 2 - w * 0.63}px) scale(1.44)`;
+    } else {
+      const media = w * 1.25;                     // photo posts render full width at 4:5
+      f.style.height = (media + 260) + "px";
+      f.style.top = -(54 + Math.max(0, (media - h) / 2)) + "px";
+    }
+  });
+}
+window.addEventListener("resize", () => { if (planView === "grid") cropGrid(); });
+
 $("#planViewSeg").querySelectorAll("button").forEach(b => b.onclick = () => { planView = b.dataset.pv; store.set("ns.planView", planView); renderPlan(); });
 
 /* ───────── TEAM ───────── */
