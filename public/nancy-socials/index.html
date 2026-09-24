@@ -207,6 +207,31 @@ select.filter{appearance:none;color:var(--text)}
 .search a:hover{color:var(--text)}
 
 /* ── intel ── */
+.sub-title{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;margin:26px 0 4px}
+.sub-title .serif{color:var(--pink);font-size:1.15em}
+.sub-note{margin:0 0 12px;font-size:13px;color:var(--muted)}
+.media-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.mcard{display:flex;flex-direction:column;text-decoration:none;background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;transition:transform .15s,border-color .15s}
+.mcard:hover{transform:translateY(-2px);border-color:var(--line)}
+.mthumb{position:relative;aspect-ratio:16/9;background:linear-gradient(160deg,#2a1622,#120c10);display:grid;place-items:center;overflow:hidden}
+.mthumb.tt{background:linear-gradient(160deg,#25F4EE33,#FE2C5533),#111}
+.mthumb.ig{background:linear-gradient(45deg,#FEC05355,#F2203E55,#B729A855,#5342D655),#111}
+.mthumb.yt{background:linear-gradient(160deg,#FF3B3B44,#111)}
+.mthumb.capcut{background:linear-gradient(160deg,#ffffff22,#00000000),#161616}
+.mthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mplay{position:relative;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;font-size:20px;color:#fff;backdrop-filter:blur(4px)}
+.mplat{position:absolute;top:10px;left:10px;font-size:10px;font-weight:900;letter-spacing:.06em;background:rgba(0,0,0,.6);padding:4px 8px;border-radius:999px;color:#fff}
+.mbody{padding:12px 14px 14px;display:grid;gap:5px}
+.mbody b{font-size:14px;line-height:1.3}
+.mmeta{font-size:11px;font-weight:700;color:var(--dim)}
+.mbody p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.mbody .mwhy{color:var(--text)}
+.mex{font-size:12px;font-weight:800;color:var(--pink);cursor:pointer}
+.watch{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.watch a{font-size:11.5px;font-weight:700;text-decoration:none;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--pink)}
+.watch a:hover{border-color:var(--pink)}
+.profiles{display:inline-flex;gap:4px;margin-left:8px;vertical-align:middle}
+.profiles a{text-decoration:none;padding:2px 6px;font-size:9px}
 .fresh{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--muted);margin:-6px 0 16px}
 .fresh b{color:var(--text)}
 .intel{display:grid;gap:16px;grid-template-columns:1fr}
@@ -469,6 +494,17 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
   <section id="intel" hidden>
     <h2 class="sec-title">What's <span class="serif">happening</span></h2>
     <p class="fresh" id="intelFresh"></p>
+    <div id="watchWrap" hidden>
+      <h3 class="sub-title">▶ Watch these <span class="serif">outliers</span></h3>
+      <p class="sub-note">Real posts that performed, worth replicating. Tap to watch.</p>
+      <div class="media-grid" id="outliers"></div>
+    </div>
+    <div id="capWrap" hidden>
+      <h3 class="sub-title">Trending <span class="serif">CapCut</span> templates</h3>
+      <p class="sub-note">Open on your phone and tap "Use template" in CapCut.</p>
+      <div class="media-grid" id="capcut"></div>
+    </div>
+    <h3 class="sub-title">News &amp; <span class="serif">moves</span></h3>
     <div class="filters" id="intelFilters"></div>
     <div class="intel">
       <div class="news" id="news"></div>
@@ -808,13 +844,44 @@ function renderIntel(){
     ${i.sowhat ? `<p class="sowhat"><b>So what:</b> ${esc(i.sowhat)}</p>` : ""}
     <a class="src" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">${esc(i.source)} ↗</a>
   </article>`).join("") || `<div class="empty">Nothing in this category.</div>`;
-  $("#trends").innerHTML = (INTEL.trends || []).map(t => `<div class="trend"><b>${t.platform && PLATFORMS[t.platform] ? `<span class="plat ${t.platform}" style="padding:2px 6px;font-size:9px;margin-right:6px">${PLATFORMS[t.platform]}</span>` : ""}${esc(t.name)}</b><p>${esc(t.how)}${t.url ? ` <a href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p></div>`).join("");
-  $("#comps").innerHTML = (INTEL.competitors || []).map(c => `<div class="trend"><b>${esc(c.brand)}</b><p>${esc(c.recent)} ${c.url ? `<a href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p></div>`).join("");
+  $("#trends").innerHTML = (INTEL.trends || []).map(t => `<div class="trend"><b>${platBadge(t.platform)}${esc(t.name)}</b><p>${esc(t.how)}${t.url ? ` <a href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p>
+    ${watchLinks(t.examples)}</div>`).join("");
+  $("#comps").innerHTML = (INTEL.competitors || []).map(c => `<div class="trend"><b>${esc(c.brand)}</b>
+    ${c.profiles ? `<span class="profiles">${Object.entries(c.profiles).filter(([, u]) => u).map(([k, u]) => `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener" class="plat ${k}">${PLATFORMS[k] || k}</a>`).join("")}</span>` : ""}
+    <p>${esc(c.recent)} ${c.url ? `<a href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p>${watchLinks(c.posts)}</div>`).join("");
+  const outs = INTEL.outliers || [];
+  $("#watchWrap").hidden = !outs.length;
+  $("#outliers").innerHTML = outs.map(o => mediaCard({url: o.url, platform: o.platform, title: o.account || "", line1: o.format, line2: o.why, yt: o.yt_id})).join("");
+  const caps = INTEL.capcut || [];
+  $("#capWrap").hidden = !caps.length;
+  $("#capcut").innerHTML = caps.map(c => mediaCard({url: c.url, platform: "capcut", title: c.name,
+    meta: [c.clips ? `${c.clips} clips` : "", c.uses || ""].filter(Boolean).join(" · "), line1: c.vibe, line2: c.how ? `Nancy: ${c.how}` : "", example: c.example})).join("");
   const age = -daysUntil(INTEL.updated);
   $("#intelNote").textContent = `Every item links to its source.`;
   $("#intelFresh").innerHTML = `<span class="dot" style="background:${age > 8 ? "var(--care)" : "var(--retail)"}"></span>
     Last updated <b>${fmt(INTEL.updated,{weekday:"short", day:"numeric", month:"short"})}</b> · ${age === 0 ? "today" : age === 1 ? "yesterday" : `${age} days ago`}${age > 8 ? " · due for a refresh" : ""}`;
 }
+
+const platBadge = p => p && PLATFORMS[p] ? `<span class="plat ${p}" style="padding:2px 6px;font-size:9px;margin-right:6px">${PLATFORMS[p]}</span>` : "";
+const ytId = u => (String(u || "").match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/) || [])[1];
+function watchLinks(list){
+  if (!list?.length) return "";
+  return `<div class="watch">${list.map(x => `<a href="${esc(safeUrl(x.url))}" target="_blank" rel="noopener" title="${esc(x.what || "")}">▶ ${esc(x.account || PLAT_NAMES[x.platform] || "Watch")}</a>`).join("")}</div>`;
+}
+function mediaCard({url, platform, title, meta, line1, line2, yt, example}){
+  const id = yt || (platform === "yt" ? ytId(url) : null);
+  const label = platform === "capcut" ? "CapCut" : PLAT_NAMES[platform] || "Post";
+  return `<a class="mcard" href="${esc(safeUrl(url))}" target="_blank" rel="noopener">
+    <div class="mthumb ${esc(platform)}">${id ? `<img src="https://i.ytimg.com/vi/${esc(id)}/hqdefault.jpg" alt="" loading="lazy">` : ""}<span class="mplay">▶</span><span class="mplat">${esc(label)}</span></div>
+    <div class="mbody"><b>${esc(title)}</b>${meta ? `<span class="mmeta">${esc(meta)}</span>` : ""}
+      ${line1 ? `<p>${esc(line1)}</p>` : ""}${line2 ? `<p class="mwhy">${esc(line2)}</p>` : ""}
+      ${example ? `<span class="mex" data-href="${esc(safeUrl(example))}">See it in use ↗</span>` : ""}</div>
+  </a>`;
+}
+document.addEventListener("click", e => {
+  const ex = e.target.closest(".mex");
+  if (ex){ e.preventDefault(); window.open(ex.dataset.href, "_blank", "noopener"); }
+});
 
 /* ───────── SAFETY ───────── */
 const SWAPS = [
@@ -1365,7 +1432,7 @@ function showTab(id){
 }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
 
-fetch("/nancy-socials/moments.json").then(r => r.json()).then(data => {
+fetch("/nancy-socials/moments.json", {cache: "no-cache"}).then(r => r.json()).then(data => {
   MOMENTS = data.moments;
   $("#momentSelect").innerHTML += MOMENTS.filter(m => m.date >= todayIso || (m.end && m.end >= todayIso))
     .map(m => `<option value="${m.id}">${fmt(m.date)} · ${esc(m.name)}</option>`).join("");
@@ -1376,7 +1443,7 @@ fetch("/nancy-socials/moments.json").then(r => r.json()).then(data => {
   document.querySelector("main").innerHTML = `<p class="empty">Couldn't load moments.json. Open this page through the site, not straight from the file.</p>`;
 });
 /* The week builder uses Intel trends, so it waits for intel.json (or its failure). */
-const intelReady = fetch("/nancy-socials/intel.json").then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
+const intelReady = fetch("/nancy-socials/intel.json", {cache: "no-cache"}).then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
   $("#news").innerHTML = `<div class="empty">No intel yet.</div>`;
 });
 </script>
