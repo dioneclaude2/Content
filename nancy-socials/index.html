@@ -244,6 +244,13 @@ select.filter{appearance:none;color:var(--text)}
 .nitem p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
 .sowhat{margin-top:10px!important;color:var(--text)!important;font-size:13.5px;padding-left:12px;border-left:3px solid var(--pink)}
 .nitem a.src{font-size:12px;color:var(--dim);display:inline-block;margin-top:10px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer}
+.pill span{font-size:11px;background:var(--surface-3);color:var(--muted);border-radius:999px;padding:1px 7px}
+.pill:hover{color:var(--text);border-color:var(--muted)}
+.pill.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.pill.on span{background:rgba(255,255,255,.25);color:#fff}
+.intel.solo{grid-template-columns:1fr}
 .cat-science{--c:var(--intimacy)}.cat-popculture{--c:var(--culture)}.cat-trending{--c:var(--holiday)}
 .cat-platform{--c:var(--culture)}.cat-law{--c:var(--care)}.cat-industry{--c:var(--retail)}.cat-trend{--c:var(--identity)}.cat-competitor{--c:var(--holiday)}
 .catchip{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
@@ -506,25 +513,20 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
   <section id="intel" hidden>
     <h2 class="sec-title">What's <span class="serif">happening</span></h2>
     <p class="fresh" id="intelFresh"></p>
-    <div id="watchWrap" hidden>
-      <h3 class="sub-title">▶ Watch these <span class="serif">outliers</span></h3>
-      <p class="sub-note">Real posts that performed, worth replicating. Tap to watch.</p>
-      <div class="media-grid" id="outliers"></div>
-    </div>
+    <div class="pills" id="intelPills"></div>
     <div id="capWrap" hidden>
       <h3 class="sub-title">Trending <span class="serif">CapCut</span> templates</h3>
       <p class="sub-note">Open on your phone and tap "Use template" in CapCut.</p>
       <div class="filters" id="capFilters"></div>
       <div class="media-grid" id="capcut"></div>
     </div>
-    <h3 class="sub-title">News &amp; <span class="serif">moves</span></h3>
-    <div class="filters" id="intelFilters"></div>
-    <div class="intel">
+    <div id="newsHead"><h3 class="sub-title">News &amp; <span class="serif">moves</span></h3></div>
+    <div class="intel" id="intelGrid">
       <div class="news" id="news"></div>
-      <div style="display:grid;gap:16px;align-content:start">
+      <div id="intelSide" style="display:grid;gap:16px;align-content:start">
         <div class="panel" id="rulesWrap" hidden><p class="eyebrow">⚠ Rules watch</p><div id="rules2"></div></div>
-        <div class="panel"><p class="eyebrow">Trends to ride</p><div id="trends"></div></div>
-        <div class="panel"><p class="eyebrow">Competitor watch</p><div id="comps"></div></div>
+        <div class="panel" id="trendsWrap"><p class="eyebrow">Trends to ride</p><div id="trends"></div></div>
+        <div class="panel" id="compsWrap"><p class="eyebrow">Competitor watch</p><div id="comps"></div></div>
       </div>
     </div>
     <p class="note" id="intelNote"></p>
@@ -965,22 +967,40 @@ document.addEventListener("click", e => {
 });
 
 /* ───────── INTEL ───────── */
-let INTEL = null, intelCat = "all";
+let INTEL = null;
 /* News shows three kinds; platform and law changes go to the small "Rules watch" box. */
 const CATS = {science:"Intimacy science", popculture:"Pop culture", trending:"Trending now"};
+/* Pill badges at the top of Intel: "all", a news kind (CATS), or one section. */
+const INTEL_PILLS = [["all","All"], ["science","🔬 Intimacy science"], ["popculture","🎬 Pop culture"], ["trending","✨ Trending now"],
+  ["capcut","🎞 CapCut"], ["trends","📈 Trends to ride"], ["comps","👀 Competitors"], ["rules","⚠ Rules watch"]];
+let intelView = store.get("ns.intelView", "all");
 const RULE_CATS = {platform:"Platform", law:"Law"};
 const CAP_STYLES = {creator:"Creator", highlights:"Highlights", fonts:"Viral fonts"};
 let capStyle = "all";
 function renderIntel(){
   if (!INTEL){ $("#news").innerHTML = `<div class="empty">Intel is loading…</div>`; return; }
-  $("#intelFilters").innerHTML = [["all","All"], ...Object.entries(CATS)].map(([k,v]) =>
-    `<button class="filter" data-ic="${k}" aria-pressed="${intelCat===k}">${v}</button>`).join("");
-  $("#intelFilters").querySelectorAll("[data-ic]").forEach(b => b.onclick = () => { intelCat = b.dataset.ic; renderIntel(); });
+  const v = intelView, all = v === "all";
+  const counts = {science:0, popculture:0, trending:0};
+  INTEL.items.forEach(i => { if (i.category in counts) counts[i.category]++; });
+  counts.capcut = (INTEL.capcut || []).length; counts.trends = (INTEL.trends || []).length;
+  counts.comps = (INTEL.competitors || []).length; counts.rules = Math.min(3, INTEL.items.filter(i => RULE_CATS[i.category]).length);
+  $("#intelPills").innerHTML = INTEL_PILLS.map(([k, l]) => (k === "all" || counts[k]) ?
+    `<button class="pill ${v === k ? "on" : ""}" data-iv="${k}">${l}${k !== "all" ? `<span>${counts[k]}</span>` : ""}</button>` : "").join("");
+  $("#intelPills").querySelectorAll("[data-iv]").forEach(b => b.onclick = () => { intelView = b.dataset.iv; store.set("ns.intelView", intelView); renderIntel(); });
+  const newsView = all || v in CATS;
+  $("#capWrap").hidden = !(all || v === "capcut") || !counts.capcut;
+  $("#newsHead").hidden = !all;
+  $("#news").hidden = !newsView;
+  $("#intelSide").hidden = !(all || ["trends","comps","rules"].includes(v));
+  $("#trendsWrap").hidden = !(all || v === "trends");
+  $("#compsWrap").hidden = !(all || v === "comps");
+  $("#rulesWrap").hidden = !(all || v === "rules") || !counts.rules;
+  $("#intelGrid").classList.toggle("solo", !all);
   const order = Object.keys(CATS);
-  const items = INTEL.items.filter(i => CATS[i.category] && (intelCat === "all" || i.category === intelCat))
+  const items = INTEL.items.filter(i => CATS[i.category] && (all || i.category === v))
     .sort((a,b) => order.indexOf(a.category) - order.indexOf(b.category) || b.date.localeCompare(a.date));
   const rules = INTEL.items.filter(i => RULE_CATS[i.category]).sort((a,b) => b.date.localeCompare(a.date)).slice(0, 3);
-  $("#rulesWrap").hidden = !rules.length;
+
   $("#rules2").innerHTML = rules.map(i => `<div class="trend"><b>${platBadge(i.platform)}${esc(i.title)}</b><p>${esc(i.sowhat || i.summary)} <a href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">↗</a></p></div>`).join("");
   $("#news").innerHTML = items.map(i => `<article class="nitem cat-${esc(i.category)}">
     <div class="nhead"><span class="chip catchip">${esc(CATS[i.category] || i.category)}</span>${i.platform && i.platform !== "all" && PLATFORMS[i.platform] ? `<span class="plat ${i.platform}" style="padding:3px 7px;font-size:9.5px">${PLATFORMS[i.platform]}</span>` : ""}<span class="chip">${fmt(i.date,{day:"numeric",month:"short",year:"numeric"})}</span></div>
@@ -994,11 +1014,7 @@ function renderIntel(){
   $("#comps").innerHTML = (INTEL.competitors || []).map(c => `<div class="trend"><b>${esc(c.brand)}</b>
     ${c.profiles ? `<span class="profiles">${Object.entries(c.profiles).filter(([, u]) => u).map(([k, u]) => `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener" class="plat ${k}">${PLATFORMS[k] || k}</a>`).join("")}</span>` : ""}
     <p>${esc(c.recent)} ${c.url ? `<a href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p>${watchLinks(c.posts)}</div>`).join("");
-  const outs = INTEL.outliers || [];
-  $("#watchWrap").hidden = !outs.length;
-  $("#outliers").innerHTML = outs.map(o => mediaCard({url: o.url, platform: o.platform, title: o.account || "", line1: o.format, line2: o.why, yt: o.yt_id})).join("");
   const caps = INTEL.capcut || [];
-  $("#capWrap").hidden = !caps.length;
   const styles = Object.keys(CAP_STYLES).filter(k => caps.some(c => c.style === k));
   $("#capFilters").innerHTML = styles.length ? [["all","All"], ...styles.map(k => [k, CAP_STYLES[k]])].map(([k, v]) =>
     `<button class="filter" data-cs="${k}" aria-pressed="${capStyle === k}">${v}</button>`).join("") : "";
