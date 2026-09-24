@@ -922,10 +922,16 @@ const DEFAULT_TEAM = [
   {id:"dione",  name:"Dione",        role:"Social strategist"},
   {id:"sarah",  name:"Sarah Tan",    role:"Educator"},
   {id:"susan",  name:"Susan",        role:"Creative director"},
+  {id:"caroline", name:"Caroline",   role:"Content support"},
   {id:"editor", name:"Editor (TBD)", role:"Video editor"},
   {id:"crew",   name:"Event crew",   role:"Videographers & photographers"},
 ];
 let TEAM = store.get("ns.team", DEFAULT_TEAM);
+/* One-time: Caroline joined after some browsers had already saved a team. */
+if (!store.get("ns.mig.caroline", false)){
+  if (!TEAM.some(p => p.id === "caroline" || /caroline/i.test(p.name))) TEAM.splice(3, 0, {id:"caroline", name:"Caroline", role:"Content support"});
+  store.set("ns.team", TEAM); store.set("ns.mig.caroline", true);
+}
 const person = id => TEAM.find(p => p.id === id);
 /* film: a person id, "none" (no filming needed) or "" (not assigned yet) */
 const pname = id => id === "none" ? "No filming" : (id && person(id)?.name) || "Not assigned";
@@ -937,8 +943,16 @@ const PILLARS = {
     desc:"Event footage cut for any day. Already shot, so it only needs editing."},
   edu:{group:"core", label:"Educational", c:"#4FB3FF", film:"sarah", edit:"editor", status:"film", plats:["ig","tt","yt"],
     desc:"Sarah Tan's education series."},
+  minimic:{group:"core", label:"Mini Mic", c:"#FF7EB6", film:"susan", edit:"", status:"create", plats:["ig","tt"],
+    desc:"Mini Mic Wednesday: meet her. Product personality, features and moments."},
+  carousel_ed:{group:"core", label:"Carousel article", c:"#6FC3FF", film:"none", edit:"", status:"create", plats:["ig"],
+    desc:"Thursday educational carousel with Sarah Tan: visual, or a more in-depth editorial."},
+  friyay:{group:"core", label:"Friyay with Nancy", c:"#FFB23F", film:"susan", edit:"", status:"create", plats:["ig","tt"],
+    desc:"Nancy games: Mini Mic or small games followers can play along with."},
+  hacks:{group:"core", label:"Nancy hacks", c:"#57E0A8", film:"sarah", edit:"", status:"create", plats:["ig","tt","yt"],
+    desc:"The product push: tips with a sexologist, how to clean your toy, how to use it."},
   outlier:{group:"core", label:"Outlier", c:"#FF4F8B", film:"susan", edit:"susan", status:"create", plats:["ig","tt"],
-    desc:"Susan recreates a proven outlier post in Nancy's style."},
+    desc:"Recreate a proven viral outlier in Nancy's style. Weekends are for outlier testing; add 1–3 on any day when there's capacity."},
   meme:{group:"core", label:"Meme", c:"#FFB547", film:"none", edit:"", status:"create", plats:["ig","x"],
     desc:"Fast, relatable, low effort. No filming needed."},
   trend:{group:"core", label:"Trending", c:"#A77BFF", film:"", edit:"", status:"create", plats:["tt","ig"],
@@ -997,7 +1011,7 @@ const PILLARS = {
     desc:"YouTube video or a clip cut from a longer talk."},
 };
 
-const TYPE_GROUPS = [["core","Our pillars"],["teaser","Teasers"],["more","More to try"]];
+const TYPE_GROUPS = [["core","Weekly series & pillars"],["teaser","Teasers"],["more","More to try"]];
 const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -((d.getDay() + 6) % 7));
 let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
 const wkKey = () => "ns.week3." + iso(wkStart);
@@ -1016,8 +1030,14 @@ function mkSlot(day, pillar){
 let WEEK = null;
 /* Posts preloaded every week, always starred. day: 0 = Mon … 6 = Sun. */
 const RECURRING = [
-  {key:"sun-team",    day:6, pillar:"team"},
-  {key:"sun-outlier", day:6, pillar:"outlier"},
+  {key:"mon-meme",     day:0, pillar:"meme",        series:"Monday memes"},
+  {key:"tue-edu",      day:1, pillar:"edu",         series:"Educational Tuesday"},
+  {key:"wed-minimic",  day:2, pillar:"minimic",     series:"Mini Mic Wednesday"},
+  {key:"thu-carousel", day:3, pillar:"carousel_ed", series:"Carousel article"},
+  {key:"fri-friyay",   day:4, pillar:"friyay",      series:"Friyay with Nancy"},
+  {key:"sat-hacks",    day:5, pillar:"hacks",       series:"Nancy hacks (or a viral outlier)"},
+  {key:"sun-outlier",  day:6, pillar:"outlier",     series:"Viral outlier"},
+  {key:"sun-team",     day:6, pillar:"team",        series:"Team content"},
 ];
 
 /* Tentpole and strong moments are pre-scheduled once per week. `seeded` remembers which were
@@ -1029,7 +1049,7 @@ function loadWeek(){
   for (const r of RECURRING){
     if (WEEK.seeded.includes(r.key)) continue;
     const s = mkSlot(days[r.day], r.pillar);
-    s.star = true; s.auto = true;
+    s.star = true; s.auto = true; s.series = r.series;
     WEEK.slots.push(s); WEEK.seeded.push(r.key);
   }
   const big = MOMENTS.filter(m => days.includes(m.date) && m.tier !== "minor" && !WEEK.seeded.includes(m.id));
@@ -1232,7 +1252,7 @@ function slotCard(s){
   return `<div class="slot ${s.status === "posted" ? "done" : ""} ${s.star ? "starred" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
     <div class="slot-p">${s.star ? `<span class="star" title="Starred">★</span>` : ""}${esc(P.label)}${s.auto ? `<span class="slot-auto">${s.star ? "WEEKLY" : "AUTO"}</span>` : ""}</div>
     <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
-    ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : ""}
+    ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : s.series && s.series !== P.label ? `<div class="slot-for">${esc(s.series)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
     ${s.ref ? `<a class="slot-ref" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener">▶ See reference</a>` : `<span class="slot-ref none">No reference yet</span>`}
     <div class="slot-plats">${s.plats.map(p => `<span class="plat ${p}">${PLATFORMS[p]}</span>`).join("")}</div>
