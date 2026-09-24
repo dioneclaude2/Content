@@ -343,6 +343,8 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .load-row{display:grid;grid-template-columns:110px 1fr 28px;gap:10px;align-items:center;font-size:12.5px}
 .load-row .bar{height:8px}
 .load-row b{text-align:right}
+.daygrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:start}
+@media (max-width:1100px){.daygrid{grid-template-columns:1fr}}
 .wday{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:10px;display:grid;gap:8px;min-width:0}
 .wday.today{border-color:var(--pink)}
 .wday-h{display:flex;align-items:baseline;justify-content:space-between;padding:4px 4px 2px}
@@ -509,7 +511,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <button class="iconbtn" id="wkPrev" aria-label="Previous week">‹</button>
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
-        <div class="seg" id="planViewSeg"><button data-pv="grid">Grid</button><button data-pv="people">By person</button></div>
+        <div class="seg" id="planViewSeg"><button data-pv="grid">Grid</button><button data-pv="people">By person</button><button data-pv="week">Week</button></div>
         <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
     </div>
@@ -521,6 +523,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <div class="weekevents" id="weekEvents"></div>
       <div class="iggrid" id="weekgrid"></div>
     </div>
+    <div class="daygrid" id="daygrid" hidden></div>
     <div id="peopleWrap" hidden>
       <div class="filters" id="personFilter"></div>
       <div class="peoplegrid" id="peoplegrid"></div>
@@ -1474,12 +1477,15 @@ function planMoment(id){
 /* ───────── BY PERSON ─────────
    The same week, grouped by who's on each post: one column per teammate (filming or
    editing), plus Unassigned for posts still missing someone. */
-let planView = store.get("ns.planView", "grid") === "people" ? "people" : "grid";
+let planView = ["people", "week"].includes(store.get("ns.planView", "grid")) ? store.get("ns.planView") : "grid";
 let personOnly = "all";
 function renderPeople(){
   const people = planView === "people";
   $("#planViewSeg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.pv === planView));
-  $("#gridWrap").hidden = people; $("#tray").hidden = people; $("#peopleWrap").hidden = !people;
+  const week = planView === "week";
+  $("#gridWrap").hidden = people || week; $("#tray").hidden = people; $("#peopleWrap").hidden = !people;
+  $("#daygrid").hidden = !week;
+  if (week) return renderDays();
   if (!people) return;
   const byDay = (a, b) => a.day.localeCompare(b.day);
   const cols = TEAM.map(p => ({id: p.id, name: p.name, role: p.role,
@@ -1603,6 +1609,54 @@ function playTile(t, s){
     const src = embedSrc(s.ref);
     if (face && src) face.outerHTML = `<iframe class="ig-full" src="${esc(src)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
   }
+}
+
+/* ───────── WEEK (DAY COLUMNS) ─────────
+   Mon–Sun columns with each day's events and post cards. Drag a card to another day,
+   or drop a content type from the tray onto a day. */
+function renderDays(){
+  $("#daygrid").innerHTML = DOW.map((d, i) => {
+    const day = iso(addDays(wkStart, i));
+    const moms = MOMENTS.filter(m => m.date === day);
+    const slots = WEEK.slots.filter(x => x.day === day);
+    return `<div class="wday ${day === todayIso ? "today" : ""}" data-day="${day}">
+      <div class="wday-h"><b>${d}${slots.length ? ` <span class="slot-count">· ${slots.length}</span>` : ""}</b><span>${parse(day).getDate()}</span></div>
+      ${moms.length ? `<div class="wday-m">${moms.map(m => {
+        const planned = slots.some(x => x.moment === m.id);
+        return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}">${m.tier === "tentpole" ? "★ " : ""}${esc(m.name)}${mnote(m.id) ? ` <span class="wm-note">📝 ${esc(mnote(m.id))}</span>` : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
+      }).join("")}</div>` : ""}
+      ${slots.map(slotCard).join("") || `<div class="wday-empty">Drop content here</div>`}
+      <button class="addslot" data-add="${day}">+ Add</button>
+    </div>`;
+  }).join("");
+  const g = $("#daygrid");
+  g.querySelectorAll("[data-slot]").forEach(el => {
+    const x = WEEK.slots.find(y => y.id === el.dataset.slot);
+    el.onclick = e => {
+      if (e.target.closest("a")) return;
+      if (e.target.closest("[data-x]")) return removeSlot(x);
+      if (e.target.closest(".status")){
+        const i = STATUSES.findIndex(y => y[0] === x.status);
+        x.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
+      }
+      openSlot(x.id);
+    };
+    el.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + x.id); el.classList.add("dragging"); };
+    el.ondragend = () => el.classList.remove("dragging");
+  });
+  g.querySelectorAll("[data-day]").forEach(col_ => {
+    const day = col_.dataset.day;
+    col_.ondragover = e => { e.preventDefault(); col_.classList.add("drop"); };
+    col_.ondragleave = e => { if (!col_.contains(e.relatedTarget)) col_.classList.remove("drop"); };
+    col_.ondrop = e => {
+      e.preventDefault(); col_.classList.remove("drop");
+      const [kind, val] = e.dataTransfer.getData("text/plain").split(":");
+      if (kind === "type" && PILLARS[val]) return addToDay(day, val);
+      const x = kind === "slot" && WEEK.slots.find(y => y.id === val);
+      if (x && x.day !== day){ x.day = day; WEEK.slots = [...WEEK.slots.filter(y => y !== x), x]; saveWeek(); renderPlan(); }
+    };
+  });
+  g.querySelectorAll("[data-add]").forEach(b => b.onclick = () => pickType(b.dataset.add));
 }
 
 /* Choose the day for a content type picked from the tray. */
