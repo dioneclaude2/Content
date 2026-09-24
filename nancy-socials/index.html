@@ -433,15 +433,18 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .igtile.drop{box-shadow:inset 0 0 0 3px var(--pink)}
 .igtile.dragging{opacity:.4}
 .ig-label{position:absolute;left:6px;bottom:6px;font-size:9.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pc);color:#160b10;border-radius:5px;padding:2px 6px}
-.ig-x{position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
+.ig-x{position:absolute;right:50px;top:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
 .igtile:hover .ig-x{opacity:1}
 @media (hover:none){.ig-x{opacity:.7}}
-.ig-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(4px)}
-.ig-play:hover{background:var(--pink)}
-.ig-open{position:absolute;right:6px;top:6px;border:0;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;cursor:pointer;display:none}
-.igtile.live iframe{pointer-events:auto}
-.igtile.live .ig-play,.igtile.live .ig-st,.igtile.live .ig-label,.igtile.live .ig-x{display:none}
-.igtile.live .ig-open{display:block}
+.ig-info{position:absolute;left:0;right:0;bottom:0;padding:34px 9px 8px;display:grid;gap:3px;text-align:left;pointer-events:none;
+  background:linear-gradient(transparent,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85));color:#fff}
+.ig-info .ig-label{position:static;justify-self:start}
+.ig-info b{font-size:12px;font-weight:800;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ig-info span{font-size:10.5px;color:rgba(255,255,255,.8)}
+.ig-info em{font-style:normal;font-size:10.5px;line-height:1.35;color:rgba(255,255,255,.85);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.igtile.live .ig-info{opacity:0;transition:opacity .2s}
+.ig-edit{position:absolute;right:22px;top:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:12px;cursor:pointer}
+.ig-edit:hover{background:var(--pink)}
 .igtile iframe.ig-full{inset:0;width:100%;height:100%;top:0}
 .d-player{margin:0 26px 8px;border-radius:16px;overflow:hidden;background:#000;height:560px}
 .d-player.wide{height:auto;aspect-ratio:16/9}
@@ -460,14 +463,14 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .daypick small{font-size:10.5px;color:var(--dim)}
 .igtile{position:relative;aspect-ratio:3/4;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--surface-2)}
 .igtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.igtile iframe{position:absolute;left:0;border:0;pointer-events:none}
+.igtile iframe{position:absolute;left:0;border:0}
 .ig-tt{position:absolute;inset:0;background:linear-gradient(160deg,#25F4EE33,#FE2C5533),#111}
-.ig-poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;
+.ig-poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 12px 30%;text-align:center;
   background:radial-gradient(120% 90% at 30% 0%,color-mix(in srgb,var(--pc) 85%,#fff 15%),var(--pc) 45%,color-mix(in srgb,var(--pc) 55%,#000));color:#160b10}
 .ig-poster b{font-size:clamp(13px,3.2vw,19px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;line-height:1}
 .ig-poster span{font-size:11px;font-weight:600;line-height:1.3;opacity:.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .ig-day{position:absolute;top:6px;left:6px;font-size:10px;font-weight:800;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:2px 7px}
-.ig-st{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
+.ig-st{position:absolute;top:12px;right:8px;width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
 .igtile:hover{filter:brightness(1.08)}
 .peoplegrid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px;align-items:start}
 @media (max-width:760px){.peoplegrid{grid-auto-flow:row;grid-auto-columns:auto}}
@@ -1533,14 +1536,19 @@ function renderWeekGrid(){
     const face = yt ? `<img src="https://i.ytimg.com/vi/${esc(yt)}/hqdefault.jpg" alt="">`
       : src && /instagram\.com/.test(src) ? `<iframe data-crop src="${esc(src)}" scrolling="no" loading="lazy" tabindex="-1"></iframe>`
       : src ? `<div class="ig-tt" data-tt="${esc(x.ref)}"></div>`
-      : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b>${x.title ? `<span>${esc(x.title)}</span>` : ""}</div>`;
-    return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}" title="${esc(P.label)}${x.title ? " · " + esc(x.title) : ""}">
+      : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b></div>`;
+    const who = [x.film === "none" ? "" : `🎥 ${pname(x.film)}`, x.edit === "none" ? "" : `✂️ ${pname(x.edit)}`].filter(Boolean).join(" · ");
+    return `<div class="igtile ${x.day === todayIso ? "today" : ""} ${src || yt ? "has-ref" : ""}" draggable="true" data-slot="${x.id}">
       ${face}
       <span class="ig-day">${x.star ? "★ " : ""}${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
-      ${src || yt ? `<span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>
-        <button class="ig-play" data-play aria-label="Play here" title="Play here">▶</button>
-        <button class="ig-open" data-open aria-label="Open post" title="Open post">Open</button>` : ""}
+      <div class="ig-info">
+        ${src || yt ? `<span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>` : ""}
+        ${x.title ? `<b>${esc(x.title)}</b>` : ""}
+        ${who ? `<span>${esc(who)}</span>` : ""}
+        ${x.note ? `<em>📝 ${esc(x.note)}</em>` : ""}
+      </div>
+      <button class="ig-edit" data-edit aria-label="Edit post" title="Edit post">✎</button>
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     </div>`;
   }).join("") + `<button class="igtile ig-add" id="gridAdd" title="Add a post"><span>+</span>Add post</button>`;
@@ -1550,8 +1558,9 @@ function renderWeekGrid(){
     const s = WEEK.slots.find(x => x.id === t.dataset.slot);
     t.onclick = e => {
       if (e.target.closest("[data-x]")) return removeSlot(s);
-      if (e.target.closest("[data-play]")) return playTile(t, s);
-      if (t.classList.contains("live") && !e.target.closest("[data-open]")) return;
+      if (e.target.closest("[data-edit]")) return openSlot(s.id);
+      // A reference plays right here; only posts without one open the editor.
+      if (t.classList.contains("has-ref")) return playTile(t, s);
       openSlot(s.id);
     };
     t.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + s.id); e.dataTransfer.effectAllowed = "move"; t.classList.add("dragging"); };
@@ -1585,13 +1594,11 @@ function renderWeekGrid(){
     } catch {}
   });
 }
-/* Play a tile's reference in place. Instagram embeds are already in the tile, so they
-   just become clickable; YouTube and TikTok covers swap to their players. */
+/* Play a tile's reference in place. Instagram embeds are live in the tile already
+   (tap their play button); YouTube and TikTok covers swap to their players. */
 function playTile(t, s){
   t.classList.add("live");
-  t.draggable = false;
-  const f = t.querySelector("iframe");
-  if (!f){
+  if (!t.querySelector("iframe")){
     const face = t.querySelector("img, .ig-tt");
     const src = embedSrc(s.ref);
     if (face && src) face.outerHTML = `<iframe class="ig-full" src="${esc(src)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
