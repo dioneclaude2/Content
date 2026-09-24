@@ -26,8 +26,23 @@ async function redis(cmd) {
   return (await r.json()).result;
 }
 
+/* The planner is served from Vercel and from GitHub Pages (dioneclaude2.github.io),
+   so both origins may call this. */
+const ORIGINS = /^https:\/\/(dioneclaude2\.github\.io|content[\w-]*\.vercel\.app)$/;
+
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
+  const origin = req.headers.origin || "";
+  if (ORIGINS.test(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-passcode");
+  }
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
   if (!URL_ || !TOKEN) {
     res.status(503).json({ error: "no-store" });
     return;

@@ -499,7 +499,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
     </div>
     <div class="spanbar" id="spanbar"></div>
     <div id="calBody"></div>
-    <p class="note">A dashed chip means the date isn't confirmed. <a href="/nancy-socials/nancy-socials.ics" download>Download the calendar file</a> to add every moment to Google Calendar or Apple Calendar, with a reminder 7 days before each big moment.</p>
+    <p class="note">A dashed chip means the date isn't confirmed. <a href="nancy-socials.ics" id="icsLink" download>Download the calendar file</a> to add every moment to Google Calendar or Apple Calendar, with a reminder 7 days before each big moment.</p>
   </section>
 
   <!-- INTEL -->
@@ -595,6 +595,15 @@ const daysUntil = s => Math.round((parse(s) - TODAY) / 864e5);
 const fmt = (s, o={day:"numeric", month:"short"}) => parse(s).toLocaleDateString("en-US", o);
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
 
+/* The page is served at /nancy-socials on Vercel and copied to GitHub Pages
+   (dioneclaude2.github.io/Content/nancy-socials/). Both read the same data files and
+   the same team store on Vercel. */
+const ON_VERCEL = /vercel\.app$/.test(location.hostname) || /^(localhost|127\.)/.test(location.hostname);
+const BASE = ON_VERCEL
+  ? (() => { const seg = location.pathname.split("/").pop(); return seg && !seg.includes(".") ? seg + "/" : ""; })()
+  : "https://content-nine-topaz.vercel.app/nancy-socials/";   // GitHub Pages copy reads the live data
+const API = ON_VERCEL && !/^(localhost|127\.)/.test(location.hostname) ? "/api/socials" : "https://content-nine-topaz.vercel.app/api/socials";
+
 const store = {
   get(k, def){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} sync.queue(k); },
@@ -640,7 +649,7 @@ const sync = {
     const batch = [...sync.pending]; sync.pending.clear();
     try {
       for (const [key, v] of batch){
-        const r = await fetch("/api/socials", {method: "POST", headers: {"Content-Type": "application/json"},
+        const r = await fetch(API, {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({key, value: v == null ? null : JSON.parse(v)})});
         if (!r.ok) throw new Error(r.status);
         sync.remote.set(key, v);
@@ -656,7 +665,7 @@ const sync = {
   async pull(){
     let docs;
     try {
-      const r = await fetch("/api/socials", {cache: "no-store"});
+      const r = await fetch(API, {cache: "no-store"});
       if (r.status === 503 || r.status === 404){ sync.show("off"); return false; }
       if (!r.ok) throw new Error(r.status);
       docs = (await r.json()).docs || {};
@@ -1588,6 +1597,8 @@ $("#wkClear").onclick = () => {
 };
 document.addEventListener("keydown", e => { if (e.key === "Escape" && armed){ armed = null; renderTray(); } });
 
+$("#icsLink").href = BASE + "nancy-socials.ics";
+
 /* ───────── TABS & BOOT ───────── */
 function showTab(id){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === id));
@@ -1597,7 +1608,7 @@ function showTab(id){
 }
 document.querySelectorAll(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
 
-fetch("/nancy-socials/moments.json", {cache: "no-cache"}).then(r => r.json()).then(data => {
+fetch(BASE + "moments.json", {cache: "no-cache"}).then(r => r.json()).then(data => {
   MOMENTS = data.moments;
   $("#momentSelect").innerHTML += MOMENTS.filter(m => m.date >= todayIso || (m.end && m.end >= todayIso))
     .map(m => `<option value="${m.id}">${fmt(m.date)} · ${esc(m.name)}</option>`).join("");
@@ -1614,7 +1625,7 @@ fetch("/nancy-socials/moments.json", {cache: "no-cache"}).then(r => r.json()).th
   document.querySelector("main").innerHTML = `<p class="empty">Couldn't load moments.json. Open this page through the site, not straight from the file.</p>`;
 });
 /* The week builder uses Intel trends, so it waits for intel.json (or its failure). */
-const intelReady = fetch("/nancy-socials/intel.json", {cache: "no-cache"}).then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
+const intelReady = fetch(BASE + "intel.json", {cache: "no-cache"}).then(r => r.json()).then(d => { INTEL = d; renderIntel(); }).catch(() => {
   $("#news").innerHTML = `<div class="empty">No intel yet.</div>`;
 });
 </script>
