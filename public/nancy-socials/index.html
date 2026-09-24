@@ -609,10 +609,29 @@ const sync = {
   pending: new Map(),
   timer: null,
   shared: k => k === "ns.team" || k === "ns.mnotes" || k.startsWith("ns.week3."),
+  remote: new Map(),       // key -> JSON the shared store last had
+  /* Does this copy hold anything a person actually did? Auto-preloaded weeks and the
+     default team don't, so they never overwrite real work on another device. */
+  meaningful(k, v){
+    if (v == null) return false;
+    if (k === "ns.mnotes") return Object.keys(v).length > 0;
+    if (k === "ns.team") return JSON.stringify(v) !== JSON.stringify(DEFAULT_TEAM);
+    const slots = v.slots || [];
+    if ((v.seeded || []).length > slots.filter(x => x.auto).length) return true;   // a preloaded post was removed
+    return slots.some(x => {
+      const P = PILLARS[x.pillar] || {};
+      return !x.auto || x.title || x.ref || x.note || x.event || (x.series && x.star === false)
+        || x.status !== P.status || JSON.stringify(x.plats) !== JSON.stringify(P.plats)
+        || (x.film || "") !== whoOr(P.film || "") || (x.edit || "") !== whoOr(P.edit || "");
+    });
+  },
+  parsed(k){ try { return JSON.parse(sync.raw(k)); } catch { return null; } },
   localKeys(){ try { return Object.keys(localStorage).filter(sync.shared); } catch { return []; } },
   raw(k){ try { return localStorage.getItem(k); } catch { return null; } },
   queue(k){
     if (!sync.shared(k) || sync.state === "off") return;
+    if (!sync.remote.has(k) && !sync.meaningful(k, sync.parsed(k))) return;   // nothing worth sharing yet
+    if (sync.remote.get(k) === sync.raw(k) && !sync.pending.has(k)) return;    // already matches the shared copy
     sync.pending.set(k, sync.raw(k));
     sync.show("saving");
     clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 500);
@@ -624,6 +643,7 @@ const sync = {
         const r = await fetch("/api/socials", {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({key, value: v == null ? null : JSON.parse(v)})});
         if (!r.ok) throw new Error(r.status);
+        sync.remote.set(key, v);
       }
       sync.show(sync.pending.size ? "saving" : "ok");
     } catch {
@@ -651,7 +671,10 @@ const sync = {
       return false;
     }
     for (const [k, v] of Object.entries(docs)){
+      sync.remote.set(k, JSON.stringify(v));
       if (sync.pending.has(k)) continue;              // our unsaved edit wins
+      // A blank shared copy never replaces real work in this browser: share ours instead.
+      if (!sync.meaningful(k, v) && sync.meaningful(k, sync.parsed(k))){ sync.queue(k); continue; }
       const json = JSON.stringify(v);
       if (sync.raw(k) !== json){ try { localStorage.setItem(k, json); } catch {} changed = true; }
     }
