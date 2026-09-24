@@ -469,7 +469,6 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <button class="iconbtn" id="wkPrev" aria-label="Previous week">‹</button>
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
-        <button class="btn ghost" id="wkCopy">Copy for Slack</button>
         <div class="seg" id="planViewSeg"><button data-pv="days">By day</button><button data-pv="people">By person</button></div>
         <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
@@ -1699,22 +1698,9 @@ function openSlot(id){
   });
 }
 
-function weekForSlack(){
-  const end = addDays(wkStart, 6);
-  const lines = [`*Nancy socials · ${fmt(iso(wkStart),{month:"short",day:"numeric"})} – ${fmt(iso(end),{month:"short",day:"numeric"})}*`];
-  for (let i = 0; i < 7; i++){
-    const day = iso(addDays(wkStart, i));
-    const slots = WEEK.slots.filter(s => s.day === day);
-    if (!slots.length) continue;
-    lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
-    for (const s of slots) lines.push(`• ${s.star ? "⭐ " : ""}[${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.event ? `\n   Event: ${s.event}` : ""}${s.ref ? `\n   Reference: ${s.ref}` : ""}${s.note ? `\n   Notes: ${s.note.replace(/\n+/g, " ")}` : ""}`);
-  }
-  return lines.join("\n");
-}
 $("#wkPrev").onclick = () => { wkStart = addDays(wkStart, -7); WEEK = null; renderPlan(); };
 $("#wkNext").onclick = () => { wkStart = addDays(wkStart, 7); WEEK = null; renderPlan(); };
 $("#wkJump").querySelectorAll("button").forEach(b => b.onclick = () => { wkStart = addDays(mondayOf(TODAY), 7 * b.dataset.jump); WEEK = null; renderPlan(); });
-$("#wkCopy").onclick = () => copy(weekForSlack());
 $("#wkClear").onclick = () => {
   if (!WEEK.slots.length || !confirm("Remove every post from this week?")) return;
   WEEK.slots = []; saveWeek(); renderPlan(); toast("Week cleared");
