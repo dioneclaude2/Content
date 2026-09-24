@@ -30,7 +30,8 @@ a{color:inherit}
 /* ── header ── */
 .topbar{position:sticky;top:0;z-index:10;background:rgba(11,7,9,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
 .topbar-in{display:flex;align-items:center;gap:18px;padding:14px var(--pad);max-width:1440px;margin:0 auto;flex-wrap:wrap}
-.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.sync{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px;margin-right:auto;cursor:help}
+.brand{display:flex;align-items:baseline;gap:8px}
 .brand b{font-size:20px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
 .brand span{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--pink)}
 .tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
@@ -417,6 +418,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 
 <header class="topbar"><div class="topbar-in">
   <div class="brand"><b>Nancy</b><span>socials</span></div>
+  <span class="sync" id="syncBadge"></span>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-tab="plan" aria-selected="true">Week</button>
     <button class="tab" role="tab" data-tab="today">Today</button>
@@ -595,8 +597,87 @@ const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
 
 const store = {
   get(k, def){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } },
-  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} sync.queue(k); },
 };
+
+/* ───────── TEAM SYNC ─────────
+   The week plans, team and event notes are shared through /api/socials so every
+   device sees the same thing. This browser's copy is a cache: it's used offline
+   and uploaded the first time sync finds the shared store empty. */
+const sync = {
+  state: "off",            // off (no shared store yet) · ok · saving · error
+  pending: new Map(),
+  timer: null,
+  shared: k => k === "ns.team" || k === "ns.mnotes" || k.startsWith("ns.week3."),
+  localKeys(){ try { return Object.keys(localStorage).filter(sync.shared); } catch { return []; } },
+  raw(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  queue(k){
+    if (!sync.shared(k) || sync.state === "off") return;
+    sync.pending.set(k, sync.raw(k));
+    sync.show("saving");
+    clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 500);
+  },
+  async flush(){
+    const batch = [...sync.pending]; sync.pending.clear();
+    try {
+      for (const [key, v] of batch){
+        const r = await fetch("/api/socials", {method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({key, value: v == null ? null : JSON.parse(v)})});
+        if (!r.ok) throw new Error(r.status);
+      }
+      sync.show(sync.pending.size ? "saving" : "ok");
+    } catch {
+      for (const [k, v] of batch) if (!sync.pending.has(k)) sync.pending.set(k, v);
+      sync.show("error");
+      clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 5000);
+    }
+  },
+  /* Pull the shared copy into this browser. Returns true if anything changed. */
+  async pull(){
+    let docs;
+    try {
+      const r = await fetch("/api/socials", {cache: "no-store"});
+      if (r.status === 503 || r.status === 404){ sync.show("off"); return false; }
+      if (!r.ok) throw new Error(r.status);
+      docs = (await r.json()).docs || {};
+    } catch { if (sync.state !== "off") sync.show("error"); return false; }
+    const first = sync.state === "off";
+    if (first) sync.state = "ok";
+    let changed = false;
+    // First sync from a browser that already has plans and the shared store is empty: upload them.
+    if (!Object.keys(docs).length){
+      for (const k of sync.localKeys()) sync.queue(k);
+      sync.show(sync.pending.size ? "saving" : "ok");
+      return false;
+    }
+    for (const [k, v] of Object.entries(docs)){
+      if (sync.pending.has(k)) continue;              // our unsaved edit wins
+      const json = JSON.stringify(v);
+      if (sync.raw(k) !== json){ try { localStorage.setItem(k, json); } catch {} changed = true; }
+    }
+    // Weeks planned only on this device get shared too.
+    for (const k of sync.localKeys()) if (!(k in docs)) sync.queue(k);
+    sync.show(sync.pending.size ? "saving" : "ok");
+    return changed;
+  },
+  show(st){
+    sync.state = st;
+    const el = document.getElementById("syncBadge"); if (!el) return;
+    const t = {off: ["Only on this device", "var(--care)", "Team sync isn't switched on yet, so changes stay in this browser."],
+               ok: ["Synced with team", "var(--retail)", "Everyone sees the same plan."],
+               saving: ["Saving…", "var(--holiday)", "Saving your change for the team."],
+               error: ["Offline · will retry", "var(--care)", "Couldn't reach the shared store. Your changes are kept and will upload when it's back."]}[st];
+    el.innerHTML = `<span class="dot" style="background:${t[1]}"></span>${t[0]}`;
+    el.title = t[2];
+  },
+};
+/* Reload everything that was read from storage, then redraw. */
+function reloadShared(){
+  TEAM = store.get("ns.team", DEFAULT_TEAM);
+  MNOTES = store.get("ns.mnotes", {});
+  WEEK = null;
+  if (!$("#drawer").classList.contains("on")){ renderPlan(); renderWeek(); renderCal(); }
+}
 function toast(msg="Copied", action){
   const t = $("#toast");
   t.innerHTML = esc(msg) + (action ? ` <button class="toast-act">${esc(action.label)}</button>` : "");
@@ -1498,7 +1579,13 @@ fetch("/nancy-socials/moments.json", {cache: "no-cache"}).then(r => r.json()).th
   $("#momentSelect").innerHTML += MOMENTS.filter(m => m.date >= todayIso || (m.end && m.end >= todayIso))
     .map(m => `<option value="${m.id}">${fmt(m.date)} · ${esc(m.name)}</option>`).join("");
   renderWeek(); renderFilters(); renderCal(); renderSafety(); renderPipe(); renderIntel();
-  intelReady.then(renderPlan);
+  intelReady.then(async () => {
+    renderPlan();
+    if (await sync.pull()) reloadShared();
+    // Pick up teammates' changes: every 20 s, and whenever the tab comes back into view.
+    setInterval(async () => { if (!document.hidden && await sync.pull()) reloadShared(); }, 20000);
+    document.addEventListener("visibilitychange", async () => { if (!document.hidden && await sync.pull()) reloadShared(); });
+  });
   showTab(store.get("ns.tab2", "plan"));
 }).catch(() => {
   document.querySelector("main").innerHTML = `<p class="empty">Couldn't load moments.json. Open this page through the site, not straight from the file.</p>`;
