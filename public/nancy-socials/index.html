@@ -243,6 +243,7 @@ select.filter{appearance:none;color:var(--text)}
 .nitem p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
 .sowhat{margin-top:10px!important;color:var(--text)!important;font-size:13.5px;padding-left:12px;border-left:3px solid var(--pink)}
 .nitem a.src{font-size:12px;color:var(--dim);display:inline-block;margin-top:10px}
+.cat-science{--c:var(--intimacy)}.cat-popculture{--c:var(--culture)}.cat-trending{--c:var(--holiday)}
 .cat-platform{--c:var(--culture)}.cat-law{--c:var(--care)}.cat-industry{--c:var(--retail)}.cat-trend{--c:var(--identity)}.cat-competitor{--c:var(--holiday)}
 .catchip{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
 .panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:22px;padding:18px}
@@ -507,6 +508,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
     <div id="capWrap" hidden>
       <h3 class="sub-title">Trending <span class="serif">CapCut</span> templates</h3>
       <p class="sub-note">Open on your phone and tap "Use template" in CapCut.</p>
+      <div class="filters" id="capFilters"></div>
       <div class="media-grid" id="capcut"></div>
     </div>
     <h3 class="sub-title">News &amp; <span class="serif">moves</span></h3>
@@ -514,6 +516,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
     <div class="intel">
       <div class="news" id="news"></div>
       <div style="display:grid;gap:16px;align-content:start">
+        <div class="panel" id="rulesWrap" hidden><p class="eyebrow">⚠ Rules watch</p><div id="rules2"></div></div>
         <div class="panel"><p class="eyebrow">Trends to ride</p><div id="trends"></div></div>
         <div class="panel"><p class="eyebrow">Competitor watch</p><div id="comps"></div></div>
       </div>
@@ -837,17 +840,27 @@ document.addEventListener("click", e => {
 
 /* ───────── INTEL ───────── */
 let INTEL = null, intelCat = "all";
-const CATS = {platform:"Platforms", law:"Laws", industry:"Industry", trend:"Trends", competitor:"Competitors"};
+/* News shows three kinds; platform and law changes go to the small "Rules watch" box. */
+const CATS = {science:"Intimacy science", popculture:"Pop culture", trending:"Trending now"};
+const RULE_CATS = {platform:"Platform", law:"Law"};
+const CAP_STYLES = {creator:"Creator", highlights:"Highlights", fonts:"Viral fonts"};
+let capStyle = "all";
 function renderIntel(){
   if (!INTEL){ $("#news").innerHTML = `<div class="empty">Intel is loading…</div>`; return; }
   $("#intelFilters").innerHTML = [["all","All"], ...Object.entries(CATS)].map(([k,v]) =>
     `<button class="filter" data-ic="${k}" aria-pressed="${intelCat===k}">${v}</button>`).join("");
   $("#intelFilters").querySelectorAll("[data-ic]").forEach(b => b.onclick = () => { intelCat = b.dataset.ic; renderIntel(); });
-  const items = INTEL.items.filter(i => intelCat === "all" || i.category === intelCat).sort((a,b) => b.date.localeCompare(a.date));
+  const order = Object.keys(CATS);
+  const items = INTEL.items.filter(i => CATS[i.category] && (intelCat === "all" || i.category === intelCat))
+    .sort((a,b) => order.indexOf(a.category) - order.indexOf(b.category) || b.date.localeCompare(a.date));
+  const rules = INTEL.items.filter(i => RULE_CATS[i.category]).sort((a,b) => b.date.localeCompare(a.date)).slice(0, 3);
+  $("#rulesWrap").hidden = !rules.length;
+  $("#rules2").innerHTML = rules.map(i => `<div class="trend"><b>${platBadge(i.platform)}${esc(i.title)}</b><p>${esc(i.sowhat || i.summary)} <a href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">↗</a></p></div>`).join("");
   $("#news").innerHTML = items.map(i => `<article class="nitem cat-${esc(i.category)}">
     <div class="nhead"><span class="chip catchip">${esc(CATS[i.category] || i.category)}</span>${i.platform && i.platform !== "all" && PLATFORMS[i.platform] ? `<span class="plat ${i.platform}" style="padding:3px 7px;font-size:9.5px">${PLATFORMS[i.platform]}</span>` : ""}<span class="chip">${fmt(i.date,{day:"numeric",month:"short",year:"numeric"})}</span></div>
     <h3>${esc(i.title)}</h3><p>${esc(i.summary)}</p>
-    ${i.sowhat ? `<p class="sowhat"><b>So what:</b> ${esc(i.sowhat)}</p>` : ""}
+    ${i.sowhat ? `<p class="sowhat"><b>For Nancy:</b> ${esc(i.sowhat)}</p>` : ""}
+    ${watchLinks(i.media)}
     <a class="src" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">${esc(i.source)} ↗</a>
   </article>`).join("") || `<div class="empty">Nothing in this category.</div>`;
   $("#trends").innerHTML = (INTEL.trends || []).map(t => `<div class="trend"><b>${platBadge(t.platform)}${esc(t.name)}</b><p>${esc(t.how)}${t.url ? ` <a href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p>
@@ -860,8 +873,12 @@ function renderIntel(){
   $("#outliers").innerHTML = outs.map(o => mediaCard({url: o.url, platform: o.platform, title: o.account || "", line1: o.format, line2: o.why, yt: o.yt_id})).join("");
   const caps = INTEL.capcut || [];
   $("#capWrap").hidden = !caps.length;
-  $("#capcut").innerHTML = caps.map(c => mediaCard({url: c.url, platform: "capcut", title: c.name,
-    meta: [c.clips ? `${c.clips} clips` : "", c.uses || ""].filter(Boolean).join(" · "), line1: c.vibe, line2: c.how ? `Nancy: ${c.how}` : "", example: c.example})).join("");
+  const styles = Object.keys(CAP_STYLES).filter(k => caps.some(c => c.style === k));
+  $("#capFilters").innerHTML = styles.length ? [["all","All"], ...styles.map(k => [k, CAP_STYLES[k]])].map(([k, v]) =>
+    `<button class="filter" data-cs="${k}" aria-pressed="${capStyle === k}">${v}</button>`).join("") : "";
+  $("#capFilters").querySelectorAll("[data-cs]").forEach(b => b.onclick = () => { capStyle = b.dataset.cs; renderIntel(); });
+  $("#capcut").innerHTML = caps.filter(c => capStyle === "all" || c.style === capStyle).map(c => mediaCard({url: c.url, platform: "capcut", title: c.name,
+    meta: [CAP_STYLES[c.style] || "", c.clips ? `${c.clips} clips` : "", c.uses || ""].filter(Boolean).join(" · "), line1: c.vibe, line2: c.how ? `Nancy: ${c.how}` : "", example: c.example})).join("");
   const age = -daysUntil(INTEL.updated);
   $("#intelNote").textContent = `Every item links to its source.`;
   $("#intelFresh").innerHTML = `<span class="dot" style="background:${age > 8 ? "var(--care)" : "var(--retail)"}"></span>
