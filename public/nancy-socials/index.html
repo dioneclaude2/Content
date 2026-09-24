@@ -328,7 +328,12 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .wday-h span{font-size:26px;font-weight:900;letter-spacing:-.03em;color:var(--muted)}
 .wday.today .wday-h span{color:var(--pink)}
 .wday-m{display:flex;flex-direction:column;gap:4px}
-.wday-m button{border:0;border-radius:8px;text-align:left;font-size:11px;font-weight:700;padding:5px 8px;cursor:pointer;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--text);line-height:1.25}
+.wm{display:flex;align-items:stretch;border-radius:8px;overflow:hidden;background:color-mix(in srgb,var(--c) 16%,transparent)}
+.wm button{border:0;background:none;color:var(--text);cursor:pointer;font-size:11px;font-weight:700;line-height:1.25}
+.wm > button:first-child{flex:1;text-align:left;padding:5px 8px;min-width:0}
+.wm-plan{flex:none;padding:0 8px;border-left:1px solid color-mix(in srgb,var(--c) 30%,transparent)!important;color:var(--c)!important;white-space:nowrap}
+.wm-plan:hover{background:color-mix(in srgb,var(--c) 22%,transparent)!important}
+.wm-plan.done{color:var(--retail)!important}
 .slot{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 11px 10px;cursor:pointer;overflow:hidden;display:grid;gap:7px}
 .slot::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--pc)}
 .slot:hover{border-color:var(--dim)}
@@ -804,12 +809,11 @@ function openMoment(id){
           <a target="_blank" rel="noopener" href="https://x.com/search?q=${q}&f=top">X · top</a>
         </div></div>
       <div class="d-block btnrow">
-        <button class="btn pink" id="toPipe">Add to pipeline</button>
+        <button class="btn pink" data-plan="${m.id}">+ Plan &amp; assign</button>
         <button class="btn ghost" id="copyAll">Copy full brief</button>
       </div>
     </div>`;
   d.querySelector(".d-close").onclick = closeDrawer;
-  $("#toPipe").onclick = () => { addCard({title: m.name, moment: m.id, platform: "ig", ref: ""}); closeDrawer(); showTab("pipe"); toast("Added to pipeline"); };
   $("#copyAll").onclick = () => copy([
     `${m.name} — ${fmt(m.date,{day:"numeric",month:"short",year:"numeric"})}`, m.angle,
     m.stat ? `Stat: ${m.stat.text} (${m.stat.source})` : "",
@@ -825,6 +829,8 @@ document.addEventListener("keydown", e => e.key === "Escape" && closeDrawer());
 document.addEventListener("click", e => {
   const c = e.target.closest("[data-copy]");
   if (c){ e.stopPropagation(); copy(c.dataset.copy); return; }
+  const pl = e.target.closest("[data-plan]");
+  if (pl){ e.stopPropagation(); planMoment(pl.dataset.plan); return; }
   const t = e.target.closest("[data-id]");
   if (t && !t.closest(".card")) openMoment(t.dataset.id);
 });
@@ -1193,7 +1199,10 @@ function renderPlan(){
     const slots = WEEK.slots.filter(s => s.day === day);
     return `<div class="wday ${day === todayIso ? "today" : ""}" data-day="${day}">
       <div class="wday-h"><b>${d}${slots.length ? ` <span class="slot-count">· ${slots.length}</span>` : ""}</b><span>${parse(day).getDate()}</span></div>
-      ${moms.length ? `<div class="wday-m">${moms.map(m => `<button data-id="${m.id}" style="--c:${col(m)}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}</button>`).join("")}</div>` : ""}
+      ${moms.length ? `<div class="wday-m">${moms.map(m => {
+        const planned = slots.some(x => x.moment === m.id);
+        return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}" title="${planned ? "Open the planned post" : "Turn this into a post and assign it"}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
+      }).join("")}</div>` : ""}
       ${slots.map(slotCard).join("") || `<div class="wday-empty">Drop content here</div>`}
       <button class="addslot" data-add="${day}">+ Add</button>
     </div>`;
@@ -1218,7 +1227,7 @@ function renderPlan(){
   grid.querySelectorAll("[data-day]").forEach(dayEl => {
     const day = dayEl.dataset.day;
     dayEl.onclick = e => {
-      if (!armed || e.target.closest("[data-id]")) return;
+      if (!armed || e.target.closest("[data-id],[data-plan]")) return;
       addToDay(day, armed);
     };
     dayEl.ondragover = e => { e.preventDefault(); dayEl.classList.add("drop"); };
@@ -1247,6 +1256,16 @@ function renderPlan(){
   }).join("");
 
   renderTeam();
+}
+
+/* Turn a calendar moment into a planned post (or open the one already planned) and assign it. */
+function planMoment(id){
+  const m = MOMENTS.find(x => x.id === id); if (!m) return;
+  const mon = mondayOf(parse(m.date));
+  if (iso(mon) !== iso(wkStart) || !WEEK){ wkStart = mon; WEEK = null; loadWeek(); }
+  let s = WEEK.slots.find(x => x.moment === id);
+  if (!s){ s = mkSlot(m.date, "moment"); s.moment = id; WEEK.slots.push(s); saveWeek(); }
+  closeDrawer(); showTab("plan"); renderPlan(); openSlot(s.id);
 }
 
 /* ───────── TEAM ───────── */
