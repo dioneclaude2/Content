@@ -1,85 +1,65 @@
 {
- "updated": "2026-09-23",
+ "updated": "2026-09-24",
  "items": [
   {
-   "date": "2026-07-22",
-   "category": "platform",
-   "platform": "ig",
-   "title": "Meta moves Health & Wellness ads to claims-based review",
-   "summary": "Meta's updated Health & Wellness Advertising Standards took effect July 22, 2026, judging ads on their claims and intent rather than on the product category, which should cut false rejections for sexual health and contraception. Products that 'enhance sexual desire, arousal, or pleasure' are still prohibited, and sexual health ads must target 18+ and lead with health benefits.",
-   "sowhat": "Rewrite paid copy around health, comfort and education claims such as dryness, pelvic health or menopause, keep pleasure language for organic posts, and re-submit ads that were rejected before July.",
-   "source": "Clikim",
-   "url": "https://clikim.com/meta-health-wellness-policy-update/"
+   "date": "2026-09-24",
+   "category": "law",
+   "platform": null,
+   "title": "Utah's 2% adult-content excise tax takes effect October 1",
+   "summary": "Utah SB73 imposes a 2% excise tax on revenue from adult digital images, video or audio sold to Utah users, on top of the state's existing age-verification duties, with civil penalties for noncompliance.",
+   "sowhat": "If Nancy sells or licenses any explicit digital content, not just physical toys, to Utah customers, confirm tax registration with finance before October 1.",
+   "source": "Deseret News",
+   "url": "https://www.deseret.com/politics/2026/03/20/utah-law-targets-porn-websites-with-new-tax-and-hefty-fines-here-is-why-parents-say-it-is-necessary/"
   },
   {
-   "date": "2026-04-09",
-   "category": "platform",
-   "platform": "ig",
-   "title": "Instagram rolls out 13+ Teen Accounts worldwide",
-   "summary": "Instagram is rolling out its movie-rating-inspired 13+ content setting internationally: under-18 accounts see no sexually suggestive or mature content by default, and parents can turn on a stricter Limited Content mode. Accounts that regularly post age-inappropriate content are filtered from teens.",
-   "sowhat": "Expect less recommendation reach wherever Meta can't confirm a viewer's age, and keep Reels covers and captions non-suggestive so adult viewers still get them in Explore.",
-   "source": "Meta Newsroom",
-   "url": "https://about.fb.com/news/2026/04/instagram-expands-teen-accounts-inspired-by-13-content-ratings/"
+   "date": "2026-09-23",
+   "category": "law",
+   "platform": null,
+   "title": "Ofcom opens formal investigation into Pornhub's age-assurance system",
+   "summary": "Ofcom launched an Online Safety Act investigation into Aylo (Pornhub's owner) over whether its Apple-device-based age check, rolled out in May 2026, is 'highly effective' at blocking minors; penalties can reach £18m or 10% of global turnover.",
+   "sowhat": "UK regulators are now scrutinizing device-signal shortcuts, not just document checks, so audit whatever age-assurance method gates any UK-facing adult content or storefront.",
+   "source": "Ofcom",
+   "url": "https://www.ofcom.org.uk/online-safety/protecting-children/ofcom-launches-investigation-into-pornhubs-age-checks"
   },
   {
-   "date": "2026-06-01",
-   "category": "platform",
-   "platform": "ig",
-   "title": "13+ filter extends to Facebook and Messenger and applies to sponsored posts too",
-   "summary": "A brand-reach analysis reports that Meta expanded the 13+ setting globally to Facebook and Messenger in June 2026 (exact day unconfirmed, so the 1st of the month is used here). The analysis says the filter applies to organic and paid-partnership content alike, and Meta has documented no exception for sponsored posts.",
-   "sowhat": "Brief creators that a 'Paid partnership' label won't protect suggestive content from being filtered, and review creator whitelisting plans with that in mind.",
-   "source": "Make Influence",
-   "url": "https://www.makeinfluence.com/en/academy/instagrams-teen-accounts-and-13-content-ratings-what-the-platforms-own-restrictions-mean-for-brand-reach"
+   "date": "2026-09-22",
+   "category": "law",
+   "platform": null,
+   "title": "Louisiana age-verification law reshapes live video chat services",
+   "summary": "New reporting details how Louisiana's age-verification statute is forcing changes to live video chat and streaming services that operate with or near adult content in the state.",
+   "sowhat": "If Nancy ever runs livestream shopping or creator live-chat features, confirm Louisiana-specific age-gating before targeting that state.",
+   "source": "Big Easy Magazine",
+   "url": "https://bigeasymagazine.com/2026/09/22/louisianas-age-verification-law-reshapes-live-video-chat/"
   },
   {
-   "date": "2026-09-01",
-   "category": "platform",
-   "platform": "tt",
-   "title": "TikTok branded content still bans sex toys and lube",
-   "summary": "TikTok's Branded Content Policy still lists 'adult and sexual products' as prohibited, naming sex toys, lubricants and fetish costumes, while some contraceptives and medications are allowed. The policy page is undated; it was checked in September 2026, so the 1st of the month is used here.",
-   "sowhat": "Keep TikTok creator deals product-free or education-led (anatomy, communication, myth-busting), and don't tag toys in paid partnerships.",
-   "source": "TikTok",
-   "url": "https://www.tiktok.com/legal/page/global/bc-policy/en"
+   "date": "2026-09-22",
+   "category": "competitor",
+   "platform": "all",
+   "title": "Womanizer launches Snap and the Liberty 2 Leopard Edition, fresh off IFA Berlin",
+   "summary": "Womanizer's smallest-ever Pleasure Air toy, the Snap, launched in Europe alongside the Liberty 2 Leopard Edition's September 22 North American debut, following the brand's presence at IFA Berlin (Sept 4-8), one of the largest mainstream consumer electronics fairs, where it ran a 'Why Pleasure is the ultimate Beauty Tech' Creator Stage talk.",
+   "sowhat": "Compact, travel-ready design plus mainstream tech-show placement is how the category leader is normalizing pleasure products; borrow the portability and 'beauty tech' framing for Nancy's own content.",
+   "source": "EAN Online",
+   "url": "https://www.ean-online.com/company-news/womanizer-brings-sexual-wellness-to-ifa-2026-biggest-european-consumer-electronics-fair/"
   },
   {
-   "date": "2025-12-09",
-   "category": "platform",
-   "platform": "tt",
-   "title": "TikTok Shop: lube and cycle care sell, explicit items don't",
-   "summary": "An agency analysis finds that lubricants, consumables and reproductive and cycle-care products perform very well on TikTok Shop, while intimacy accessories do moderately well when framed as education. It says explicit or adult-only items are heavily restricted.",
-   "sowhat": "If you test TikTok Shop, lead with lube and body-care SKUs and send traffic for devices to your own site.",
-   "source": "Break Out",
-   "url": "https://break-out.co.uk/is-tiktok-shop-worth-it-for-sexual-wellness-brands-in-2026/"
+   "date": "2026-09-20",
+   "category": "industry",
+   "platform": null,
+   "title": "Satisfyer expands to 6,700+ CVS stores, adds a menstrual cup",
+   "summary": "Satisfyer grew its US retail footprint to more than 6,700 CVS locations nationwide and added the 'Feel Confident' menstrual cup to its assortment.",
+   "sowhat": "Mass-drugstore retail keeps normalizing the category; watch for CVS-tagged hauls and UGC worth engaging with, and use retail proof points the way Satisfyer and plusOne do.",
+   "source": "PR Newswire",
+   "url": "https://www.prnewswire.com/news-releases/satisfyer-announces-extensive-expansion-to-6-700-cvs-stores-302254474.html"
   },
   {
-   "date": "2025-07-29",
-   "category": "platform",
-   "platform": "yt",
-   "title": "YouTube uses AI to estimate viewers' ages in the US",
-   "summary": "YouTube estimates viewer age from signals such as watch history, and accounts it treats as under 18 get non-personalized ads, restricted mature content and wellbeing reminders. Adults who are misclassified have to verify with a credit card or government ID.",
-   "sowhat": "Age-restricted sex-ed videos will lose some adult viewers to misclassification, so make clean, non-restricted cuts and Shorts that lead into the full videos.",
-   "source": "YouTube Official Blog",
-   "url": "https://blog.youtube/news-and-events/extending-our-built-in-protections-to-more-teens-on-youtube/"
-  },
-  {
-   "date": "2026-04-07",
-   "category": "platform",
-   "platform": "x",
-   "title": "X tightens adult-content age assurance and advertiser adjacency defaults",
-   "summary": "A third-party policy comparison, not an official X source, reports that X now excludes ads from appearing next to adult content by default and requires age assurance for EU and UK users who want to view adult content. It also says adult-labelled posts are de-indexed from search engines.",
-   "sowhat": "Don't mark the brand account as sensitive, since X remains the most open platform for pleasure-forward copy but labelled posts lose discovery.",
-   "source": "AuditSocials",
-   "url": "https://www.auditsocials.com/blog/x-twitter-adult-content-policy-2025-vs-2026-comparison-rule-changes-advertiser-compliance"
-  },
-  {
-   "date": "2026-06-15",
+   "date": "2026-09-18",
    "category": "law",
    "platform": "all",
-   "title": "UK announces under-16 social media ban and age checks for all users",
-   "summary": "The UK government announced on June 15, 2026 a ban on social media for under-16s, with regulations due by the end of 2026 and enforcement in spring 2027. Platforms including Instagram, TikTok, X and YouTube will need to verify the age of every user, adults included.",
-   "sowhat": "Plan for a verified-adult UK audience from 2027, which could eventually loosen reach limits for 18+ content, and keep content age-gated until then.",
-   "source": "All About Cookies",
-   "url": "https://allaboutcookies.org/uk-age-verification"
+   "title": "EU pushes pilot countries to speed up its age-verification app",
+   "summary": "The European Commission is urging France, Denmark, Greece, Italy, Spain, Cyprus and Ireland to accelerate rollout of its free, anonymous age-verification app, targeting EU-wide availability by the end of 2026.",
+   "sowhat": "Plan for app-based age gates to become a real distribution factor in these pilot countries before year-end, and budget EU social strategy country by country.",
+   "source": "93.3 The Drive (Reuters)",
+   "url": "https://www.933thedrive.com/2026/09/18/explainer-how-the-eus-age-verification-app-for-children-would-work/"
   },
   {
    "date": "2026-09-17",
@@ -92,104 +72,64 @@
    "url": "https://www.theregister.com/security/2026/09/17/ofcom-discovers-issuing-online-safety-act-fines-is-easier-than-collecting-them/5297110"
   },
   {
-   "date": "2026-03-11",
+   "date": "2026-09-15",
    "category": "law",
    "platform": null,
-   "title": "Ofcom's biggest age-assurance fines to date: £1.35m and £800k",
-   "summary": "In February 2026 Ofcom fined 8579 LLC £1.35 million and Kick Online Entertainment £800,000 for failing to put 'highly effective age assurance' in place. The regulator is enforcing across operators' whole site portfolios, not just single services.",
-   "sowhat": "Check that any UK landing page carrying explicit or user-generated content sits behind proper age assurance, not a checkbox.",
-   "source": "Inforrm",
-   "url": "https://inforrm.org/2026/03/11/ofcom-steps-up-online-safety-act-enforcement-with-two-further-age-assurance-fines-for-pornographic-platforms-alexandros-antoniou/"
+   "title": "UK Lords committee presses Ofcom on Online Safety Act enforcement",
+   "summary": "The House of Lords Communications and Digital Committee held an oral evidence session with Ofcom on whether Online Safety Act enforcement is working; a follow-up session is set for October 1, 2026.",
+   "sowhat": "Expect UK enforcement to intensify further into Q4, so build age-assurance and geo-compliance margin into UK content plans now rather than reacting to a fine.",
+   "source": "UK Parliament Committees",
+   "url": "https://committees.parliament.uk/committee/170/communications-and-digital-committee/news/217266/online-safety-act-inquiry-launched-by-committee/"
   },
   {
-   "date": "2026-04-15",
-   "category": "law",
-   "platform": "all",
-   "title": "EU age-verification app is 'technically ready'",
-   "summary": "On April 15, 2026 the European Commission said its privacy-preserving age-verification app is ready, with rollout tied to the EU Digital Identity Wallet by the end of 2026. Member states are also adding their own social media age limits, such as France's under-15 ban and Austria's under-14 limit.",
-   "sowhat": "Budget for EU-compliant age checks on adult product pages in 2027, and plan EU social strategy country by country.",
-   "source": "ZwillGen",
-   "url": "https://www.zwillgen.com/eu-uk/eus-age-verification-app-technical-fix-fragmented-legal-landscape/"
-  },
-  {
-   "date": "2026-05-28",
-   "category": "law",
-   "platform": null,
-   "title": "Supreme Court lets Texas app store age-verification law take effect",
-   "summary": "The US Supreme Court declined to block Texas SB 2420, which requires Apple and Google to verify every user's age and get parental consent before minors download apps or make purchases. An expedited Fifth Circuit hearing on whether the law is constitutional was set for early August 2026.",
-   "sowhat": "If the brand runs an app, such as for app-controlled toys, check that it has an 18+ rating and uses the new age-range APIs.",
-   "source": "The Texas Tribune",
-   "url": "https://www.texastribune.org/2026/05/28/texas-apple-google-app-store-age-verification/"
-  },
-  {
-   "date": "2026-06-03",
-   "category": "law",
-   "platform": null,
-   "title": "Apple enforces 18+ confirmation for Texas accounts",
-   "summary": "From June 4, 2026, Texas users must confirm they are 18+ when creating an Apple Account, and minors need Family Sharing consent for every download and purchase. Developers must use Apple's Declared Age Range API and face civil penalties of up to $10,000 per violation.",
-   "sowhat": "App-connected toy brands should confirm their App Store age category and consent flow for Texas now.",
-   "source": "MacRumors",
-   "url": "https://www.macrumors.com/2026/06/03/apple-app-store-texas-sb-2420/"
-  },
-  {
-   "date": "2026-02-20",
-   "category": "industry",
-   "platform": null,
-   "title": "Supreme Court strikes down IEEPA tariffs, opening refunds for importers",
-   "summary": "In a 6-3 ruling on February 20, 2026, the Supreme Court held that IEEPA does not let the President impose sweeping tariffs, which opened the door to an estimated $175 billion in refunds. Toy brands had been hit by these China tariffs in 2025, and Dame, for example, added a surcharge.",
-   "sowhat": "If you raised prices because of tariffs, a 'price drop' or 'surcharge removed' post is a good-will message, but check with finance on refund status first.",
-   "source": "Penn Wharton Budget Model",
-   "url": "https://budgetmodel.wharton.upenn.edu/p/2026-02-20-supreme-court-tariff-ruling/"
-  },
-  {
-   "date": "2026-07-28",
-   "category": "industry",
-   "platform": null,
-   "title": "plusOne vibrators land in 1,300+ Ulta stores",
-   "summary": "plusOne, from Beacon Wellness Brands, launched massagers and intimate care products in more than 1,300 Ulta Beauty stores and online, which it calls the largest intimate wellness brand broadly carried by Ulta. Ulta-exclusive plusOne products are due in early 2027.",
-   "sowhat": "Mass beauty retail is normalizing toys as self-care, so lean into beauty-shelf visuals (vanity shelfies, GRWM) and use retail availability as proof in social posts.",
-   "source": "Yahoo Finance",
-   "url": "https://finance.yahoo.com/healthcare/articles/plusone-launches-ulta-beauty-marking-123000848.html"
-  },
-  {
-   "date": "2026-06-30",
-   "category": "industry",
-   "platform": null,
-   "title": "Mila raises $2.5M to sell intimate wellness as a beauty ritual",
-   "summary": "Mila launched with $2.5 million in pre-seed funding from Mensch VC and Sticker Ventures, with the Aura 4-in-1 device, the Bloom intimate mist and a planned lube line built on K-beauty ingredients. Investors have otherwise been cool on sexual wellness since the 2020–21 peak.",
-   "sowhat": "The skincare-ritual framing is how new entrants position themselves, so make sure your own content owns the 'self-care routine' angle first.",
-   "source": "BeautyMatter",
-   "url": "https://beautymatter.com/articles/sexual-wellness-brand-mila-lands-2-5-million-in-pre-seed-funding"
-  },
-  {
-   "date": "2026-01-16",
-   "category": "industry",
-   "platform": null,
-   "title": "Sex tech back at CES 2026, led by Lovense",
-   "summary": "Lovense exhibited at CES 2026 in Las Vegas on January 15, presenting itself as a leader in intimacy tech. CES rules for sex-tech exhibitors still ban overtly sexual language at booths.",
-   "sowhat": "Use trade-show and 'tech' framing for connected products, since it gets through platform filters better than pleasure framing.",
-   "source": "Longbridge",
-   "url": "https://longbridge.com/en/news/272786779"
-  },
-  {
-   "date": "2026-09-10",
+   "date": "2026-09-15",
    "category": "competitor",
    "platform": "all",
-   "title": "Womanizer brings sexual wellness to IFA Berlin",
-   "summary": "Womanizer exhibited at IFA 2026 (September 4–8), Europe's biggest consumer electronics fair, showing Next Liberty and the award-winning Snap, which launches September 22. It also ran a Creator Stage session titled 'Why Pleasure is the ultimate Beauty Tech'.",
-   "sowhat": "Competitors are claiming 'beauty tech' in mainstream venues, so decide whether to own that positioning or counter it.",
-   "source": "EAN Online",
-   "url": "https://www.ean-online.com/company-news/womanizer-brings-sexual-wellness-to-ifa-2026-biggest-european-consumer-electronics-fair/"
+   "title": "Maude launches Vibe Mini, a $32 compact vibrator",
+   "summary": "Maude added Vibe Mini, a $32, 3.35-inch, 5-speed flutter-tip vibrator positioned as a compact travel companion to its original Vibe.",
+   "sowhat": "Direct positioning overlap on compact and travel products; benchmark Maude's price point and minimalist 'just landed' copy tone against Nancy's own portable-product messaging.",
+   "source": "Maude",
+   "url": "https://getmaude.com/products/vibe-mini"
   },
   {
-   "date": "2026-07-15",
+   "date": "2026-09-08",
    "category": "competitor",
    "platform": "all",
-   "title": "Womanizer Beauty: a lipstick-shaped toy made for the vanity",
-   "summary": "Womanizer relaunched its lipstick-style 2GO as Womanizer Beauty ($79) in four colours, available in Europe from July 14 and in North America from September 22. The brand says the discreet design is so pleasure 'can belong naturally in everyday spaces'.",
-   "sowhat": "Expect a wave of 'what's in my makeup bag' reveals, and get ahead with your own discreet-design content.",
-   "source": "EAN Online",
-   "url": "https://www.ean-online.com/product-news/womanizer-reimagines-its-iconic-lipstick-inspired-pleasure-product-with-the-launch-of-womanizer-beauty/"
+   "title": "Lovense makes its European trade-show debut at IFA Berlin",
+   "summary": "Lovense showed at IFA Berlin for the first time, after years exhibiting only at CES, presenting 'A Day in the Lovense Ecosystem' and a second-generation Intimate Doll prototype with voice interaction and adaptive movement.",
+   "sowhat": "Tech and AI framing at a mainstream electronics show shows where competitor conversation is heading; useful for careful AI-in-intimacy trend-jacking, but keep the tone light rather than uncanny.",
+   "source": "PR Newswire",
+   "url": "https://www.prnewswire.com/news-releases/lovense-shines-in-european-debut-at-ifa-berlin-2026-demonstrating-how-technology-strengthens-human-connection-302883997.html"
+  },
+  {
+   "date": "2026-09-01",
+   "category": "law",
+   "platform": "all",
+   "title": "France's under-15 social account ban takes effect without a mandated verification method",
+   "summary": "France began blocking new social media accounts for under-15s on September 1, 2026, but Parliament stripped the mandated verification method from the final bill, leaving the CNIL to approve whatever age-check tools platforms adopt.",
+   "sowhat": "Expect inconsistent or rougher age-gating UX on French traffic for the next few months, so don't treat French audience-targeting numbers as stable during this transition.",
+   "source": "Tech Times",
+   "url": "https://www.techtimes.com/articles/321273/20260722/france-bans-social-media-under-15s-cut-enforcement-mechanism.htm"
+  },
+  {
+   "date": "2026-09-01",
+   "category": "platform",
+   "platform": "tt",
+   "title": "TikTok's ad policy log shows continued health & wellness tightening",
+   "summary": "TikTok's official ad policy change log shows 2026 rules on health and wellness claims still in force, including bans on before/after imagery outside a narrow medical exception, carried over from May and July updates.",
+   "sowhat": "Keep sexual-wellness ad creative in self-care/wellness-aid framing, avoid any transformation implication, and pre-clear via TikTok's allowlisting process rather than assuming previously approved creative still qualifies.",
+   "source": "TikTok for Business",
+   "url": "https://ads.tiktok.com/resources/help/article/tiktok-ad-policy-change-log-2026"
+  },
+  {
+   "date": "2026-09-01",
+   "category": "platform",
+   "platform": "tt",
+   "title": "TikTok branded content still bans sex toys and lube",
+   "summary": "TikTok's Branded Content Policy still lists 'adult and sexual products' as prohibited, naming sex toys, lubricants and fetish costumes, while some contraceptives and medications are allowed. The policy page is undated; it was checked in September 2026, so the 1st of the month is used here.",
+   "sowhat": "Keep TikTok creator deals product-free or education-led (anatomy, communication, myth-busting), and don't tag toys in paid partnerships.",
+   "source": "TikTok",
+   "url": "https://www.tiktok.com/legal/page/global/bc-policy/en"
   },
   {
    "date": "2026-08-20",
@@ -198,18 +138,8 @@
    "title": "LELO report predicts an 'analogue counter-movement' in intimacy",
    "summary": "LELO's 2026 Futurist Report, written with Tracey Follows, finds 60% of people have used AI in their intimate lives, and 18% of Americans have passed off AI-written messages as their own. It predicts a move toward phone-free bedrooms and 'protected human presence'.",
    "sowhat": "Build a phone-free / offline intimacy content series, which makes a strong counterpoint to AI companion discourse.",
-   "source": "Yahoo Finance",
-   "url": "https://finance.yahoo.com/technology/ai/articles/lelo-publishes-2026-futurist-report-140000317.html"
-  },
-  {
-   "date": "2026-05-17",
-   "category": "trend",
-   "platform": "all",
-   "title": "Lovehoney's 2026 sex trends: purposeful pleasure, playful toys, Gen X",
-   "summary": "Lovehoney's report names seven trends, among them Purposeful Pleasure (Gen Z choosing intentional sex), Playful Pleasure (cute, collectible toys), Generation (se)X and Cosmic Pleasure (astrology). It also finds 18% of Gen Z and millennials admit to using their phones during sex.",
-   "sowhat": "Aim more content at Gen X, which has high confidence and is underserved, and try collectible and astrology formats with younger audiences.",
-   "source": "Mamabella",
-   "url": "https://mamabella.uk/lovehoney-2026-sex-trends/"
+   "source": "PR Newswire",
+   "url": "https://www.prnewswire.com/news-releases/whats-hot-in-2026-lelo-reveals-trends-that-everybody-needs-to-know-302667891.html"
   },
   {
    "date": "2026-08-10",
@@ -225,220 +155,141 @@
    "date": "2026-08-01",
    "category": "competitor",
    "platform": "all",
-   "title": "Lovehoney opens Q4 early with five 2026 advent calendars",
-   "summary": "Lovehoney launched five advent calendars ($129–$369) in August, featuring Womanizer and We-Vibe toys, and positioned them as selling out fast. The exact launch day is unconfirmed, so the 1st of the month is used here.",
-   "sowhat": "Advent and gifting content is already live at competitors, so start your holiday gift-guide content in October, not November.",
-   "source": "AOL",
-   "url": "https://www.aol.com/articles/lovehoney-just-dropped-2026-advent-164509000.html"
-  },
-  {
-   "date": "2026-08-01",
-   "category": "competitor",
-   "platform": "all",
    "title": "Satisfyer sails a Pro 2-shaped boat at WorldPride Amsterdam",
    "summary": "Satisfyer sponsored a boat modelled on its Satisfyer Pro 2 in the WorldPride Amsterdam Canal Parade on August 1, 2026. It carried the message that everyone deserves pleasure 'without shame, without limits, and without exclusion'.",
    "sowhat": "Plan physical, photogenic activations tied to cultural moments, which travel well on IG and TikTok without showing product explicitly.",
    "source": "Pride Amsterdam",
    "url": "https://pride.amsterdam/en/boats/satisfyer/"
+  },
+  {
+   "date": "2026-08-01",
+   "category": "competitor",
+   "platform": "all",
+   "title": "Lovehoney opens Q4 early with five 2026 advent calendars",
+   "summary": "Lovehoney launched five advent calendars ($129-$369) in August, featuring Womanizer and We-Vibe toys, and positioned them as selling out fast. The exact launch day is unconfirmed, so the 1st of the month is used here.",
+   "sowhat": "Advent and gifting content is already live at competitors, so start your holiday gift-guide content in October, not November.",
+   "source": "AOL",
+   "url": "https://www.aol.com/articles/lovehoney-just-dropped-2026-advent-164509000.html"
+  },
+  {
+   "date": "2026-07-28",
+   "category": "industry",
+   "platform": null,
+   "title": "plusOne is now in 25,000+ US doors after its Ulta Beauty launch",
+   "summary": "plusOne (Beacon Wellness Brands) launched in 1,300+ Ulta Beauty stores in July and by September had grown to more than 25,000 US doors including Walmart, Target, CVS, Walgreens, Meijer and Amazon; it also convened a 2026 Wellness Collective expert panel on sex ed, gynecology and pelvic health.",
+   "sowhat": "Mass beauty and drugstore retail is now a core distribution channel for the category, so lean into beauty-shelf visuals (vanity shelfies, GRWM) and use retail availability as proof in social posts.",
+   "source": "Forbes",
+   "url": "https://www.forbes.com/sites/sharonedelson/2026/07/28/plusones-intimate-wellness-products-launch-at-ulta-beauty/"
   }
  ],
  "trends": [
   {
-   "name": "Reasons to Get a Bob (deadpan list, 'FREAKED OUT' audio)",
+   "name": "'Nicole Kidman' manifestation audio (Adéla's song)",
    "platform": "tt",
-   "how": "Do a deadpan on-screen list of 'reasons to get a [hero product]' where every reason is just the product name.",
-   "url": "https://www.socialpilot.co/blog/tiktok-trends",
+   "how": "Pair Adéla's 'Nicole Kidman' in-control anthem with a confidence-forward pleasure-product reveal or a customer-testimonial cut, riding the boost from Nicole Kidman's own TikTok debut in late August.",
+   "url": "https://www.justjared.com/2026/08/27/nicole-kidman-makes-tiktok-debut-with-adela-song-reveals-plans-to-attend-her-concert/",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@jocelynmeiere/video/7656890735513505046",
+     "url": "https://www.tiktok.com/@adela/video/7681536754377084182",
      "platform": "tt",
-     "account": "@jocelynmeiere",
-     "what": "The original 'Miss Diva Bob': deadpan list of reasons to get a bob, every reason is just 'bob' on the FREAKED OUT beat"
+     "account": "@adela",
+     "what": "Original 'Nicole Kidman' manifestation-audio post that took off after Nicole Kidman joined TikTok"
     },
     {
-     "url": "https://www.tiktok.com/@jocelynmeiere/video/7677326016477498646",
-     "platform": "tt",
-     "account": "@jocelynmeiere",
-     "what": "Follow-up version from the trend creator, the format Epidemic Sound flagged in its Aug 2026 roundup"
-    },
-    {
-     "url": "https://www.tiktok.com/@ntoofrosty1/video/7668001998926515470",
-     "platform": "tt",
-     "account": "@ntoofrosty1",
-     "what": "Off-topic adaptation, 'Reasons to get a bob with Erling Haaland', showing the format carries any subject"
+     "url": "https://www.youtube.com/shorts/3bsglWB1ZcA",
+     "platform": "yt",
+     "account": "YouTube Shorts",
+     "what": "Short cut of the same in-control, glow-up trend format"
     }
    ]
   },
   {
-   "name": "How Could This Day Get Any Better",
-   "platform": "tt",
-   "how": "Use mock-enthusiastic reveals of mundane self-care items, with the final flat punchline a discreet toy or lube.",
-   "url": "https://www.socialpilot.co/blog/tiktok-trends",
-   "examples": [
-    {
-     "url": "https://www.tiktok.com/@makksv/video/7500339339449109791",
-     "platform": "tt",
-     "account": "@makksv",
-     "what": "Deadpan 'oh boy, a [object], how could this day get any better' reveal gag"
-    },
-    {
-     "url": "https://www.tiktok.com/@reallovense/video/7677406135497837855",
-     "platform": "tt",
-     "account": "@reallovense",
-     "what": "Brand analogue: Lovense's 'She's hydrated, caffeinated, and ___' mundane-routine-then-toy punchline (5.3K plays)"
-    }
-   ]
-  },
-  {
-   "name": "My American Girl Doll",
-   "platform": "tt",
-   "how": "Contrast childhood toy excitement with an adult 'prized possession' reveal, keeping it tasteful by showing the charging case or box.",
-   "url": "https://www.socialpilot.co/blog/tiktok-trends",
-   "examples": [
-    {
-     "url": "https://www.tiktok.com/@anya.par_/video/7658757295534394655",
-     "platform": "tt",
-     "account": "@anya.par_",
-     "what": "Lip-syncs the 'My American Girl Doll Mia' audio then reveals her current obsession"
-    }
-   ]
-  },
-  {
-   "name": "What I Looked Like When",
-   "platform": "tt",
-   "how": "Pair team childhood photos with the 'backstory' of the moment they learned the word 'clitoris', for a sex-ed hook.",
-   "url": "https://www.socialpilot.co/blog/tiktok-trends",
-   "examples": [
-    {
-     "url": "https://www.tiktok.com/@maliacbrown/video/7636159095698902303",
-     "platform": "tt",
-     "account": "@maliacbrown",
-     "what": "'What I looked like when…' childhood photo paired with a TMI backstory caption"
-    }
-   ]
-  },
-  {
-   "name": "What Did My Husband Pray For?",
+   "name": "'Right Round Hangover' staged morning-after",
    "platform": "ig",
-   "how": "Use opposites-attract couple bait-and-switch edits to show mismatched libidos or toy preferences.",
-   "url": "https://newengen.com/insights/instagram-trends/",
-   "examples": [
-    {
-     "url": "https://www.instagram.com/reel/DcgbgiURbTG/",
-     "platform": "ig",
-     "account": "@dailydoseof.rose",
-     "what": "Calm-partner intro cut into a chaos compilation: 'what did I pray for?' couple bait-and-switch"
-    }
-   ]
-  },
-  {
-   "name": "Flop-Core",
-   "platform": "ig",
-   "how": "Post the 'bedroom fails' reel (dead batteries, lube everywhere) to humanize the brand and make pleasure relatable.",
-   "url": "https://newengen.com/insights/instagram-trends/",
-   "examples": [
-    {
-     "url": "https://www.instagram.com/p/DdTHydzEydH/",
-     "platform": "ig",
-     "account": "@kartiandco",
-     "what": "'Everyone's posting their wins, so here's my latest flop' carousel: cheerful photos with failure captions"
-    }
-   ]
-  },
-  {
-   "name": "10/10 Habits",
-   "platform": "ig",
-   "how": "Rate intimacy habits 10/10 (cleaning your toy, aftercare, communication) as a carousel or talking-head reel.",
-   "url": "https://newengen.com/insights/instagram-trends/",
-   "examples": [
-    {
-     "url": "https://www.instagram.com/reel/DbBMIk0CrKM/",
-     "platform": "ig",
-     "account": "@ravenabailey",
-     "what": "'10/10 habits to build extreme discipline' talking-head list reel"
-    },
-    {
-     "url": "https://www.instagram.com/reel/DblXvemOx-7/",
-     "platform": "ig",
-     "account": "@calleighmc2",
-     "what": "'10/10 Habits to get out of victim mindset': same hook on a different topic"
-    }
-   ]
-  },
-  {
-   "name": "Potential-Maxxing",
-   "platform": "ig",
-   "how": "Back up pleasure claims with hard numbers such as survey stats, orgasm-gap data or battery life, instead of vague empowerment copy.",
-   "url": "https://newengen.com/insights/instagram-trends/",
-   "examples": [
-    {
-     "url": "https://www.instagram.com/reel/DcL2GkOuHvZ/",
-     "platform": "ig",
-     "account": "@veranothing",
-     "what": "'6 months of progress in 33 days by Potential Maxxing': self-improvement claims backed by numbers"
-    }
-   ]
-  },
-  {
-   "name": "Trending audio on carousels and photo posts",
-   "platform": "ig",
-   "how": "Add trending sounds such as Olivia Dean's 'Reason to Stay' to educational carousels so they become eligible for the Reels feed.",
+   "how": "Stage a full 'morning after a great night' scene (props, sunglasses, snacks) shot paparazzi-style to Flo Rida's 'Right Round', with a product visible on the nightstand as the punchline, no explicit content required.",
    "url": "https://www.socialpilot.co/blog/instagram-reels-trends",
    "examples": [
     {
-     "url": "https://www.instagram.com/reel/DdACVOAgaNs/",
+     "url": "https://www.instagram.com/btt.mp4/reel/C8Eo7gnv8od/",
      "platform": "ig",
-     "account": "@willeatfood",
-     "what": "Uses Olivia Dean's 'Reason To Stay', the trending sound SocialPilot names for this format"
+     "account": "@btt.mp4",
+     "what": "Original staged 'morning after' paparazzi-style gag set to Flo Rida's Right Round"
     }
    ]
   },
   {
-   "name": "Phone-free bedroom / analogue intimacy",
-   "platform": "yt",
-   "how": "Run a long-form conversation series on offline intimacy and AI-mediated dating, riding LELO's 'analogue counter-movement' data.",
-   "url": "https://finance.yahoo.com/technology/ai/articles/lelo-publishes-2026-futurist-report-140000317.html",
+   "name": "'What I Did' 3-panel day recap",
+   "platform": "ig",
+   "how": "Split the screen into 3 panels (what I wore / where I went / what I did) as a date-night recap that features product subtly rather than as a hard sell.",
+   "url": "https://socialbee.com/blog/latest-instagram-trends/",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@themccabelife/video/7535884351800610103",
+     "url": "https://www.instagram.com/reel/Da7FLuro3-i/",
+     "platform": "ig",
+     "account": "",
+     "what": "3-panel 'what I wore / where I went / what I did' day-recap reel"
+    }
+   ]
+  },
+  {
+   "name": "'My American Girl Doll' nostalgia reveal",
+   "platform": "tt",
+   "how": "Riff on the excited-kid nostalgia reveal template with an adult 'prized possession' reveal, such as a self-care drawer, using humor to destigmatize ownership.",
+   "url": "https://nextreel.ai/blog/how-to-ride-my-american-girl-doll-tiktok-trend-with-ai-2026",
+   "examples": [
+    {
+     "url": "https://www.tiktok.com/@itsangelodavid/video/7639431358141582622",
      "platform": "tt",
-     "account": "@themccabelife",
-     "what": "Married-couple skit on phones as an intimacy killer (116.8K plays), a hook for the phone-free-bedroom angle"
-    },
-    {
-     "url": "https://www.youtube.com/watch?v=XJAze_FppJ4",
-     "platform": "yt",
-     "account": "TEDx Talks",
-     "what": "'How AI Companions Are Destroying Human Intimacy' (TEDxWest Vancouver), a long-form analogue-intimacy argument",
-     "yt_id": "XJAze_FppJ4"
+     "account": "@itsangelodavid",
+     "what": "Origin clip: excited kid reveals 'MY AMERICAN GIRL DOLL MIA,' now a nostalgia-reveal template"
     }
    ]
   },
   {
-   "name": "Purposeful pleasure and the Gen Z 'body count' debate",
-   "platform": "x",
-   "how": "Join the Gen Z intentional-sex and body-count discourse with stat-led, non-judgmental quote posts.",
-   "url": "https://mamabella.uk/lovehoney-2026-sex-trends/",
+   "name": "'Reasons to get a ___' deadpan list (Fat Papi 'Freaked Out')",
+   "platform": "tt",
+   "how": "Deadpan on-screen list where every 'reason' is just the product name, set to Fat Papi's viral 'Freaked Out' beat; low-production and easy for founders or staff to duet.",
+   "url": "https://thetab.com/2026/07/02/who-is-the-viral-bob-girl-on-tiktok-the-filthy-lyrics-of-fat-papis-freaked-out-explained",
    "examples": [
     {
-     "url": "https://www.instagram.com/reel/DWTyHNVDGRc/",
-     "platform": "ig",
-     "account": "@titaniarex",
-     "what": "Breaks down Lovehoney's 5 Sex Trends 2026 and leads with Gen Z 'intentional pleasure'"
+     "url": "https://www.tiktok.com/@jocelynmeiere/video/7665769098663480598",
+     "platform": "tt",
+     "account": "@jocelynmeiere",
+     "what": "Deadpan 'reasons to get a bob' list on the Freaked Out beat"
     },
     {
-     "url": "https://www.youtube.com/watch?v=Cv6W767KVoQ",
-     "platform": "yt",
-     "account": "The Durex Podcast",
-     "what": "Durex's brand podcast, 'The SHOCKING Truth About How Gen Z Approaches Relationships' (653K views)",
-     "yt_id": "Cv6W767KVoQ"
-    },
+     "url": "https://www.tiktok.com/@fatpapimusic/video/7666149373755084052",
+     "platform": "tt",
+     "account": "@fatpapimusic",
+     "what": "The original artist's own post of the Freaked Out sound driving the trend"
+    }
+   ]
+  },
+  {
+   "name": "'Twins at the Carousel' deadpan character meme",
+   "platform": "tt",
+   "how": "Animate a product mascot or logo staring deadpan while tiny icons (low battery, 'forgot to clean', 'left in a drawer') dance in a circle around it, set to Kikuo's song; no faces needed, good for platforms with tighter content rules.",
+   "url": "https://knowyourmeme.com/memes/twins-at-the-carousel-trend",
+   "examples": [
     {
-     "url": "https://www.youtube.com/watch?v=sDA9OYguqUE",
-     "platform": "yt",
-     "account": "DhiruMonchik",
-     "what": "Street-interview 'body count flexing' Gen Z roast (508K views), the body-count discourse at scale",
-     "yt_id": "sDA9OYguqUE"
+     "url": "https://www.tiktok.com/@rhoes_rb/video/7653573169147612437",
+     "platform": "tt",
+     "account": "@rhoes_rb",
+     "what": "Deadpan character with dancing miniature twins circling its head"
+    }
+   ]
+  },
+  {
+   "name": "Sex-educator explainers on mainstream show accounts",
+   "platform": "tt",
+   "how": "Pitch an in-house educator or sexologist for a quick-hit 'myth vs fact' explainer clip in the style mainstream TV/media accounts now run, borrowing their mainstream credibility rather than posting only from niche sex-ed accounts.",
+   "url": "https://www.tiktok.com/@irelandamvmtv/video/7625979808031182113",
+   "examples": [
+    {
+     "url": "https://www.tiktok.com/@irelandamvmtv/video/7625979808031182113",
+     "platform": "tt",
+     "account": "@irelandamvmtv",
+     "what": "National morning-show account running a short expert-interview clip on inclusive sex ed"
     }
    ]
   }
@@ -446,7 +297,7 @@
  "competitors": [
   {
    "brand": "Womanizer",
-   "recent": "Exhibited at IFA Berlin (Sept 4–8, 2026) with Next Liberty and the new Snap (launching Sept 22), and launched the lipstick-shaped Womanizer Beauty ($79), available in North America from Sept 22.",
+   "recent": "Launched the Snap, its smallest-ever Pleasure Air toy, in Europe and debuted the Liberty 2 Leopard Edition in North America on Sept 22, following its Beauty Hub presence at IFA Berlin (Sept 4-8).",
    "url": "https://www.ean-online.com/company-news/womanizer-brings-sexual-wellness-to-ifa-2026-biggest-european-consumer-electronics-fair/",
    "profiles": {
     "tt": "https://www.tiktok.com/@womanizerofficial",
@@ -457,13 +308,7 @@
     {
      "url": "https://www.tiktok.com/@womanizerofficial/video/7559548530352966915",
      "platform": "tt",
-     "what": "'PSA: that peach is not a real peach': peach-shaped toy meme (20K plays, Oct 2025, the account's latest burst)"
-    },
-    {
-     "url": "https://www.youtube.com/watch?v=9fNonbAKfqg",
-     "platform": "yt",
-     "yt_id": "9fNonbAKfqg",
-     "what": "Short: 'Bedside drawer be like: can't you get a hobby?', a personified-product joke"
+     "what": "'PSA: that peach is not a real peach': peach-shaped toy meme"
     },
     {
      "url": "https://www.youtube.com/watch?v=2cStSWIFEn4",
@@ -474,9 +319,162 @@
    ]
   },
   {
+   "brand": "Satisfyer",
+   "recent": "Expanded to more than 6,700 CVS stores nationwide and added the 'Feel Confident' menstrual cup to its range (Sept 20).",
+   "url": "https://www.prnewswire.com/news-releases/satisfyer-announces-extensive-expansion-to-6-700-cvs-stores-302254474.html",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@satisfyer.com",
+    "ig": "https://www.instagram.com/satisfyercom/"
+   },
+   "posts": [
+    {
+     "url": "https://www.tiktok.com/@satisfyer.com/video/7637514169310383393",
+     "platform": "tt",
+     "what": "'Your brain doesn't lie. The fMRI data on this is genuinely wild': science-stat sex ed"
+    },
+    {
+     "url": "https://www.instagram.com/p/DOBZ763DM06/",
+     "platform": "ig",
+     "what": "'Slow bites. Deep focus. Zero crumbs left.': styled as an airfryer post, the brand's signature euphemism-humor format for skirting platform content rules"
+    },
+    {
+     "url": "https://www.tiktok.com/@satisfyer.com/video/7621586737034300704",
+     "platform": "tt",
+     "what": "'Foreplay isn't the appetizer, it's the whole meal': an orgasm-gap myth-bust"
+    }
+   ]
+  },
+  {
+   "brand": "Lovense",
+   "recent": "Made its European trade-show debut at IFA Berlin, after years exhibiting only at CES, showing a second-generation Intimate Doll prototype with voice interaction and adaptive movement.",
+   "url": "https://www.prnewswire.com/news-releases/lovense-shines-in-european-debut-at-ifa-berlin-2026-demonstrating-how-technology-strengthens-human-connection-302883997.html",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@reallovense",
+    "ig": "https://www.instagram.com/lovenseofficial/",
+    "x": "https://x.com/Lovense"
+   },
+   "posts": [
+    {
+     "url": "https://www.tiktok.com/@reallovense/video/7688537938900045086",
+     "platform": "tt",
+     "what": "'Move your way. Feel your rhythm.': remote-control toy on a run"
+    },
+    {
+     "url": "https://www.tiktok.com/@reallovense/video/7666675767064923423",
+     "platform": "tt",
+     "what": "'Just a chilled little treat': toy disguised in an afternoon-tea aesthetic"
+    }
+   ]
+  },
+  {
+   "brand": "Maude",
+   "recent": "Launched Vibe Mini, a $32 compact travel vibrator, alongside continued Target and Ulta retail expansion.",
+   "url": "https://getmaude.com/products/vibe-mini",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@getmaude",
+    "ig": "https://www.instagram.com/getmaude/"
+   },
+   "posts": [
+    {
+     "url": "https://www.instagram.com/p/DOqlVM5jfkk/",
+     "platform": "ig",
+     "what": "Vibe Mini launch post, 'just landed'"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DPEapKGDUO6/",
+     "platform": "ig",
+     "what": "'What's in our bag' travel-edition reel featuring Vibe Mini"
+    },
+    {
+     "url": "https://www.tiktok.com/@getmaude/video/7686942155394288910",
+     "platform": "tt",
+     "what": "'A night in, curated by our founder': a 60-second founder shop-with-me"
+    }
+   ]
+  },
+  {
+   "brand": "plusOne (Beacon Wellness Brands)",
+   "recent": "Now in 25,000+ US doors after its July Ulta Beauty launch, and convened a 2026 Wellness Collective expert panel on sex ed, gynecology and pelvic health.",
+   "url": "https://www.forbes.com/sites/sharonedelson/2026/07/28/plusones-intimate-wellness-products-launch-at-ulta-beauty/",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@_myplusone",
+    "ig": "https://www.instagram.com/_myplusone/"
+   },
+   "posts": [
+    {
+     "url": "https://www.tiktok.com/@_myplusone/video/7688070852490857742",
+     "platform": "tt",
+     "what": "Recap from Create & Cultivate festival: 'the vibes are still high'"
+    },
+    {
+     "url": "https://www.tiktok.com/@_myplusone/video/7686141145751063821",
+     "platform": "tt",
+     "what": "Menopause support lineup push, part of a steady peri/menopause content run"
+    },
+    {
+     "url": "https://www.instagram.com/p/DbYQBwFDtOF/",
+     "platform": "ig",
+     "what": "Brand and retail-availability announcement post"
+    }
+   ]
+  },
+  {
+   "brand": "Dame",
+   "recent": "No major news this week; keeps posting relatable, humor-first product content and cause-marketing on TikTok, and has expanded into pH-balanced intimate wipes.",
+   "url": "https://www.tiktok.com/@dameproducts/video/7488824340994100522",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@dameproducts"
+   },
+   "posts": [
+    {
+     "url": "https://www.tiktok.com/@dameproducts/video/7488824340994100522",
+     "platform": "tt",
+     "what": "Eva 2 vibrator silent, humorous review"
+    },
+    {
+     "url": "https://www.tiktok.com/@dameproducts/video/7460956418716454190",
+     "platform": "tt",
+     "what": "'Keep Com and Carry On': wand-focused relationship humor"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DWfKVgdDXmC/",
+     "platform": "ig",
+     "what": "Recruiting for the 'Dame Labs' product-tester community"
+    }
+   ]
+  },
+  {
+   "brand": "Lovehoney",
+   "recent": "Published a US 'Sex Map' from a year of sales data (Aug 10) and opened Q4 gifting early with five 2026 advent calendars (Aug).",
+   "url": "https://www.prnewswire.com/news-releases/lovehoney-reveals-the-sexiest-cities-in-the-us-with-new-sex-map-302847188.html",
+   "profiles": {
+    "tt": "https://www.tiktok.com/@lovehoneyglobal",
+    "ig": "https://www.instagram.com/lovehoneyofficial/",
+    "yt": "https://www.youtube.com/@LovehoneyOfficial"
+   },
+   "posts": [
+    {
+     "url": "https://www.tiktok.com/@lovehoneyglobal/video/7628204384995839254",
+     "platform": "tt",
+     "what": "'Matchy matchy with the ocean': themed product video"
+    },
+    {
+     "url": "https://www.tiktok.com/@lovehoneyglobal/video/7343628467365367073",
+     "platform": "tt",
+     "what": "'This message is brought to you by Lovehoney': a self-aware, Gen-Z-coded humor bit that reads as a creator post, not an ad"
+    },
+    {
+     "url": "https://www.youtube.com/watch?v=wS8JKinbv-8",
+     "platform": "yt",
+     "yt_id": "wS8JKinbv-8",
+     "what": "'This Girl Came', a Lovehoney brand short film"
+    }
+   ]
+  },
+  {
    "brand": "LELO",
-   "recent": "Published its 2026 Futurist Report with Tracey Follows (Aug 20), predicting an 'analogue counter-movement' against AI-mediated intimacy.",
-   "url": "https://finance.yahoo.com/technology/ai/articles/lelo-publishes-2026-futurist-report-140000317.html",
+   "recent": "Published its 2026 Futurist Report with futurist Tracey Follows, finding 60% of people have used AI in their intimate lives and predicting an 'analogue counter-movement' toward phone-free, protected human presence.",
+   "url": "https://www.prnewswire.com/news-releases/whats-hot-in-2026-lelo-reveals-trends-that-everybody-needs-to-know-302667891.html",
    "profiles": {
     "ig": "https://www.instagram.com/lelo_official/",
     "yt": "https://www.youtube.com/@leloofficial9046",
@@ -490,365 +488,189 @@
      "what": "Short: 'Not just vibration. Movement you can feel. Meet Ina Thrust', a product launch loop"
     },
     {
-     "url": "https://www.youtube.com/watch?v=hjYY4QbtytY",
-     "platform": "yt",
-     "yt_id": "hjYY4QbtytY",
-     "what": "Short: 'When your battery is running low, it's time for a high-quality charging', a pun-led lifestyle clip"
-    },
-    {
      "url": "https://www.youtube.com/watch?v=mSviV4ScSDQ",
      "platform": "yt",
      "yt_id": "mSviV4ScSDQ",
      "what": "'Meet SONA 3 & SONA 3 Cruise', a polished hero-product film"
     }
    ]
-  },
-  {
-   "brand": "Lovehoney",
-   "recent": "Published a US 'Sex Map' from sales data (Aug 10), launched five 2026 advent calendars in August, and published its 2026 Sex Trends Report in May.",
-   "url": "https://www.prnewswire.com/news-releases/lovehoney-reveals-the-sexiest-cities-in-the-us-with-new-sex-map-302847188.html",
-   "profiles": {
-    "tt": "https://www.tiktok.com/@lovehoneyglobal",
-    "ig": "https://www.instagram.com/lovehoneyofficial/",
-    "yt": "https://www.youtube.com/@LovehoneyOfficial"
-   },
-   "posts": [
-    {
-     "url": "https://www.tiktok.com/@lovehoneyglobal/video/7688368449449512224",
-     "platform": "tt",
-     "what": "'You're getting mauled by the tigers' meme-audio post (9.9K plays, 22 Sep 2026), riding memes daily"
-    },
-    {
-     "url": "https://www.tiktok.com/@lovehoneyglobal/video/7687990390896610592",
-     "platform": "tt",
-     "what": "'We know what you've got under your bed btw', relatable toy-drawer joke on a Zara Larsson sound (21 Sep 2026)"
-    },
-    {
-     "url": "https://www.youtube.com/watch?v=wS8JKinbv-8",
-     "platform": "yt",
-     "yt_id": "wS8JKinbv-8",
-     "what": "'This Girl Came', a Lovehoney brand short film (17K views)"
-    }
-   ]
-  },
-  {
-   "brand": "Satisfyer",
-   "recent": "Sponsored a Satisfyer Pro 2-shaped boat in the WorldPride Amsterdam Canal Parade on Aug 1, 2026.",
-   "url": "https://pride.amsterdam/en/boats/satisfyer/",
-   "profiles": {
-    "tt": "https://www.tiktok.com/@satisfyer.com",
-    "ig": "https://www.instagram.com/satisfyercom/",
-    "yt": "https://www.youtube.com/c/Satisfyer"
-   },
-   "posts": [
-    {
-     "url": "https://www.tiktok.com/@satisfyer.com/video/7637514169310383393",
-     "platform": "tt",
-     "what": "'Your brain doesn't lie. The fMRI data on this is genuinely wild': science-stat sex ed (6.4K plays on about 1.2K followers)"
-    },
-    {
-     "url": "https://www.tiktok.com/@satisfyer.com/video/7637174705413246240",
-     "platform": "tt",
-     "what": "History-of-sex-ed storytelling ('1950 was wild…')"
-    },
-    {
-     "url": "https://www.tiktok.com/@satisfyer.com/video/7621586737034300704",
-     "platform": "tt",
-     "what": "'Foreplay isn't the appetizer, it's the whole meal': an orgasm-gap myth-bust"
-    }
-   ]
-  },
-  {
-   "brand": "Lovense",
-   "recent": "Exhibited at CES 2026 in Las Vegas (Jan 15), framing sex tech as mainstream consumer technology.",
-   "url": "https://longbridge.com/en/news/272786779",
-   "profiles": {
-    "tt": "https://www.tiktok.com/@reallovense",
-    "ig": "https://www.instagram.com/lovenseofficial/",
-    "x": "https://twitter.com/lovense"
-   },
-   "posts": [
-    {
-     "url": "https://www.tiktok.com/@reallovense/video/7688537938900045086",
-     "platform": "tt",
-     "what": "'Move your way. Feel your rhythm.': remote-control toy on a run (23 Sep 2026)"
-    },
-    {
-     "url": "https://www.tiktok.com/@reallovense/video/7687808089227136286",
-     "platform": "tt",
-     "what": "Ticket-war joke: your 'helper' hits 260 taps a minute, tech humour on a topical moment"
-    },
-    {
-     "url": "https://www.tiktok.com/@reallovense/video/7666675767064923423",
-     "platform": "tt",
-     "what": "'Just a chilled little treat': toy disguised in an afternoon-tea aesthetic (11.1K plays)"
-    }
-   ]
-  },
-  {
-   "brand": "plusOne (Beacon Wellness Brands)",
-   "recent": "Launched in 1,300+ Ulta Beauty stores (July 28, 2026), with Ulta-exclusive products due in early 2027.",
-   "url": "https://finance.yahoo.com/healthcare/articles/plusone-launches-ulta-beauty-marking-123000848.html",
-   "profiles": {
-    "tt": "https://www.tiktok.com/@_myplusone",
-    "ig": "https://www.instagram.com/_myplusone/"
-   },
-   "posts": [
-    {
-     "url": "https://www.tiktok.com/@_myplusone/video/7688070852490857742",
-     "platform": "tt",
-     "what": "Recap from Create & Cultivate festival: 'the vibes are still high' (21 Sep 2026)"
-    },
-    {
-     "url": "https://www.tiktok.com/@_myplusone/video/7686141145751063821",
-     "platform": "tt",
-     "what": "Menopause support lineup push, part of a steady peri/menopause content run"
-    },
-    {
-     "url": "https://www.tiktok.com/@_myplusone/video/7684276829938732301",
-     "platform": "tt",
-     "what": "'Win our Birkin' giveaway teaser, a luxury prize stunt"
-    }
-   ]
-  },
-  {
-   "brand": "Mila",
-   "recent": "Came out of stealth with $2.5M pre-seed (June 30, 2026), selling the Aura device and Bloom mist as a K-beauty-style intimate care ritual.",
-   "url": "https://beautymatter.com/articles/sexual-wellness-brand-mila-lands-2-5-million-in-pre-seed-funding",
-   "profiles": {
-    "tt": "https://www.tiktok.com/@heymila.co",
-    "ig": "https://www.instagram.com/heymila.co/"
-   },
-   "posts": [
-    {
-     "url": "https://www.tiktok.com/@heymila.co/video/7688131753596177677",
-     "platform": "tt",
-     "what": "'Answering your dating questions', a talking-head intimacy Q&A (21 Sep 2026)"
-    },
-    {
-     "url": "https://www.tiktok.com/@heymila.co/video/7681007348462177550",
-     "platform": "tt",
-     "what": "'Evening routine' wellness GRWM that frames intimate care as a skincare-style ritual"
-    }
-   ]
   }
  ],
  "outliers": [
   {
-   "url": "https://www.tiktok.com/@lovehoneyglobal/video/7658799805736488214",
+   "url": "https://www.tiktok.com/@unboundbabes/video/7553688705404341535",
+   "platform": "tt",
+   "account": "@unboundbabes",
+   "format": "'HAVE U MET DEX?': a compact-wand product reveal led by punchy teaser caption",
+   "why": "Curiosity-driving caption earns the stop before the product is even shown"
+  },
+  {
+   "url": "https://www.tiktok.com/@dameproducts/video/7291738506374958382",
+   "platform": "tt",
+   "account": "@dameproducts",
+   "format": "'Planetary Pleasures' ep.1: astrologer @astrologicallyursxo breaks down each zodiac sign's turn-ons",
+   "why": "A recurring series format plus an evergreen, high-engagement niche (astrology) and guest-creator credibility"
+  },
+  {
+   "url": "https://www.instagram.com/reel/DWfKVgdDXmC/",
+   "platform": "ig",
+   "account": "@dameproducts",
+   "format": "Recruiting reel for the 'Dame Labs' product-tester community",
+   "why": "Invites audience participation and builds a UGC pipeline rather than just selling"
+  },
+  {
+   "url": "https://www.tiktok.com/@getmaude/video/7354433728577408298",
+   "platform": "tt",
+   "account": "@getmaude",
+   "format": "Sephora Savings Event tie-in post",
+   "why": "Borrows a beauty-retailer halo that reduces stigma and taps Sephora's own audience"
+  },
+  {
+   "url": "https://www.tiktok.com/@getmaude/video/7282925502153624878",
+   "platform": "tt",
+   "account": "@getmaude",
+   "format": "'Band' shared-stimulation device launch, clean product-education copy",
+   "why": "Leads with the relationship use-case, 'coming together', rather than specs"
+  },
+  {
+   "url": "https://www.tiktok.com/@getmaude/video/7556318901374635319",
+   "platform": "tt",
+   "account": "@getmaude",
+   "format": "'Wellness Essentials' shoppable roundup video",
+   "why": "Bundles multiple SKUs into one browsable, shoppable format"
+  },
+  {
+   "url": "https://www.tiktok.com/@lovehoneyglobal/video/7343628467365367073",
    "platform": "tt",
    "account": "@lovehoneyglobal",
-   "format": "'The only hack you need for summer': a heatwave 'hack' post with a toy punchline (15.2M plays, 720K likes, Jul 2026)",
-   "why": "Rides a seasonal search moment with a bait-and-switch reveal, so it reads as a lifehack first and sneaks past the sensitivity filter"
+   "format": "'This message is brought to you by Lovehoney': Gen-Z-coded self-aware humor bit",
+   "why": "Meme-literate tone that reads as a creator post, not an ad, on an account with 2.5M likes"
+  },
+  {
+   "url": "https://www.tiktok.com/@irelandamvmtv/video/7625979808031182113",
+   "platform": "tt",
+   "account": "@irelandamvmtv",
+   "format": "National morning-show clip of sex educator Jenny Keane on inclusive sex ed",
+   "why": "Mainstream news/TV account distribution gives a sensitive topic broad, 'safe' reach"
+  },
+  {
+   "url": "https://www.tiktok.com/@jerryxzeng/video/7625025087560764685",
+   "platform": "tt",
+   "account": "@jerryxzeng",
+   "format": "GRWM-style essay video reacting to Meta banning Bellesa's 700K-follower Instagram over the word 'clitoris'",
+   "why": "Rides a real platform-censorship controversy that sexual-wellness audiences rally around; a cautionary tale on platform risk too"
   },
   {
    "url": "https://www.tiktok.com/@sexedtok/video/7560707801790696718",
    "platform": "tt",
    "account": "@sexedtok",
-   "format": "'How do constriction rings work?': a plain-language product explainer (2.2M plays, Oct 2025)",
+   "format": "'How do constriction rings work?': a plain-language product explainer",
    "why": "Answers a question people are too embarrassed to Google; clinical tone keeps it distributable and highly saveable"
-  },
-  {
-   "url": "https://www.tiktok.com/@mondaypunday/video/7519179067225033997",
-   "platform": "tt",
-   "account": "@mondaypunday",
-   "format": "Comedian's 'Which setting do you use?' vibrator-settings bit (386K plays, 48K likes, Jun 2025)",
-   "why": "Pure comedy with a comment-bait question; the 'setting' joke is universal and easy for a brand to remake with its own toy"
-  },
-  {
-   "url": "https://www.tiktok.com/@themccabelife/video/7535884351800610103",
-   "platform": "tt",
-   "account": "@themccabelife",
-   "format": "Married-couple skit: 'what's the situation with phones in your relationship?' (117K plays, Aug 2025)",
-   "why": "A relatable conflict plus a direct debate question drives comments, and it maps onto the phone-free-bedroom story"
-  },
-  {
-   "url": "https://www.tiktok.com/@_myplusone/video/7478084829712534830",
-   "platform": "tt",
-   "account": "@_myplusone",
-   "format": "'It's an honor to be nominated': an Oscars 'this or that' product red carpet (91.6K plays vs about 4.5K followers)",
-   "why": "Borrows a cultural tentpole and runs roughly 20x the account's following, proof that topical newsjacking works for a mass-retail toy brand"
-  },
-  {
-   "url": "https://www.tiktok.com/@getmaude/video/7686942155394288910",
-   "platform": "tt",
-   "account": "@getmaude",
-   "format": "'A night in, curated by our founder': a 60-second founder shop-with-me (61K plays, Sep 2026)",
-   "why": "Founder-led, timed, cozy self-care framing makes intimacy products feel like a beauty haul; about 4x the account's follower count"
-  },
-  {
-   "url": "https://www.tiktok.com/@sexwithemily/video/7504780541103852843",
-   "platform": "tt",
-   "account": "@sexwithemily",
-   "format": "Podcast-clip talking head: sex as part of overall wellness (37K plays, May 2025)",
-   "why": "Clips long-form expert audio into a single-claim short; the wellness framing is algorithm-safe"
-  },
-  {
-   "url": "https://www.instagram.com/reel/DR0bhAaDOIV/",
-   "platform": "ig",
-   "account": "@getmaude",
-   "format": "'Maude Wrapped': a Spotify-Wrapped-style 'your year in intimacy, remastered' reel (Dec 2025)",
-   "why": "Hijacks a format everyone already shares and turns sales data into playful, screenshot-able stats"
-  },
-  {
-   "url": "https://www.youtube.com/watch?v=MM-Qhlxf1pM",
-   "platform": "yt",
-   "account": "The Diary Of A CEO",
-   "format": "Long-form interview with sexual-medicine doctor Rachel Rubin, 'Your doctor was never taught about women's bodies' (1.77M views)",
-   "why": "Outrage-driven title plus an authority guest; the pleasure-gap/medical-neglect angle travels far beyond sex-ed audiences",
-   "yt_id": "MM-Qhlxf1pM"
-  },
-  {
-   "url": "https://www.youtube.com/watch?v=gr6RWK2LFJE",
-   "platform": "yt",
-   "account": "Live Well Be Well with Sarah Ann Macklin",
-   "format": "'Why You Still Can't Orgasm (The Step-By-Step Guide)' with sex therapist Laurie Mintz (595K views)",
-   "why": "Promise-of-a-fix title with a numbered method; evergreen search demand for orgasm help",
-   "yt_id": "gr6RWK2LFJE"
-  },
-  {
-   "url": "https://www.youtube.com/watch?v=ksRiisg52DQ",
-   "platform": "yt",
-   "account": "Dr. Smurf",
-   "format": "'The Clitoris Anatomy Explained', a 3D animation (486K views)",
-   "why": "Visual anatomy explainers go viral because most people have never seen the full structure; easy for Nancy to replicate with motion graphics",
-   "yt_id": "ksRiisg52DQ"
-  },
-  {
-   "url": "https://www.youtube.com/watch?v=Cv6W767KVoQ",
-   "platform": "yt",
-   "account": "The Durex Podcast",
-   "format": "Brand-owned podcast episode on how Gen Z approaches relationships (653K views)",
-   "why": "A condom brand owning a Gen Z discourse show shows that a branded long-form series can hit mainstream numbers",
-   "yt_id": "Cv6W767KVoQ"
   }
  ],
  "capcut": [
   {
-   "name": "new trend 🫠",
-   "url": "https://www.capcut.com/template-detail/foryou-viral-trend-slowmo/7678239334352342292",
-   "uses": "1.2M uses",
-   "vibe": "14s slow-mo beat-sync edit, one hero subject gliding in and out of slow motion (template published ~26 Aug 2026)",
-   "how": "Mini Mic Wednesday slow-mo product reveal: unboxing, hand pick-up, glossy close-up",
-   "source": "https://www.capcut.com/explore/new-trending-2026"
+   "name": "Trending 2026",
+   "url": "https://www.capcut.com/template-detail/Trending-2026/7636747789375999253",
+   "uses": "175,690 uses",
+   "vibe": "Fast-cut multi-clip montage, punchy transitions, upbeat (9:16, ~18s)",
+   "how": "Hero format for a product-drop teaser or 'new arrival' reveal: quick hits of packaging, unboxing, texture close-ups",
+   "source": "capcut.com template page"
   },
   {
-   "name": "trending template🍏",
-   "url": "https://www.capcut.com/template-detail/capcut-foryou-trending-vairal-fyp/7677692691496455441",
-   "uses": "616.5K uses",
-   "vibe": "18s speed-ramp slow-mo ('SlowMo vairal') with punchy beat hits (published ~24 Aug 2026)",
-   "how": "Product hero shots, or the team strutting into the office on Friyay",
-   "source": "https://www.capcut.com/explore/latest-trends-2026"
+   "name": "2026 New Trending",
+   "url": "https://www.capcut.com/template-detail/2026-New-trending/7623879964567325973",
+   "uses": "180,749 uses",
+   "vibe": "Short snappy loop, beat-synced cuts (~12s)",
+   "how": "Quick reveal stinger to open or close a Mini Mic Wednesday segment",
+   "source": "capcut.com template page"
   },
   {
-   "name": "2026 moments",
-   "url": "https://www.capcut.com/template-detail/2026moments-2026recap-2026dump-fyp-trend/7677626419173723400",
-   "clips": "25",
-   "uses": "77.3K uses",
-   "vibe": "27s fast-cut '2026 so far' recap dump",
-   "how": "Nancy's 2026 so far: launches, events, team moments, best memes",
-   "source": "https://www.capcut.com/explore/2026-in-100-photos"
+   "name": "Behind the Scenes",
+   "url": "https://www.capcut.com/template-detail/Behind-the-Scenes/7393595962557582600",
+   "uses": "91,088 uses",
+   "vibe": "Documentary-style clip sequence, 'here's what we've been up to' pacing",
+   "how": "Founder or team content, warehouse or photoshoot BTS, event recap",
+   "source": "capcut.com template page"
   },
   {
-   "name": "Summer break 2026",
-   "url": "https://www.capcut.com/template-detail/naturecinematic-naturetemplates-fyp/7677383500189781255",
-   "uses": "46.7K uses",
-   "vibe": "22s cinematic end-of-summer montage with soft, filmic transitions",
-   "how": "Goodbye-summer recap of pop-ups and NYC shoot footage",
-   "source": "https://www.capcut.com/explore/summer-recap-2026"
+   "name": "JJ 5 Photo's",
+   "url": "https://www.capcut.com/template-detail/JJ-5-Photo-s/7546881780398279997",
+   "clips": "5",
+   "uses": "7,896 uses",
+   "vibe": "Viral 'JJ 5 photo' slideshow: 5 stills, transitions, trending audio",
+   "how": "Friyay team photo dump, or a 5-shot product styling slideshow",
+   "source": "capcut.com template page"
   },
   {
-   "name": "2026 IN 100 PHOTOS",
-   "url": "https://www.capcut.com/template-detail/2026-recap-dump-sofar-memories/7677802514183638293",
-   "clips": "100",
-   "uses": "44.7K uses",
-   "vibe": "29s rapid-fire 100-photo recap, one frame per beat",
-   "how": "Camera-roll dump: product flat-lays, behind-the-scenes, customer UGC",
-   "source": "https://www.capcut.com/explore/2026-in-100-photos"
+   "name": "Slow Photo Reveal",
+   "url": "https://www.capcut.com/template-detail/Slow-photo-reveal/7220753255997934854",
+   "uses": "5,308 uses",
+   "vibe": "Single image builds in slowly, dramatic and moody reveal",
+   "how": "Suspenseful build into a new toy or collection shot for a Mini Mic Wednesday reveal",
+   "source": "capcut.com template page"
   },
   {
-   "name": "2026 in 50 photos",
-   "url": "https://www.capcut.com/template-detail/2026-recap-moments-fyp-trend/7677411513006656788",
-   "clips": "50",
-   "uses": "25K uses",
-   "vibe": "Shorter version of the '2026 in X photos' beat-sync recap",
-   "how": "Event recap, e.g. the NYC shoot days in 50 shots",
-   "source": "https://www.capcut.com/explore/2026-in-100-photos"
+   "name": "Photo Reveal Trend",
+   "url": "https://www.capcut.com/template-detail/Photo-Reveal-Trend/7330312179268341000",
+   "uses": "4,421 uses",
+   "vibe": "Similar reveal mechanic with a punchier cut on the reveal beat",
+   "how": "Alternate reveal-segment intro for Mini Mic Wednesday",
+   "source": "capcut.com template page"
   },
   {
-   "name": "2026 in 60 Photo",
-   "url": "https://www.capcut.com/template-detail/pearlakdnz-in60photos-2026newtemplates/7678268258012728577",
-   "clips": "60",
-   "uses": "18.7K uses",
-   "vibe": "60-photo montage recap (published ~26 Aug 2026)",
-   "how": "Team content: 60 faces and moments from Nancy HQ",
-   "source": "https://www.capcut.com/explore/2026-in-100-photos"
+   "name": "Aesthetic Slowmo",
+   "url": "https://www.capcut.com/template-detail/aesthetic-slowmo/7561796412766244101",
+   "uses": "445 uses",
+   "vibe": "Soft slow-motion, moody lifestyle-shoot feel (9:16, ~20s)",
+   "how": "Pairs with candlelit self-care product styling, 'set the mood' content",
+   "source": "capcut.com template page"
   },
   {
-   "name": "Trending template 🔥❤️",
-   "url": "https://www.capcut.com/template-detail/Trending-slow-motion-trend-viral-hero-slowmo-walk/7687835534021971220",
-   "uses": "15K uses",
-   "vibe": "13s 'hero slow-mo walk': a dramatic slow-motion walk-in (published ~21 Sep 2026)",
-   "how": "Team walk-in before an event or launch day, or a 'main character' product entrance",
-   "source": "https://www.capcut.com/explore/trending-templates-2026"
+   "name": "Spin the Wheel Edit",
+   "url": "https://www.capcut.com/template-detail/spin-the-wheel-edit/7310693932290034949",
+   "uses": "304 uses",
+   "vibe": "Playful spinning-wheel graphic overlay, game-show energy",
+   "how": "Friyay team game segment: spin for a dare, question or product pick",
+   "source": "capcut.com template page"
   },
   {
-   "name": "summer 2026",
-   "url": "https://www.capcut.com/template-detail/and-with-that-the-summer-break-2026/7678693604809903381",
-   "uses": "11.8K uses",
-   "vibe": "44s nostalgic 'and with that, the summer break 2026' text-led montage",
-   "how": "'And with that, summer's over': a soft goodbye recap of summer drops",
-   "source": "https://www.capcut.com/explore/summer-recap-2026"
+   "name": "August Dump 2026",
+   "url": "https://www.capcut.com/template-detail/augustdump-augustdump2026-augustrecap-august-fyp/7678357889039207698",
+   "uses": "165 uses",
+   "vibe": "Casual multi-photo camera-roll dump with month-recap framing; the format refreshes monthly, so a September variant should appear on CapCut's monthly explore pages",
+   "how": "Monthly team or brand recap dump: office moments, events, candid product shots",
+   "source": "https://www.capcut.com/explore/for-september-2026"
   },
   {
-   "name": "Welcome September",
-   "url": "https://www.capcut.com/template-detail/viralgroup/7680452994147552533",
-   "uses": "11.5K uses",
-   "vibe": "14s new-month greeting reel (published ~1 Sep 2026)",
-   "how": "New-month hello with a product line-up; swap the text for an October version",
-   "source": "https://www.capcut.com/explore/what-s-in-september-2026"
+   "name": "Countdown to 2026",
+   "url": "https://www.capcut.com/template-detail/proeffects-2026-countdown-welcome-goodbye/7587223552760302901",
+   "uses": "137 uses",
+   "vibe": "Bold numeral countdown graphics, hype-building",
+   "how": "Countdown to a launch date, sale, or live event",
+   "source": "capcut.com template page"
   },
   {
-   "name": "2026 in 16photos",
-   "url": "https://www.capcut.com/template-detail/2026recap-2026dump-2026moments-trainingseason-fyp/7677533205209107730",
-   "clips": "16",
-   "uses": "10.7K uses",
-   "vibe": "Compact 16-photo beat-sync recap",
-   "how": "Quick product-range roll call, or a 16-photo lookback at a single event",
-   "source": "https://www.capcut.com/explore/2026-in-100-photos"
+   "name": "Outfit Change Trend",
+   "url": "https://www.capcut.com/template-detail/globalaidc-ainewyear-aibuilders-my2025story/7593368602837863697",
+   "uses": "21 uses",
+   "vibe": "Snap-transition outfit or look change",
+   "how": "'Date-night ready' transition from loungewear to going-out look, tying into confidence messaging; keep it tasteful",
+   "source": "capcut.com template page"
   },
   {
-   "name": "The end summer 2026",
-   "url": "https://www.capcut.com/template-detail/theend-summer2026-summerrecap-summerdump-fyp/7680457174711127316",
-   "uses": "9.9K uses",
-   "vibe": "26s 'the end' summer recap dump with credits-style framing",
-   "how": "Close out summer with a 'season finale' of best-performing posts and BTS",
-   "source": "https://www.capcut.com/explore/end-of-summer-2026"
+   "name": "Corporate Humor",
+   "url": "https://www.capcut.com/explore/corporate-humor",
+   "vibe": "Relatable workplace-meme skits: meeting jokes, '#corporatehumor #9to5 #officememes'",
+   "how": "Light, relatable Friyay office-culture content that isn't product-forward",
+   "source": "capcut.com explore/category page (category-level, no single template's stats surfaced)"
   },
   {
-   "name": "pretty little liars🥹",
-   "url": "https://www.capcut.com/template-detail/prettylittleliars-trend-blowthisup-proudtosay/7671434878537223444",
-   "uses": "65 uses",
-   "vibe": "15s PLL-style 'secret from A' reveal; the template itself is small but HeyOrca flagged the trend on 23 Sep",
-   "how": "'Got a secret…' teaser for an upcoming drop, signed '-N'",
-   "example": "https://www.tiktok.com/@tarayummy/video/7688419657086291214",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
-  },
-  {
-   "name": "Taylor Swift countdown",
-   "url": "https://www.tiktok.com/@en.editss/video/7688552041290992927",
-   "vibe": "Countdown build-up edit riding Taylor Swift's 'Showgirl: The Encore' countdown (drops 25 Sep); no capcut.com link found, so use the TikTok's 'Try this template' anchor",
-   "how": "Countdown to a launch or Mini Mic Wednesday reveal",
-   "example": "https://www.tiktok.com/@en.editss/video/7688552041290992927",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
-  },
-  {
-   "name": "The face I make",
-   "url": "https://www.tiktok.com/@nursemichell/video/7687816844476009742",
-   "vibe": "Reaction meme contrasting the polite outer face with the inner reaction (audio: original sound - WarbossTae). No capcut.com link found, so open it from the TikTok",
-   "how": "Friyay meme: 'the face I make when someone asks what I do for work' (team clip)",
-   "example": "https://www.tiktok.com/@nursemichell/video/7687816844476009742",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
+   "name": "Meet the Gang",
+   "url": "https://www.capcut.com/explore/meet-the-gang/7520689768104642568",
+   "vibe": "Team-member intro cards or carousel",
+   "how": "Staff spotlight content, new-hire intros, 'meet the Nancy team' for Friyay or About Us content",
+   "source": "capcut.com explore page"
   }
  ]
 }
