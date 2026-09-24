@@ -343,8 +343,6 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .load-row{display:grid;grid-template-columns:110px 1fr 28px;gap:10px;align-items:center;font-size:12.5px}
 .load-row .bar{height:8px}
 .load-row b{text-align:right}
-.weekgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:start}
-@media (max-width:1100px){.weekgrid{grid-template-columns:1fr}}
 .wday{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:10px;display:grid;gap:8px;min-width:0}
 .wday.today{border-color:var(--pink)}
 .wday-h{display:flex;align-items:baseline;justify-content:space-between;padding:4px 4px 2px}
@@ -413,19 +411,16 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 @media (max-width:600px){.two{grid-template-columns:1fr}}
 .wk-sum{margin:18px 0 0}
 @media (min-width:1000px){.wk-sum{grid-template-columns:1fr 1fr}}
-.tray{position:sticky;top:69px;z-index:6;background:rgba(11,7,9,.9);backdrop-filter:blur(12px);border:1px solid var(--line-soft);border-radius:20px;padding:12px 12px 10px;margin:0 0 14px}
-@media (max-width:640px){.tray{top:112px}}
-.tray-hint{margin:0 4px 10px;font-size:12.5px;color:var(--muted)}
+.tray{max-width:640px;margin:0 auto 14px}
+.tray-hint{margin:0 2px 8px;font-size:12px;color:var(--dim)}
 .tray-hint b{color:var(--pink)}
-.tray-chips{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow-y:auto}
+.tray-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent)}
+.tchip,.tgroup{flex:none}
 .tgroup{font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;align-self:center;padding:0 4px 0 2px}
 .tgroup:not(:first-child){margin-left:8px;padding-left:12px;border-left:1px solid var(--line)}
 .tchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:700;cursor:grab;user-select:none;-webkit-user-select:none}
 .tchip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--pc)}
 .tchip:hover{border-color:var(--pc)}
-.tchip.armed{background:var(--pc);color:#140a0f;border-color:var(--pc)}
-.tchip.armed::before{background:#140a0f}
-.weekgrid.arming .wday{cursor:copy;outline:2px dashed color-mix(in srgb,var(--pink) 55%,transparent);outline-offset:-2px}
 .wday.drop{outline:2px solid var(--pink)!important;outline-offset:-2px;background:var(--surface-2)}
 .wday{min-height:180px;align-content:start}
 .wday-empty{border:1px dashed var(--line);border-radius:12px;padding:16px 8px;text-align:center;font-size:11.5px;color:var(--dim)}
@@ -433,7 +428,26 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .slot.dragging{opacity:.4}
 .slot-count{font-size:11px;font-weight:800;color:var(--dim)}
 .grid-note{margin:0 auto 10px;max-width:560px;font-size:12.5px;color:var(--muted);text-align:center}
-.iggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:560px;margin:0 auto;background:var(--bg)}
+.iggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:640px;margin:0 auto;background:var(--bg)}
+.igtile.today{box-shadow:inset 0 0 0 2px var(--pink)}
+.igtile.drop{box-shadow:inset 0 0 0 3px var(--pink)}
+.igtile.dragging{opacity:.4}
+.ig-label{position:absolute;left:6px;bottom:6px;font-size:9.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pc);color:#160b10;border-radius:5px;padding:2px 6px}
+.ig-x{position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
+.igtile:hover .ig-x{opacity:1}
+@media (hover:none){.ig-x{opacity:.7}}
+.ig-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1.5px dashed var(--line);color:var(--muted);font-size:12px;font-weight:700}
+.ig-add span{font-size:30px;font-weight:300;line-height:1}
+.ig-add:hover{border-color:var(--pink);color:var(--text)}
+.weekevents{display:flex;flex-wrap:wrap;gap:6px;max-width:640px;margin:0 auto 12px}
+.weekevents .wm{flex:0 1 auto}
+.we-day{font-weight:900;color:var(--c);margin-right:2px}
+.daypick{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.daypick button{display:grid;gap:2px;justify-items:center;padding:12px 6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;cursor:pointer}
+.daypick button:hover{border-color:var(--pink)}
+.daypick b{font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.daypick span{font-size:24px;font-weight:900}
+.daypick small{font-size:10.5px;color:var(--dim)}
 .igtile{position:relative;aspect-ratio:3/4;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--surface-2)}
 .igtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .igtile iframe{position:absolute;left:0;border:0;pointer-events:none}
@@ -482,7 +496,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
         <button class="iconbtn" id="wkPrev" aria-label="Previous week">‹</button>
         <div class="seg" id="wkJump"><button data-jump="0">This week</button><button data-jump="1">Next week</button></div>
         <button class="iconbtn" id="wkNext" aria-label="Next week">›</button>
-        <div class="seg" id="planViewSeg"><button data-pv="days">By day</button><button data-pv="people">By person</button><button data-pv="grid">IG grid</button></div>
+        <div class="seg" id="planViewSeg"><button data-pv="grid">Grid</button><button data-pv="people">By person</button></div>
         <button class="btn ghost" id="wkClear">Clear week</button>
       </div>
     </div>
@@ -490,10 +504,9 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <p class="tray-hint" id="trayHint">Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.</p>
       <div class="tray-chips" id="trayChips"></div>
     </div>
-    <div class="weekgrid" id="weekgrid"></div>
-    <div id="gridWrap" hidden>
-      <p class="grid-note" id="gridNote"></p>
-      <div class="iggrid" id="iggrid"></div>
+    <div id="gridWrap">
+      <div class="weekevents" id="weekEvents"></div>
+      <div class="iggrid" id="weekgrid"></div>
     </div>
     <div id="peopleWrap" hidden>
       <div class="filters" id="personFilter"></div>
@@ -1374,10 +1387,8 @@ function removeSlot(s){
   toast(`${PILLARS[s.pillar].label} removed`, {label: "Undo", run: () => { WEEK.slots.splice(i, 0, s); saveWeek(); renderPlan(); }});
 }
 const saveWeek = () => store.set(wkKey(), WEEK);
-let armed = null;   // content type picked in the tray, waiting for a day tap
 
 function addToDay(day, pillar){
-  armed = null;   // one tap = one post; clicks after this open or edit posts, never add more
   const s = mkSlot(day, pillar);
   WEEK.slots.push(s); saveWeek(); renderPlan();
   toast(`${PILLARS[pillar].label} → ${fmt(day,{weekday:"short"})}`);
@@ -1387,13 +1398,10 @@ function renderTray(){
   const groups = TYPE_GROUPS;
   $("#trayChips").innerHTML = groups.map(([g, lbl]) => `<span class="tgroup">${lbl}</span>` +
     Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
-      `<span class="tchip ${armed === k ? "armed" : ""}" draggable="true" data-type="${k}" style="--pc:${P.c}" title="${esc(P.desc)}">${esc(P.label)}</span>`).join("")).join("");
-  $("#trayHint").innerHTML = armed
-    ? `<b>Tap a day</b> to add one ${esc(PILLARS[armed].label)}. Tap it again in the tray to cancel.`
-    : "Drag a content type onto a day, or tap one and then tap a day. Big events are pre-scheduled (AUTO); tap ✕ on any post to remove it.";
-  $("#weekgrid").classList.toggle("arming", !!armed);
+      `<span class="tchip" draggable="true" data-type="${k}" style="--pc:${P.c}" title="${esc(P.desc)}">${esc(P.label)}</span>`).join("")).join("");
+  $("#trayHint").textContent = "Tap a content type to add it, or drag it onto a post to add it to that day. Drag posts onto each other to reorder.";
   $("#trayChips").querySelectorAll("[data-type]").forEach(ch => {
-    ch.onclick = () => { armed = armed === ch.dataset.type ? null : ch.dataset.type; renderTray(); };
+    ch.onclick = () => pickDay(ch.dataset.type);
     ch.ondragstart = e => { e.dataTransfer.setData("text/plain", "type:" + ch.dataset.type); e.dataTransfer.effectAllowed = "copy"; };
   });
 }
@@ -1427,61 +1435,7 @@ function renderPlan(){
     + (unassigned ? `<p class="note" style="margin:6px 0 0">${unassigned} post${unassigned === 1 ? " needs" : "s need"} someone assigned. Tap the post to pick who.</p>` : ""))
     || `<p class="note" style="margin:0">No posts planned yet.</p>`;
 
-  // days
-  $("#weekgrid").innerHTML = DOW.map((d, i) => {
-    const day = iso(addDays(wkStart, i));
-    const moms = MOMENTS.filter(m => m.date === day);
-    const slots = WEEK.slots.filter(s => s.day === day);
-    return `<div class="wday ${day === todayIso ? "today" : ""}" data-day="${day}">
-      <div class="wday-h"><b>${d}${slots.length ? ` <span class="slot-count">· ${slots.length}</span>` : ""}</b><span>${parse(day).getDate()}</span></div>
-      ${moms.length ? `<div class="wday-m">${moms.map(m => {
-        const planned = slots.some(x => x.moment === m.id);
-        return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}${mnote(m.id) ? ` <span class="wm-note">📝 ${esc(mnote(m.id))}</span>` : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}" title="${planned ? "Open the planned post" : "Turn this into a post and assign it"}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
-      }).join("")}</div>` : ""}
-      ${slots.map(slotCard).join("") || `<div class="wday-empty">Drop content here</div>`}
-      <button class="addslot" data-add="${day}">+ Add</button>
-    </div>`;
-  }).join("");
-
-  const grid = $("#weekgrid");
-  grid.querySelectorAll("[data-slot]").forEach(el => {
-    el.onclick = e => {
-      e.stopPropagation();
-      if (e.target.closest("a")) return;
-      const s = WEEK.slots.find(x => x.id === el.dataset.slot);
-      if (e.target.closest("[data-x]")) return removeSlot(s);
-      if (e.target.closest(".status")){
-        const i = STATUSES.findIndex(x => x[0] === s.status);
-        s.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
-      }
-      openSlot(s.id);
-    };
-    el.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + el.dataset.slot); e.dataTransfer.effectAllowed = "move"; el.classList.add("dragging"); };
-    el.ondragend = () => el.classList.remove("dragging");
-  });
-  grid.querySelectorAll("[data-day]").forEach(dayEl => {
-    const day = dayEl.dataset.day;
-    dayEl.onclick = e => {
-      if (!armed || e.target.closest("[data-id],[data-plan]")) return;
-      addToDay(day, armed);
-    };
-    dayEl.ondragover = e => { e.preventDefault(); dayEl.classList.add("drop"); };
-    dayEl.ondragleave = e => { if (!dayEl.contains(e.relatedTarget)) dayEl.classList.remove("drop"); };
-    dayEl.ondrop = e => {
-      e.preventDefault(); dayEl.classList.remove("drop");
-      const [kind, val] = e.dataTransfer.getData("text/plain").split(":");
-      if (kind === "type" && PILLARS[val]) addToDay(day, val);
-      if (kind === "slot"){
-        const s = WEEK.slots.find(x => x.id === val);
-        if (s && s.day !== day){ s.day = day; WEEK.slots = [...WEEK.slots.filter(x => x !== s), s]; saveWeek(); renderPlan(); }
-      }
-    };
-  });
-  grid.querySelectorAll("[data-add]").forEach(b => b.onclick = e => {
-    e.stopPropagation();
-    if (armed) return addToDay(b.dataset.add, armed);
-    pickType(b.dataset.add);
-  });
+  renderWeekGrid();
   renderTray();
   renderPeople();
 
@@ -1507,14 +1461,12 @@ function planMoment(id){
 /* ───────── BY PERSON ─────────
    The same week, grouped by who's on each post: one column per teammate (filming or
    editing), plus Unassigned for posts still missing someone. */
-let planView = store.get("ns.planView", "days");
+let planView = store.get("ns.planView", "grid") === "people" ? "people" : "grid";
 let personOnly = "all";
 function renderPeople(){
-  const people = planView === "people", grid = planView === "grid";
+  const people = planView === "people";
   $("#planViewSeg").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.pv === planView));
-  $("#weekgrid").hidden = people || grid; $("#tray").hidden = people || grid;
-  $("#peopleWrap").hidden = !people; $("#gridWrap").hidden = !grid;
-  if (grid) return renderGrid();
+  $("#gridWrap").hidden = people; $("#tray").hidden = people; $("#peopleWrap").hidden = !people;
   if (!people) return;
   const byDay = (a, b) => a.day.localeCompare(b.day);
   const cols = TEAM.map(p => ({id: p.id, name: p.name, role: p.role,
@@ -1551,17 +1503,20 @@ function renderPeople(){
     openSlot(x.id);
   });
 }
-/* ───────── IG GRID ─────────
-   How the Instagram profile will look this week: newest post top-left, 3 across,
-   3:4 tiles. A post with a reference shows that post; otherwise a poster in its
-   pillar colour. */
-function renderGrid(){
-  const ig = WEEK.slots.filter(x => x.plats.includes("ig"))
-    .sort((a, b) => b.day.localeCompare(a.day) || WEEK.slots.indexOf(b) - WEEK.slots.indexOf(a));
-  const other = WEEK.slots.length - ig.length;
-  $("#gridNote").textContent = `${ig.length} Instagram post${ig.length === 1 ? "" : "s"} this week · newest first` +
-    (other ? ` · ${other} not going to Instagram` : "");
-  $("#iggrid").innerHTML = ig.map(x => {
+/* ───────── WEEK GRID ─────────
+   The week as an Instagram-style grid: 3 across, 3:4 tiles, in posting order with
+   Monday top-left. A post with a reference shows that post; otherwise a poster in
+   its pillar colour. Drag a tile onto another to move it there. */
+function renderWeekGrid(){
+  const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
+  // events strip
+  const moms = MOMENTS.filter(m => days.includes(m.date));
+  $("#weekEvents").innerHTML = moms.map(m => {
+    const planned = WEEK.slots.some(x => x.moment === m.id);
+    return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}"><span class="we-day">${fmt(m.date, {weekday: "short"})} ${parse(m.date).getDate()}</span> ${m.tier === "tentpole" ? "★ " : ""}${esc(m.name)}${mnote(m.id) ? " 📝" : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
+  }).join("");
+  const posts = WEEK.slots.slice().sort((a, b) => a.day.localeCompare(b.day) || WEEK.slots.indexOf(a) - WEEK.slots.indexOf(b));
+  $("#weekgrid").innerHTML = posts.map(x => {
     const P = PILLARS[x.pillar] || PILLARS.meme;
     const src = x.ref && embedSrc(x.ref);
     const yt = x.ref && ytId(x.ref);
@@ -1569,25 +1524,68 @@ function renderGrid(){
       : src && /instagram\.com/.test(src) ? `<iframe data-crop src="${esc(src)}" scrolling="no" loading="lazy" tabindex="-1"></iframe>`
       : src ? `<div class="ig-tt" data-tt="${esc(x.ref)}"></div>`
       : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b>${x.title ? `<span>${esc(x.title)}</span>` : ""}</div>`;
-    return `<button class="igtile" data-slot="${x.id}" title="${esc(P.label)}${x.title ? " · " + esc(x.title) : ""}">
+    return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}" title="${esc(P.label)}${x.title ? " · " + esc(x.title) : ""}">
       ${face}
       <span class="ig-day">${x.star ? "★ " : ""}${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
-    </button>`;
-  }).join("") || `<div class="empty" style="grid-column:1/-1">No Instagram posts planned this week.</div>`;
-  $("#iggrid").querySelectorAll(".igtile").forEach(t => t.onclick = () => openSlot(t.dataset.slot));
+      ${src || yt ? `<span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>` : ""}
+      <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
+    </div>`;
+  }).join("") + `<button class="igtile ig-add" id="gridAdd" title="Add a post"><span>+</span>Add post</button>`;
+
+  const grid = $("#weekgrid");
+  grid.querySelectorAll(".igtile[data-slot]").forEach(t => {
+    const s = WEEK.slots.find(x => x.id === t.dataset.slot);
+    t.onclick = e => { if (e.target.closest("[data-x]")) return removeSlot(s); openSlot(s.id); };
+    t.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + s.id); e.dataTransfer.effectAllowed = "move"; t.classList.add("dragging"); };
+    t.ondragend = () => t.classList.remove("dragging");
+    t.ondragover = e => { e.preventDefault(); t.classList.add("drop"); };
+    t.ondragleave = () => t.classList.remove("drop");
+    t.ondrop = e => {
+      e.preventDefault(); e.stopPropagation(); t.classList.remove("drop");
+      const [kind, val] = e.dataTransfer.getData("text/plain").split(":");
+      if (kind === "type" && PILLARS[val]) return addToDay(s.day, val);
+      const m = kind === "slot" && WEEK.slots.find(x => x.id === val);
+      if (!m || m === s) return;
+      // Move the dragged post onto this tile's day, just before it.
+      WEEK.slots.splice(WEEK.slots.indexOf(m), 1);
+      m.day = s.day; WEEK.slots.splice(WEEK.slots.indexOf(s), 0, m);
+      saveWeek(); renderPlan();
+    };
+  });
+  grid.ondragover = e => e.preventDefault();
+  grid.ondrop = e => {
+    e.preventDefault();
+    const [kind, val] = e.dataTransfer.getData("text/plain").split(":");
+    if (kind === "type" && PILLARS[val]) pickDay(val);
+  };
+  $("#gridAdd").onclick = () => pickType(null);
   cropGrid();
-  // TikTok references: show the video's cover image (TikTok's oEmbed allows this without a key).
-  $("#iggrid").querySelectorAll("[data-tt]").forEach(async el => {
+  grid.querySelectorAll("[data-tt]").forEach(async el => {
     try {
       const j = await (await fetch("https://www.tiktok.com/oembed?url=" + encodeURIComponent(el.dataset.tt))).json();
       if (j.thumbnail_url) el.innerHTML = `<img src="${esc(j.thumbnail_url)}" alt="">`;
     } catch {}
   });
 }
+/* Choose the day for a content type picked from the tray. */
+function pickDay(pillar){
+  const P = PILLARS[pillar];
+  const d = openDrawer(P.c, `
+    <div class="d-hero">
+      <button class="iconbtn d-close" aria-label="Close">✕</button>
+      <div class="d-date">Add a post</div>
+      <div class="d-name">${esc(P.label)}</div>
+    </div>
+    <div class="d-body"><p class="eyebrow">Which day?</p><div class="daypick">${DOW.map((n, i) => {
+      const day = iso(addDays(wkStart, i)), c = WEEK.slots.filter(x => x.day === day).length;
+      return `<button data-day="${day}"><b>${n}</b><span>${parse(day).getDate()}</span><small>${c} post${c === 1 ? "" : "s"}</small></button>`;
+    }).join("")}</div></div>`);
+  d.querySelectorAll("[data-day]").forEach(b => b.onclick = () => { closeDrawer(); addToDay(b.dataset.day, pillar); });
+}
 /* Instagram's embed has a header and footer; size and shift it so only the media fills the tile. */
 function cropGrid(){
-  $("#iggrid").querySelectorAll("iframe[data-crop]").forEach(f => {
+  $("#weekgrid").querySelectorAll("iframe[data-crop]").forEach(f => {
     const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight;
     f.style.width = w + "px";
     if (/\/reels?\//.test(f.src)){
@@ -1708,13 +1706,13 @@ function pickType(day){
   const d = openDrawer("var(--pink)", `
     <div class="d-hero">
       <button class="iconbtn d-close" aria-label="Close">✕</button>
-      <div class="d-date">${fmt(day,{weekday:"long", day:"numeric", month:"long"})}</div>
+      <div class="d-date">${day ? fmt(day,{weekday:"long", day:"numeric", month:"long"}) : "Pick a type, then a day"}</div>
       <div class="d-name">Add content</div>
     </div>
     <div class="d-body">${TYPE_GROUPS.map(([g, lbl]) => `<p class="eyebrow">${lbl}</p>
       <div class="typegrid" style="margin-bottom:20px">${Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
         `<button data-pick="${k}" style="--pc:${P.c}">${esc(P.label)}<span>${esc(P.desc)}</span></button>`).join("")}</div>`).join("")}</div>`);
-  d.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { closeDrawer(); addToDay(day, b.dataset.pick); });
+  d.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => day ? (closeDrawer(), addToDay(day, b.dataset.pick)) : pickDay(b.dataset.pick));
 }
 
 function openSlot(id){
@@ -1778,7 +1776,6 @@ $("#wkClear").onclick = () => {
   if (!WEEK.slots.length || !confirm("Remove every post from this week?")) return;
   WEEK.slots = []; saveWeek(); renderPlan(); toast("Week cleared");
 };
-document.addEventListener("keydown", e => { if (e.key === "Escape" && armed){ armed = null; renderTray(); } });
 
 $("#icsLink").href = BASE + "nancy-socials.ics";
 
