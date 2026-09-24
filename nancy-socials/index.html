@@ -436,6 +436,16 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-x{position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
 .igtile:hover .ig-x{opacity:1}
 @media (hover:none){.ig-x{opacity:.7}}
+.ig-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:18px;cursor:pointer;backdrop-filter:blur(4px)}
+.ig-play:hover{background:var(--pink)}
+.ig-open{position:absolute;right:6px;top:6px;border:0;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;cursor:pointer;display:none}
+.igtile.live iframe{pointer-events:auto}
+.igtile.live .ig-play,.igtile.live .ig-st,.igtile.live .ig-label,.igtile.live .ig-x{display:none}
+.igtile.live .ig-open{display:block}
+.igtile iframe.ig-full{inset:0;width:100%;height:100%;top:0}
+.d-player{margin:0 26px 8px;border-radius:16px;overflow:hidden;background:#000;height:560px}
+.d-player.wide{height:auto;aspect-ratio:16/9}
+.d-player iframe{width:100%;height:100%;border:0;display:block}
 .ig-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1.5px dashed var(--line);color:var(--muted);font-size:12px;font-weight:700}
 .ig-add span{font-size:30px;font-weight:300;line-height:1}
 .ig-add:hover{border-color:var(--pink);color:var(--text)}
@@ -1528,7 +1538,9 @@ function renderWeekGrid(){
       ${face}
       <span class="ig-day">${x.star ? "★ " : ""}${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
-      ${src || yt ? `<span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>` : ""}
+      ${src || yt ? `<span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>
+        <button class="ig-play" data-play aria-label="Play here" title="Play here">▶</button>
+        <button class="ig-open" data-open aria-label="Open post" title="Open post">Open</button>` : ""}
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     </div>`;
   }).join("") + `<button class="igtile ig-add" id="gridAdd" title="Add a post"><span>+</span>Add post</button>`;
@@ -1536,7 +1548,12 @@ function renderWeekGrid(){
   const grid = $("#weekgrid");
   grid.querySelectorAll(".igtile[data-slot]").forEach(t => {
     const s = WEEK.slots.find(x => x.id === t.dataset.slot);
-    t.onclick = e => { if (e.target.closest("[data-x]")) return removeSlot(s); openSlot(s.id); };
+    t.onclick = e => {
+      if (e.target.closest("[data-x]")) return removeSlot(s);
+      if (e.target.closest("[data-play]")) return playTile(t, s);
+      if (t.classList.contains("live") && !e.target.closest("[data-open]")) return;
+      openSlot(s.id);
+    };
     t.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + s.id); e.dataTransfer.effectAllowed = "move"; t.classList.add("dragging"); };
     t.ondragend = () => t.classList.remove("dragging");
     t.ondragover = e => { e.preventDefault(); t.classList.add("drop"); };
@@ -1568,6 +1585,19 @@ function renderWeekGrid(){
     } catch {}
   });
 }
+/* Play a tile's reference in place. Instagram embeds are already in the tile, so they
+   just become clickable; YouTube and TikTok covers swap to their players. */
+function playTile(t, s){
+  t.classList.add("live");
+  t.draggable = false;
+  const f = t.querySelector("iframe");
+  if (!f){
+    const face = t.querySelector("img, .ig-tt");
+    const src = embedSrc(s.ref);
+    if (face && src) face.outerHTML = `<iframe class="ig-full" src="${esc(src)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }
+}
+
 /* Choose the day for a content type picked from the tray. */
 function pickDay(pillar){
   const P = PILLARS[pillar];
@@ -1729,6 +1759,7 @@ function openSlot(id){
       <div class="d-name">${esc(P.label)}</div>
       <p style="margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.5">${esc(P.desc)}</p>
     </div>
+    ${s.ref && embedSrc(s.ref) ? `<div class="d-player ${ytId(s.ref) ? "wide" : ""}"><iframe src="${esc(embedSrc(s.ref).replace("?autoplay=1", ""))}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : ""}
     <div class="d-body"><div class="form">
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
