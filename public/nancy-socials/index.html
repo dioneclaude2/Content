@@ -266,6 +266,12 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .empty{color:var(--dim);font-size:14px;padding:20px;background:var(--surface);border-radius:18px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:var(--text);color:var(--bg);font-weight:800;font-size:13px;padding:10px 18px;border-radius:999px;opacity:0;transition:.2s;z-index:40;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.act{pointer-events:auto}
+.toast-act{background:var(--pink);color:#fff;border:0;border-radius:999px;padding:4px 10px;margin-left:8px;font-weight:800;font-size:12px;cursor:pointer}
+.slot-x{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:0;background:var(--surface-3);color:var(--muted);font-size:12px;cursor:pointer;display:grid;place-items:center;opacity:.7}
+.slot-x:hover{opacity:1;background:var(--pink);color:#fff}
+@media (hover:hover){.slot .slot-x{opacity:0}.slot:hover .slot-x{opacity:.8}}
+.slot-auto{font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:1px 4px;margin-left:auto;margin-right:24px}
 
 /* ── week planner ── */
 .wk-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:0 0 18px}
@@ -534,7 +540,13 @@ const store = {
   get(k, def){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch { return def; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
-function toast(msg="Copied"){ const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), 1300); }
+function toast(msg="Copied", action){
+  const t = $("#toast");
+  t.innerHTML = esc(msg) + (action ? ` <button class="toast-act">${esc(action.label)}</button>` : "");
+  t.classList.toggle("act", !!action);
+  if (action) t.querySelector("button").onclick = () => { action.run(); t.classList.remove("on"); };
+  t.classList.add("on"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("on"), action ? 5000 : 1300);
+}
 function copy(txt){ (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast()).catch(() => toast("Couldn't copy")); }
 
 let MOMENTS = [];
@@ -982,11 +994,30 @@ function mkSlot(day, pillar){
   return s;
 }
 let WEEK = null;
-function loadWeek(){ WEEK = store.get(wkKey(), null) || {start: iso(wkStart), slots: []}; }
+/* Tentpole and strong moments are pre-scheduled once per week. `seeded` remembers which were
+   added, so a moment Dione deletes stays deleted. */
+function loadWeek(){
+  WEEK = store.get(wkKey(), null) || {start: iso(wkStart), slots: []};
+  WEEK.seeded = WEEK.seeded || [];
+  const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
+  const big = MOMENTS.filter(m => days.includes(m.date) && m.tier !== "minor" && !WEEK.seeded.includes(m.id));
+  for (const m of big){
+    const s = mkSlot(m.date, "moment");
+    s.moment = m.id; s.auto = true;
+    WEEK.slots.push(s); WEEK.seeded.push(m.id);
+  }
+  saveWeek();
+}
+function removeSlot(s){
+  const i = WEEK.slots.indexOf(s);
+  WEEK.slots.splice(i, 1); saveWeek(); renderPlan();
+  toast(`${PILLARS[s.pillar].label} removed`, {label: "Undo", run: () => { WEEK.slots.splice(i, 0, s); saveWeek(); renderPlan(); }});
+}
 const saveWeek = () => store.set(wkKey(), WEEK);
 let armed = null;   // content type picked in the tray, waiting for a day tap
 
 function addToDay(day, pillar){
+  armed = null;   // one tap = one post; clicks after this open or edit posts, never add more
   const s = mkSlot(day, pillar);
   WEEK.slots.push(s); saveWeek(); renderPlan();
   toast(`${PILLARS[pillar].label} → ${fmt(day,{weekday:"short"})}`);
@@ -998,8 +1029,8 @@ function renderTray(){
     Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
       `<span class="tchip ${armed === k ? "armed" : ""}" draggable="true" data-type="${k}" style="--pc:${P.c}" title="${esc(P.desc)}">${esc(P.label)}</span>`).join("")).join("");
   $("#trayHint").innerHTML = armed
-    ? `<b>Tap a day</b> to add ${esc(PILLARS[armed].label)}. Tap it again in the tray to cancel.`
-    : "Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.";
+    ? `<b>Tap a day</b> to add one ${esc(PILLARS[armed].label)}. Tap it again in the tray to cancel.`
+    : "Drag a content type onto a day, or tap one and then tap a day. Big events are pre-scheduled (AUTO); tap ✕ on any post to remove it.";
   $("#weekgrid").classList.toggle("arming", !!armed);
   $("#trayChips").querySelectorAll("[data-type]").forEach(ch => {
     ch.onclick = () => { armed = armed === ch.dataset.type ? null : ch.dataset.type; renderTray(); };
@@ -1052,9 +1083,10 @@ function renderPlan(){
   const grid = $("#weekgrid");
   grid.querySelectorAll("[data-slot]").forEach(el => {
     el.onclick = e => {
-      if (e.target.closest("a") || armed) return;
       e.stopPropagation();
+      if (e.target.closest("a")) return;
       const s = WEEK.slots.find(x => x.id === el.dataset.slot);
+      if (e.target.closest("[data-x]")) return removeSlot(s);
       if (e.target.closest(".status")){
         const i = STATUSES.findIndex(x => x[0] === s.status);
         s.status = STATUSES[(i + 1) % STATUSES.length][0]; saveWeek(); renderPlan(); return;
@@ -1108,7 +1140,8 @@ function slotCard(s){
   const P = PILLARS[s.pillar] || PILLARS.meme;
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
   return `<div class="slot ${s.status === "posted" ? "done" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
-    <div class="slot-p">${esc(P.label)}</div>
+    <div class="slot-p">${esc(P.label)}${s.auto ? `<span class="slot-auto">AUTO</span>` : ""}</div>
+    <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
     ${s.ref ? `<a class="slot-ref" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener">▶ See reference</a>` : `<span class="slot-ref none">No reference yet</span>`}
@@ -1174,7 +1207,7 @@ function openSlot(id){
     </div></div>`);
   const upd = () => { saveWeek(); renderPlan(); };
   $("#fDone").onclick = closeDrawer;
-  $("#fDel").onclick = () => { WEEK.slots = WEEK.slots.filter(x => x !== s); upd(); closeDrawer(); toast("Post removed"); };
+  $("#fDel").onclick = () => { closeDrawer(); removeSlot(s); };
   $("#fDup").onclick = () => { const c = {...s, id: Math.random().toString(36).slice(2, 9), plats: [...s.plats]}; WEEK.slots.push(c); upd(); openSlot(c.id); toast("Duplicated"); };
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
   $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
