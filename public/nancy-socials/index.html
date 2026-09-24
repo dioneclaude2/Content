@@ -330,7 +330,11 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .pillar p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
 .pillar .who{margin-top:8px;font-size:11.5px;color:var(--dim)}
 .team{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
-.team .panel{display:grid;gap:6px;padding:12px}
+.team .panel{display:grid;gap:8px;padding:14px;align-content:start}
+.member-top{display:flex;align-items:center;justify-content:space-between}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--identity));display:grid;place-items:center;font-weight:900;font-size:14px;color:#fff}
+.member-meta{font-size:12px;color:var(--dim)}
+.member.add{border-style:dashed}
 .team input{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;width:100%}
 .form{display:grid;gap:14px}
 .form label{display:grid;gap:6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
@@ -413,7 +417,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
     <div class="sec">
       <h2 class="sec-title">The <span class="serif">team</span></h2>
       <div class="team" id="team"></div>
-      <p class="note">Change a name here and it updates everywhere. Plans are saved in this browser for now; team-wide saving comes next.</p>
+      <p class="note">Edit a name or role and it updates on every post. Removing someone unassigns their posts, and you can undo it. Plans and the team are saved in this browser for now.</p>
     </div>
   </section>
 
@@ -916,7 +920,7 @@ const DEFAULT_TEAM = [
 let TEAM = store.get("ns.team", DEFAULT_TEAM);
 const person = id => TEAM.find(p => p.id === id);
 /* film: a person id, "none" (no filming needed) or "" (not assigned yet) */
-const pname = id => id === "none" ? "No filming" : id ? (person(id)?.name || "—") : "Not assigned";
+const pname = id => id === "none" ? "No filming" : (id && person(id)?.name) || "Not assigned";
 
 /* Content types in the tray. group "core" = what we post today; "more" = formats to try.
    film/edit/status are only starting defaults; every post can change them. */
@@ -988,10 +992,11 @@ const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate(
 let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
 const wkKey = () => "ns.week3." + iso(wkStart);
 
+const whoOr = id => id === "none" || person(id) ? id : "";
 function mkSlot(day, pillar){
   const P = PILLARS[pillar];
   const s = {id: Math.random().toString(36).slice(2, 9), day, pillar, title: "", ref: "", note: "", plats: [...P.plats],
-             film: P.film, edit: P.edit, status: P.status};
+             film: whoOr(P.film), edit: whoOr(P.edit), status: P.status};
   if (pillar === "moment"){
     const m = MOMENTS.find(x => x.date === day && x.tier !== "minor") || MOMENTS.find(x => x.date === day);
     if (m) s.moment = m.id;
@@ -1132,13 +1137,71 @@ function renderPlan(){
     return `<div class="pillar" style="--pc:${P.c}"><h4>${esc(P.label)}${c ? `<span class="chip" style="margin-left:auto">${c} this week</span>` : ""}</h4><p>${esc(P.desc)}</p></div>`;
   }).join("");
 
-  // team
-  $("#team").innerHTML = TEAM.map(p => `<div class="panel"><input data-team="${p.id}" data-f="name" value="${esc(p.name)}" aria-label="Name"><input data-team="${p.id}" data-f="role" value="${esc(p.role)}" aria-label="Role" style="color:var(--muted)"></div>`).join("")
-    + `<button class="addslot" id="addPerson" style="min-height:90px">+ Add person</button>`;
+  renderTeam();
+}
+
+/* ───────── TEAM ───────── */
+const saveTeam = () => store.set("ns.team", TEAM);
+const weekKeys = () => { try { return Object.keys(localStorage).filter(k => k.startsWith("ns.week3.")); } catch { return []; } };
+
+/* Posts assigned to a person across every planned week, as [film, edit] counts. */
+function assignments(id){
+  let film = 0, edit = 0;
+  for (const k of weekKeys()){
+    for (const s of store.get(k, {slots: []}).slots){ if (s.film === id) film++; if (s.edit === id) edit++; }
+  }
+  return [film, edit];
+}
+
+function renderTeam(){
+  $("#team").innerHTML = TEAM.map(p => {
+    const [f, e] = assignments(p.id);
+    return `<div class="panel member">
+      <div class="member-top"><span class="avatar">${esc((p.name || "?").trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>
+        <button class="copy" data-rm="${p.id}" aria-label="Remove ${esc(p.name)}">Remove</button></div>
+      <input data-team="${p.id}" data-f="name" value="${esc(p.name)}" aria-label="Name" placeholder="Name">
+      <input data-team="${p.id}" data-f="role" value="${esc(p.role)}" aria-label="Role" placeholder="Role" style="color:var(--muted)">
+      <div class="member-meta">🎥 Filming ${f} · ✂️ Editing ${e} (all weeks)</div>
+    </div>`;
+  }).join("") + `<form class="panel member add" id="addPersonForm">
+      <p class="eyebrow" style="margin:0">Add someone</p>
+      <input name="name" placeholder="Name" required aria-label="New person's name">
+      <input name="role" placeholder="Role, e.g. Videographer" aria-label="New person's role">
+      <button class="btn pink" type="submit" style="justify-self:start">Add to team</button>
+    </form>`;
   $("#team").querySelectorAll("[data-team]").forEach(inp => inp.onchange = () => {
-    const p = person(inp.dataset.team); p[inp.dataset.f] = inp.value.trim() || p[inp.dataset.f]; store.set("ns.team", TEAM); renderPlan();
+    const p = person(inp.dataset.team), v = inp.value.trim();
+    if (inp.dataset.f === "name" && !v){ inp.value = p.name; return toast("A name can't be empty"); }
+    p[inp.dataset.f] = v; saveTeam(); renderPlan(); toast("Saved");
   });
-  $("#addPerson").onclick = () => { TEAM.push({id: "p" + Date.now().toString(36), name: "New person", role: "Role"}); store.set("ns.team", TEAM); renderPlan(); };
+  $("#team").querySelectorAll("[data-rm]").forEach(b => b.onclick = () => removePerson(b.dataset.rm));
+  $("#addPersonForm").onsubmit = e => {
+    e.preventDefault();
+    const f = new FormData(e.target), name = f.get("name").trim();
+    if (!name) return;
+    TEAM.push({id: "p" + Date.now().toString(36), name, role: f.get("role").trim() || "Team"});
+    saveTeam(); renderPlan(); toast(`${name} added`);
+  };
+}
+
+/* Removing a person unassigns their posts in every week; Undo puts both back. */
+function removePerson(id){
+  const i = TEAM.findIndex(p => p.id === id), p = TEAM[i];
+  const [f, e] = assignments(id);
+  if (f + e && !confirm(`${p.name} is on ${f + e} post${f + e === 1 ? "" : "s"}. Remove them and unassign those posts?`)) return;
+  const before = weekKeys().map(k => [k, store.get(k, null)]);
+  for (const [k, w] of before){
+    if (!w) continue;
+    const copy = JSON.parse(JSON.stringify(w));
+    copy.slots.forEach(s => { if (s.film === id) s.film = ""; if (s.edit === id) s.edit = ""; });
+    store.set(k, copy);
+  }
+  TEAM.splice(i, 1); saveTeam(); WEEK = null; renderPlan();
+  toast(`${p.name} removed`, {label: "Undo", run: () => {
+    TEAM.splice(i, 0, p); saveTeam();
+    for (const [k, w] of before) if (w) store.set(k, w);
+    WEEK = null; renderPlan();
+  }});
 }
 
 function slotCard(s){
