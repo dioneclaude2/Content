@@ -344,6 +344,10 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .slot-t{font-size:13px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .slot-plats{display:flex;gap:3px}
 .slot-for{font-size:11px;color:var(--muted);margin-top:-3px}
+.slot-ev{justify-self:start;font-size:11px;font-weight:800;background:var(--surface-3);border-radius:999px;padding:3px 8px}
+.slot-note{font-size:11.5px;color:#E6D9DF;background:rgba(255,216,77,.07);border-left:2px solid #FFD84D;border-radius:6px;padding:5px 7px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.wm-note{display:block;font-weight:500;color:var(--muted);font-size:10.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mnote{width:100%;min-height:90px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;resize:vertical}
 .slot-ref{font-size:11.5px;font-weight:800;color:var(--pink);text-decoration:none;justify-self:start}
 .slot-ref:hover{text-decoration:underline}
 .slot-ref.none{color:var(--dim);font-weight:600}
@@ -747,7 +751,7 @@ function renderCal(){
   const list = MOMENTS.filter(passes);
   const first = iso(new Date(y, mo, 1)), last = iso(new Date(y, mo+1, 0));
   const spans = list.filter(m => m.end && m.date <= last && m.end >= first);
-  $("#spanbar").innerHTML = spans.map(m => `<span class="chip" data-id="${m.id}" style="--c:${col(m)}">${dot(m)} All month · ${esc(m.name)}${m.tier==="tentpole"?" ★":""}</span>`).join("");
+  $("#spanbar").innerHTML = spans.map(m => `<span class="chip" data-id="${m.id}" style="--c:${col(m)}">${dot(m)} All month · ${esc(m.name)}${m.tier==="tentpole"?" ★":""}${mnote(m.id) ? " · 📝" : ""}</span>`).join("");
 
   if (F.view === "agenda"){
     const items = list.filter(m => !m.end && m.date >= first && m.date <= last);
@@ -764,7 +768,7 @@ function renderCal(){
     const cap = 3;
     html += `<div class="day ${d.getMonth() !== mo ? "out" : ""} ${di === todayIso ? "today" : ""} ${top ? "big" : ""}" ${top ? `style="--c:${col(top)}"` : ""}>
       <div class="day-num"><span>${d.getDate()}</span>${di === todayIso ? "<span>TODAY</span>" : ""}</div>
-      ${shown.slice(0, cap).map(m => `<button class="ev ${m.tier}" style="--c:${col(m)}" data-id="${m.id}" title="${esc(m.name)}">${esc(m.name)}</button>`).join("")}
+      ${shown.slice(0, cap).map(m => `<button class="ev ${m.tier}" style="--c:${col(m)}" data-id="${m.id}" title="${esc(m.name)}${mnote(m.id) ? " · 📝 " + esc(mnote(m.id)) : ""}">${mnote(m.id) ? "📝 " : ""}${esc(m.name)}</button>`).join("")}
       ${shown.length > cap ? `<button class="more" data-list>+${shown.length - cap} more</button>` : ""}
     </div>`;
   }
@@ -776,6 +780,11 @@ $("#next").onclick = () => { cursor = new Date(cursor.getFullYear(), cursor.getM
 $("#viewSeg").querySelectorAll("button").forEach(b => b.onclick = () => { F.view = b.dataset.view; saveF(); renderCal(); });
 
 /* ───────── DRAWER ───────── */
+/* Dione's own notes on calendar events, kept per moment id. */
+let MNOTES = store.get("ns.mnotes", {});
+const mnote = id => MNOTES[id] || "";
+function setMnote(id, v){ if (v.trim()) MNOTES[id] = v; else delete MNOTES[id]; store.set("ns.mnotes", MNOTES); }
+
 function openMoment(id){
   const m = MOMENTS.find(x => x.id === id); if (!m) return;
   const n = daysUntil(m.date);
@@ -793,6 +802,8 @@ function openMoment(id){
       ${!m.verified ? `<div class="warn" style="border-style:dashed">This date isn't confirmed yet. Check it before you build a campaign around it.</div>` : ""}
     </div>
     <div class="d-body">
+      <div class="d-block"><p class="eyebrow">📝 Your notes</p>
+        <textarea id="mNote" class="mnote" placeholder="Anything to remember for this event: plans, contacts, ideas, what worked last year…">${esc(mnote(m.id))}</textarea></div>
       <div class="d-block"><p class="eyebrow">The angle</p><p>${esc(m.angle)}</p>${m.why ? `<p style="margin-top:10px;color:var(--muted);font-size:14px">${esc(m.why)}</p>` : ""}
         ${m.start ? `<p style="margin-top:12px;font-size:13.5px"><b style="color:var(--pink)">When to start:</b> ${esc(m.start)}</p>` : ""}</div>
       ${m.stat ? `<div class="d-block"><p class="eyebrow">Stat to post with</p><div class="stat"><q>${esc(m.stat.text)}</q><a href="${esc(safeUrl(m.stat.url))}" target="_blank" rel="noopener">${esc(m.stat.source)} ↗</a></div></div>` : ""}
@@ -823,6 +834,8 @@ function openMoment(id){
     ...Object.entries(PLAT_NAMES).map(([k,v]) => `${v}: ${m.hooks[k] || "—"}`),
     m.ideas?.length ? "Ideas:\n- " + m.ideas.join("\n- ") : "",
     m.hashtags?.length ? m.hashtags.join(" ") : ""].filter(Boolean).join("\n"));
+  $("#mNote").oninput = e => { setMnote(m.id, e.target.value); };
+  $("#mNote").onchange = () => { renderWeek(); renderCal(); if (WEEK) renderPlan(); };
   d.scrollTop = 0;
   d.classList.add("on"); $("#scrim").classList.add("on"); d.setAttribute("aria-hidden", "false");
 }
@@ -1218,7 +1231,7 @@ function renderPlan(){
       <div class="wday-h"><b>${d}${slots.length ? ` <span class="slot-count">· ${slots.length}</span>` : ""}</b><span>${parse(day).getDate()}</span></div>
       ${moms.length ? `<div class="wday-m">${moms.map(m => {
         const planned = slots.some(x => x.moment === m.id);
-        return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}" title="${planned ? "Open the planned post" : "Turn this into a post and assign it"}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
+        return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}">${m.tier==="tentpole"?"★ ":""}${esc(m.name)}${mnote(m.id) ? ` <span class="wm-note">📝 ${esc(mnote(m.id))}</span>` : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}" title="${planned ? "Open the planned post" : "Turn this into a post and assign it"}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
       }).join("")}</div>` : ""}
       ${slots.map(slotCard).join("") || `<div class="wday-empty">Drop content here</div>`}
       <button class="addslot" data-add="${day}">+ Add</button>
@@ -1349,6 +1362,13 @@ function removePerson(id){
   }});
 }
 
+/* Event names for the post's Event field: Nancy's usual events plus anything typed before. */
+function knownEvents(){
+  const set = new Set(["LFW", "US Open", "Cancun", "NYC Brunch", "Ibiza"]);
+  for (const k of weekKeys()) for (const x of store.get(k, {slots: []}).slots) if (x.event) set.add(x.event);
+  return [...set];
+}
+
 function slotCard(s){
   const P = PILLARS[s.pillar] || PILLARS.meme;
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
@@ -1357,6 +1377,8 @@ function slotCard(s){
     <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : s.series && s.series !== P.label ? `<div class="slot-for">${esc(s.series)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
+    ${s.event ? `<span class="slot-ev">📍 ${esc(s.event)}</span>` : ""}
+    ${s.note ? `<div class="slot-note">📝 ${esc(s.note)}</div>` : ""}
     ${s.ref ? `<a class="slot-ref" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener">▶ See reference</a>` : `<span class="slot-ref none">No reference yet</span>`}
     <div class="slot-plats">${s.plats.map(p => `<span class="plat ${p}">${PLATFORMS[p]}</span>`).join("")}</div>
     <div class="slot-who"><span>🎥 <b>${esc(pname(s.film))}</b></span><span>✂️ <b>${esc(s.edit === "none" ? "No editing" : pname(s.edit))}</b></span></div>
@@ -1414,7 +1436,9 @@ function openSlot(id){
         <label>🎥 Filming<select id="fFilm">${opts(s.film, `<option value="none" ${s.film === "none" ? "selected" : ""}>No filming needed</option>`)}</select></label>
         <label>✂️ Editing<select id="fEdit">${opts(s.edit, `<option value="none" ${s.edit === "none" ? "selected" : ""}>No editing needed</option>`)}</select></label>
       </div>
-      <label>Notes for the maker<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
+      <label>Event<input id="fEvent" list="eventList" placeholder="Which event it's from or for, e.g. LFW, US Open, Cancun" value="${esc(s.event || "")}">
+        <datalist id="eventList">${knownEvents().map(e => `<option value="${esc(e)}">`).join("")}</datalist></label>
+      <label>Notes<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
       ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
       <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fStar">${s.star ? "★ Unstar" : "☆ Star"}</button><button class="btn ghost" id="fDup">Duplicate</button><button class="btn ghost" id="fDel">Delete</button></div>
     </div></div>`);
@@ -1426,6 +1450,7 @@ function openSlot(id){
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
   $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
   $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
+  $("#fEvent").onchange = e => { s.event = e.target.value.trim(); upd(); };
   $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
   $("#fDay").onchange = e => { s.day = e.target.value; upd(); openSlot(s.id); };
@@ -1445,7 +1470,7 @@ function weekForSlack(){
     const slots = WEEK.slots.filter(s => s.day === day);
     if (!slots.length) continue;
     lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
-    for (const s of slots) lines.push(`• ${s.star ? "⭐ " : ""}[${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
+    for (const s of slots) lines.push(`• ${s.star ? "⭐ " : ""}[${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.event ? `\n   Event: ${s.event}` : ""}${s.ref ? `\n   Reference: ${s.ref}` : ""}${s.note ? `\n   Notes: ${s.note.replace(/\n+/g, " ")}` : ""}`);
   }
   return lines.join("\n");
 }
