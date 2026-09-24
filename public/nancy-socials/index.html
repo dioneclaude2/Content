@@ -244,6 +244,20 @@ select.filter{appearance:none;color:var(--text)}
 .nitem p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
 .sowhat{margin-top:10px!important;color:var(--text)!important;font-size:13.5px;padding-left:12px;border-left:3px solid var(--pink)}
 .nitem a.src{font-size:12px;color:var(--dim);display:inline-block;margin-top:10px}
+.capline{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;background:var(--surface-2);border-radius:12px;padding:10px 12px;margin-top:10px}
+.capline q{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.4;quotes:none}
+.nmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.nmeta .chip.hot{background:rgba(255,79,139,.14);color:var(--pink)}
+.vtiles{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(170px,210px);gap:10px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
+.vtile{position:relative;aspect-ratio:9/16;border-radius:14px;overflow:hidden;cursor:pointer;display:grid;place-items:center;background:linear-gradient(160deg,#2a1622,#120c10)}
+.vtile.ig{background:linear-gradient(45deg,#FEC05366,#F2203E66,#B729A866,#5342D666),#111}
+.vtile.tt{background:linear-gradient(160deg,#25F4EE40,#FE2C5540),#111}
+.vtile.yt{background:#111}
+.vtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85}
+.vtile .vwhat{position:absolute;left:0;right:0;bottom:0;padding:26px 10px 10px;font-size:11.5px;line-height:1.35;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.vtile .vopen{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;text-decoration:none;display:grid;place-items:center;font-size:12px}
+.vtile.playing{cursor:default;aspect-ratio:auto;height:520px;background:#000}
+.vtile iframe{width:100%;height:100%;border:0}
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
 .pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer}
 .pill span{font-size:11px;background:var(--surface-3);color:var(--muted);border-radius:999px;padding:1px 7px}
@@ -1006,7 +1020,9 @@ function renderIntel(){
     <div class="nhead"><span class="chip catchip">${esc(CATS[i.category] || i.category)}</span>${i.platform && i.platform !== "all" && PLATFORMS[i.platform] ? `<span class="plat ${i.platform}" style="padding:3px 7px;font-size:9.5px">${PLATFORMS[i.platform]}</span>` : ""}<span class="chip">${fmt(i.date,{day:"numeric",month:"short",year:"numeric"})}</span></div>
     <h3>${esc(i.title)}</h3><p>${esc(i.summary)}</p>
     ${i.sowhat ? `<p class="sowhat"><b>For Nancy:</b> ${esc(i.sowhat)}</p>` : ""}
-    ${watchLinks(i.media)}
+    ${i.caption ? `<div class="capline"><q>${esc(i.caption)}</q><button class="copy" data-copy="${esc(i.caption)}">Copy</button></div>` : ""}
+    ${i.format || i.window ? `<div class="nmeta">${i.format ? `<span class="chip">🎬 ${esc(i.format)}</span>` : ""}${i.window ? `<span class="chip hot">⏱ ${esc(i.window)}</span>` : ""}</div>` : ""}
+    ${videoTiles(i.media)}
     <a class="src" href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener">${esc(i.source)} ↗</a>
   </article>`).join("") || `<div class="empty">Nothing in this category.</div>`;
   $("#trends").innerHTML = (INTEL.trends || []).map(t => `<div class="trend"><b>${platBadge(t.platform)}${esc(t.name)}</b><p>${esc(t.how)}${t.url ? ` <a href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p>
@@ -1033,6 +1049,35 @@ function watchLinks(list){
   if (!list?.length) return "";
   return `<div class="watch">${list.map(x => `<a href="${esc(safeUrl(x.url))}" target="_blank" rel="noopener" title="${esc(x.what || "")}">▶ ${esc(x.account || PLAT_NAMES[x.platform] || "Watch")}</a>`).join("")}</div>`;
 }
+/* Real posts play in place: tap a tile and it swaps to the platform's own embed. */
+function embedSrc(url){
+  const u = String(url || "");
+  let m;
+  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return `https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`;
+  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return `https://www.tiktok.com/embed/v2/${m[1]}`;
+  const id = ytId(u); if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
+  return null;
+}
+function videoTiles(list){
+  if (!list?.length) return "";
+  const playable = list.filter(x => embedSrc(x.url)), rest = list.filter(x => !embedSrc(x.url));
+  return (playable.length ? `<div class="vtiles">${playable.map(x => {
+    const id = ytId(x.url);
+    return `<div class="vtile ${esc(x.platform || "")}" data-embed="${esc(embedSrc(x.url))}">
+      ${id ? `<img src="https://i.ytimg.com/vi/${esc(id)}/hqdefault.jpg" alt="" loading="lazy">` : ""}
+      <span class="mplat">${esc(PLAT_NAMES[x.platform] || "Video")}</span><span class="mplay">▶</span>
+      <span class="vwhat">${esc(x.what || "")}</span>
+      <a class="vopen" href="${esc(safeUrl(x.url))}" target="_blank" rel="noopener" title="Open in the app">↗</a>
+    </div>`;
+  }).join("")}</div>` : "") + watchLinks(rest);
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest(".vtile[data-embed]");
+  if (!t || e.target.closest(".vopen")) return;
+  t.innerHTML = `<iframe src="${t.dataset.embed}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  t.removeAttribute("data-embed"); t.classList.add("playing");
+});
+
 function mediaCard({url, platform, title, meta, line1, line2, yt, example}){
   const id = yt || (platform === "yt" ? ytId(url) : null);
   const label = platform === "capcut" ? "CapCut" : PLAT_NAMES[platform] || "Post";
