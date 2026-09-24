@@ -207,6 +207,8 @@ select.filter{appearance:none;color:var(--text)}
 .search a:hover{color:var(--text)}
 
 /* ── intel ── */
+.fresh{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;color:var(--muted);margin:-6px 0 16px}
+.fresh b{color:var(--text)}
 .intel{display:grid;gap:16px;grid-template-columns:1fr}
 @media (min-width:1000px){.intel{grid-template-columns:1.5fr 1fr}}
 .news{display:grid;gap:10px}
@@ -271,6 +273,8 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .slot-x{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:0;background:var(--surface-3);color:var(--muted);font-size:12px;cursor:pointer;display:grid;place-items:center;opacity:.7}
 .slot-x:hover{opacity:1;background:var(--pink);color:#fff}
 @media (hover:hover){.slot .slot-x{opacity:0}.slot:hover .slot-x{opacity:.8}}
+.slot.starred{border-color:#FFD84D;box-shadow:0 0 0 1px rgba(255,216,77,.35),0 6px 20px rgba(255,216,77,.08)}
+.star{color:#FFD84D;font-size:13px;margin-right:2px;letter-spacing:0}
 .slot-auto{font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:1px 4px;margin-left:auto;margin-right:24px}
 
 /* ── week planner ── */
@@ -464,6 +468,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
   <!-- INTEL -->
   <section id="intel" hidden>
     <h2 class="sec-title">What's <span class="serif">happening</span></h2>
+    <p class="fresh" id="intelFresh"></p>
     <div class="filters" id="intelFilters"></div>
     <div class="intel">
       <div class="news" id="news"></div>
@@ -805,7 +810,10 @@ function renderIntel(){
   </article>`).join("") || `<div class="empty">Nothing in this category.</div>`;
   $("#trends").innerHTML = (INTEL.trends || []).map(t => `<div class="trend"><b>${t.platform && PLATFORMS[t.platform] ? `<span class="plat ${t.platform}" style="padding:2px 6px;font-size:9px;margin-right:6px">${PLATFORMS[t.platform]}</span>` : ""}${esc(t.name)}</b><p>${esc(t.how)}${t.url ? ` <a href="${esc(safeUrl(t.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p></div>`).join("");
   $("#comps").innerHTML = (INTEL.competitors || []).map(c => `<div class="trend"><b>${esc(c.brand)}</b><p>${esc(c.recent)} ${c.url ? `<a href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">↗</a>` : ""}</p></div>`).join("");
-  $("#intelNote").textContent = `Researched ${fmt(INTEL.updated,{day:"numeric",month:"long",year:"numeric"})}. Every item links to its source.`;
+  const age = -daysUntil(INTEL.updated);
+  $("#intelNote").textContent = `Every item links to its source.`;
+  $("#intelFresh").innerHTML = `<span class="dot" style="background:${age > 8 ? "var(--care)" : "var(--retail)"}"></span>
+    Last updated <b>${fmt(INTEL.updated,{weekday:"short", day:"numeric", month:"short"})}</b> · ${age === 0 ? "today" : age === 1 ? "yesterday" : `${age} days ago`}${age > 8 ? " · due for a refresh" : ""}`;
 }
 
 /* ───────── SAFETY ───────── */
@@ -935,6 +943,8 @@ const PILLARS = {
     desc:"Fast, relatable, low effort. No filming needed."},
   trend:{group:"core", label:"Trending", c:"#A77BFF", film:"", edit:"", status:"create", plats:["tt","ig"],
     desc:"What's fun or trending this week: audio, formats, news."},
+  team:{group:"core", label:"Team content", c:"#FFD84D", film:"", edit:"", status:"create", plats:["ig","tt"],
+    desc:"The Nancy team on camera: opinions, reactions, day-in-the-life, office moments."},
   moment:{group:"core", label:"Moment", c:"#FF8A4C", film:"", edit:"", status:"create", plats:["ig","tt","x"],
     desc:"Tied to a day on the calendar. Drop it on a day that has a moment and it links automatically."},
   pteaser:{group:"teaser", label:"Product teaser", c:"#FF3D9A", film:"", edit:"", status:"create", plats:["ig","tt","x"],
@@ -1004,12 +1014,24 @@ function mkSlot(day, pillar){
   return s;
 }
 let WEEK = null;
+/* Posts preloaded every week, always starred. day: 0 = Mon … 6 = Sun. */
+const RECURRING = [
+  {key:"sun-team",    day:6, pillar:"team"},
+  {key:"sun-outlier", day:6, pillar:"outlier"},
+];
+
 /* Tentpole and strong moments are pre-scheduled once per week. `seeded` remembers which were
    added, so a moment Dione deletes stays deleted. */
 function loadWeek(){
   WEEK = store.get(wkKey(), null) || {start: iso(wkStart), slots: []};
   WEEK.seeded = WEEK.seeded || [];
   const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
+  for (const r of RECURRING){
+    if (WEEK.seeded.includes(r.key)) continue;
+    const s = mkSlot(days[r.day], r.pillar);
+    s.star = true; s.auto = true;
+    WEEK.slots.push(s); WEEK.seeded.push(r.key);
+  }
   const big = MOMENTS.filter(m => days.includes(m.date) && m.tier !== "minor" && !WEEK.seeded.includes(m.id));
   for (const m of big){
     const s = mkSlot(m.date, "moment");
@@ -1207,8 +1229,8 @@ function removePerson(id){
 function slotCard(s){
   const P = PILLARS[s.pillar] || PILLARS.meme;
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
-  return `<div class="slot ${s.status === "posted" ? "done" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
-    <div class="slot-p">${esc(P.label)}${s.auto ? `<span class="slot-auto">AUTO</span>` : ""}</div>
+  return `<div class="slot ${s.status === "posted" ? "done" : ""} ${s.star ? "starred" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
+    <div class="slot-p">${s.star ? `<span class="star" title="Starred">★</span>` : ""}${esc(P.label)}${s.auto ? `<span class="slot-auto">${s.star ? "WEEKLY" : "AUTO"}</span>` : ""}</div>
     <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
@@ -1271,10 +1293,11 @@ function openSlot(id){
       </div>
       <label>Notes for the maker<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
       ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
-      <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fDup">Duplicate</button><button class="btn ghost" id="fDel">Delete</button></div>
+      <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fStar">${s.star ? "★ Unstar" : "☆ Star"}</button><button class="btn ghost" id="fDup">Duplicate</button><button class="btn ghost" id="fDel">Delete</button></div>
     </div></div>`);
   const upd = () => { saveWeek(); renderPlan(); };
   $("#fDone").onclick = closeDrawer;
+  $("#fStar").onclick = () => { s.star = !s.star; upd(); openSlot(s.id); };
   $("#fDel").onclick = () => { closeDrawer(); removeSlot(s); };
   $("#fDup").onclick = () => { const c = {...s, id: Math.random().toString(36).slice(2, 9), plats: [...s.plats]}; WEEK.slots.push(c); upd(); openSlot(c.id); toast("Duplicated"); };
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
@@ -1299,7 +1322,7 @@ function weekForSlack(){
     const slots = WEEK.slots.filter(s => s.day === day);
     if (!slots.length) continue;
     lines.push("", `*${fmt(day,{weekday:"long", day:"numeric", month:"short"})}*`);
-    for (const s of slots) lines.push(`• [${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
+    for (const s of slots) lines.push(`• ${s.star ? "⭐ " : ""}[${PILLARS[s.pillar].label}] ${s.title || "TBD"} (${s.plats.map(p => PLATFORMS[p]).join("/")}). Film: ${pname(s.film)} · Edit: ${s.edit === "none" ? "No editing" : pname(s.edit)} · _${ST_LABEL[s.status]}_${s.ref ? `\n   Reference: ${s.ref}` : ""}`);
   }
   return lines.join("\n");
 }
