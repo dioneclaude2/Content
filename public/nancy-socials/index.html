@@ -933,6 +933,10 @@ const PILLARS = {
     desc:"What's fun or trending this week: audio, formats, news."},
   moment:{group:"core", label:"Moment", c:"#FF8A4C", film:"", edit:"", status:"create", plats:["ig","tt","x"],
     desc:"Tied to a day on the calendar. Drop it on a day that has a moment and it links automatically."},
+  pteaser:{group:"teaser", label:"Product teaser", c:"#FF3D9A", film:"", edit:"", status:"create", plats:["ig","tt","x"],
+    desc:"Build hype before a drop: silhouettes, close-ups, countdowns, 'coming soon'."},
+  eteaser:{group:"teaser", label:"Event teaser", c:"#FFA23D", film:"", edit:"", status:"create", plats:["ig","tt","x"],
+    desc:"Build hype before an event: location hints, invite reveals, countdowns, past-event flashbacks."},
   ask:{group:"more", label:"Ask Nancy", c:"#F06CD8", film:"", edit:"", status:"create", plats:["ig","tt"],
     desc:"Anonymous follower questions, answered on camera or in Stories."},
   myth:{group:"more", label:"Myth vs fact", c:"#6FC3FF", film:"", edit:"", status:"create", plats:["ig","tt"],
@@ -979,6 +983,7 @@ const PILLARS = {
     desc:"YouTube video or a clip cut from a longer talk."},
 };
 
+const TYPE_GROUPS = [["core","Our pillars"],["teaser","Teasers"],["more","More to try"]];
 const mondayOf = d => addDays(new Date(d.getFullYear(), d.getMonth(), d.getDate()), -((d.getDay() + 6) % 7));
 let wkStart = addDays(mondayOf(TODAY), 7);   // plan ahead: next week by default
 const wkKey = () => "ns.week3." + iso(wkStart);
@@ -1024,7 +1029,7 @@ function addToDay(day, pillar){
 }
 
 function renderTray(){
-  const groups = [["core","Our pillars"],["more","More to try"]];
+  const groups = TYPE_GROUPS;
   $("#trayChips").innerHTML = groups.map(([g, lbl]) => `<span class="tgroup">${lbl}</span>` +
     Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
       `<span class="tchip ${armed === k ? "armed" : ""}" draggable="true" data-type="${k}" style="--pc:${P.c}" title="${esc(P.desc)}">${esc(P.label)}</span>`).join("")).join("");
@@ -1167,7 +1172,7 @@ function pickType(day){
       <div class="d-date">${fmt(day,{weekday:"long", day:"numeric", month:"long"})}</div>
       <div class="d-name">Add content</div>
     </div>
-    <div class="d-body">${[["core","Our pillars"],["more","More to try"]].map(([g, lbl]) => `<p class="eyebrow">${lbl}</p>
+    <div class="d-body">${TYPE_GROUPS.map(([g, lbl]) => `<p class="eyebrow">${lbl}</p>
       <div class="typegrid" style="margin-bottom:20px">${Object.entries(PILLARS).filter(([, P]) => P.group === g).map(([k, P]) =>
         `<button data-pick="${k}" style="--pc:${P.c}">${esc(P.label)}<span>${esc(P.desc)}</span></button>`).join("")}</div>`).join("")}</div>`);
   d.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { closeDrawer(); addToDay(day, b.dataset.pick); });
