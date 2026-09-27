@@ -1,438 +1,469 @@
 {
- "updated": "2026-09-24",
+ "updated": "2026-09-27",
  "items": [
   {
-   "date": "2026-09-08",
+   "date": "2026-08-31",
    "category": "science",
    "platform": null,
-   "title": "Menopause doesn't shrink the brain the way puberty and pregnancy remodel it",
-   "summary": "Amsterdam UMC researchers publishing in Nature Communications compared brain scans of people before, during and after the menopause transition and found no overall drop in cortical grey matter. Unlike puberty and pregnancy, the menopause transition itself showed minimal grey-matter change, which suggests sex hormones act on the brain differently at different life stages.",
-   "sowhat": "A 'menopause myth vs science' carousel: your brain isn't shrinking, and neither is your right to pleasure. Pair it with Nancy's 40+ pleasure tips.",
-   "source": "Scientific American",
-   "url": "https://www.scientificamerican.com/article/something-unique-seems-to-be-happening-to-the-brain-in-menopause/",
+   "title": "Most 'recurrent UTIs' in women aren't UTIs, study finds",
+   "summary": "A study in The Journal of Sexual Medicine, reported by NPR, reviewed records of 253 women with recurrent UTI-like symptoms and found only 15% had infections confined to the bladder, while 85% showed hormonally driven vulvar inflammation and 75% had pelvic floor dysfunction. Lead researcher Dr. Maria Uloko says these conditions mimic UTI symptoms (burning, urgency, frequency) but need entirely different treatment than antibiotics.",
+   "sowhat": "A myth-busting 'it's probably not a UTI' carousel positions Nancy as a brand that takes vulvar and pelvic health seriously, and opens a natural bridge into lubricant and pelvic-wellness content.",
+   "caption": "Plot twist: that 'UTI' that keeps coming back might not be a UTI at all. Vulvar health is wonderfully complicated — bring curiosity, not just antibiotics 💛",
+   "format": "carousel",
+   "window": "Good all week",
+   "source": "NPR",
+   "url": "https://www.npr.org/2026/08/31/nx-s1-5947249/infection-uti-bladder-antibiotics-hormone-menopause",
    "media": []
   },
   {
-   "date": "2026-09-11",
+   "date": "2026-09-23",
    "category": "science",
    "platform": null,
-   "title": "15-year beetle study: more partners, healthier genes",
-   "summary": "A University of East Anglia study in PNAS followed red flour beetles for 15 years and found that when females mated with several males, offspring carried fewer harmful mutations. Those populations were healthier and more resistant to extinction, with no loss of genetic diversity.",
-   "sowhat": "A cheeky 'science says variety is healthy' post (beetles only, of course) that leads into a 'try something new tonight' toy roundup.",
-   "source": "University of East Anglia via Newswise",
-   "url": "https://www.newswise.com/articles/how-sex-can-help-save-species-from-extinction",
+   "title": "New Kinsey/Playboy survey: the Gen Z 'sex recession' is real, but it's complicated",
+   "summary": "The 2026 Playboy Gen Z Sex Survey, run with Julie and the Kinsey Institute among 2,373 US adults 18-29, found 29% had no sexual partners in the past three months and 19% have never had one. Top cited barriers were lack of opportunity to meet people (66.5%), fear of rejection (60%) and being 'too broke to date' (43%), even as desire for sex and romance stayed high.",
+   "sowhat": "Reframe the 'sex recession' as a low-stakes, confidence-building opportunity rather than a problem, meeting anxious, cash-strapped Gen Z where they already are.",
+   "caption": "Gen Z isn't 'less horny' — they're broke, busy, and terrified of being left on read. No judgment here: solo dates absolutely count 💫",
+   "format": "reel",
+   "window": "Good all week",
+   "source": "YPulse (Kinsey Institute / Playboy / Julie survey)",
+   "url": "https://www.ypulse.com/newsfeed/2026/09/23/a-new-study-says-the-gen-z-sex-recession-is-real-but-its-complicated/",
    "media": []
+  },
+  {
+   "date": "2026-09-10",
+   "category": "science",
+   "platform": null,
+   "title": "Stanford study: heavy AI-companion use linked to lower well-being",
+   "summary": "A Stanford study reported by CNBC surveyed 1,131 US adults and analyzed 464,687 messages from 237 Character.AI users, finding that people with smaller offline social circles leaned more on AI companions and reported greater loneliness and lower life satisfaction. Researchers concluded sustained AI companionship is associated with lower well-being, largely through reduced human interaction.",
+   "sowhat": "A cheeky 'science says real hands beat chatbots' angle lets Nancy position its products as tools for actual human intimacy and confidence, not AI-companion substitutes.",
+   "caption": "Science says: a chatbot can text you good morning, but it can't hold your hand. Real intimacy still wins 🤝",
+   "format": "meme",
+   "window": "Good all week",
+   "source": "CNBC",
+   "url": "https://www.cnbc.com/2026/09/10/ai-companions-lower-wellbeing-associated.html",
+   "media": []
+  },
+  {
+   "date": "2026-09-25",
+   "category": "popculture",
+   "platform": null,
+   "title": "Taylor Swift's 'Cleveland!' is an ode to husband Travis Kelce",
+   "summary": "On the deluxe reissue of 'The Life of a Showgirl,' Swift released 'Cleveland!,' singing 'this is the love of my life' about husband Travis Kelce, and shared a lyric video built from real footage of a road trip to his Ohio hometown. The song and video dropped September 25, days after their July 2026 wedding.",
+   "sowhat": "A newlywed writing a whole song about how good her husband makes her feel is basically a testimonial for prioritizing pleasure in a relationship.",
+   "caption": "Taylor really wrote a whole song about how good her man makes her feel and honestly? We support the transparency 💍🎶",
+   "format": "tweet / meme with lyric quote graphic",
+   "window": "Post within 48h",
+   "source": "E! Online",
+   "url": "https://www.eonline.com/news/1436476/taylor-swift-shares-travis-kelce-road-trip-in-cleveland-lyric-video",
+   "media": [
+    {
+     "url": "https://www.youtube.com/watch?v=jfVVXYTZykw",
+     "platform": "yt",
+     "what": "Taylor Swift's official 'Cleveland!' lyric video"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-26",
+   "category": "popculture",
+   "platform": null,
+   "title": "SNL's earliest-ever premiere: Jalen Brunson hosts, an airport massage chair breaks Mikey Day",
+   "summary": "SNL's Season 52 premiere on September 26, hosted by Knicks star Jalen Brunson with KATSEYE as musical guest, was the show's earliest-ever season opener. The standout sketch, 'Airport Massage Chairs,' had Brunson and Mikey Day so overtaken by an over-the-top massage-chair experience that Day broke character laughing.",
+   "sowhat": "A whole sketch built around people losing composure over a sensation being 'too good' is an easy, cheeky segue into Nancy's own 'good feelings make people lose it' territory.",
+   "caption": "SNL made a whole sketch about a massage chair being TOO good and honestly, groundbreaking journalism. We get it 💆‍♀️😂",
+   "format": "reel reacting to the clip + meme caption",
+   "window": "Post within 48h",
+   "source": "NBC Insider",
+   "url": "https://www.nbc.com/nbc-insider/watch-jalen-brunson-snl-monologue-sketches-september-26-premiere",
+   "media": [
+    {
+     "url": "https://www.youtube.com/watch?v=POESY1TgMs4",
+     "platform": "yt",
+     "what": "Official 'Airport Massage Chairs' SNL sketch"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-26",
+   "category": "popculture",
+   "platform": null,
+   "title": "Karol G's 'BbY WOW' scores a third straight week at #1 globally",
+   "summary": "Karol G, Judeline and Rusowsky's 'BbY WOW' held #1 on the Billboard Global 200 and Global Excl. U.S. for a third week on the chart dated September 26, while also climbing to #7 on the Hot 100 — Karol G's biggest global streak yet.",
+   "sowhat": "A song literally titled 'Baby Wow' about a surprising, can't-help-yourself reaction is a gift of a hook for talking about surprisingly good feelings.",
+   "caption": "Karol G's 'BbY WOW' has been #1 for THREE weeks straight and same — that's the reaction we're going for every time 🔥",
+   "format": "reel using the song as audio + product cameo",
+   "window": "Good all week (chart-topping momentum)",
+   "source": "Billboard",
+   "url": "https://www.billboard.com/music/chart-beat/karol-g-bby-wow-global-charts-three-weeks-1236344354/",
+   "media": [
+    {
+     "url": "https://www.youtube.com/watch?v=dhzZU_-sLtA",
+     "platform": "yt",
+     "what": "KAROL G, Judeline, rusowsky - Bby Wow (official music video)"
+    },
+    {
+     "url": "https://www.youtube.com/watch?v=YMfh_KzoQ7c",
+     "platform": "yt",
+     "what": "BbY WOW lyric video"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-27",
+   "category": "popculture",
+   "platform": null,
+   "title": "The 2026 VMAs: Madonna's first performance in 23 years, Sabrina Carpenter leads the red carpet",
+   "summary": "Madonna opened the MTV VMAs (Peacock Theater, LA, Sept 27) for the first time since 2003, arriving with a career-high 11 nominations after teasing her Charli XCX collab 'Danceteria Afterhours' days earlier. Sabrina Carpenter, up for seven awards, and the rest of the red carpet leaned maximalist and skin-baring for the Snoop Dogg-hosted show.",
+   "sowhat": "A pop icon proving confidence never goes out of style, on a red carpet built entirely around dressing for yourself, is exactly the 'own your power at any age' energy Nancy stands for.",
+   "caption": "23 years later and Madonna is STILL out here reminding everyone who invented causing a scene. Some legends only get more confident with age — we relate 💅",
+   "format": "reel/carousel reacting to performance and red-carpet clips",
+   "window": "Post within 48h",
+   "source": "Billboard / Variety",
+   "url": "https://www.billboard.com/music/awards/madonna-2026-vmas-opening-performer-1236341723/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/p/DdlIqESj2tH/",
+     "platform": "ig",
+     "what": "Madonna & Charli XCX announce 'Danceteria Afterhours,' the collab that set up her VMA comeback"
+    },
+    {
+     "url": "https://www.instagram.com/p/DcL8KNKOfjH/",
+     "platform": "ig",
+     "what": "Post on Sabrina Carpenter's seven 2026 VMA nominations"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-22",
+   "category": "popculture",
+   "platform": null,
+   "title": "Fall officially arrives and 'cuffing season' discourse kicks off right on schedule",
+   "summary": "With fall starting September 22, TikTok and Instagram's annual 'cuffing season' conversation is back in full swing, with creators discussing pairing up for the colder months and what they want in a partner as temperatures drop.",
+   "sowhat": "This is the single most on-the-nose, once-a-year moment for a pleasure brand to own the 'getting cozy while you wait' conversation.",
+   "caption": "It's officially cuffing season 🍂 which means it's also officially 'treat yourself while you wait' season. Just saying.",
+   "format": "carousel/meme, evergreen brand tie-in",
+   "window": "Good all week, arguably for several weeks",
+   "source": "Pepper Agency trend roundup",
+   "url": "https://www.pepperagency.com/blog/tiktok-instagram-trends-for-september-2026-and-how-brands-can-actually-use-them",
+   "media": [
+    {
+     "url": "https://www.instagram.com/p/DM1hK8EtxF1/",
+     "platform": "ig",
+     "what": "'Today is the start of scouting for the cuffing season' post kicking off the seasonal discourse"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-20",
+   "category": "trending",
+   "platform": "ig",
+   "title": "\"That Wasn't Very Nonchalant\"",
+   "summary": "A viral original Instagram audio has creators calling out the exact moment they drop their too-cool composure — sprinting to greet a friend, fangirling over a celebrity, celebrating a small win. The format is a deadpan setup that hard-cuts into unfiltered, joyful chaos.",
+   "sowhat": "Flip 'unbothered' self-care into 'fully unhinged excitement' the second the new drop shows up.",
+   "caption": "That wasn't very nonchalant of us, but also... have you SEEN our new drop? 👀 Zero chill, all thrill.",
+   "format": "reel (reaction/whiplash cut)",
+   "window": "Good for ~2 weeks",
+   "source": "SocialBee trending Instagram songs roundup",
+   "url": "https://socialbee.com/blog/trending-instagram-songs-this-week/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/reel/DFBPxPXyWOi/",
+     "platform": "ig",
+     "what": "'That wasn't very nonchalant' whiplash-reaction reel"
+    },
+    {
+     "url": "https://www.instagram.com/p/DH8cT2Oqk4Y/",
+     "platform": "ig",
+     "what": "Another creator's take on the nonchalant-to-chaos format"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DX1kw8yMRtC/",
+     "platform": "ig",
+     "what": "Third example of the trend format"
+    }
+   ]
   },
   {
    "date": "2026-09-15",
-   "category": "science",
+   "category": "trending",
+   "platform": "ig",
+   "title": "'Right Round Hangover' staged morning-after",
+   "summary": "Flo Rida's 'Right Round' is resurging as the soundtrack for an elaborate prank format where creators stage a full 'morning after a great night' scene around a sleeping friend or partner, paparazzi-style, no explicit content required.",
+   "sowhat": "Stage a cheeky 'morning after' prank reel where the scattered 'evidence' is just an artfully chaotic pile of tasteful wellness products.",
+   "caption": "POV: you wake up and the 'evidence' is just... really good self-care choices 😌🎵 Right Round, wrong assumptions.",
+   "format": "reel (staged prank/aftermath scene)",
+   "window": "Good for ~2 weeks",
+   "source": "CreatorFlow",
+   "url": "https://creatorflow.so/blog/instagram-trends-2026-creators-marketers/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/reel/DFGEqvTSeDR/",
+     "platform": "ig",
+     "what": "Staged 'morning after' paparazzi-style scene set to 'Right Round'"
+    },
+    {
+     "url": "https://www.instagram.com/edd7e/reel/DHVQTDjs_ms/",
+     "platform": "ig",
+     "what": "Second creator's version of the same staged-aftermath format"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-24",
+   "category": "trending",
+   "platform": "ig",
+   "title": "One-take POV lip-sync / 'ordinary person' skits",
+   "summary": "This month's biggest Reels are raw, single-take lip syncs and POV skits using a 'POV: [job/role] finds out...' curiosity-gap caption with zero edits, part of a broader swing away from polished content.",
+   "sowhat": "Film one unbroken take of 'POV: the customer service team reads today's DMs,' reacting to real funny questions — all delivery, no props.",
+   "caption": "POV: customer service reads today's DMs and does NOT have a poker face 😭 one take, zero regrets.",
+   "format": "reel (single-take POV lip-sync/skit)",
+   "window": "Good for ~2-3 weeks",
+   "source": "NewEngen Instagram Trends",
+   "url": "https://newengen.com/insights/instagram-trends/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/reel/DS5vvs7jjQJ/",
+     "platform": "ig",
+     "what": "Single-take POV lip-sync example"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DXaVkzwJg07/",
+     "platform": "ig",
+     "what": "Another raw one-take POV skit"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DT4oojeEW49/",
+     "platform": "ig",
+     "what": "Third example of the format"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-21",
+   "category": "trending",
+   "platform": "ig",
+   "title": "Charli XCX 'Everything Is Romantic' remix progress reels",
+   "summary": "The Caroline Polachek-featuring remix of Charli XCX's 'Everything Is Romantic' is trending as the soundtrack for motivational 'look how far I've come' progress reels — gym transformations, project milestones, incremental self-improvement.",
+   "sowhat": "Romanticize the slow, unglamorous process of figuring out what you actually like — a self-love progress reel with no before/after shaming.",
+   "caption": "Everything is romantic, including the slow, unglamorous version of figuring out what you actually like. Romanticize the process 💗",
+   "format": "reel (progress montage)",
+   "window": "Good for ~2 weeks",
+   "source": "SocialBee trending Instagram songs roundup",
+   "url": "https://socialbee.com/blog/trending-instagram-songs-this-week/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/reel/DPZzds4DWmm/",
+     "platform": "ig",
+     "what": "Progress-montage reel set to the 'Everything Is Romantic' remix"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DPsm3wej8C1/",
+     "platform": "ig",
+     "what": "Second progress-reel example using the trend"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-17",
+   "category": "trending",
+   "platform": "ig",
+   "title": "'DAISIES' (Justin Bieber) nostalgic throwback",
+   "summary": "Bieber's lo-fi single 'Daisies' (from Swag) is a top trending audio for soft-focus nostalgic throwback content, with creators cutting together childhood or younger-self clips.",
+   "sowhat": "Pair it with a 'then vs. now' throwback on how conversations about pleasure and wellness have grown up.",
+   "caption": "Then vs. now: awkward sex-ed pamphlets vs. actually good conversations. We've grown, bestie 🌼",
+   "format": "reel (nostalgic montage)",
+   "window": "Good for ~2-3 weeks",
+   "source": "Buffer trending Instagram audio",
+   "url": "https://buffer.com/resources/trending-audio-instagram/",
+   "media": [
+    {
+     "url": "https://www.instagram.com/reel/DLAVwCxO_dv/",
+     "platform": "ig",
+     "what": "Nostalgic throwback montage set to 'Daisies'"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DM8CPIrt7-C/",
+     "platform": "ig",
+     "what": "Second nostalgic-montage example"
+    },
+    {
+     "url": "https://www.instagram.com/reel/DOlpdVpkqfh/",
+     "platform": "ig",
+     "what": "Third nostalgic-montage example"
+    }
+   ]
+  },
+  {
+   "date": "2026-09-24",
+   "category": "platform",
    "platform": null,
-   "title": "Testosterone prescriptions for women are rising, and so are denials",
-   "summary": "Reuters reports that more menopausal women are being prescribed testosterone, often for low libido, even though the US still has no FDA-approved testosterone product for women. Patients describe insurance denials, pharmacy delays and off-label workarounds as demand grows faster than access.",
-   "sowhat": "An explainer on 'what low libido in menopause actually is, and what helps', framing desire as healthcare rather than an afterthought.",
-   "source": "Reuters",
-   "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/testosterone-scripts-women-rise-along-with-denials-delays-2026-09-15/",
+   "title": "TikTok's new Community Guidelines crack down on sexually suggestive content",
+   "summary": "TikTok published updated Community Guidelines and For You Feed Eligibility Standards, effective September 24, tightening enforcement against sexually suggestive behavior and significant adult body exposure. Such content is now age-restricted and ineligible for the For You feed, under a formalized three-tier enforcement ladder (warning, temporary restriction, account ban).",
+   "sowhat": "Nancy's team should audit recent TikTok content for anything that reads as 'sexually suggestive' under the new standard and lean harder into humor/education framing to protect FYP reach.",
+   "caption": "New TikTok rules just landed. If your FYP reach felt shy this week, that's why — we're keeping things classy (and still very visible) 👀",
+   "format": "explainer",
+   "window": "Post within 48h",
+   "source": "TikTok Newsroom",
+   "url": "https://newsroom.tiktok.com/strengthening-enforcement-of-sexually-suggestive-content?lang=en",
    "media": []
   },
   {
-   "date": "2026-09-24",
+   "date": "2026-09-14",
    "category": "law",
    "platform": null,
-   "title": "Utah's 2% adult-content excise tax takes effect October 1",
-   "summary": "Utah SB73 imposes a 2% excise tax on revenue from adult digital images, video or audio sold to Utah users, on top of the state's existing age-verification duties, with civil penalties for noncompliance.",
-   "sowhat": "If Nancy sells or licenses any explicit digital content, not just physical toys, to Utah customers, confirm tax registration with finance before October 1.",
-   "source": "Deseret News",
-   "url": "https://www.deseret.com/politics/2026/03/20/utah-law-targets-porn-websites-with-new-tax-and-hefty-fines-here-is-why-parents-say-it-is-necessary/"
-  },
-  {
-   "date": "2026-09-23",
-   "category": "law",
-   "platform": null,
-   "title": "Ofcom opens formal investigation into Pornhub's age-assurance system",
-   "summary": "Ofcom launched an Online Safety Act investigation into Aylo (Pornhub's owner) over whether its Apple-device-based age check, rolled out in May 2026, is 'highly effective' at blocking minors; penalties can reach £18m or 10% of global turnover.",
-   "sowhat": "UK regulators are now scrutinizing device-signal shortcuts, not just document checks, so audit whatever age-assurance method gates any UK-facing adult content or storefront.",
-   "source": "Ofcom",
-   "url": "https://www.ofcom.org.uk/online-safety/protecting-children/ofcom-launches-investigation-into-pornhubs-age-checks"
-  },
-  {
-   "date": "2026-09-22",
-   "category": "law",
-   "platform": null,
-   "title": "Louisiana age-verification law reshapes live video chat services",
-   "summary": "New reporting details how Louisiana's age-verification statute is forcing changes to live video chat and streaming services that operate with or near adult content in the state.",
-   "sowhat": "If Nancy ever runs livestream shopping or creator live-chat features, confirm Louisiana-specific age-gating before targeting that state.",
-   "source": "Big Easy Magazine",
-   "url": "https://bigeasymagazine.com/2026/09/22/louisianas-age-verification-law-reshapes-live-video-chat/"
-  },
-  {
-   "date": "2026-09-23",
-   "category": "popculture",
-   "platform": null,
-   "title": "Taylor Swift announces 'The Life of a Showgirl: The Encore'",
-   "summary": "Taylor revealed on Instagram an expanded Showgirl edition dropping Friday 25 Sep with four new songs: 'Patient Zero', 'Cleveland!' (a nod to Travis Kelce's hometown), 'Pink Clouding' and 'Babylon'. It came after days of Swifties decoding a hidden website page and a 'Point of No Return' file-name theory, so the fandom is at full volume.",
-   "sowhat": "Play on the word 'encore'. Nobody should ever have to settle for one round, so it's a natural nudge toward self-care and a second go.",
-   "caption": "Taylor said encore and honestly? Same energy we bring to date night. Why stop at one? 🎤✨",
-   "format": "meme / tweet, then a reel on release day",
-   "window": "Post within 48h (ride the Friday 25 Sep release)",
-   "source": "Billboard",
-   "url": "https://www.billboard.com/music/pop/taylor-swift-life-of-a-showgirl-the-encore-album-new-songs-1236345267/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/p/Ddocc9fOjIg/",
-     "platform": "ig",
-     "what": "Taylor's Instagram announcement of The Encore and its four new tracks"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-23",
-   "category": "popculture",
-   "platform": null,
-   "title": "'The Love Hypothesis' drops on Prime Video: fake dating, real chemistry",
-   "summary": "Lili Reinhart and Tom Bateman's adaptation of Ali Hazelwood's BookTok hit arrived on Prime Video on 23 Sep. Critics are calling it a rom-com revival and singling out a 'hot hotel room scene', and fans are already primed after the one-arm-lift set TikTok passed 84M views.",
-   "sowhat": "Test 'the hypothesis' as a lab experiment: fake dating, real chemistry, and a Nancy product as the control variable.",
-   "caption": "Hypothesis: fake dating leads to real chemistry. Method: one hotel room. Results: peer-reviewed and approved 🧪💋",
-   "format": "reel (lab-coat 'experiment' skit) or carousel",
+   "title": "France drops its under-15 social media ban but keeps mandatory adult age checks",
+   "summary": "After France's Constitutional Council struck down the original under-15 social media ban, Macron's government notified the European Commission of a revised law restricting about ten 'addictive' platform features for minors instead. The revised proposal still requires every adult user on TikTok, Instagram, Facebook and X in France to verify their age, and Macron is pushing for it to become an EU-wide requirement.",
+   "sowhat": "Nancy should start prepping age-verification-friendly account flows for French/EU followers now, since mandatory adult age checks are moving from 'maybe' to 'likely EU-wide.'",
+   "caption": "Heads up, EU friends: proving you're an adult online is about to get very real in France. Wherever the rules land, we'll make sure you can still find us 🔐",
+   "format": "tweet",
    "window": "Good all week",
-   "source": "TechRadar",
-   "url": "https://www.techradar.com/streaming/amazon-prime-video/the-love-hypothesis-review",
-   "media": [
-    {
-     "url": "https://www.youtube.com/watch?v=xwdamnfS6IM",
-     "platform": "yt",
-     "what": "Official trailer (Prime Video)"
-    },
-    {
-     "url": "https://www.tiktok.com/@lilireinhart/video/7537771359301029151",
-     "platform": "tt",
-     "what": "Lili Reinhart's TikTok on The Love Hypothesis"
-    }
-   ]
+   "source": "Tech Times",
+   "url": "https://www.techtimes.com/articles/327502/20260914/france-swaps-social-media-ban-feature-curbs-every-adult-still-proves-age.htm",
+   "media": []
   },
   {
-   "date": "2026-09-22",
-   "category": "popculture",
+   "date": "2026-07-22",
+   "category": "platform",
    "platform": null,
-   "title": "Robots on the runway: Vogue World Milano's 'human touch' backfires",
-   "summary": "At Vogue World Milano, a show billed as a tribute to Italian craftsmanship and 'the human touch', Unitree humanoid robots walked the Galleria to 'L'Amour Toujours'. Alessandro Michele's frozen front-row face went viral and the internet roasted the whole thing.",
-   "sowhat": "Some things should keep the human touch and some are better battery-powered. Nancy can joke about knowing exactly which is which.",
-   "caption": "Robots on the runway? Hard pass. Robots in the bedside drawer? Now we're talking 🤖💅",
-   "format": "meme (Alessandro Michele reaction face) / tweet",
-   "window": "Post within 48h",
-   "source": "TechCrunch",
-   "url": "https://techcrunch.com/2026/09/23/vogue-sent-robots-down-the-runway-at-vogue-world-and-people-were-not-impressed/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/reel/DdozAsvhmXL/",
-     "platform": "ig",
-     "what": "Reel of the robot act and Alessandro Michele's pained front-row reaction"
-    },
-    {
-     "url": "https://x.com/SaschaAmato/status/2102468535725576695",
-     "platform": "x",
-     "what": "Viral post: robots dance to L'Amour Toujours while Michele 'slowly dies inside'"
-    },
-    {
-     "url": "https://x.com/michaelmiraflor/status/2102764452290683364",
-     "platform": "x",
-     "what": "'We are all Alessandro Michele' reaction post"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-18",
-   "category": "popculture",
-   "platform": null,
-   "title": "Miley's 'Bass Persuades' album is out and it's pure dance-floor seduction",
-   "summary": "Miley's 10th album 'Bass Persuades' landed on 18 Sep, led by a title track whose video was directed by Mert Alas: leather-clad dancers, Night Porter references and a steamy club mood. Critics are calling it a full-throttle dance-pop comeback.",
-   "sowhat": "The title is basically an innuendo already, so Nancy gets to ask which bass does the persuading: good vibrations, low frequencies and a bit of rumble.",
-   "caption": "Miley said the bass persuades. We said: we know, we built a whole product line around good vibrations 🎶〰️",
-   "format": "reel / trending sound",
+   "title": "Meta rewrites Health & Wellness ad rules to judge claims, not imagery",
+   "summary": "Meta's updated Health & Wellness Advertising Standards shifted enforcement from a product-based approach to a claims-based one, so ads are now reviewed primarily on what they claim rather than what they depict. Sexual wellness products remain governed by this policy and must still target audiences 18+, with ads still barred from focusing on sexual pleasure or enhancement claims rather than health/medical efficacy.",
+   "sowhat": "Still the operative standard for Nancy's paid Meta campaigns — copy should lean on wellness/health language over pleasure-forward claims to stay compliant.",
+   "caption": "Meta's ad rules got a refresh: less before/after panic, same old rule about keeping things classy. We're adapting our ads to stay visible AND vibrant ✨",
+   "format": "explainer",
    "window": "Good all week",
-   "source": "Billboard",
-   "url": "https://www.billboard.com/music/pop/miley-cyrus-bass-persuades-single-1236332800/",
-   "media": [
-    {
-     "url": "https://www.youtube.com/watch?v=aWpw-Ynl0Yc",
-     "platform": "yt",
-     "what": "MILEY - Bass Persuades (Official Video)"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-23",
-   "category": "popculture",
-   "platform": null,
-   "title": "Lindsey Vonn hard-launches her French skier boyfriend with a thirsty carousel",
-   "summary": "Olympic legend Lindsey Vonn, 41, went Instagram official with 30-year-old French ski racer Matthieu Bailet in a 19-photo 'summer recap pt 1' full of pool kisses and hammock cuddles. He replied 'can't wait to see the summer recap part 2 😉', Ilona Maher called them 'the hottest couple' and Sloane Stephens yelled 'HARD LAUNCH!!!'.",
-   "sowhat": "Celebrate a confident 40-something woman going public with her joy, and borrow the 'summer recap pt 2' tease.",
-   "caption": "Summer recap pt 1: posted. Pt 2: rated 'not for the grid' 😉⛷️ Go get it, Lindsey.",
-   "format": "tweet / carousel ('hard launch' meme template)",
-   "window": "Post within 48h",
-   "source": "HELLO! Magazine",
-   "url": "https://www.hellomagazine.com/us/925141/lindsey-vonn-goes-public-with-new-romance-in-steamy-vacation-photos/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/lindseyvonn/p/Ddo6uf_nScn/",
-     "platform": "ig",
-     "what": "Vonn's 'summer recap pt 1' hard-launch carousel"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-24",
-   "category": "trending",
-   "platform": "ig",
-   "title": "Whimsymaxxing: bedazzle everything",
-   "summary": "Y2K-flavoured maximalism where creators cover nails, phones, cakes and everyday objects in rhinestones, gems, charms and stickers, often with a sped-up ASMR glue-and-gem montage. It has spread into tiny rituals too, like heart-shaped ice cubes and sprinkles in your coffee.",
-   "sowhat": "Bedazzle a Nancy toy (and its storage pouch) in a gem-by-gem timelapse: 'the most whimsical thing in my nightstand'.",
-   "caption": "Whimsymaxxing, but make it bedside ✨ Every gem was placed with love. Our toy did not need this. She deserved it anyway. #whimsymaxxing",
-   "format": "reel (ASMR bedazzle timelapse + reveal)",
-   "window": "Good for ~2 weeks",
-   "source": "Later Reels trends (Aug 28 entry), SocialBee trend roundup, Instagram search results",
-   "url": "https://later.com/blog/instagram-reels-trends/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/reel/Dctd5w5xI3N/",
-     "platform": "ig",
-     "what": "'Whimsymaxxing but make it NAILS': purple, magical, gem-covered nail set"
-    },
-    {
-     "url": "https://www.instagram.com/reel/DclyhXSCB1Y/",
-     "platform": "ig",
-     "what": "Creators try whimsymaxxing by covering objects in gems and charms"
-    },
-    {
-     "url": "https://www.instagram.com/reel/DcUkOMPBXAS/",
-     "platform": "ig",
-     "what": "'Whimsymaxxing, but make it my birthday': maximal colour-and-sparkle party set-up"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-24",
-   "category": "trending",
-   "platform": "ig",
-   "title": "Miley's 'Bass Persuades' goes dance-floor viral",
-   "summary": "Miley Cyrus's title track (out Sept 3, album Sept 18) is a fast-rising Reels audio, used for bold fashion transitions, choreo clips and nightlife teasers. It's still under ~100k Reels, so the early-adopter window is open.",
-   "sowhat": "The name does the work: a bass-drop reveal of Nancy's most rumbly toy, synced to the beat.",
-   "caption": "Some things you just have to feel in your bass 🔊 Turned it up to see who'd be persuaded. (Everyone. It was everyone.)",
-   "format": "reel (beat-synced product reveal / transition)",
-   "window": "Good for ~3 weeks while the album cycle runs",
-   "source": "SocialPilot trending Reels audio (Sept 2026), Buffer trending sounds, TikTok search results",
-   "url": "https://www.socialpilot.co/blog/instagram-reels-trends",
-   "media": [
-    {
-     "url": "https://www.instagram.com/reel/DdExhj-xXVK/",
-     "platform": "ig",
-     "what": "Reel set to 'Bass Persuades', embedded by SocialPilot as the trend example"
-    },
-    {
-     "url": "https://www.tiktok.com/@jasonleighwinter/video/7681647084583259425",
-     "platform": "tiktok",
-     "what": "Creator learns and performs the 'Bass Persuades' video choreography"
-    },
-    {
-     "url": "https://www.tiktok.com/@jukeboxx222/video/7681451651370077473",
-     "platform": "tiktok",
-     "what": "Release-day 'Bass Persuades out now' dance clip"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-24",
-   "category": "trending",
-   "platform": "ig",
-   "title": "Flop-core: 'my recent flops' carousels",
-   "summary": "The anti-highlight reel: creators post carousels and Reels of failed attempts, rejected ideas and embarrassing moments, not their wins. It's honest, a bit self-roasting, and very shareable.",
-   "sowhat": "Nancy's flop dump: rejected product names, the prototype that rolled off the table, the caption legal said no to.",
-   "caption": "Our recent flops, lovingly curated 🫠 Slide 3 got vetoed by legal. Slide 5 is why we test everything (thoroughly). Winners soon, promise.",
-   "format": "carousel (photo dump of flops)",
-   "window": "Good for ~2 weeks",
-   "source": "SocialBee (Sept 18 entry), Ramdam Instagram trends Sept 2026, NewEngen",
-   "url": "https://socialbee.com/blog/latest-instagram-trends/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/p/DdTHydzEydH/",
-     "platform": "ig",
-     "what": "'My latest flops' carousel showing failed and rejected ideas"
-    },
-    {
-     "url": "https://www.instagram.com/p/DbviwQ4GzJL/",
-     "platform": "ig",
-     "what": "'My recent flops' carousel of missed goals and mistakes, told with relatable honesty"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-24",
-   "category": "trending",
-   "platform": "ig",
-   "title": "Cozy girl autumn / 'a new season had begun'",
-   "summary": "Wordless, soft-focus montages of fall rituals like warm drinks, layered knits, slow mornings and candles, plus summer-vs-September contrast clips and 'fall wishlist' carousels. The mood is sensory and slow, not productive.",
-   "sowhat": "Cuffing-season self-care: a slow-morning montage where the toy sits between the chai and the candle.",
-   "caption": "A new season had begun 🍂 Chunky knit, hot chai, zero plans and a very good reason to stay in bed.",
-   "format": "reel (wordless aesthetic montage) or fall-wishlist carousel",
-   "window": "Good for ~4 weeks through October",
-   "source": "Ramdam Instagram trends Sept 2026, SocialBee (Sept 2 and Sept 23 entries), NewEngen",
-   "url": "https://www.ramd.am/blog/trends-instagram",
-   "media": [
-    {
-     "url": "https://www.instagram.com/reel/DceQtyZIxJF/",
-     "platform": "ig",
-     "what": "Cozy girl autumn montage: warm drinks, layers, slow mornings, walks"
-    },
-    {
-     "url": "https://www.instagram.com/reels/DcuE576oDjs/",
-     "platform": "ig",
-     "what": "'New season' Reel contrasting August 31 summer with September fall"
-    },
-    {
-     "url": "https://www.instagram.com/p/DdBlKxsjANc/",
-     "platform": "ig",
-     "what": "Fall wishlist carousel of coffee recipes, books, outfits and seasonal treats"
-    }
-   ]
-  },
-  {
-   "date": "2026-09-24",
-   "category": "trending",
-   "platform": "ig",
-   "title": "'Kinda chic to...' affirmation carousels",
-   "summary": "Colour-blocked carousels and Reels finishing the line 'kinda chic to...' with small confident, self-loving statements, from 'be a 10 at size 14' to 'be late to the trend'. It started in August and is still being remixed by brands and creators.",
-   "sowhat": "Sex-positive affirmations in the format: 'kinda chic to know what you like'.",
-   "caption": "Kinda chic to know what you like. Kinda chic to ask for it. Kinda chic to treat yourself on a Tuesday 💅 Finish the sentence 👇",
-   "format": "carousel (text-on-colour slides)",
-   "window": "Good for ~1–2 weeks (late but still going)",
-   "source": "Later Reels trends (Aug 14 entry), SocialBee (Aug 5 entry), Instagram search results",
-   "url": "https://later.com/blog/instagram-reels-trends/",
-   "media": [
-    {
-     "url": "https://www.instagram.com/p/DcEl16PC8Ij/",
-     "platform": "ig",
-     "what": "'Kinda chic to be a 10…at size 14' body-positive take"
-    },
-    {
-     "url": "https://www.instagram.com/p/DcdzOMvjW5S/",
-     "platform": "ig",
-     "what": "'Kinda chic to be a dog mom' carousel version"
-    },
-    {
-     "url": "https://www.instagram.com/p/Dbx6PZBjrIY/",
-     "platform": "ig",
-     "what": "'Kinda chic to be late to the trend' self-aware remix"
-    }
-   ]
+   "source": "Meta Transparency Center",
+   "url": "https://transparency.meta.com/policies/ad-standards/restricted-goods-services/health-wellness/",
+   "media": []
   }
  ],
  "trends": [
   {
-   "name": "'Nicole Kidman' manifestation audio (Adéla's song)",
+   "name": "Finger Down Challenge (couples put-a-finger-down game)",
    "platform": "tt",
-   "how": "Pair Adéla's 'Nicole Kidman' in-control anthem with a confidence-forward pleasure-product reveal or a customer-testimonial cut, riding the boost from Nicole Kidman's own TikTok debut in late August.",
-   "url": "https://www.justjared.com/2026/08/27/nicole-kidman-makes-tiktok-debut-with-adela-song-reveals-plans-to-attend-her-concert/",
+   "how": "Film a couple (or two staffers) doing 'put a finger down' with cheeky, tasteful prompts about desire, communication and toy habits — sparks comments/duets without being explicit.",
+   "url": "https://www.tiktok.com/discover/couples-put-down-a-finger-challenge",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@adela/video/7681536754377084182",
+     "url": "https://www.tiktok.com/@indistar/video/7482859103476321578",
      "platform": "tt",
-     "account": "@adela",
-     "what": "Original 'Nicole Kidman' manifestation-audio post that took off after Nicole Kidman joined TikTok"
+     "account": "@indistar",
+     "what": "Couple runs through 'put a finger down' relationship prompts, comedic take"
     },
     {
-     "url": "https://www.youtube.com/shorts/3bsglWB1ZcA",
-     "platform": "yt",
-     "account": "YouTube Shorts",
-     "what": "Short cut of the same in-control, glow-up trend format"
+     "url": "https://www.tiktok.com/@calebnandrea/video/7396825796930735406",
+     "platform": "tt",
+     "account": "@calebnandrea",
+     "what": "Couple plays the finger-down challenge trading confessions/reactions"
     }
    ]
   },
   {
-   "name": "'Right Round Hangover' staged morning-after",
-   "platform": "ig",
-   "how": "Stage a full 'morning after a great night' scene (props, sunglasses, snacks) shot paparazzi-style to Flo Rida's 'Right Round', with a product visible on the nightstand as the punchline, no explicit content required.",
-   "url": "https://www.socialpilot.co/blog/instagram-reels-trends",
+   "name": "Headphone/AirPods swap",
+   "platform": "tt",
+   "how": "Two people 'swap' bedside-drawer must-haves the way people swap headphones, reacting to each other's very different go-to picks — funny/wholesome, no explicit detail needed.",
+   "url": "https://napoleoncat.com/blog/instagram-reels-trends/",
    "examples": [
     {
-     "url": "https://www.instagram.com/btt.mp4/reel/C8Eo7gnv8od/",
-     "platform": "ig",
-     "account": "@btt.mp4",
-     "what": "Original staged 'morning after' paparazzi-style gag set to Flo Rida's Right Round"
-    }
-   ]
-  },
-  {
-   "name": "'What I Did' 3-panel day recap",
-   "platform": "ig",
-   "how": "Split the screen into 3 panels (what I wore / where I went / what I did) as a date-night recap that features product subtly rather than as a hard sell.",
-   "url": "https://socialbee.com/blog/latest-instagram-trends/",
-   "examples": [
+     "url": "https://www.tiktok.com/@katzefrissthund/video/7624499082630810912",
+     "platform": "tt",
+     "account": "@katzefrissthund",
+     "what": "Two people bump, swap headphones, react to each other's taste"
+    },
     {
-     "url": "https://www.instagram.com/reel/Da7FLuro3-i/",
+     "url": "https://www.instagram.com/p/DWDTKTTyASq/",
      "platform": "ig",
      "account": "",
-     "what": "3-panel 'what I wore / where I went / what I did' day-recap reel"
+     "what": "POV headphone-swap reel, captioned 'wasn't meant for your ears'"
     }
    ]
   },
   {
-   "name": "'My American Girl Doll' nostalgia reveal",
+   "name": "Pretty Little Liars '-A' text trend",
    "platform": "tt",
-   "how": "Riff on the excited-kid nostalgia reveal template with an adult 'prized possession' reveal, such as a self-care drawer, using humor to destigmatize ownership.",
-   "url": "https://nextreel.ai/blog/how-to-ride-my-american-girl-doll-tiktok-trend-with-ai-2026",
+   "how": "Brand account 'receives' a shady '-A is always watching' text calling out a relatable self-care-avoidance habit, read aloud in the trend's deadpan format.",
+   "url": "https://www.tiktok.com/discover/pretty-little-liars-trend-explained",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@itsangelodavid/video/7639431358141582622",
+     "url": "https://www.tiktok.com/@dondad_aaa/video/7687324557866290445",
      "platform": "tt",
-     "account": "@itsangelodavid",
-     "what": "Origin clip: excited kid reveals 'MY AMERICAN GIRL DOLL MIA,' now a nostalgia-reveal template"
-    }
-   ]
-  },
-  {
-   "name": "'Reasons to get a ___' deadpan list (Fat Papi 'Freaked Out')",
-   "platform": "tt",
-   "how": "Deadpan on-screen list where every 'reason' is just the product name, set to Fat Papi's viral 'Freaked Out' beat; low-production and easy for founders or staff to duet.",
-   "url": "https://thetab.com/2026/07/02/who-is-the-viral-bob-girl-on-tiktok-the-filthy-lyrics-of-fat-papis-freaked-out-explained",
-   "examples": [
-    {
-     "url": "https://www.tiktok.com/@jocelynmeiere/video/7665769098663480598",
-     "platform": "tt",
-     "account": "@jocelynmeiere",
-     "what": "Deadpan 'reasons to get a bob' list on the Freaked Out beat"
+     "account": "@dondad_aaa",
+     "what": "Reads a shady '-A' text calling out an everyday habit"
     },
     {
-     "url": "https://www.tiktok.com/@fatpapimusic/video/7666149373755084052",
+     "url": "https://www.tiktok.com/@netflix.basics/video/7508506956575853846",
      "platform": "tt",
-     "account": "@fatpapimusic",
-     "what": "The original artist's own post of the Freaked Out sound driving the trend"
+     "account": "@netflix.basics",
+     "what": "Netflix's own account revisiting the PLL trend format"
     }
    ]
   },
   {
-   "name": "'Twins at the Carousel' deadpan character meme",
+   "name": "'Nowhere, Nobody' (Ariana Grande) lyric carousel",
    "platform": "tt",
-   "how": "Animate a product mascot or logo staring deadpan while tiny icons (low battery, 'forgot to clean', 'left in a drawer') dance in a circle around it, set to Kikuo's song; no faces needed, good for platforms with tighter content rules.",
-   "url": "https://knowyourmeme.com/memes/twins-at-the-carousel-trend",
+   "how": "Build a slide-by-slide carousel synced to the song telling a tongue-in-cheek 'solo era' glow-up story — mood, ritual, product, confidence.",
+   "url": "https://www.socialgrowthengineers.com/the-nowhere-nobody-carousel-trend-4m-views",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@rhoes_rb/video/7653573169147612437",
+     "url": "https://www.tiktok.com/@bostonandmarkie/video/7678618130662591746",
      "platform": "tt",
-     "account": "@rhoes_rb",
-     "what": "Deadpan character with dancing miniature twins circling its head"
+     "account": "@bostonandmarkie",
+     "what": "Highlight/reaction riffing on the 'nowhere, nobody' carousel trend"
     }
    ]
   },
   {
-   "name": "Sex-educator explainers on mainstream show accounts",
+   "name": "'Partner picks my ___' trend",
    "platform": "tt",
-   "how": "Pitch an in-house educator or sexologist for a quick-hit 'myth vs fact' explainer clip in the style mainstream TV/media accounts now run, borrowing their mainstream credibility rather than posting only from niche sex-ed accounts.",
-   "url": "https://www.tiktok.com/@irelandamvmtv/video/7625979808031182113",
+   "how": "Riff on the outfit-pick format as 'partner blind-picks a toy from 3 boxes for date night,' filming genuine (SFW) reactions.",
+   "url": "https://www.tiktok.com/discover/my-bf-picks-out-my-outfit",
    "examples": [
     {
-     "url": "https://www.tiktok.com/@irelandamvmtv/video/7625979808031182113",
+     "url": "https://www.tiktok.com/@mosawertokhi/video/7531053450818342166",
      "platform": "tt",
-     "account": "@irelandamvmtv",
-     "what": "National morning-show account running a short expert-interview clip on inclusive sex ed"
+     "account": "@mosawertokhi",
+     "what": "Girlfriend picks the outfit partner wears for the day, classic format"
+    }
+   ]
+  },
+  {
+   "name": "'That Girl' wind-down routine",
+   "platform": "tt",
+   "how": "Parody the aspirational 'That Girl' morning-routine format as a 'That Girl' WIND-DOWN routine — bath, journaling, product staged on the nightstand.",
+   "url": "https://azulcorawellness.com/blog/what-we-can-learn-from-the-that-girl-trend-on-tiktok",
+   "examples": [
+    {
+     "url": "https://www.tiktok.com/@siffhaider/video/7465771032633232658",
+     "platform": "tt",
+     "account": "@siffhaider",
+     "what": "Green-screen 'That Girl morning routine' walkthrough to riff on"
+    }
+   ]
+  },
+  {
+   "name": "Silent walking, framed as solo self-care",
+   "platform": "tt",
+   "how": "Frame a 'silent walk' as part of a solo self-care day — decompress device-free, then reward yourself at home.",
+   "url": "https://www.tiktok.com/discover/silent-walking-trend",
+   "examples": [
+    {
+     "url": "https://www.tiktok.com/@the.tiser/video/7291143965615639815",
+     "platform": "tt",
+     "account": "@the.tiser",
+     "what": "Explainer on walking without phone/music/distractions; format still referenced in 2026 roundups"
+    }
+   ]
+  },
+  {
+   "name": "Red Flag or Green Flag",
+   "platform": "tt",
+   "how": "Rapid-fire 'red flag or green flag' bit judging bedroom-communication habits — funny, relatable, on-brand.",
+   "url": "https://www.tiktok.com/discover/green-red-flag-trend",
+   "examples": [
+    {
+     "url": "https://www.tiktok.com/@dustinpoynter/video/7451404903420792095",
+     "platform": "tt",
+     "account": "@dustinpoynter",
+     "what": "Debates whether a dating behavior is a red or green flag"
     }
    ]
   }
@@ -440,7 +471,7 @@
  "competitors": [
   {
    "brand": "Womanizer",
-   "recent": "Launched the Snap, its smallest-ever Pleasure Air toy, in Europe and debuted the Liberty 2 Leopard Edition in North America on Sept 22, following its Beauty Hub presence at IFA Berlin (Sept 4-8).",
+   "recent": "Launched the Snap, its smallest-ever Pleasure Air toy, in Europe on Sept 22, following its Beauty Hub presence at IFA Berlin (Sept 4-8) where it also showed the Womanizer Beauty lipstick-inspired product.",
    "url": "https://www.ean-online.com/company-news/womanizer-brings-sexual-wellness-to-ifa-2026-biggest-european-consumer-electronics-fair/",
    "profiles": {
     "tt": "https://www.tiktok.com/@womanizerofficial",
@@ -463,7 +494,7 @@
   },
   {
    "brand": "Satisfyer",
-   "recent": "Expanded to more than 6,700 CVS stores nationwide and added the 'Feel Confident' menstrual cup to its range (Sept 20).",
+   "recent": "Continues its expansion to more than 6,700 CVS stores nationwide and its 'Feel Confident' menstrual cup range; no major new announcement found this week.",
    "url": "https://www.prnewswire.com/news-releases/satisfyer-announces-extensive-expansion-to-6-700-cvs-stores-302254474.html",
    "profiles": {
     "tt": "https://www.tiktok.com/@satisfyer.com",
@@ -478,7 +509,7 @@
     {
      "url": "https://www.instagram.com/p/DOBZ763DM06/",
      "platform": "ig",
-     "what": "'Slow bites. Deep focus. Zero crumbs left.': styled as an airfryer post, the brand's signature euphemism-humor format for skirting platform content rules"
+     "what": "'Slow bites. Deep focus. Zero crumbs left.': styled as an airfryer post, the brand's signature euphemism-humor format"
     },
     {
      "url": "https://www.tiktok.com/@satisfyer.com/video/7621586737034300704",
@@ -489,7 +520,7 @@
   },
   {
    "brand": "Lovense",
-   "recent": "Made its European trade-show debut at IFA Berlin, after years exhibiting only at CES, showing a second-generation Intimate Doll prototype with voice interaction and adaptive movement.",
+   "recent": "Made its European trade-show debut at IFA Berlin, showing a second-generation Intimate Doll prototype with voice interaction and adaptive movement, following July's Remote 8.0 app/ecosystem update.",
    "url": "https://www.prnewswire.com/news-releases/lovense-shines-in-european-debut-at-ifa-berlin-2026-demonstrating-how-technology-strengthens-human-connection-302883997.html",
    "profiles": {
     "tt": "https://www.tiktok.com/@reallovense",
@@ -511,7 +542,7 @@
   },
   {
    "brand": "Maude",
-   "recent": "Launched Vibe Mini, a $32 compact travel vibrator, alongside continued Target and Ulta retail expansion.",
+   "recent": "Continues its retail push into Target and Ulta alongside its Vibe Mini ($32 compact travel vibrator) launch.",
    "url": "https://getmaude.com/products/vibe-mini",
    "profiles": {
     "tt": "https://www.tiktok.com/@getmaude",
@@ -588,7 +619,7 @@
   },
   {
    "brand": "Lovehoney",
-   "recent": "Published a US 'Sex Map' from a year of sales data (Aug 10) and opened Q4 gifting early with five 2026 advent calendars (Aug).",
+   "recent": "Published a US 'Sex Map' from a year of sales data (Aug 10) and opened Q4 gifting early with five 2026 advent calendars (Aug); still the brand's freshest news.",
    "url": "https://www.prnewswire.com/news-releases/lovehoney-reveals-the-sexiest-cities-in-the-us-with-new-sex-map-302847188.html",
    "profiles": {
     "tt": "https://www.tiktok.com/@lovehoneyglobal",
@@ -616,7 +647,7 @@
   },
   {
    "brand": "LELO",
-   "recent": "Published its 2026 Futurist Report with futurist Tracey Follows, finding 60% of people have used AI in their intimate lives and predicting an 'analogue counter-movement' toward phone-free, protected human presence.",
+   "recent": "Its August 2026 Futurist Report with futurist Tracey Follows remains its freshest news: 60% of people have used AI in their intimate lives, and LELO predicts an 'analogue counter-movement' toward phone-free, protected human presence.",
    "url": "https://www.prnewswire.com/news-releases/whats-hot-in-2026-lelo-reveals-trends-that-everybody-needs-to-know-302667891.html",
    "profiles": {
     "ig": "https://www.instagram.com/lelo_official/",
@@ -641,153 +672,154 @@
  ],
  "capcut": [
   {
-   "name": "intro trend",
-   "url": "https://www.capcut.com/template-detail/yanu-trend-fyp/7686751121959963925",
+   "name": "Get ready with me (US GRWM)",
+   "url": "https://www.capcut.com/template-detail/grwm-getreadywithme-ootd-outfitideas-us/7567418619462700289",
+   "style": "creator",
+   "clips": "multi",
+   "uses": "US-tagged",
+   "vibe": "Standard GRWM structure (mirror selfie, outfit reveal, final look), part of the ongoing 2026 GRWM revival",
+   "how": "Team GRWM-style 'get ready for date night' or 'get ready for Mini Mic Wednesday' content",
+   "source": "CapCut template search, September 2026"
+  },
+  {
+   "name": "day in my life (CapCutGala2026)",
+   "url": "https://www.capcut.com/template-detail/dayinmylife-capcutgala2026-vlog/7605879230416637201",
+   "style": "creator",
+   "clips": "multi",
+   "uses": "n/a",
+   "vibe": "Mini-vlog 'day in my life' cut-together, part of the current mini-vlog wave used to tap into a day, event or BTS content",
+   "how": "'A day in the life of the Nancy team' BTS content or a customer-POV 'day in my life with Nancy' piece",
+   "source": "CapCut template search, September 2026"
+  },
+  {
+   "name": "POV: ur text",
+   "url": "https://www.capcut.com/template-detail/POV-ur-text/7457215710046014773",
    "style": "creator",
    "clips": "1",
-   "uses": "77K uses",
-   "vibe": "8-second punchy intro, created ~Sept 18 and already the fastest-growing intro on CapCut's day-in-my-life list",
-   "how": "Hook opener for Mini Mic Wednesday before the talking-head bit",
-   "source": "https://www.capcut.com/explore/template-a-day-in-my-life"
+   "uses": "46,531 uses, 11,711 likes",
+   "vibe": "Single-clip POV hook-text format where bold caption text sets up the scenario over one continuous shot",
+   "how": "'POV: it's Friyay and Nancy just dropped—' style hook opener for Friyay date-night content or a Nancy hacks tip video",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "Opening Vlog Cute",
-   "url": "https://www.capcut.com/template-detail/aesthetic-vlog-intro-fyp/7677977623150005520",
+   "name": "Behind the Scenes",
+   "url": "https://www.capcut.com/template-detail/Behind-the-Scenes/7393595962557582600",
    "style": "creator",
-   "clips": "1",
-   "uses": "18K uses",
-   "vibe": "Soft, aesthetic 10-second vlog opener",
-   "how": "Intro for 'a day at Nancy HQ' team content",
-   "source": "https://www.capcut.com/explore/template-a-day-in-my-life"
+   "clips": "multi",
+   "uses": "~91,000 uses, 3,759 likes",
+   "vibe": "High-use BTS storytelling template built for 'an authentic glimpse into processes and production moments'",
+   "how": "Team behind-the-scenes content — packing orders, photoshoots, product testing",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "a day withme opening",
-   "url": "https://www.capcut.com/template-detail/intro-openingtemplate-adaywithme/7681264010464939285",
+   "name": "opening vlog",
+   "url": "https://www.capcut.com/template-detail/opening-vlog/7663860398113721608",
    "style": "creator",
-   "clips": "1",
-   "uses": "7.3K uses",
-   "vibe": "5-second 'a day with me' title card, late August",
-   "how": "Open a 'day in the life of a Nancy product designer' POV",
-   "source": "https://www.capcut.com/explore/template-a-day-in-my-life"
+   "clips": "multi",
+   "uses": "171 uses",
+   "vibe": "Simple vlog-opener title card, freshly active",
+   "how": "Intro card for a weekly team vlog or BTS series",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "Grwm opening",
-   "url": "https://www.capcut.com/template-detail/grwm-opening-intro-foryou-openingvlog/7675886999403810065",
-   "style": "creator",
-   "clips": "1",
-   "uses": "3.3K uses",
-   "vibe": "Quick 6-second GRWM title intro",
-   "how": "'Get ready with me for Friyay with Nancy' date-night GRWM",
-   "source": "https://www.capcut.com/explore/get-ready-with-me-template"
-  },
-  {
-   "name": "I feel like a ____ (fill-in trend)",
-   "url": "https://www.tiktok.com/@sophclaudet/video/7686478181309713677",
-   "style": "creator",
-   "vibe": "Fill-in-the-blank relatable caption format in HeyOrca's Sept 23 weekly roundup (no direct CapCut link found)",
-   "how": "'I feel like a new woman after…' as a Nancy hack or a customer-review POV",
-   "example": "https://www.tiktok.com/@sophclaudet/video/7686478181309713677",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
-  },
-  {
-   "name": "Summer break 2026",
-   "url": "https://www.capcut.com/template-detail/summerdump-summerrecap-summervibes-trend-viral/7673371999712021781",
+   "name": "photodumps",
+   "url": "https://www.capcut.com/template-detail/photodumps/7485252854920351029",
    "style": "highlights",
    "clips": "multi",
-   "uses": "40K uses",
-   "vibe": "33-second beat-synced summer recap dump",
-   "how": "'Nancy's summer in 30 seconds', with the NYC shoot, events and the team",
-   "source": "https://www.capcut.com/explore/end-of-summer-2026"
+   "uses": "794,135 uses, 408,059 likes",
+   "vibe": "Classic aesthetic photo-dump montage cut to a moody/vibey track; one of the biggest photo-dump templates in circulation",
+   "how": "'This week at Nancy HQ' or event/pop-up recap dump — high virality ceiling",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "The end summer 2026",
-   "url": "https://www.capcut.com/template-detail/theend-summer2026-summerrecap-summerdump-fyp/7680457174711127316",
+   "name": "BEAT SYNC PHOTO",
+   "url": "https://www.capcut.com/template-detail/BEAT-SYNC-PHOTO/7457051179193863442",
    "style": "highlights",
    "clips": "multi",
-   "uses": "9.9K uses",
-   "vibe": "'The end' summer farewell montage from late August",
-   "how": "Goodbye-summer recap leading into a fall launch tease",
-   "source": "https://www.capcut.com/explore/end-of-summer-2026"
+   "uses": "298,540 uses, 25,171 likes",
+   "vibe": "Fast-cut beat-synced photo montage with flash transitions timed to music drops",
+   "how": "'Week in review' or product-launch-week recap synced to a trending audio drop",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "And With That Summer",
-   "url": "https://www.capcut.com/template-detail/Break-2026-summer2026-trend-fyp/7676403407204191508",
+   "name": "Aesthetic Photo Dump",
+   "url": "https://www.capcut.com/template-detail/dump-aesthetic-dumpphotos-recap-memories/7591633115794263301",
+   "style": "highlights",
+   "clips": "18",
+   "uses": "4,042 uses, 242 likes",
+   "vibe": "Softer, memory-book style photo dump/recap in an 18-clip 9:16 layout",
+   "how": "Monthly 'Nancy memories' recap for the community or team",
+   "source": "CapCut template search, September 2026"
+  },
+  {
+   "name": "weekly recap",
+   "url": "https://www.capcut.com/template-detail/fyp-trend-viral-vlog/7618999054076333328",
    "style": "highlights",
    "clips": "multi",
-   "uses": "8.8K uses",
-   "vibe": "Nostalgic 'and with that, summer…' closer",
-   "how": "Event recap for the US Open / NYC shoot days",
-   "source": "https://www.capcut.com/explore/end-of-summer-2026"
+   "uses": "n/a",
+   "vibe": "FYP/trend/viral vlog-tagged template explicitly built for week-in-review use",
+   "how": "Literal 'week in review' or 'this week at Nancy' recap post",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "summer of 2026!!",
-   "url": "https://www.capcut.com/template-detail/summer-dump-fyp-pinterest/7658597690611191056",
+   "name": "Before After glow-up",
+   "url": "https://www.capcut.com/template-detail/Before-After-glow-up/7343580010592210197",
    "style": "highlights",
    "clips": "multi",
-   "uses": "225K uses",
-   "vibe": "Fast 7-second Pinterest-style photo dump, the most-used summer template",
-   "how": "Quick photo-dump carousel of team and customer UGC",
-   "source": "https://www.capcut.com/explore/end-of-summer-2026"
+   "uses": "n/a",
+   "vibe": "Before/after transformation cut, part of the current 'glow-up' nostalgia-transition wave",
+   "how": "'Nancy glow-up' style before/after for a product-results or rebrand story",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "Your Event Recap",
-   "url": "https://www.capcut.com/template-detail/trendtemplate-cinematic-aesthetic-vlogaesthetic/7658215426823916820",
-   "style": "highlights",
+   "name": "TREND VIRAL",
+   "url": "https://www.capcut.com/template-detail/TREND-VIRAL/7655604732806843665",
+   "style": "fonts",
    "clips": "multi",
-   "uses": "16K uses",
-   "vibe": "47-second cinematic event highlight reel",
-   "how": "Event recap for Nancy pop-ups and brand activations",
-   "source": "https://www.capcut.com/explore/event-recap"
+   "uses": "~72,000 uses, ~6,000 likes",
+   "vibe": "Bold animated-text viral-caption template currently circulating widely",
+   "how": "'Nancy hacks' quick-tip video with punchy animated on-screen text callouts",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "pretty little liars🥹",
-   "url": "https://www.capcut.com/template-detail/prettylittleliars-trend-blowthisup-proudtosay/7671434878537223444",
+   "name": "Viral template ❤️",
+   "url": "https://www.capcut.com/template-detail/Viral-template/7667078587559857426",
    "style": "fonts",
-   "clips": "1",
-   "uses": "65 uses",
-   "vibe": "PLL-style 'text from -A' callout text overlay (the 'Text From A' trend is in HeyOrca's Sept 23 roundup)",
-   "how": "'I know you haven't charged your toy since August. -N' as a Nancy hack reminder",
-   "example": "https://www.tiktok.com/@tarayummy/video/7688419657086291214",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
+   "clips": "multi",
+   "uses": "~191,000 uses",
+   "vibe": "Very high-use generic 'viral template' built around bold text-overlay captions",
+   "how": "High-virality-ceiling option for a Nancy hacks or meme-style caption post",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "Match Text",
-   "url": "https://www.capcut.com/template-detail/uidesign-text-newspaper/7663328234494463240",
+   "name": "Storytime",
+   "url": "https://www.capcut.com/template-detail/Storytime/7392437032196279557",
    "style": "fonts",
-   "clips": "1",
-   "uses": "13K uses",
-   "vibe": "3-second newspaper-headline text pop",
-   "how": "'BREAKING: Mini Mic sells out' fake-headline hooks and science-news posts",
-   "source": "https://www.capcut.com/explore/text-effects-templates/7497635722376218640"
+   "clips": "multi",
+   "uses": "9 uses, 270 likes",
+   "vibe": "Text-heavy storytime caption template with on-screen narrative text; high like-to-use ratio suggests it's heavily bookmarked",
+   "how": "'Storytime: how Nancy started' or a cheeky customer-story caption video",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "misery (lyric template)",
-   "url": "https://www.capcut.com/template-detail/fyp-trend-lyric-template-foryou/7657812831315709204",
+   "name": "aesthetic font lyric",
+   "url": "https://www.capcut.com/template-detail/aesthetic-font-lyric/7254424023487008002",
    "style": "fonts",
-   "clips": "1",
-   "uses": "20K uses",
-   "vibe": "Square 1:1 animated lyric-text template",
-   "how": "Lyric-text overlay on product b-roll for Friyay with Nancy",
-   "source": "https://www.capcut.com/explore/lyrics-template"
+   "clips": "multi",
+   "uses": "growing",
+   "vibe": "Lyric-text-over-photo template with a stylized aesthetic font treatment",
+   "how": "Lyric-caption post pairing a cheeky innuendo lyric with a product photo",
+   "source": "CapCut template search, September 2026"
   },
   {
-   "name": "you're right (lyrics)",
-   "url": "https://www.capcut.com/template-detail/lyrics-aesthetic-trend-fyp-foryou/7654193550053199124",
+   "name": "TRENDING TEMPLATE",
+   "url": "https://www.capcut.com/template-detail/foryou-capcut-viral-trendcapcut/7619700552485670197",
    "style": "fonts",
-   "clips": "1",
-   "uses": "31K uses",
-   "vibe": "Aesthetic 1:1 lyric-typography edit",
-   "how": "Aesthetic text-over-product loop for IG feed",
-   "source": "https://www.capcut.com/explore/lyrics-template"
-  },
-  {
-   "name": "Taylor Swift countdown",
-   "url": "https://www.tiktok.com/@en.editss/video/7688552041290992927",
-   "style": "fonts",
-   "vibe": "Text countdown built for launches, trending ahead of 'Patient Zero' (HeyOrca Sept 23; no direct CapCut link found)",
-   "how": "Countdown to a Nancy drop or the VMAs watch-party post",
-   "example": "https://www.tiktok.com/@en.editss/video/7688552041290992927",
-   "source": "https://www.heyorca.com/blog/capcut-trends-and-templates"
+   "clips": "multi",
+   "uses": "n/a",
+   "vibe": "FYP-tagged trending text/caption template, part of the current wave of generically-named 'viral template' text formats",
+   "how": "Backup meme-caption/tip-video option for Nancy hacks content",
+   "source": "CapCut template search, September 2026"
   }
  ]
 }
