@@ -287,6 +287,30 @@ h2{font-size:clamp(24px,3.7vw,42px)}
 .sl a:hover{background:var(--accent-soft)}
 .sl span{display:block;font-size:clamp(11.5px,1.25vw,13px);line-height:1.45;color:var(--soft)}
 .sl span b{color:var(--ink)}
+
+/* phones: no presenter, so the deck becomes one scrolling page —
+   every slide stacked, no tap-to-advance, nothing clipped sideways */
+@media (max-width:700px){
+  body{overflow:auto;background:var(--paper)}
+  .deck{position:static}
+  .slide,.slide.on{position:static;display:block;overflow:visible;
+                   padding:40px 16px 44px;border-bottom:1px solid var(--line)}
+  .slide:last-child{border-bottom:0;padding-bottom:56px}
+  .bar,.prog{display:none}
+  h1{font-size:32px}
+  h2{font-size:26px}
+
+  .tr{grid-template-columns:1fr;gap:4px;padding:11px 14px}
+  .tr .v{white-space:normal}
+  .blank{min-width:110px}
+
+  .pillars{grid-template-columns:1fr 1fr}
+  .steps .st{grid-template-columns:26px 1fr}
+  .st .wk{grid-column:2;border-left:0;margin:6px 0 0;padding:0}
+  .tlbar{flex-wrap:wrap}
+  .tlbar i,.tlbar i.ev{flex:1 1 calc(25% - 5px);padding:10px 2px}
+  .legal{max-height:none;overflow:visible}
+}
 </style>
 
 <div class="prog"><i id="pg"></i></div>
@@ -741,6 +765,7 @@ const st = document.getElementById("strip");
 if (st) st.innerHTML = STRIP.map(src => `<img src="${src}" alt="">`).join("");
 
 const slides = [...document.querySelectorAll(".slide")];
+const phone = matchMedia("(max-width:700px)");
 let i = 0;
 function show(n){
   i = Math.max(0, Math.min(slides.length - 1, n));
@@ -757,14 +782,16 @@ function show(n){
 document.getElementById("next").addEventListener("click", () => show(i + 1));
 document.getElementById("prev").addEventListener("click", () => show(i - 1));
 document.addEventListener("keydown", e => {
+  if (phone.matches) return;
   if (["ArrowRight", "PageDown", " "].includes(e.key)) { show(i + 1); e.preventDefault(); }
   if (["ArrowLeft", "PageUp"].includes(e.key)) { show(i - 1); e.preventDefault(); }
   if (e.key === "Home") show(0);
   if (e.key === "End") show(slides.length - 1);
 });
 document.getElementById("deck").addEventListener("click", e => {
-  if (e.target.closest("a,button") || e.target.closest(".legal")) return;
+  if (phone.matches || e.target.closest("a,button") || e.target.closest(".legal")) return;
   show(e.clientX > window.innerWidth / 2 ? i + 1 : i - 1);
 });
 show(parseInt(location.hash.slice(1), 10) - 1 || 0);
+if (phone.matches && i > 0) slides[i].scrollIntoView();
 </script>
