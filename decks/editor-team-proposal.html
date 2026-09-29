@@ -7,6 +7,97 @@
 @font-face{font-family:'PP Editorial New';src:url('__PPE_RG__') format('opentype');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'PP Editorial New';src:url('__PPE_IT__') format('opentype');font-weight:400;font-style:italic;font-display:swap}
 @font-face{font-family:'PP Editorial New';src:url('__PPE_UB__') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+.note a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.note a:hover{background:var(--accent-soft)}
+.hi .hw em{display:block;font-family:var(--alt);font-style:normal;font-weight:500;
+             font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--soft);margin-top:3px}
+.hi .now.alt{background:#F4F1F5}
+.hi .now.alt span{color:var(--ink)}
+/* four-act structure: the ask / the why / the how / decision */
+.act{display:inline-flex;align-items:center;gap:8px;font-family:var(--alt);font-weight:600;
+     font-size:clamp(10px,1vw,11.5px);letter-spacing:.14em;text-transform:uppercase;
+     color:var(--soft);border:1px solid var(--line);background:#fff;
+     padding:4px 11px 4px 4px;margin-bottom:14px}
+.act i{display:grid;place-items:center;width:18px;height:18px;font-style:normal;
+       font-size:10.5px;letter-spacing:0;background:var(--accent);color:#fff}
+.slide .act + .eyebrow{display:none}
+
+.asks{display:grid;gap:12px;margin-top:26px}
+@media (min-width:900px){.asks{grid-template-columns:repeat(3,1fr)}}
+.ask{border:1px solid var(--line);background:#fff;padding:18px 20px 20px}
+.ask .al{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.ask .av{font-family:var(--serif);font-size:clamp(34px,4.4vw,52px);line-height:1;color:var(--accent);margin:8px 0 10px}
+.ask p{margin:0;font-size:clamp(12.5px,1.35vw,14.5px);line-height:1.5;color:var(--soft)}
+.ask p b{color:var(--ink);font-weight:600}
+.ask .blank{min-width:110px}
+
+.dec{display:grid;gap:9px;margin-top:24px}
+.dc{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
+    border:1px solid var(--line);background:#fff;padding:14px 18px}
+.dc.yes{border-left:2px solid var(--accent)}
+.dc.later{background:#F4F1F5;border-left:2px solid var(--line)}
+.dc .dn{display:grid;place-items:center;width:22px;height:22px;margin-top:1px;
+        font-family:var(--alt);font-size:12px;font-weight:600;
+        background:var(--accent);color:#fff}
+.dc.later .dn{background:var(--line);color:var(--soft)}
+.dc h4{font-size:clamp(13px,1.45vw,15.5px);margin-bottom:3px}
+.dc p{margin:0;font-size:clamp(12px,1.3vw,14px);line-height:1.5;color:var(--soft)}
+.dc p b{color:var(--ink)}
+.two.dl{margin-top:16px}
+.two.dl .blank{min-width:90px}
+
+.act.appx{border-color:#E8DCC4;background:var(--warn-soft);color:var(--warn)}
+.act.appx i{background:var(--warn)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 9px}
+.chips b{font-family:var(--alt);font-weight:600;font-size:clamp(12px,1.3vw,14px);
+         color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);
+         padding:3px 10px;white-space:nowrap}
+.pillars{display:grid;gap:10px;margin-top:20px}
+@media (min-width:900px){.pillars{grid-template-columns:repeat(4,1fr)}}
+.pil{border:1px solid var(--line);background:#fff;padding:13px 15px 12px}
+.pil.take{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pil .pn{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--soft)}
+.pil.take .pn{color:var(--accent)}
+.pil h4{font-size:clamp(13px,1.4vw,15px);margin:5px 0 3px}
+.pil em{display:block;font-family:var(--alt);font-style:italic;
+        font-size:clamp(11.5px,1.2vw,13px);color:var(--soft)}
+.pil .who{margin-top:9px;padding-top:8px;border-top:1px solid var(--line);
+          font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.pil.take .who{color:var(--accent);border-top-color:var(--accent)}
+
+.paths{display:grid;gap:12px;margin-top:16px}
+@media (min-width:820px){.paths{grid-template-columns:1fr 1fr}}
+.pth{border:1px solid var(--line);background:#fff;padding:13px 16px 14px}
+.pth.good{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pth .pl{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.pth.good .pl{color:var(--accent)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:9px 0 8px}
+.flow i{font-family:var(--alt);font-style:normal;font-size:clamp(11.5px,1.25vw,13.5px);
+        border:1px solid var(--line);background:var(--paper);padding:3px 9px;white-space:nowrap}
+.flow b{color:var(--soft);font-size:13px}
+.pth.good .flow i{border-color:var(--accent);background:var(--accent-soft)}
+.pth.good .flow b{color:var(--accent)}
+.pth p{margin:0;font-size:clamp(11.5px,1.25vw,13.5px);line-height:1.45;color:var(--soft)}
+.pth p b{color:var(--ink)}
+
+.steps .st{grid-template-columns:26px 1fr auto}
+.st .wk{font-family:var(--alt);font-style:normal;font-weight:600;font-size:10.5px;
+        letter-spacing:.12em;text-transform:uppercase;color:var(--soft);
+        border-left:1px solid var(--line);padding-left:11px;margin-left:11px;white-space:nowrap}
+.st.go{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.st.go .wk{color:var(--accent);border-left-color:var(--accent)}
+.steps .st.opt{grid-template-columns:26px 1fr}
+
+.strip.slim img{aspect-ratio:4/3}
+.slide .asks{margin-top:20px}
+.ask{padding:14px 16px 15px}
+.ask .av{font-size:clamp(28px,3.4vw,40px);margin:5px 0 7px}
+.ask p{font-size:clamp(11.5px,1.2vw,13px);line-height:1.45}
+.dec{gap:7px;margin-top:14px}
+.dc{padding:10px 15px;gap:12px}
+.dc h4{font-size:clamp(12.5px,1.35vw,14.5px)}
+.dc p{font-size:clamp(11.5px,1.2vw,13px);line-height:1.45}
 </style>
 
 <style>
@@ -175,6 +266,27 @@ h2{font-size:clamp(24px,3.7vw,42px)}
          text-transform:uppercase;color:var(--accent);margin-bottom:7px}
 .opt h4{font-size:clamp(14.5px,1.6vw,17px);margin-bottom:5px}
 .opt p{margin:0;font-size:clamp(12.5px,1.35vw,14px);line-height:1.5;color:var(--soft)}
+
+/* sourcing channels */
+.src{display:grid;gap:12px}
+@media (min-width:760px){.src{grid-template-columns:repeat(3,1fr)}}
+.sc{border:1px solid var(--line);background:#fff;padding:14px 16px;border-top:3px solid var(--accent)}
+.sc .sn{font-family:var(--serif);font-size:clamp(17px,2vw,21px);font-weight:400;margin-bottom:6px}
+.sc p{margin:0;font-size:clamp(12px,1.3vw,13.5px);line-height:1.5;color:var(--soft)}
+.sc p b{color:var(--ink);font-weight:600}
+
+/* sources */
+.srcs{display:grid;gap:9px;margin-top:14px}
+.srcs.one{max-width:64ch}
+@media (min-width:820px){.srcs{grid-template-columns:1fr 1fr}}
+.sl{border-left:2px solid var(--accent);padding:2px 0 2px 13px}
+.sl.muted{border-left-color:var(--line)}
+.sl a{display:block;font-size:clamp(12.5px,1.35vw,14px);font-weight:600;color:var(--ink);
+      text-decoration:none;border-bottom:1px solid var(--accent);width:fit-content;margin-bottom:4px}
+.sl.muted a{border-bottom-color:var(--line)}
+.sl a:hover{background:var(--accent-soft)}
+.sl span{display:block;font-size:clamp(11.5px,1.25vw,13px);line-height:1.45;color:var(--soft)}
+.sl span b{color:var(--ink)}
 </style>
 
 <div class="prog"><i id="pg"></i></div>
@@ -182,25 +294,117 @@ h2{font-size:clamp(24px,3.7vw,42px)}
 
   <section class="slide">
     <div class="inner">
-      <div class="eyebrow">Proposal</div>
+      <div class="act"><i>1</i> The ask</div>
       <h1>A small editing team,<br>instead of rehiring one every event.</h1>
       <p class="lede">
-        A small editing team working alongside me. I would handle the sourcing, the training and
-        the standards, and keep supporting Crystal as I do now.
+        One adaptive editor and one adaptive creative, working alongside me. I would handle the
+        sourcing, the training and the standards, and keep supporting Crystal as I do now.
+        <b>Two is my recommendation, not a fixed number.</b>
       </p>
-      <div class="strip" id="strip"></div>
+      <div class="asks">
+        <div class="ask">
+          <div class="al">How many</div><div class="av num">2</div>
+          <p><b>A test, to add manpower and volume.</b> One to carry the volume, one to lift the
+             quality. Enough that nobody doubles as the uploader.</p>
+        </div>
+        <div class="ask">
+          <div class="al">By when</div><div class="av num">3 wks</div>
+          <p>To a decision: posting, then interviews and trial, then decide. Week four is
+             orientation and training.</p>
+        </div>
+        <div class="ask">
+          <div class="al">What it changes</div>
+          <div class="chips"><b>Efficiency</b><b>Capacity</b><b>Scale potential</b></div>
+          <p>One brief instead of two. More volume than Crystal and I can produce between us.
+             And room for us to build systems rather than output.</p>
+        </div>
+      </div>
+      <div class="strip slim" id="strip"></div>
       <div class="mark"><img src="__LOGO__" alt="Nancy"></div>
     </div>
   </section>
 
   <section class="slide">
     <div class="inner">
+      <div class="act"><i>2</i> The investment</div>
+      <div class="eyebrow">Budget</div>
+      <h2>Two rates, and what is still open</h2>
+      <p class="lede">
+        <b>These are not experience levels.</b> Years of experience is not what we are paying for.
+        Both of these can already cut without hand-holding; both have to be <b>adaptive</b> &mdash;
+        able to work inside a brief that is still moving. What separates them is how much they shape
+        the work, not how long they have been doing it.
+      </p>
+      <div class="tbl">
+        <div class="tr head"><div class="l">What we are hiring for</div><div class="v">Hourly &middot; per event day (8&ndash;13 hrs)</div></div>
+        <div class="tr us"><div class="l">Adaptive<small>Cuts on their own, and keeps up when the brief moves mid-event</small></div><div class="v num">$7&ndash;10 &middot; $56&ndash;130</div></div>
+        <div class="tr us"><div class="l">Adaptive creative<small>All of that, and improves the content &mdash; brings references, calls the hook</small></div><div class="v num">$10&ndash;15+ &middot; $80&ndash;195</div></div>
+      </div>
+      <p class="note">
+        <b>Where $7 comes from.</b> On Upwork, where these people are found, video editors run
+        <b>$6&ndash;25 an hour</b>. The bottom of that band is where people are still learning, so we
+        start at the top of it rather than the floor. The creative rate sits at $10&ndash;15+, still
+        inside the same range and a fraction of what Western freelance and agency editors charge.
+      </p>
+      <div class="srcs one">
+        <div class="sl">
+          <a href="https://www.upwork.com/hire/video-editors/cost/" target="_blank" rel="noopener">Upwork &mdash; cost to hire a video editor</a>
+          <span>$6&ndash;25/hr on the platform. The benchmark that matches what we would actually be doing: freelance, project-based, hired internationally.</span>
+        </div>
+      </div>
+
+      <div class="tbl">
+        <div class="tr head"><div class="l">Additional costs &mdash; to confirm with the team</div><div class="v">Monthly</div></div>
+        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
+        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
+        <div class="tr"><div class="l"><b>Total estimated monthly</b></div><div class="v"><span class="blank"></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="act"><i>3</i> The risk</div>
+      <div class="eyebrow">Capacity and scale potential</div>
+      <h2>Four pillars in social media.<br>Right now they sit on the same two people.</h2>
+      <p class="lede">
+        Possible? Yes &mdash; it is what we have been doing. <b>Sustainable, and able to scale? No.</b>
+      </p>
+      <div class="pillars">
+        <div class="pil"><span class="pn">1</span><h4>Strategy &amp; research</h4><em>The strategist</em><div class="who">Crystal &amp; me</div></div>
+        <div class="pil take"><span class="pn">2</span><h4>Creation &amp; production</h4><em>The editor, designer, writer</em><div class="who">Mostly me &rarr; the team</div></div>
+        <div class="pil"><span class="pn">3</span><h4>Management &amp; distribution</h4><em>The social media manager</em><div class="who">Crystal &amp; me</div></div>
+        <div class="pil"><span class="pn">4</span><h4>Analysis &amp; optimisation</h4><em>The analyst</em><div class="who">Crystal &amp; me</div></div>
+      </div>
+      <div class="two">
+        <div class="pane">
+          <h4>Capacity</h4>
+          <ul>
+            <li>Pillar two is the one that <b>eats the hours</b>, and the only one that scales with volume</li>
+            <li>Two editors on it means <b>more output than we can produce between us</b>, without the other three slipping</li>
+          </ul>
+        </div>
+        <div class="pane go">
+          <h4>Scale potential</h4>
+          <ul>
+            <li>Instead of the heavy lifting landing on us, we <b>grow the team that does it</b></li>
+            <li>That gives Crystal and me the room to work on one, three and four &mdash; <b>learning and implementing systems and strategy</b> rather than producing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="act"><i>3</i> The risk</div>
       <div class="eyebrow">The problem</div>
-      <h2>It is not a workload problem.<br>It is a knowledge problem.</h2>
+      <h2>It is an efficiency problem.<br>The way we run this does not scale.</h2>
       <p class="lede">
         We rotate through different editors event to event. Every one of them starts from zero:
-        no understanding of our events, our editing style, or what we count as a strong reference.
-        <b>All of it gets re-explained every time.</b>
+        no understanding of our events, our editing style, or what we count as a strong reference,
+        so all of it gets re-explained every time. It gets us through an event &mdash;
+        <b>but it is not efficient, and it is not a process that scales.</b>
       </p>
       <div class="chart">
         <div class="ch">
@@ -234,7 +438,7 @@ h2{font-size:clamp(24px,3.7vw,42px)}
       </div>
       <div class="two">
         <div class="pane">
-          <h4>What that costs us</h4>
+          <h4>What that costs us every event</h4>
           <ul>
             <li>Output slows while people are brought up to speed</li>
             <li>Quality swings event to event</li>
@@ -257,59 +461,193 @@ h2{font-size:clamp(24px,3.7vw,42px)}
 
   <section class="slide">
     <div class="inner">
-      <div class="eyebrow">What we already spend</div>
-      <h2>We are buying this capacity anyway</h2>
-      <div class="tbl">
-        <div class="tr head"><div class="l">Engagement</div><div class="v">Fee</div></div>
-        <div class="tr spend"><div class="l">Veydris Production &mdash; Nancy x ASAP<small>Videography and photography, flat rate</small></div><div class="v num">HK$18,000 &asymp; $2,308</div></div>
-        <div class="tr spend"><div class="l">Filmed by Harrison &mdash; Nancy Goes to Brighton<small>Filming and editing</small></div><div class="v num">&pound;850 &asymp; $1,139</div></div>
-        <div class="tr spend"><div class="l">Same engagement, with travel and expenses<small>Total invoiced</small></div><div class="v num">&pound;1,172.90 &asymp; $1,572</div></div>
+      <div class="act"><i>4</i> Preventing the risk</div>
+      <div class="eyebrow">What I build, and who we look for</div>
+      <h2>Not all editors can adapt.<br>That is what we are hiring for.</h2>
+      <p class="lede">
+        Our content passes through several people before it goes out, and we are still working out
+        how it should run. That is not a brief anyone can be handed &mdash; <b>it has to be taught,
+        and they have to be able to move with it.</b>
+      </p>
+      <div class="two">
+        <div class="pane go">
+          <h4>Full training, not a handover</h4>
+          <ul>
+            <li>Full training on <b>reading outliers</b> &mdash; and sourcing them independently</li>
+            <li>Full training on <b>AI</b> and the tools we use</li>
+            <li>Full training on <b>Nancy captions</b> and on-screen text</li>
+            <li>The <b>editing brief</b> &mdash; I started it, Crystal and Susan finished it &mdash; and the standards that come out of it</li>
+            <li>A <b>full brief on how our content actually moves</b> &mdash; who it passes through, and why</li>
+            <li>And on whatever else we need them for as this grows</li>
+          </ul>
+        </div>
+        <div class="pane">
+          <h4>Why it has to be adaptive</h4>
+          <ul>
+            <li>We move fast, and briefs get built on the fly. The requirement is not a flawless brief &mdash; it is <b>people who work well inside an evolving one</b></li>
+            <li><b>Editors pulled from clipping queues and other teams are a hindrance</b>, not a shortcut. They arrive with someone else&rsquo;s habits and no room to unlearn them</li>
+            <li><b>Crystal and I are living these changes first-hand.</b> The brief should come straight from us, while we still are</li>
+            <li>Adaptive, not passive. Invested in improving, not just executing</li>
+          </ul>
+        </div>
+      </div>
+      <div class="paths">
+        <div class="pth bad">
+          <div class="pl">A team in between</div>
+          <div class="flow"><i>Crystal &amp; Dion&eacute;</i><b>&rarr;</b><i>that team</i><b>&rarr;</b><i>editors</i></div>
+          <p><b>Briefed twice.</b> Double work, and clarity and context lost at every hop.</p>
+        </div>
+        <div class="pth good">
+          <div class="pl">Straight from us</div>
+          <div class="flow"><i>Crystal &amp; Dion&eacute;</i><b>&rarr;</b><i>editors</i></div>
+          <p><b>Briefed once</b>, by the people living the changes first-hand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="act"><i>4</i> Preventing the risk</div>
+      <div class="eyebrow">Approach</div>
+      <h2>Proven before we commit</h2>
+      <div class="two">
+        <div class="pane">
+          <h4>How it goes now</h4>
+          <ul>
+            <li>Availability decides it, because an event is already close</li>
+            <li>A portfolio shows someone&rsquo;s best work, not how they work</li>
+            <li>We find out what they can actually do once it matters</li>
+          </ul>
+        </div>
+        <div class="pane go">
+          <h4>What I would do instead</h4>
+          <ul>
+            <li><b>A paid one-day trial</b> before any commitment</li>
+            <li>Real clips, minimal direction &mdash; the conditions they would work in</li>
+            <li>Hire on <b>what they produce</b>, not on what they say they can do</li>
+          </ul>
+        </div>
       </div>
       <p class="note">
-        <b>Said honestly:</b> both of these bundle filming with editing, so a team does not replace
-        them outright. What it does replace is <b>buying editing capacity ad hoc, at agency rates,
-        from people who do not know the brand.</b>
+        <b>No commitment to anyone before we have seen their output.</b> A trial day is cheap.
+        Finding out mid-event is not.
       </p>
     </div>
   </section>
 
   <section class="slide">
     <div class="inner">
-      <div class="eyebrow">Approach</div>
-      <h2>Local, and proven before we commit</h2>
-      <div class="two">
-        <div class="pane go">
-          <h4>Why a Filipino team</h4>
+      <div class="act"><i>5</i> Decision</div>
+      <div class="eyebrow">Decision</div>
+      <h2>What is fixed, what is open,<br>and what I need today</h2>
+      <div class="terms">
+        <div class="tcard fixed">
+          <div class="th">Nonnegotiable</div>
           <ul>
-            <li><b>Cultural and communication alignment</b> we already have</li>
-            <li>Shorter onboarding, less friction per brief</li>
-            <li>More cost-effective at the same standard</li>
+            <li><b>Confidentiality</b> on unreleased footage, event content and brand assets</li>
+            <li><b>Clear scope per engagement</b> &mdash; cutting, captions, overlays and our standards in; filming and licensed music out</li>
+            <li><b>Ownership</b> &mdash; final files and source footage are the company&rsquo;s once paid</li>
+            <li><b>Responsiveness</b> during live event hours</li>
+            <li><b>Firm deadline</b> on event-day deliverables, same or next day</li>
           </ul>
         </div>
-        <div class="pane">
-          <h4>Why test first, either way</h4>
+        <div class="tcard open">
+          <div class="th">Open to discussion</div>
           <ul>
-            <li>We should not commit to anyone &mdash; local or international &mdash; <b>before seeing their output</b></li>
-            <li>A paid one-day trial shows more than any interview</li>
-            <li>The process below is built to find that out cheaply</li>
+            <li>Pay structure &mdash; hourly, day rate or per deliverable</li>
+            <li>Revision rounds before extra charges</li>
+            <li>Turnaround on evergreen content</li>
+            <li>Exclusivity between events</li>
+            <li>Conversion criteria and timeline</li>
+            <li>Equipment and software provided or self-supplied</li>
+            <li>Payment schedule</li>
           </ul>
         </div>
       </div>
-      <p class="note">The geography argument is secondary. <b>The argument for testing before hiring holds regardless.</b></p>
+      <div class="dec">
+        <div class="dc yes"><div class="dn">1</div><div><h4>Approve the paid trial days.</h4>
+          <p>Up to four candidates, one paid day each at the $7&ndash;10 rate &mdash; <b>$224&ndash;520 in total.</b>
+             That is the entire spend being approved today.</p></div></div>
+        <div class="dc yes"><div class="dn">2</div><div><h4>Confirm the headcount I am sourcing towards.</h4>
+          <p>Two, or a different number &mdash; I need it before I start, so I am not interviewing for a role that does not exist.</p></div></div>
+        <div class="dc yes"><div class="dn">3</div><div><h4>Send the confidentiality draft to whoever handles contracts.</h4>
+          <p>Appendix overleaf. Nobody starts paid work before it is signed, so this is the one item that can block the timeline.</p></div></div>
+      </div>
+      <p class="note">
+        <b>Decided later, together, on output:</b> who we actually hire, final rates inside the two
+        bands, and how the lead-in days are priced. I bring you the trial results and a short written
+        assessment first. <b>A yes on the trial days by</b> <span class="blank"></span>
+      </p>
     </div>
   </section>
 
   <section class="slide">
     <div class="inner">
+      <div class="act appx"><i>+</i> Appendix &mdash; not presented</div>
+      <div class="eyebrow">What we have already tried</div>
+      <h2>When editing comes bundled with production</h2>
+      <p class="lede">Three engagements, three versions of the same outcome. None of this is about the people we hired &mdash; it is what happens when one team is asked to shoot and cut, usually without a brief.</p>
+      <div class="hist">
+        <div class="hi">
+          <div class="hw">Veydris &mdash; Nancy x ASAP <em>HK$18,000 &asymp; $2,308</em></div>
+          <div class="then"><span>What came back</span><p>One highlight.</p></div>
+          <div class="now alt"><span>Why</span><p>Limited exposure to the brand, and <b>no brief to work from</b>. The result was not what we expected because nothing had told them what to expect.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">Filmed by Harrison &mdash; Brighton <em>&pound;850 &asymp; $1,139</em></div>
+          <div class="then"><span>What came back</span><p>Event highlights, which we finished on our end.</p></div>
+          <div class="now alt"><span>Why</span><p>He was shooting as well. So the cut arrived finished and <b>the hook had to be found afterwards</b> &mdash; the reverse of starting from the hook and cutting to it.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">Corrine <em>cost being confirmed</em></div>
+          <div class="then"><span>What came back</span><p>The same shape of result again.</p></div>
+          <div class="now alt"><span>Why</span><p>We hired an editor, but with <b>no uploader on the team they became the uploader</b>. The editing was never the job it ended up being.</p></div>
+        </div>
+      </div>
+      <div class="quote">If we bring in a production team, let them shoot. That is what they are good at, and it is what we actually need from them.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="act appx"><i>+</i> Appendix &mdash; not presented</div>
+      <div class="eyebrow">Looking back</div>
+      <h2>What hurt, and what we have already fixed</h2>
+      <div class="hist">
+        <div class="hi">
+          <div class="hw">Before ASAP HK and the US Open</div>
+          <div class="then"><span>Then</span><p>The production team edited without hooks. Finding the hook and adding the captions came back to me afterwards &mdash; the wrong order, and it does not scale.</p></div>
+          <div class="now"><span>Now</span><p>We <b>work backwards</b> &mdash; the reference, the music or the hook is chosen first, and the edit is cut to it.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">ASAP HK</div>
+          <div class="then"><span>Then</span><p>Just Remo and me, and I wrote every caption and text overlay myself.</p></div>
+          <div class="now"><span>Now</span><p>The partnership got better as we went, and it became clear <b>he could be trained to write them</b>. A system to support that is in progress.</p></div>
+        </div>
+        <div class="hi">
+          <div class="hw">US Open</div>
+          <div class="then"><span>Then</span><p>We had editors but had not met them beforehand. Everything landed on the day, and the gaps surfaced there.</p></div>
+          <div class="now"><span>Now</span><p>The standards are <b>written down</b>, and the first proper feedback session with the editors has happened.</p></div>
+        </div>
+      </div>
+      <div class="quote">Each of these got better because we caught it and changed it. A standing team is how that stops being accidental.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="act appx"><i>+</i> Appendix &mdash; not presented</div>
       <div class="eyebrow">Hiring</div>
-      <h2>Six steps, deliberately light</h2>
+      <h2>Four weeks, deliberately light</h2>
       <div class="steps">
-        <div class="st"><span class="sn">1</span><span><h4>Source talent.</h4> Referrals, portfolios, freelance platforms.</span></div>
-        <div class="st"><span class="sn">2</span><span><h4>Sign the confidentiality agreement.</h4> Before any paid work begins. Draft in the appendix.</span></div>
-        <div class="st"><span class="sn">3</span><span><h4>First interview &mdash; Dion&eacute; and Ally.</h4> Experience, availability, working style. Screening only.</span></div>
-        <div class="st"><span class="sn">4</span><span><h4>Paid one-day trial.</h4> A set of clips, minimal direction. How much they finish, and how they read the assets. <b>This is the real signal.</b></span></div>
-        <div class="st"><span class="sn">5</span><span><h4>Review and short report.</h4> I assess the output and write it up for you.</span></div>
-        <div class="st"><span class="sn">6</span><span><h4>Decide together.</h4> Event partner or not. No second interview &mdash; the role is an event partnership, not a full-time hire.</span></div>
+        <div class="st"><span class="sn">1</span><span><h4>Post the job and source candidates.</h4> Through the agency, plus referrals from people we already work with.</span><i class="wk">Week 1</i></div>
+        <div class="st"><span class="sn">2</span><span><h4>Sign the confidentiality agreement.</h4> Before any paid work begins. Draft in the appendix.</span><i class="wk">Week 2</i></div>
+        <div class="st"><span class="sn">3</span><span><h4>First interview &mdash; Dion&eacute; and Ally.</h4> Availability, working style, how they handle a brief that moves. Screening only.</span><i class="wk">Week 2</i></div>
+        <div class="st"><span class="sn">4</span><span><h4>Paid one-day trial.</h4> A set of clips, minimal direction. How much they finish, and how they read the assets. <b>This is the real signal.</b></span><i class="wk">Week 2</i></div>
+        <div class="st"><span class="sn">5</span><span><h4>Review and short report.</h4> I assess the output and write it up for you.</span><i class="wk">Week 3</i></div>
+        <div class="st"><span class="sn">6</span><span><h4>Decide together.</h4> Event partner or not. No second interview &mdash; the role is an event partnership, not a full-time hire.</span><i class="wk">Week 3</i></div>
+        <div class="st go"><span class="sn">7</span><span><h4>Orientation and training.</h4> Our standards, reading outliers, Nancy captions and overlays. They arrive at the first event already knowing how we work.</span><i class="wk">Week 4</i></div>
         <div class="st opt"><span class="sn">+</span><span><h4>Optional.</h4> A secondary review with Crystal and Susan if useful. Skipped by default so candidates are not pushed through more process than the role warrants.</span></div>
       </div>
       <p class="note"><b>Later, selectively:</b> anyone who shows a consistently strong eye across several events converts to full-time, with scope widening beyond events into regular social content.</p>
@@ -318,6 +656,7 @@ h2{font-size:clamp(24px,3.7vw,42px)}
 
   <section class="slide">
     <div class="inner">
+      <div class="act appx"><i>+</i> Appendix &mdash; not presented</div>
       <div class="eyebrow">Engagement shape</div>
       <h2>What the partnership looks like</h2>
       <p class="lede">
@@ -360,110 +699,8 @@ h2{font-size:clamp(24px,3.7vw,42px)}
 
   <section class="slide">
     <div class="inner">
-      <div class="eyebrow">What I build, and who we look for</div>
-      <h2>The team only works if two things are true</h2>
-      <div class="two">
-        <div class="pane go">
-          <h4>What I build</h4>
-          <ul>
-            <li><b>Brand editing standards</b>, written from scratch</li>
-            <li>Training on <b>reading outliers</b> &mdash; and sourcing them independently</li>
-            <li>Training on <b>Nancy captions</b> and on-screen text</li>
-          </ul>
-        </div>
-        <div class="pane">
-          <h4>Who we hire for</h4>
-          <ul>
-            <li>We move fast, and briefs get built on the fly</li>
-            <li>The requirement is not a flawless brief &mdash; it is <b>people who work well inside an evolving one</b></li>
-            <li>Adaptive, not passive. Invested in improving, not just executing</li>
-            <li><b>Culture, adaptability and a genuinely good eye</b> &mdash; scouted properly, not sourced out of scarcity once an event is already on us</li>
-          </ul>
-        </div>
-      </div>
-      <div class="quote">&ldquo;That is how I learned. I was lost at first, and I adapted as I went rather than waiting to be walked through it. That is the exact quality this team needs.&rdquo;</div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="inner">
-      <div class="eyebrow">Looking back</div>
-      <h2>What hurt, and what we have already fixed</h2>
-      <div class="hist">
-        <div class="hi">
-          <div class="hw">Before ASAP HK and the US Open</div>
-          <div class="then"><span>Then</span><p>The production team edited without hooks. Finding the hook and adding the captions came back to me afterwards &mdash; the wrong order, and it does not scale.</p></div>
-          <div class="now"><span>Now</span><p>We <b>work backwards</b>. The reference, or the music, comes before the edit.</p></div>
-        </div>
-        <div class="hi">
-          <div class="hw">ASAP HK</div>
-          <div class="then"><span>Then</span><p>Just Remo and me, and I wrote every caption and text overlay myself.</p></div>
-          <div class="now"><span>Now</span><p>The partnership got better as we went, and it became clear <b>he could be trained to write them</b>. A system to support that is in progress.</p></div>
-        </div>
-        <div class="hi">
-          <div class="hw">US Open</div>
-          <div class="then"><span>Then</span><p>We had editors but had not met them beforehand. Everything landed on the day, and the gaps surfaced there.</p></div>
-          <div class="now"><span>Now</span><p>The standards are <b>written down</b>, and the first proper feedback session with the editors has happened.</p></div>
-        </div>
-      </div>
-      <div class="quote">Each of these got better because we caught it and changed it. A standing team is how that stops being accidental.</div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="inner">
-      <div class="eyebrow">Budget</div>
-      <h2>Market rates, and what is still open</h2>
-      <div class="tbl">
-        <div class="tr head"><div class="l">Tier</div><div class="v">Hourly &middot; per deliverable &middot; per event day</div></div>
-        <div class="tr us"><div class="l">Entry level<small>Trial phase</small></div><div class="v num">$5&ndash;7 &middot; $20&ndash;100 &middot; $40&ndash;90</div></div>
-        <div class="tr us"><div class="l">Mid and senior<small>Proven, conversion candidates</small></div><div class="v num">$10&ndash;15+ &middot; $50&ndash;270 &middot; $80&ndash;195</div></div>
-      </div>
-      <div class="tbl">
-        <div class="tr head"><div class="l">Additional costs &mdash; to confirm with the team</div><div class="v">Monthly</div></div>
-        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
-        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
-        <div class="tr"><div class="l"><span class="blank"></span></div><div class="v"><span class="blank"></span></div></div>
-        <div class="tr"><div class="l"><b>Total estimated monthly</b></div><div class="v"><span class="blank"></span></div></div>
-      </div>
-      <p class="note">Event-day rates are <b>per editor</b>. The vendor fees on the earlier slide are per engagement and include filming &mdash; not a like-for-like comparison, and I would rather say so than imply a saving that is not there.</p>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="inner">
-      <div class="eyebrow">Terms</div>
-      <h2>What is fixed, and what we can shape</h2>
-      <div class="terms">
-        <div class="tcard fixed">
-          <div class="th">Nonnegotiable</div>
-          <ul>
-            <li><b>Confidentiality</b> on unreleased footage, event content and brand assets</li>
-            <li><b>Clear scope per engagement</b> &mdash; cutting, captions, overlays and our standards in; filming and licensed music out</li>
-            <li><b>Ownership</b> &mdash; final files and source footage are the company&rsquo;s once paid</li>
-            <li><b>Responsiveness</b> during live event hours</li>
-            <li><b>Firm deadline</b> on event-day deliverables, same or next day</li>
-          </ul>
-        </div>
-        <div class="tcard open">
-          <div class="th">Open to discussion</div>
-          <ul>
-            <li>Pay structure &mdash; hourly, day rate or per deliverable</li>
-            <li>Revision rounds before extra charges</li>
-            <li>Turnaround on evergreen content</li>
-            <li>Exclusivity between events</li>
-            <li>Conversion criteria and timeline</li>
-            <li>Equipment and software provided or self-supplied</li>
-            <li>Payment schedule</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="inner">
-      <div class="eyebrow">Appendix &mdash; not for reading aloud</div>
+      <div class="act appx"><i>+</i> Appendix &mdash; not presented</div>
+      <div class="eyebrow">Confidentiality</div>
       <h2>Confidentiality and non-use agreement</h2>
       <p class="note"><b>Starting draft only.</b> To be reviewed by whoever handles contracts before it is used.</p>
       <div class="legal">
@@ -494,7 +731,7 @@ h2{font-size:clamp(24px,3.7vw,42px)}
   <span class="who">Editor team proposal</span>
   <span class="sp"></span>
   <button type="button" id="prev">&larr; Back</button>
-  <span class="n" id="n">1 / 10</span>
+  <span class="n" id="n">1 / 7</span>
   <button type="button" id="next">Next &rarr;</button>
 </div>
 
@@ -508,7 +745,10 @@ let i = 0;
 function show(n){
   i = Math.max(0, Math.min(slides.length - 1, n));
   slides.forEach((s, k) => s.classList.toggle("on", k === i));
-  document.getElementById("n").textContent = (i + 1) + " / " + slides.length;
+  const LIVE = 7;
+  document.getElementById("n").textContent =
+    i < LIVE ? (i + 1) + " / " + LIVE
+             : "Appendix " + (i - LIVE + 1) + " / " + (slides.length - LIVE);
   document.getElementById("pg").style.width = ((i + 1) / slides.length * 100) + "%";
   document.getElementById("prev").disabled = i === 0;
   document.getElementById("next").disabled = i === slides.length - 1;
