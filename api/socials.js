@@ -4,7 +4,7 @@
  * Backed by Upstash Redis over its REST API (plain fetch, no SDK). Vercel's
  * Upstash integration injects KV_REST_API_URL / KV_REST_API_TOKEN; the
  * UPSTASH_REDIS_REST_* names are accepted too. Everything lives in one hash,
- * one field per client key (ns.team, ns.mnotes, ns.week3.<monday>).
+ * one field per client key (ns.team, ns.mnotes, ns.cards, ns.week3.<monday>).
  *
  *   GET  /api/socials                 -> { docs: { key: value, ... } }
  *   POST /api/socials  { key, value } -> saves one key (value null deletes it)
@@ -14,7 +14,7 @@
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const HASH = "nancy-socials";
-const KEY_OK = /^ns\.(team|mnotes|week3\.\d{4}-\d{2}-\d{2})$/;
+const KEY_OK = /^ns\.(team|mnotes|cards|week3\.\d{4}-\d{2}-\d{2})$/;
 
 async function redis(cmd) {
   const r = await fetch(URL_, {
