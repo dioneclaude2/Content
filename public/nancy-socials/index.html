@@ -1507,7 +1507,7 @@ function renderPeople(){
       ${c.slots.map(x => {
         const jobs = c.id ? [x.film === c.id ? "🎥 Filming" : "", x.edit === c.id ? "✂️ Editing" : ""].filter(Boolean).join(" + ")
                           : [!x.film ? "🎥 No filmer" : "", !x.edit ? "✂️ No editor" : ""].filter(Boolean).join(" · ");
-        return `<div class="pjob"><span>${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span><b>${jobs}</b></div>${slotCard(x)}`;
+        return `<div class="pjob"><span>${dayLabel(x.day)}</span><b>${jobs}</b></div>${slotCard(x)}`;
       }).join("")}
     </div>`;
   }).join("") || `<div class="empty">Nobody is assigned to anything this week yet.</div>`;
@@ -1522,6 +1522,9 @@ function renderPeople(){
     openSlot(x.id);
   });
 }
+/* "Thu, Oct 1": the date format used on planner tiles, cards and the events strip. */
+const dayLabel = d => fmt(d, {weekday: "short", month: "short", day: "numeric"});
+
 /* ───────── WEEK GRID ─────────
    The week as an Instagram-style grid: 3 across, 3:4 tiles, in posting order with
    Monday top-left. A post with a reference shows that post; otherwise a poster in
@@ -1532,7 +1535,7 @@ function renderWeekGrid(){
   const moms = MOMENTS.filter(m => days.includes(m.date));
   $("#weekEvents").innerHTML = moms.map(m => {
     const planned = WEEK.slots.some(x => x.moment === m.id);
-    return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}"><span class="we-day">${fmt(m.date, {weekday: "short"})} ${parse(m.date).getDate()}</span> ${m.tier === "tentpole" ? "★ " : ""}${esc(m.name)}${mnote(m.id) ? " 📝" : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
+    return `<div class="wm" style="--c:${col(m)}"><button data-id="${m.id}" title="${esc(mnote(m.id))}"><span class="we-day">${dayLabel(m.date)}</span> ${m.tier === "tentpole" ? "★ " : ""}${esc(m.name)}${mnote(m.id) ? " 📝" : ""}</button><button class="wm-plan ${planned ? "done" : ""}" data-plan="${m.id}">${planned ? "✓ Planned" : "+ Assign"}</button></div>`;
   }).join("");
   const posts = WEEK.slots.slice().sort((a, b) => a.day.localeCompare(b.day) || WEEK.slots.indexOf(a) - WEEK.slots.indexOf(b));
   const grid = $("#weekgrid");
@@ -1565,7 +1568,7 @@ function tileHTML(x){
   return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}">
     <div class="ig-media">
       ${face}
-      <span class="ig-day">${x.star ? "★ " : ""}${fmt(x.day, {weekday: "short"})} ${parse(x.day).getDate()}</span>
+      <span class="ig-day">${x.star ? "★ " : ""}${dayLabel(x.day)}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     </div>
