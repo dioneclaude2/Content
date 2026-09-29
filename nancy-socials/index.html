@@ -693,13 +693,14 @@ const sync = {
   state: "off",            // off (no shared store yet) · ok · saving · error
   pending: new Map(),
   timer: null,
-  shared: k => k === "ns.team" || k === "ns.mnotes" || k.startsWith("ns.week3."),
+  shared: k => k === "ns.team" || k === "ns.mnotes" || k === "ns.cards" || k.startsWith("ns.week3."),
   remote: new Map(),       // key -> JSON the shared store last had
   /* Does this copy hold anything a person actually did? Auto-preloaded weeks and the
      default team don't, so they never overwrite real work on another device. */
   meaningful(k, v){
     if (v == null) return false;
     if (k === "ns.mnotes") return Object.keys(v).length > 0;
+    if (k === "ns.cards") return v.length > 0;
     if (k === "ns.team") return JSON.stringify(v) !== JSON.stringify(DEFAULT_TEAM);
     const slots = v.slots || [];
     if ((v.seeded || []).length > slots.filter(x => x.auto).length) return true;   // a preloaded post was removed
@@ -713,11 +714,20 @@ const sync = {
   parsed(k){ try { return JSON.parse(sync.raw(k)); } catch { return null; } },
   localKeys(){ try { return Object.keys(localStorage).filter(sync.shared); } catch { return []; } },
   raw(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  /* Keys edited here but not yet confirmed saved. Kept in this browser too, so a refresh
+     before the upload finishes doesn't lose the change: it's sent first on the next load. */
+  unsent(){ try { return JSON.parse(localStorage.getItem("ns.sync.unsent") || "[]"); } catch { return []; } },
+  markUnsent(){ try { localStorage.setItem("ns.sync.unsent", JSON.stringify([...sync.pending.keys()])); } catch {} },
   queue(k){
-    if (!sync.shared(k) || sync.state === "off") return;
+    if (!sync.shared(k)) return;
+    if (sync.state === "off"){                                   // not connected yet: remember it
+      if (sync.meaningful(k, sync.parsed(k))){ sync.pending.set(k, sync.raw(k)); sync.markUnsent(); }
+      return;
+    }
     if (!sync.remote.has(k) && !sync.meaningful(k, sync.parsed(k))) return;   // nothing worth sharing yet
     if (sync.remote.get(k) === sync.raw(k) && !sync.pending.has(k)) return;    // already matches the shared copy
     sync.pending.set(k, sync.raw(k));
+    sync.markUnsent();
     sync.show("saving");
     clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 500);
   },
@@ -730,9 +740,11 @@ const sync = {
         if (!r.ok) throw new Error(r.status);
         sync.remote.set(key, v);
       }
+      sync.markUnsent();
       sync.show(sync.pending.size ? "saving" : "ok");
     } catch {
-      for (const [k, v] of batch) if (!sync.pending.has(k)) sync.pending.set(k, v);
+      for (const [k, v] of batch) if (!sync.pending.has(k)) sync.pending.set(k, sync.raw(k));
+      sync.markUnsent();
       sync.show("error");
       clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 5000);
     }
@@ -747,7 +759,10 @@ const sync = {
       docs = (await r.json()).docs || {};
     } catch { if (sync.state !== "off") sync.show("error"); return false; }
     const first = sync.state === "off";
-    if (first) sync.state = "ok";
+    if (first){
+      sync.state = "ok";
+      for (const k of sync.unsent()) if (sync.shared(k) && sync.raw(k) != null) sync.pending.set(k, sync.raw(k));
+    }
     let changed = false;
     // First sync from a browser that already has plans and the shared store is empty: upload them.
     if (!Object.keys(docs).length){
@@ -765,6 +780,7 @@ const sync = {
     }
     // Weeks planned only on this device get shared too.
     for (const k of sync.localKeys()) if (!(k in docs)) sync.queue(k);
+    if (sync.pending.size){ clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 50); }
     sync.show(sync.pending.size ? "saving" : "ok");
     return changed;
   },
@@ -779,10 +795,23 @@ const sync = {
     el.title = t[2];
   },
 };
+/* Leaving or refreshing: send anything still waiting, even as the page closes. */
+function flushOnExit(){
+  if (!sync.pending.size || sync.state === "off") return;
+  for (const [key, v] of sync.pending){
+    const body = JSON.stringify({key, value: v == null ? null : JSON.parse(v)});
+    try { navigator.sendBeacon(API, new Blob([body], {type: "text/plain"})); } catch {}
+  }
+}
+window.addEventListener("pagehide", flushOnExit);
+document.addEventListener("visibilitychange", () => { if (document.hidden) flushOnExit(); });
+
 /* Reload everything that was read from storage, then redraw. */
 function reloadShared(){
   TEAM = store.get("ns.team", DEFAULT_TEAM);
   MNOTES = store.get("ns.mnotes", {});
+  cards = store.get("ns.cards", []);
+  if (!$("#drawer").classList.contains("on")) renderPipe();
   WEEK = null;
   if (!$("#drawer").classList.contains("on")){ renderPlan(); renderWeek(); renderCal(); }
 }
