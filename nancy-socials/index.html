@@ -311,6 +311,21 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .card .ctl button{background:none;border:1px solid var(--line);border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;color:var(--muted)}
 .addform{display:grid;gap:8px;grid-template-columns:1fr;margin-bottom:16px}
 @media (min-width:900px){.addform{grid-template-columns:2fr 1.5fr 1fr 1.5fr auto}}
+.thread{display:grid;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
+.thread-list{display:grid;gap:10px}
+.tnote{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.avatar.sm{width:30px;height:30px;font-size:11px}
+.tnote-h{display:flex;align-items:baseline;gap:8px;font-size:12.5px}
+.tnote-h span{font-size:11px;color:var(--dim)}
+.tnote p{margin:3px 0 0;font-size:13.5px;line-height:1.5;white-space:pre-line;color:#E6D9DF}
+.tnote-x{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-size:11px}
+.tnote-x:hover{color:var(--pink)}
+.thread-add{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line-soft);border-radius:14px;padding:10px}
+.thread-add select,.thread-add textarea{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px;color:var(--text);width:100%}
+.thread-add .btn{justify-self:start;padding:8px 14px}
+.card-last{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-last b{color:var(--text)}
+.card .t{cursor:pointer}
 .addform input,.addform select{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:13.5px;width:100%}
 .note{font-size:12.5px;color:var(--dim);margin:14px 0 0;line-height:1.5}
 .note a{color:var(--muted)}
@@ -459,6 +474,9 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-meta{display:grid;gap:2px;text-align:left;padding:8px 9px 9px;background:var(--surface-2);border:0;border-top:1px solid var(--line);color:var(--text);cursor:pointer;min-height:64px;align-content:start}
 .ig-meta:hover{background:var(--surface-3)}
 .ig-meta .ig-label{position:static;justify-self:start;margin-bottom:2px}
+.ig-moment{font-size:10.5px!important;font-weight:800;color:var(--text)!important}
+.ig-poster small{font-size:9.5px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.ig-poster .ig-when{font-size:11px;font-weight:800;opacity:.85;-webkit-line-clamp:1}
 .ig-meta b{font-size:12px;font-weight:800;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .ig-meta b i{color:var(--dim);font-weight:600}
 .ig-meta span:not(.ig-label){font-size:10.5px;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
@@ -706,7 +724,7 @@ const sync = {
     if ((v.seeded || []).length > slots.filter(x => x.auto).length) return true;   // a preloaded post was removed
     return slots.some(x => {
       const P = PILLARS[x.pillar] || {};
-      return !x.auto || x.title || x.ref || x.note || x.event || (x.series && x.star === false)
+      return !x.auto || x.title || x.ref || x.note || x.event || x.comments?.length || (x.series && x.star === false)
         || x.status !== P.status || JSON.stringify(x.plats) !== JSON.stringify(P.plats)
         || (x.film || "") !== whoOr(P.film || "") || (x.edit || "") !== whoOr(P.edit || "");
     });
@@ -1236,6 +1254,23 @@ function addCard({title, moment, platform, ref}){
   cards.push({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title, moment, platform, ref, stage: ref ? 1 : 0});
   saveCards(); renderPipe();
 }
+function openCard(id){
+  const c = cards.find(x => x.id === id); if (!c) return;
+  const m = MOMENTS.find(x => x.id === c.moment);
+  openDrawer(m ? col(m) : "var(--pink)", `
+    <div class="d-hero">
+      <button class="iconbtn d-close" aria-label="Close">✕</button>
+      <div class="d-date">Pipeline · ${esc(STAGES[c.stage])} · ${PLAT_NAMES[c.platform]}</div>
+      <div class="d-name">${esc(c.title)}</div>
+      ${m ? `<div class="d-chips"><span class="chip">${dot(m)} ${esc(m.name)} · ${dayLabel(m.date)}</span></div>` : ""}
+    </div>
+    <div class="d-body">
+      ${c.ref ? `<div class="d-block"><a class="btn ghost" href="${esc(safeUrl(c.ref))}" target="_blank" rel="noopener">▶ Open reference</a></div>` : ""}
+      <div class="thread" id="cardThread"></div>
+    </div>`);
+  renderThread($("#cardThread"), c, () => { saveCards(); renderPipe(); });
+}
+
 function renderPipe(){
   $("#pipeFilters").innerHTML = [["all","All platforms"], ...Object.entries(PLAT_NAMES)].map(([k, v]) =>
     `<button class="filter" data-pf="${k}" aria-pressed="${pipeFilter === k}">${v}</button>`).join("");
@@ -1250,7 +1285,8 @@ function renderPipe(){
           <div class="t">${esc(c.title)}</div>
           <div class="m"><span class="plat ${c.platform}">${PLATFORMS[c.platform]}</span>${m ? `<span class="chip">${dot(m)} ${fmt(m.date)}</span>` : ""}</div>
           ${c.ref ? `<div class="ref"><a href="${esc(safeUrl(c.ref))}" target="_blank" rel="noopener">${esc(c.ref)}</a></div>` : i === 0 ? `<div class="ref">Needs an outlier reference</div>` : ""}
-          <div class="ctl"><button data-mv="-1" aria-label="Move back">←</button><button data-mv="1" aria-label="Move forward">→</button><button data-del aria-label="Delete" style="margin-left:auto">✕</button></div>
+          ${c.comments?.length ? `<div class="card-last"><b>${esc(person(c.comments.at(-1).by)?.name || "Someone")}:</b> ${esc(c.comments.at(-1).text)}</div>` : ""}
+          <div class="ctl"><button data-mv="-1" aria-label="Move back">←</button><button data-mv="1" aria-label="Move forward">→</button><button data-notes>💬 ${c.comments?.length ? c.comments.length + " note" + (c.comments.length === 1 ? "" : "s") : "Add note"}</button><button data-del aria-label="Delete" style="margin-left:auto">✕</button></div>
         </div>`;
       }).join("")}</div></div>`;
   }).join("");
@@ -1260,6 +1296,8 @@ function renderPipe(){
     el.ondragstart = e => e.dataTransfer.setData("text/plain", c.id);
     el.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { c.stage = Math.max(0, Math.min(STAGES.length - 1, c.stage + Number(b.dataset.mv))); saveCards(); renderPipe(); });
     el.querySelector("[data-del]").onclick = () => { cards = cards.filter(x => x !== c); saveCards(); renderPipe(); };
+    el.querySelector("[data-notes]").onclick = () => openCard(c.id);
+    el.querySelector(".t").onclick = () => openCard(c.id);
   });
   board.querySelectorAll(".col-b").forEach(colEl => {
     colEl.ondragover = e => { e.preventDefault(); colEl.classList.add("drop"); };
@@ -1591,7 +1629,10 @@ function tileHTML(x){
   const src = x.ref && embedSrc(x.ref);
   const yt = x.ref && ytId(x.ref);
   // Every reference is a live player (loaded when the tile scrolls into view).
+  const m = x.moment && MOMENTS.find(y => y.id === x.moment);
+  const mWhen = m ? (m.end ? `${fmt(m.date)} – ${fmt(m.end)}` : dayLabel(m.date)) : "";
   const face = src ? `<div class="ig-wait" data-embed="${esc(yt ? `https://www.youtube.com/embed/${yt}` : src)}" data-kind="${yt ? "yt" : /tiktok/.test(src) ? "tt" : "ig"}"></div>`
+    : m ? `<div class="ig-poster" style="--pc:${P.c}"><small>${esc(P.label)}</small><b>${esc(m.name)}</b><span class="ig-when">${esc(mWhen)}</span></div>`
     : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b></div>`;
   const who = [x.film === "none" ? "" : `🎥 ${pname(x.film)}`, x.edit === "none" ? "" : `✂️ ${pname(x.edit)}`].filter(Boolean).join(" · ");
   return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}">
@@ -1603,8 +1644,9 @@ function tileHTML(x){
     </div>
     <button class="ig-meta" data-edit title="Open to edit">
       <span class="ig-label" style="--pc:${P.c}">${esc(P.label)}</span>
+      ${m ? `<span class="ig-moment">📅 ${esc(m.name)} · ${esc(mWhen)}</span>` : ""}
       <b>${esc(x.title) || `<i>No idea yet</i>`}</b>
-      <span>${esc(who || "Not assigned")}</span>
+      <span>${esc(who || "Not assigned")}${x.comments?.length ? ` · 💬 ${x.comments.length}` : ""}</span>
       ${x.note ? `<em>📝 ${esc(x.note.split("\n")[0])}</em>` : ""}
     </button>
   </div>`;
@@ -1754,6 +1796,44 @@ window.addEventListener("resize", () => { if (planView === "grid") cropGrid(); }
 
 $("#planViewSeg").querySelectorAll("button").forEach(b => b.onclick = () => { planView = b.dataset.pv; store.set("ns.planView", planView); renderPlan(); });
 
+/* ───────── TEAM NOTES ─────────
+   A notes thread on posts and Pipeline cards. Each note is tagged with who added it;
+   "who am I" is remembered on this device only. */
+const me = () => { const id = store.get("ns.me", ""); return person(id) ? id : ""; };
+const initials = n => String(n).trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+function renderThread(box, item, save){
+  const list = item.comments || [];
+  const who = me();
+  box.innerHTML = `
+    <p class="eyebrow">💬 Team notes${list.length ? ` · ${list.length}` : ""}</p>
+    <div class="thread-list">${list.map(c => {
+      const p = person(c.by);
+      return `<div class="tnote"><span class="avatar sm">${esc(initials(p ? p.name : "?"))}</span>
+        <div><div class="tnote-h"><b>${esc(p ? p.name : "Someone")}</b><span>${new Date(c.at).toLocaleString("en-US", {month: "short", day: "numeric", hour: "numeric", minute: "2-digit"})}</span>
+          <button class="tnote-x" type="button" data-del-note="${c.id}" aria-label="Delete note">✕</button></div>
+        <p>${esc(c.text)}</p></div></div>`;
+    }).join("") || `<p class="note" style="margin:0">No notes yet.</p>`}</div>
+    <div class="thread-add">
+      <select class="tn-who" aria-label="Who's adding this note"><option value="">Who are you?</option>${TEAM.map(p => `<option value="${p.id}" ${p.id === who ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>
+      <textarea class="tn-text" placeholder="Add a note…" rows="2"></textarea>
+      <button class="btn pink tn-add" type="button">Add note</button>
+    </div>`;
+  box.querySelector(".tn-who").onchange = e => store.set("ns.me", e.target.value);
+  box.querySelector(".tn-add").onclick = () => {
+    const text = box.querySelector(".tn-text").value.trim();
+    const by = box.querySelector(".tn-who").value;
+    if (!by) return toast("Pick who you are first");
+    if (!text) return;
+    store.set("ns.me", by);
+    item.comments = [...list, {id: Math.random().toString(36).slice(2, 9), by, text, at: Date.now()}];
+    save(); renderThread(box, item, save);
+  };
+  box.querySelectorAll("[data-del-note]").forEach(b => b.onclick = () => {
+    item.comments = (item.comments || []).filter(c => c.id !== b.dataset.delNote);
+    save(); renderThread(box, item, save);
+  });
+}
+
 /* ───────── TEAM ───────── */
 const saveTeam = () => store.set("ns.team", TEAM);
 const weekKeys = () => { try { return Object.keys(localStorage).filter(k => k.startsWith("ns.week3.")); } catch { return []; } };
@@ -1896,6 +1976,7 @@ function openSlot(id){
       <label>Event<input id="fEvent" list="eventList" placeholder="Which event it's from or for, e.g. LFW, US Open, Cancun" value="${esc(s.event || "")}">
         <datalist id="eventList">${knownEvents().map(e => `<option value="${esc(e)}">`).join("")}</datalist></label>
       <label>Notes<textarea id="fNote" placeholder="Script notes, audio, props, what to copy from the reference…">${esc(s.note)}</textarea></label>
+      <div class="thread" id="slotThread"></div>
       ${m ? `<button class="btn ghost" data-id="${m.id}">Open the ${esc(m.name)} brief</button>` : ""}
       <div class="btnrow"><button class="btn pink" id="fDone">Done</button><button class="btn ghost" id="fStar">${s.star ? "★ Unstar" : "☆ Star"}</button><button class="btn ghost" id="fDup">Duplicate</button><button class="btn ghost" id="fDel">Delete</button></div>
     </div></div>`);
@@ -1907,6 +1988,7 @@ function openSlot(id){
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
   $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
   $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
+  renderThread($("#slotThread"), s, upd);
   $("#fEvent").onchange = e => { s.event = e.target.value.trim(); upd(); };
   $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
