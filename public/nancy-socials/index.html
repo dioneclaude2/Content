@@ -506,6 +506,8 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
   background:radial-gradient(120% 90% at 30% 0%,color-mix(in srgb,var(--pc) 85%,#fff 15%),var(--pc) 45%,color-mix(in srgb,var(--pc) 55%,#000));color:#160b10}
 .ig-poster b{font-size:clamp(13px,3.2vw,19px);font-weight:900;text-transform:uppercase;letter-spacing:-.01em;line-height:1}
 .ig-poster span{font-size:11px;font-weight:600;line-height:1.3;opacity:.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ig-link{margin-top:6px;font-size:11px;font-weight:800;color:#fff;background:rgba(0,0,0,.55);border-radius:999px;padding:5px 10px;text-decoration:none;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ig-link:hover{background:#000}
 .ig-day{position:absolute;top:6px;left:6px;font-size:10px;font-weight:800;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:2px 7px}
 .ig-st{position:absolute;top:12px;right:8px;width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
 .igtile:hover{filter:brightness(1.08)}
@@ -704,7 +706,17 @@ const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
 const daysUntil = s => Math.round((parse(s) - TODAY) / 864e5);
 const fmt = (s, o={day:"numeric", month:"short"}) => parse(s).toLocaleDateString("en-US", o);
-const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
+/* Accept any link people paste: add https:// when it's missing ("www.instagram.com/…",
+   "vt.tiktok.com/…"), keep http(s) links as they are, and block anything that isn't a web link. */
+const normUrl = u => {
+  u = String(u || "").trim();
+  if (!u) return "";
+  if (/^[a-z][a-z0-9+.-]*:/i.test(u)) return u;
+  if (/^\/\//.test(u)) return "https:" + u;
+  return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u;
+};
+const safeUrl = u => { const n = normUrl(u); return /^https?:\/\//i.test(n) ? n : "#"; };
+const linkHost = u => { try { return new URL(normUrl(u)).hostname.replace(/^www\./, ""); } catch { return "link"; } };
 
 /* The page is served at /nancy-socials on Vercel and copied to GitHub Pages
    (dioneclaude2.github.io/Content/nancy-socials/). Both read the same data files and
@@ -1176,17 +1188,17 @@ function renderIntel(){
 }
 
 const platBadge = p => p && PLATFORMS[p] ? `<span class="plat ${p}" style="padding:2px 6px;font-size:9px;margin-right:6px">${PLATFORMS[p]}</span>` : "";
-const ytId = u => (String(u || "").match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/) || [])[1];
+const ytId = u => (String(u || "").match(/(?:youtu\.be\/|[?&]v=|shorts\/|live\/|embed\/)([\w-]{11})/) || [])[1];
 function watchLinks(list){
   if (!list?.length) return "";
   return `<div class="watch">${list.map(x => `<a href="${esc(safeUrl(x.url))}" target="_blank" rel="noopener" title="${esc(x.what || "")}">▶ ${esc(x.account || PLAT_NAMES[x.platform] || "Watch")}</a>`).join("")}</div>`;
 }
 /* Real posts play in place: tap a tile and it swaps to the platform's own embed. */
 function embedSrc(url){
-  const u = String(url || "");
+  const u = normUrl(url);
   let m;
   if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return `https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`;
-  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return `https://www.tiktok.com/embed/v2/${m[1]}`;
+  if ((m = u.match(/tiktok\.com\/(?:@[^/]+\/video|v|embed(?:\/v2)?)\/(\d+)/))) return `https://www.tiktok.com/embed/v2/${m[1]}`;
   const id = ytId(u); if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
   return null;
 }
@@ -1337,7 +1349,7 @@ function renderPipe(){
 $("#addform").onsubmit = e => {
   e.preventDefault();
   const f = new FormData(e.target);
-  addCard({title: f.get("title").trim(), moment: f.get("moment"), platform: f.get("platform"), ref: f.get("ref").trim()});
+  addCard({title: f.get("title").trim(), moment: f.get("moment"), platform: f.get("platform"), ref: normUrl(f.get("ref"))});
   e.target.reset();
 };
 
@@ -1689,6 +1701,7 @@ function tileHTML(x){
   const m = x.moment && MOMENTS.find(y => y.id === x.moment);
   const mWhen = m ? (m.end ? `${fmt(m.date)} – ${fmt(m.end)}` : dayLabel(m.date)) : "";
   const face = src ? `<div class="ig-wait" data-embed="${esc(yt ? `https://www.youtube.com/embed/${yt}` : src)}" data-kind="${yt ? "yt" : /tiktok/.test(src) ? "tt" : "ig"}"></div>`
+    : x.ref ? `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(m ? m.name : P.label)}</b><a class="ig-link" href="${esc(safeUrl(x.ref))}" target="_blank" rel="noopener">🔗 ${esc(linkHost(x.ref))} ↗</a></div>`
     : m ? `<div class="ig-poster" style="--pc:${P.c}"><small>${esc(P.label)}</small><b>${esc(m.name)}</b><span class="ig-when">${esc(mWhen)}</span></div>`
     : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b></div>`;
   const who = [x.film === "none" ? "" : `🎥 ${pname(x.film)}`, x.edit === "none" ? "" : `✂️ ${pname(x.edit)}`].filter(Boolean).join(" · ");
@@ -1730,6 +1743,7 @@ function wireGrid(){
       return;
     }
     if (e.target.closest("[data-edit]")) return openSlot(s.id);
+    if (e.target.closest("a")) return;                       // links open in a new tab
     if (e.target.closest(".ig-poster")) openSlot(s.id);
   });
   grid.addEventListener("dragstart", e => {
@@ -2059,7 +2073,7 @@ function openSlot(id){
     <div class="d-body"><div class="form">
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
-      <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
+      <label>Reference link<input id="fRef" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste any link: IG, TikTok, YouTube, Pinterest, Canva, Drive…" value="${esc(s.ref || "")}"></label>
       ${s.ref ? `<a class="btn ghost" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener" style="justify-self:start">▶ Open reference</a>` : ""}
       <div class="two">
         <label>Date<span class="datemove"><input type="date" id="fDate" value="${s.day}"><button type="button" class="btn pink" id="fDateGo" hidden>Move</button></span></label>
@@ -2083,7 +2097,7 @@ function openSlot(id){
   $("#fDel").onclick = () => { closeDrawer(); removeSlot(s); };
   $("#fDup").onclick = () => { const c = {...s, id: Math.random().toString(36).slice(2, 9), plats: [...s.plats]}; WEEK.slots.push(c); upd(); openSlot(c.id); toast("Duplicated"); };
   $("#fTitle").oninput = e => { s.title = e.target.value; upd(); };
-  $("#fRef").onchange = e => { s.ref = e.target.value.trim(); upd(); openSlot(s.id); };
+  $("#fRef").onchange = e => { s.ref = normUrl(e.target.value); upd(); openSlot(s.id); };
   $("#fNote").oninput = e => { s.note = e.target.value; upd(); };
   renderThread($("#slotThread"), s, upd);
   $("#fEvent").onchange = e => { s.event = e.target.value.trim(); upd(); };
