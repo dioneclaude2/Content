@@ -325,6 +325,9 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-movemenu .done{background:var(--pink);border-color:var(--pink);color:#fff}
 .ig-movemenu .done:disabled{opacity:.4;cursor:default}
 .ig-movemenu input{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;color:var(--text)}
+.datemove{display:flex;gap:6px}
+.datemove input{flex:1;min-width:0}
+.datemove .btn{padding:8px 14px}
 .thread{display:grid;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
 .thread-list{display:grid;gap:10px}
 .tnote{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
@@ -748,15 +751,21 @@ const sync = {
   raw(k){ try { return localStorage.getItem(k); } catch { return null; } },
   /* Keys edited here but not yet confirmed saved. Kept in this browser too, so a refresh
      before the upload finishes doesn't lose the change: it's sent first on the next load. */
-  unsent(){ try { return JSON.parse(localStorage.getItem("ns.sync.unsent") || "[]"); } catch { return []; } },
-  markUnsent(){ try { localStorage.setItem("ns.sync.unsent", JSON.stringify([...sync.pending.keys()])); } catch {} },
+  unsent(){
+    try {
+      const u = JSON.parse(localStorage.getItem("ns.sync.unsent") || "{}");
+      // Only trust very recent leftovers (a refresh mid-save); older ones could overwrite newer team edits.
+      return Array.isArray(u.keys) && Date.now() - (u.at || 0) < 120000 ? u.keys : [];
+    } catch { return []; }
+  },
+  markUnsent(){ try { localStorage.setItem("ns.sync.unsent", JSON.stringify({at: Date.now(), keys: [...sync.pending.keys()]})); } catch {} },
   queue(k){
     if (!sync.shared(k)) return;
     if (sync.state === "off"){                                   // not connected yet: remember it
       if (sync.meaningful(k, sync.parsed(k))){ sync.pending.set(k, sync.raw(k)); sync.markUnsent(); }
       return;
     }
-    if (!sync.remote.has(k) && !sync.meaningful(k, sync.parsed(k))) return;   // nothing worth sharing yet
+    if (!sync.pending.has(k) && !sync.remote.has(k) && !sync.meaningful(k, sync.parsed(k))) return;   // nothing worth sharing yet
     if (sync.remote.get(k) === sync.raw(k) && !sync.pending.has(k)) return;    // already matches the shared copy
     sync.pending.set(k, sync.raw(k));
     sync.markUnsent();
@@ -766,7 +775,8 @@ const sync = {
   async flush(){
     const batch = [...sync.pending]; sync.pending.clear();
     try {
-      for (const [key, v] of batch){
+      for (const [key] of batch){
+        const v = sync.raw(key);                  // always send the latest copy, not the one queued
         const r = await fetch(API, {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({key, value: v == null ? null : JSON.parse(v)})});
         if (!r.ok) throw new Error(r.status);
@@ -830,7 +840,8 @@ const sync = {
 /* Leaving or refreshing: send anything still waiting, even as the page closes. */
 function flushOnExit(){
   if (!sync.pending.size || sync.state === "off") return;
-  for (const [key, v] of sync.pending){
+  for (const [key] of sync.pending){
+    const v = sync.raw(key);
     const body = JSON.stringify({key, value: v == null ? null : JSON.parse(v)});
     try { navigator.sendBeacon(API, new Blob([body], {type: "text/plain"})); } catch {}
   }
@@ -1488,25 +1499,27 @@ function loadWeek(){ WEEK = weekDoc(wkStart); }
 /* ───────── RESCHEDULE ─────────
    Move a post to any date. Within the week it just changes day; otherwise it moves
    into that week's plan. */
-function moveSlot(x, day){
+async function moveSlot(x, day){
   if (!day || day === x.day) return;
-  const from = x.movedFrom || x.day;
-  const targetMon = mondayOf(parse(day));
-  const srcKey = "ns.week3." + iso(mondayOf(parse(x.day)));
-  if (iso(targetMon) === iso(mondayOf(parse(x.day)))){
-    const doc = srcKey === wkKey() ? WEEK : weekDoc(mondayOf(parse(x.day)));
-    const y = doc.slots.find(z => z.id === x.id); y.day = day; y.movedFrom = from;
-    store.set(srcKey, doc);
+  // Get the team's latest copy first, so moving into another week can't overwrite newer work there.
+  if (sync.state === "ok") await sync.pull();
+  const srcMon = mondayOf(parse(x.day)), dstMon = mondayOf(parse(day));
+  const srcKey = "ns.week3." + iso(srcMon), dstKey = "ns.week3." + iso(dstMon);
+  const src = weekDoc(srcMon);
+  const y = src.slots.find(z => z.id === x.id);
+  if (!y){ WEEK = null; renderPlan(); return toast("That post changed on another device. Try again."); }
+  const from = y.movedFrom || y.day;
+  if (srcKey === dstKey){
+    y.day = day; y.movedFrom = from;
+    store.set(srcKey, src);
   } else {
-    const src = srcKey === wkKey() ? WEEK : weekDoc(mondayOf(parse(x.day)));
-    src.slots = src.slots.filter(z => z.id !== x.id); store.set(srcKey, src);
-    const dst = iso(targetMon) === iso(wkStart) ? WEEK : weekDoc(targetMon);
-    dst.slots.push({...x, day, movedFrom: from, auto: false});
-    store.set("ns.week3." + iso(targetMon), dst);
+    src.slots = src.slots.filter(z => z.id !== y.id); store.set(srcKey, src);
+    const dst = weekDoc(dstMon);
+    dst.slots.push({...y, day, movedFrom: from, auto: false});
+    store.set(dstKey, dst);
   }
-  if (srcKey === wkKey() || iso(targetMon) === iso(wkStart)) WEEK = store.get(wkKey(), WEEK);
-  renderPlan();
-  toast(`Moved to ${dayLabel(day)}`, iso(targetMon) !== iso(wkStart) ? {label: "Go there", run: () => { wkStart = targetMon; WEEK = null; renderPlan(); }} : undefined);
+  WEEK = null; renderPlan();
+  toast(`Moved to ${dayLabel(day)}`, iso(dstMon) !== iso(wkStart) ? {label: "Go there", run: () => { wkStart = dstMon; WEEK = null; renderPlan(); }} : undefined);
 }
 function removeSlot(s){
   const i = WEEK.slots.indexOf(s);
@@ -2049,7 +2062,7 @@ function openSlot(id){
       <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
       ${s.ref ? `<a class="btn ghost" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener" style="justify-self:start">▶ Open reference</a>` : ""}
       <div class="two">
-        <label>Date<input type="date" id="fDate" value="${s.day}"></label>
+        <label>Date<span class="datemove"><input type="date" id="fDate" value="${s.day}"><button type="button" class="btn pink" id="fDateGo" hidden>Move</button></span></label>
         <label>Content type<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></label>
       </div>
       <label>Platforms<div class="platpick">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
@@ -2076,7 +2089,9 @@ function openSlot(id){
   $("#fEvent").onchange = e => { s.event = e.target.value.trim(); upd(); };
   $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
-  $("#fDate").onchange = e => { const d = e.target.value; if (!d) return; closeDrawer(); moveSlot(s, d); };
+  // Typing a date passes through in-between dates, so nothing moves until "Move" is tapped.
+  $("#fDate").oninput = $("#fDate").onchange = e => { $("#fDateGo").hidden = !e.target.value || e.target.value === s.day; };
+  $("#fDateGo").onclick = () => { const d = $("#fDate").value; if (!d) return; closeDrawer(); moveSlot(s, d); };
   $("#fPillar").onchange = e => { s.pillar = e.target.value; s.plats = [...PILLARS[s.pillar].plats]; upd(); openSlot(s.id); };
   d.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { s.status = b.dataset.st; upd(); openSlot(s.id); });
   d.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
