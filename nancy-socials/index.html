@@ -311,22 +311,16 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .card .ctl button{background:none;border:1px solid var(--line);border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;color:var(--muted)}
 .addform{display:grid;gap:8px;grid-template-columns:1fr;margin-bottom:16px}
 @media (min-width:900px){.addform{grid-template-columns:2fr 1.5fr 1fr 1.5fr auto}}
-.latebar{max-width:640px;margin:0 auto 12px;background:rgba(255,138,76,.1);border:1px solid rgba(255,138,76,.35);border-radius:16px;padding:10px 12px}
-.late-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.late-h b{flex:1;min-width:180px;font-size:13px;color:#FFD2BA}
-.late-h .btn{padding:7px 12px;font-size:11px}
-.late-list{display:grid;gap:6px;margin-top:10px}
-.late-row{display:grid;grid-template-columns:10px 1fr auto auto auto;gap:8px;align-items:center;background:var(--surface);border-radius:10px;padding:8px 10px}
-.late-row b{display:block;font-size:12.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.late-row span:not(.dot){font-size:11px;color:var(--muted)}
-.late-date{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:11px;color:var(--text);width:120px}
-@media (max-width:560px){.late-row{grid-template-columns:10px 1fr;}.late-row button,.late-row input{grid-column:2}}
+.ig-move{position:absolute;right:6px;bottom:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.55);font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
+.igtile:hover .ig-move,.igtile .ig-day.late ~ .ig-move{opacity:1}
+@media (hover:none){.ig-move{opacity:.8}}
+.ig-movemenu{position:absolute;bottom:40px;right:6px;z-index:4;display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;min-width:140px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.ig-movemenu b{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.ig-movemenu button{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;font-weight:700;color:var(--text);cursor:pointer;text-align:left}
+.ig-movemenu button:hover{border-color:var(--pink)}
+.ig-movemenu input{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;color:var(--text)}
 .ig-day.late{background:var(--care);color:#1b0d05}
 .slot-late{font-size:11px;font-weight:800;color:var(--care)}
-.resched{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
-.resched .copy{letter-spacing:0;text-transform:none}
-.resched-hint{font-weight:500;letter-spacing:0;text-transform:none;color:var(--dim)}
-.resched-note{font-size:13px;color:#FFD2BA;background:rgba(255,138,76,.1);border-radius:10px;padding:8px 10px}
 .thread{display:grid;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
 .thread-list{display:grid;gap:10px}
 .tnote{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
@@ -553,7 +547,6 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <p class="tray-hint" id="trayHint">Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.</p>
       <div class="tray-chips" id="trayChips"></div>
     </div>
-    <div class="latebar" id="lateBar" hidden></div>
     <div id="gridWrap">
       <div class="weekevents" id="weekEvents"></div>
       <div class="iggrid" id="weekgrid"></div>
@@ -1512,39 +1505,6 @@ function moveSlot(x, day){
   renderPlan();
   toast(`Moved to ${dayLabel(day)}`, iso(targetMon) !== iso(wkStart) ? {label: "Go there", run: () => { wkStart = targetMon; WEEK = null; renderPlan(); }} : undefined);
 }
-/* Every unfinished post from past days, across all saved weeks. */
-function lateSlots(){
-  const out = [];
-  for (const k of weekKeys()) for (const x of store.get(k, {slots: []}).slots) if (isLate(x)) out.push(x);
-  return out.sort((a, b) => a.day.localeCompare(b.day));
-}
-let lateOpen = false;
-function renderLate(){
-  const late = lateSlots(), bar = $("#lateBar");
-  bar.hidden = !late.length;
-  if (!late.length) return;
-  const tomorrow = iso(addDays(TODAY, 1));
-  bar.innerHTML = `<div class="late-h"><b>⚠ ${late.length} unfinished post${late.length === 1 ? "" : "s"} from past days</b>
-      <button class="btn pink" data-late-all>Move all to today</button>
-      <button class="btn ghost" data-late-toggle>${lateOpen ? "Hide" : "Review"}</button></div>
-    ${lateOpen ? `<div class="late-list">${late.map(x => {
-      const P = PILLARS[x.pillar] || PILLARS.meme;
-      return `<div class="late-row" data-late="${x.id}" data-day="${x.day}"><span class="dot" style="background:${P.c}"></span>
-        <div><b>${esc(x.title || P.label)}</b><span>${esc(P.label)} · was ${dayLabel(x.day)} · ${ST_LABEL[x.status]}</span></div>
-        <button class="copy" data-to="${todayIso}">Today</button><button class="copy" data-to="${tomorrow}">Tomorrow</button>
-        <input type="date" class="late-date" aria-label="Pick a new date" min="${todayIso}"></div>`;
-    }).join("")}</div>` : ""}`;
-  const find = row => lateSlots().find(x => x.id === row.dataset.late);
-  bar.querySelector("[data-late-toggle]").onclick = () => { lateOpen = !lateOpen; renderLate(); };
-  bar.querySelector("[data-late-all]").onclick = () => {
-    if (!confirm(`Move ${late.length} unfinished post${late.length === 1 ? "" : "s"} to today?`)) return;
-    lateSlots().forEach(x => moveSlot(x, todayIso));
-  };
-  bar.querySelectorAll(".late-row").forEach(row => {
-    row.querySelectorAll("[data-to]").forEach(b => b.onclick = () => { const x = find(row); if (x) moveSlot(x, b.dataset.to); });
-    row.querySelector(".late-date").onchange = e => { const x = find(row); if (x && e.target.value) moveSlot(x, e.target.value); };
-  });
-}
 function removeSlot(s){
   const i = WEEK.slots.indexOf(s);
   WEEK.slots.splice(i, 1); saveWeek(); renderPlan();
@@ -1601,7 +1561,6 @@ function renderPlan(){
 
   renderWeekGrid();
   renderTray();
-  renderLate();
   renderPeople();
 
   // content types reference
@@ -1722,6 +1681,7 @@ function tileHTML(x){
       ${face}
       <span class="ig-day ${isLate(x) ? "late" : ""}">${isLate(x) ? "⚠ Overdue · " : x.star ? "★ " : ""}${dayLabel(x.day)}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
+      <button class="ig-move" data-move-open aria-label="Reschedule" title="Reschedule">📅</button>
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     </div>
     <button class="ig-meta" data-edit title="Open to edit">
@@ -1744,6 +1704,12 @@ function wireGrid(){
     const t = e.target.closest(".igtile[data-slot]"); if (!t) return;
     const s = slotOf(t); if (!s) return;
     if (e.target.closest("[data-x]")) return removeSlot(s);
+    if (e.target.closest("[data-move-open]")) return toggleMoveMenu(t, s);
+    if (e.target.closest(".ig-movemenu")){
+      const b = e.target.closest("[data-to]");
+      if (b) moveSlot(s, b.dataset.to);
+      return;
+    }
     if (e.target.closest("[data-edit]")) return openSlot(s.id);
     if (e.target.closest(".ig-poster")) openSlot(s.id);
   });
@@ -1839,6 +1805,25 @@ function renderDays(){
   });
   g.querySelectorAll("[data-add]").forEach(b => b.onclick = () => pickType(b.dataset.add));
 }
+
+/* The 📅 menu on a tile: move the post to today, tomorrow, a week later or any date. */
+function toggleMoveMenu(t, s){
+  const open = t.querySelector(".ig-movemenu");
+  document.querySelectorAll(".ig-movemenu").forEach(m => m.remove());
+  if (open) return;
+  const media = t.querySelector(".ig-media");
+  media.insertAdjacentHTML("beforeend", `<div class="ig-movemenu">
+    <b>Move to</b>
+    <button data-to="${todayIso}">Today</button>
+    <button data-to="${iso(addDays(TODAY, 1))}">Tomorrow</button>
+    <button data-to="${iso(addDays(parse(s.day), 7))}">+1 week</button>
+    <input type="date" aria-label="Pick a date" value="${s.day}">
+  </div>`);
+  media.querySelector(".ig-movemenu input").onchange = e => { if (e.target.value) moveSlot(s, e.target.value); };
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest(".ig-movemenu,[data-move-open]")) document.querySelectorAll(".ig-movemenu").forEach(m => m.remove());
+});
 
 /* Choose the day for a content type picked from the tray. */
 function pickDay(pillar){
@@ -2042,12 +2027,6 @@ function openSlot(id){
     </div>
     ${s.ref && embedSrc(s.ref) ? `<div class="d-player ${ytId(s.ref) ? "wide" : ""}"><iframe src="${esc(embedSrc(s.ref).replace("?autoplay=1", ""))}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : ""}
     <div class="d-body"><div class="form">
-      ${isLate(s) || s.movedFrom ? `<div class="resched-note">${isLate(s) ? `⚠ This was due ${dayLabel(s.day)} and isn't posted yet.` : `↪ Moved from ${dayLabel(s.movedFrom)}.`}</div>` : ""}
-      <div class="resched"><span>Reschedule</span>
-        <button type="button" class="copy" data-move="${todayIso}">Today</button>
-        <button type="button" class="copy" data-move="${iso(addDays(TODAY, 1))}">Tomorrow</button>
-        <button type="button" class="copy" data-move="${iso(addDays(parse(s.day), 7))}">+1 week</button>
-        <span class="resched-hint">or pick any date below</span></div>
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
       <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
@@ -2081,7 +2060,6 @@ function openSlot(id){
   $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
   $("#fDate").onchange = e => { const d = e.target.value; if (!d) return; closeDrawer(); moveSlot(s, d); };
-  d.querySelectorAll("[data-move]").forEach(b => b.onclick = () => { closeDrawer(); moveSlot(s, b.dataset.move); });
   $("#fPillar").onchange = e => { s.pillar = e.target.value; s.plats = [...PILLARS[s.pillar].plats]; upd(); openSlot(s.id); };
   d.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { s.status = b.dataset.st; upd(); openSlot(s.id); });
   d.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
