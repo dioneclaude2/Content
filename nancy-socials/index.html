@@ -311,6 +311,22 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .card .ctl button{background:none;border:1px solid var(--line);border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;color:var(--muted)}
 .addform{display:grid;gap:8px;grid-template-columns:1fr;margin-bottom:16px}
 @media (min-width:900px){.addform{grid-template-columns:2fr 1.5fr 1fr 1.5fr auto}}
+.latebar{max-width:640px;margin:0 auto 12px;background:rgba(255,138,76,.1);border:1px solid rgba(255,138,76,.35);border-radius:16px;padding:10px 12px}
+.late-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.late-h b{flex:1;min-width:180px;font-size:13px;color:#FFD2BA}
+.late-h .btn{padding:7px 12px;font-size:11px}
+.late-list{display:grid;gap:6px;margin-top:10px}
+.late-row{display:grid;grid-template-columns:10px 1fr auto auto auto;gap:8px;align-items:center;background:var(--surface);border-radius:10px;padding:8px 10px}
+.late-row b{display:block;font-size:12.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.late-row span:not(.dot){font-size:11px;color:var(--muted)}
+.late-date{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:11px;color:var(--text);width:120px}
+@media (max-width:560px){.late-row{grid-template-columns:10px 1fr;}.late-row button,.late-row input{grid-column:2}}
+.ig-day.late{background:var(--care);color:#1b0d05}
+.slot-late{font-size:11px;font-weight:800;color:var(--care)}
+.resched{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.resched .copy{letter-spacing:0;text-transform:none}
+.resched-hint{font-weight:500;letter-spacing:0;text-transform:none;color:var(--dim)}
+.resched-note{font-size:13px;color:#FFD2BA;background:rgba(255,138,76,.1);border-radius:10px;padding:8px 10px}
 .thread{display:grid;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
 .thread-list{display:grid;gap:10px}
 .tnote{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
@@ -537,6 +553,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
       <p class="tray-hint" id="trayHint">Drag a content type onto a day, or tap one and then tap a day. Add as many as you like.</p>
       <div class="tray-chips" id="trayChips"></div>
     </div>
+    <div class="latebar" id="lateBar" hidden></div>
     <div id="gridWrap">
       <div class="weekevents" id="weekEvents"></div>
       <div class="iggrid" id="weekgrid"></div>
@@ -724,7 +741,7 @@ const sync = {
     if ((v.seeded || []).length > slots.filter(x => x.auto).length) return true;   // a preloaded post was removed
     return slots.some(x => {
       const P = PILLARS[x.pillar] || {};
-      return !x.auto || x.title || x.ref || x.note || x.event || x.comments?.length || (x.series && x.star === false)
+      return !x.auto || x.title || x.ref || x.note || x.event || x.comments?.length || x.movedFrom || (x.series && x.star === false)
         || x.status !== P.status || JSON.stringify(x.plats) !== JSON.stringify(P.plats)
         || (x.film || "") !== whoOr(P.film || "") || (x.edit || "") !== whoOr(P.edit || "");
     });
@@ -1446,23 +1463,87 @@ const RECURRING = [
 
 /* Tentpole and strong moments are pre-scheduled once per week. `seeded` remembers which were
    added, so a moment Dione deletes stays deleted. */
-function loadWeek(){
-  WEEK = store.get(wkKey(), null) || {start: iso(wkStart), slots: []};
-  WEEK.seeded = WEEK.seeded || [];
-  const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
+/* A week's plan, with its weekly series and big moments preloaded once. Works for any
+   week, so posts can be rescheduled into weeks that aren't on screen. */
+function weekDoc(start){
+  const key = "ns.week3." + iso(start);
+  const doc = store.get(key, null) || {start: iso(start), slots: []};
+  doc.seeded = doc.seeded || [];
+  const days = DOW.map((d, i) => iso(addDays(start, i)));
+  let added = false;
   for (const r of RECURRING){
-    if (WEEK.seeded.includes(r.key)) continue;
-    const s = mkSlot(days[r.day], r.pillar);
-    s.star = true; s.auto = true; s.series = r.series;
-    WEEK.slots.push(s); WEEK.seeded.push(r.key);
+    if (doc.seeded.includes(r.key)) continue;
+    const x = mkSlot(days[r.day], r.pillar);
+    x.star = true; x.auto = true; x.series = r.series;
+    doc.slots.push(x); doc.seeded.push(r.key); added = true;
   }
-  const big = MOMENTS.filter(m => days.includes(m.date) && m.tier !== "minor" && !WEEK.seeded.includes(m.id));
+  const big = MOMENTS.filter(m => days.includes(m.date) && m.tier !== "minor" && !doc.seeded.includes(m.id));
   for (const m of big){
-    const s = mkSlot(m.date, "moment");
-    s.moment = m.id; s.auto = true;
-    WEEK.slots.push(s); WEEK.seeded.push(m.id);
+    const x = mkSlot(m.date, "moment");
+    x.moment = m.id; x.auto = true;
+    doc.slots.push(x); doc.seeded.push(m.id); added = true;
   }
-  saveWeek();
+  if (added || !store.get(key, null)) store.set(key, doc);
+  return doc;
+}
+function loadWeek(){ WEEK = weekDoc(wkStart); }
+
+/* ───────── RESCHEDULE ─────────
+   Move a post to any date. Within the week it just changes day; otherwise it moves
+   into that week's plan. Posts whose date has passed and aren't Posted are overdue. */
+const isLate = x => x.day < todayIso && x.status !== "posted";
+function moveSlot(x, day){
+  if (!day || day === x.day) return;
+  const from = x.movedFrom || x.day;
+  const targetMon = mondayOf(parse(day));
+  const srcKey = "ns.week3." + iso(mondayOf(parse(x.day)));
+  if (iso(targetMon) === iso(mondayOf(parse(x.day)))){
+    const doc = srcKey === wkKey() ? WEEK : weekDoc(mondayOf(parse(x.day)));
+    const y = doc.slots.find(z => z.id === x.id); y.day = day; y.movedFrom = from;
+    store.set(srcKey, doc);
+  } else {
+    const src = srcKey === wkKey() ? WEEK : weekDoc(mondayOf(parse(x.day)));
+    src.slots = src.slots.filter(z => z.id !== x.id); store.set(srcKey, src);
+    const dst = iso(targetMon) === iso(wkStart) ? WEEK : weekDoc(targetMon);
+    dst.slots.push({...x, day, movedFrom: from, auto: false});
+    store.set("ns.week3." + iso(targetMon), dst);
+  }
+  if (srcKey === wkKey() || iso(targetMon) === iso(wkStart)) WEEK = store.get(wkKey(), WEEK);
+  renderPlan();
+  toast(`Moved to ${dayLabel(day)}`, iso(targetMon) !== iso(wkStart) ? {label: "Go there", run: () => { wkStart = targetMon; WEEK = null; renderPlan(); }} : undefined);
+}
+/* Every unfinished post from past days, across all saved weeks. */
+function lateSlots(){
+  const out = [];
+  for (const k of weekKeys()) for (const x of store.get(k, {slots: []}).slots) if (isLate(x)) out.push(x);
+  return out.sort((a, b) => a.day.localeCompare(b.day));
+}
+let lateOpen = false;
+function renderLate(){
+  const late = lateSlots(), bar = $("#lateBar");
+  bar.hidden = !late.length;
+  if (!late.length) return;
+  const tomorrow = iso(addDays(TODAY, 1));
+  bar.innerHTML = `<div class="late-h"><b>⚠ ${late.length} unfinished post${late.length === 1 ? "" : "s"} from past days</b>
+      <button class="btn pink" data-late-all>Move all to today</button>
+      <button class="btn ghost" data-late-toggle>${lateOpen ? "Hide" : "Review"}</button></div>
+    ${lateOpen ? `<div class="late-list">${late.map(x => {
+      const P = PILLARS[x.pillar] || PILLARS.meme;
+      return `<div class="late-row" data-late="${x.id}" data-day="${x.day}"><span class="dot" style="background:${P.c}"></span>
+        <div><b>${esc(x.title || P.label)}</b><span>${esc(P.label)} · was ${dayLabel(x.day)} · ${ST_LABEL[x.status]}</span></div>
+        <button class="copy" data-to="${todayIso}">Today</button><button class="copy" data-to="${tomorrow}">Tomorrow</button>
+        <input type="date" class="late-date" aria-label="Pick a new date" min="${todayIso}"></div>`;
+    }).join("")}</div>` : ""}`;
+  const find = row => lateSlots().find(x => x.id === row.dataset.late);
+  bar.querySelector("[data-late-toggle]").onclick = () => { lateOpen = !lateOpen; renderLate(); };
+  bar.querySelector("[data-late-all]").onclick = () => {
+    if (!confirm(`Move ${late.length} unfinished post${late.length === 1 ? "" : "s"} to today?`)) return;
+    lateSlots().forEach(x => moveSlot(x, todayIso));
+  };
+  bar.querySelectorAll(".late-row").forEach(row => {
+    row.querySelectorAll("[data-to]").forEach(b => b.onclick = () => { const x = find(row); if (x) moveSlot(x, b.dataset.to); });
+    row.querySelector(".late-date").onchange = e => { const x = find(row); if (x && e.target.value) moveSlot(x, e.target.value); };
+  });
 }
 function removeSlot(s){
   const i = WEEK.slots.indexOf(s);
@@ -1520,6 +1601,7 @@ function renderPlan(){
 
   renderWeekGrid();
   renderTray();
+  renderLate();
   renderPeople();
 
   // content types reference
@@ -1638,7 +1720,7 @@ function tileHTML(x){
   return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}">
     <div class="ig-media">
       ${face}
-      <span class="ig-day">${x.star ? "★ " : ""}${dayLabel(x.day)}</span>
+      <span class="ig-day ${isLate(x) ? "late" : ""}">${isLate(x) ? "⚠ Overdue · " : x.star ? "★ " : ""}${dayLabel(x.day)}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     </div>
@@ -1910,6 +1992,7 @@ function slotCard(s){
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
   return `<div class="slot ${s.status === "posted" ? "done" : ""} ${s.star ? "starred" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
     <div class="slot-p">${s.star ? `<span class="star" title="Starred">★</span>` : ""}${esc(P.label)}${s.auto ? `<span class="slot-auto">${s.star ? "WEEKLY" : "AUTO"}</span>` : ""}</div>
+    ${isLate(s) ? `<div class="slot-late">⚠ Overdue</div>` : s.movedFrom ? `<div class="slot-for">↪ moved from ${dayLabel(s.movedFrom)}</div>` : ""}
     <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : s.series && s.series !== P.label ? `<div class="slot-for">${esc(s.series)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
@@ -1950,7 +2033,6 @@ function openSlot(id){
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
   const opts = (sel, extra) => `<option value="" ${!sel ? "selected" : ""}>Not assigned</option>` + extra +
     TEAM.map(p => `<option value="${p.id}" ${sel === p.id ? "selected" : ""}>${esc(p.name)} · ${esc(p.role)}</option>`).join("");
-  const days = DOW.map((d, i) => iso(addDays(wkStart, i)));
   const d = openDrawer(P.c, `
     <div class="d-hero">
       <button class="iconbtn d-close" aria-label="Close">✕</button>
@@ -1960,12 +2042,18 @@ function openSlot(id){
     </div>
     ${s.ref && embedSrc(s.ref) ? `<div class="d-player ${ytId(s.ref) ? "wide" : ""}"><iframe src="${esc(embedSrc(s.ref).replace("?autoplay=1", ""))}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : ""}
     <div class="d-body"><div class="form">
+      ${isLate(s) || s.movedFrom ? `<div class="resched-note">${isLate(s) ? `⚠ This was due ${dayLabel(s.day)} and isn't posted yet.` : `↪ Moved from ${dayLabel(s.movedFrom)}.`}</div>` : ""}
+      <div class="resched"><span>Reschedule</span>
+        <button type="button" class="copy" data-move="${todayIso}">Today</button>
+        <button type="button" class="copy" data-move="${iso(addDays(TODAY, 1))}">Tomorrow</button>
+        <button type="button" class="copy" data-move="${iso(addDays(parse(s.day), 7))}">+1 week</button>
+        <span class="resched-hint">or pick any date below</span></div>
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
       <label>Reference link<input id="fRef" type="url" inputmode="url" placeholder="Paste the sample post (TikTok, IG, YouTube…)" value="${esc(s.ref || "")}"></label>
       ${s.ref ? `<a class="btn ghost" href="${esc(safeUrl(s.ref))}" target="_blank" rel="noopener" style="justify-self:start">▶ Open reference</a>` : ""}
       <div class="two">
-        <label>Day<select id="fDay">${days.map(x => `<option value="${x}" ${x === s.day ? "selected" : ""}>${fmt(x,{weekday:"long", day:"numeric", month:"short"})}</option>`).join("")}</select></label>
+        <label>Date<input type="date" id="fDate" value="${s.day}"></label>
         <label>Content type<select id="fPillar">${Object.entries(PILLARS).map(([k, x]) => `<option value="${k}" ${k === s.pillar ? "selected" : ""}>${esc(x.label)}</option>`).join("")}</select></label>
       </div>
       <label>Platforms<div class="platpick">${Object.entries(PLAT_NAMES).map(([k, v]) => `<button type="button" data-p="${k}" aria-pressed="${s.plats.includes(k)}">${v}</button>`).join("")}</div></label>
@@ -1992,7 +2080,8 @@ function openSlot(id){
   $("#fEvent").onchange = e => { s.event = e.target.value.trim(); upd(); };
   $("#fFilm").onchange = e => { s.film = e.target.value; upd(); };
   $("#fEdit").onchange = e => { s.edit = e.target.value; upd(); };
-  $("#fDay").onchange = e => { s.day = e.target.value; upd(); openSlot(s.id); };
+  $("#fDate").onchange = e => { const d = e.target.value; if (!d) return; closeDrawer(); moveSlot(s, d); };
+  d.querySelectorAll("[data-move]").forEach(b => b.onclick = () => { closeDrawer(); moveSlot(s, b.dataset.move); });
   $("#fPillar").onchange = e => { s.pillar = e.target.value; s.plats = [...PILLARS[s.pillar].plats]; upd(); openSlot(s.id); };
   d.querySelectorAll("[data-st]").forEach(b => b.onclick = () => { s.status = b.dataset.st; upd(); openSlot(s.id); });
   d.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
