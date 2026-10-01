@@ -1333,6 +1333,14 @@ function addCard({title, moment, platform, ref, by}){
   cards.push({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title, moment, platform, ref, by: by || "", stage: ref ? 1 : 0});
   saveCards(); renderPipe();
 }
+/* The reference as a player at the top of a side panel (posts and Pipeline cards). */
+function refPlayer(ref){
+  const md = ref && mediaOf(ref); if (!md) return "";
+  const inner = md.kind === "img" ? `<img src="${esc(md.src)}" alt="">` : md.kind === "video" ? `<video src="${esc(md.src)}" controls playsinline></video>`
+    : `<iframe src="${esc(md.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+  return `<div class="d-player ${md.wide ? "wide" : ""}">${inner}</div>`;
+}
+
 function openCard(id){
   const c = cards.find(x => x.id === id); if (!c) return;
   const m = MOMENTS.find(x => x.id === c.moment);
@@ -1343,6 +1351,7 @@ function openCard(id){
       <input class="d-title-edit" id="cardTitle" value="${esc(c.title)}" aria-label="Title" placeholder="Card title">
       ${m ? `<div class="d-chips"><span class="chip">${dot(m)} ${esc(m.name)} · ${dayLabel(m.date)}</span></div>` : ""}
     </div>
+    ${refPlayer(c.ref)}
     <div class="d-body">
       <div class="d-block"><label class="eyebrow" for="cardRef">Reference link</label>
         <input id="cardRef" class="by-select" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste any link" value="${esc(c.ref || "")}"></div>
@@ -2128,10 +2137,7 @@ function openSlot(id){
       <div class="d-name">${esc(P.label)}</div>
       <p style="margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.5">${esc(P.desc)}</p>
     </div>
-    ${(() => { const md = s.ref && mediaOf(s.ref); if (!md) return "";
-      const inner = md.kind === "img" ? `<img src="${esc(md.src)}" alt="">` : md.kind === "video" ? `<video src="${esc(md.src)}" controls playsinline></video>`
-        : `<iframe src="${esc(md.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
-      return `<div class="d-player ${md.wide ? "wide" : ""}">${inner}</div>`; })()}
+    ${refPlayer(s.ref)}
     <div class="d-body"><div class="form">
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
