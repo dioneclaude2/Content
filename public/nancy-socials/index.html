@@ -312,7 +312,7 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .addform{display:grid;gap:8px;grid-template-columns:1fr;margin-bottom:16px}
 @media (min-width:900px){.addform{grid-template-columns:2fr 1.5fr 1fr 1.5fr auto}}
 .ig-move{position:absolute;right:6px;bottom:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.55);font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s}
-.igtile:hover .ig-move,.igtile .ig-day.late ~ .ig-move{opacity:1}
+.igtile:hover .ig-move{opacity:1}
 @media (hover:none){.ig-move{opacity:.8}}
 .ig-movemenu{position:absolute;bottom:40px;right:6px;z-index:4;display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;min-width:140px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 .ig-movemenu b{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
@@ -325,8 +325,6 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-movemenu .done{background:var(--pink);border-color:var(--pink);color:#fff}
 .ig-movemenu .done:disabled{opacity:.4;cursor:default}
 .ig-movemenu input{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;color:var(--text)}
-.ig-day.late{background:var(--care);color:#1b0d05}
-.slot-late{font-size:11px;font-weight:800;color:var(--care)}
 .thread{display:grid;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
 .thread-list{display:grid;gap:10px}
 .tnote{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
@@ -1489,8 +1487,7 @@ function loadWeek(){ WEEK = weekDoc(wkStart); }
 
 /* ───────── RESCHEDULE ─────────
    Move a post to any date. Within the week it just changes day; otherwise it moves
-   into that week's plan. Posts whose date has passed and aren't Posted are overdue. */
-const isLate = x => x.day < todayIso && x.status !== "posted";
+   into that week's plan. */
 function moveSlot(x, day){
   if (!day || day === x.day) return;
   const from = x.movedFrom || x.day;
@@ -1685,7 +1682,7 @@ function tileHTML(x){
   return `<div class="igtile ${x.day === todayIso ? "today" : ""}" draggable="true" data-slot="${x.id}">
     <div class="ig-media">
       ${face}
-      <span class="ig-day ${isLate(x) ? "late" : ""}">${isLate(x) ? "⚠ Overdue · " : x.star ? "★ " : ""}${dayLabel(x.day)}</span>
+      <span class="ig-day">${x.star ? "★ " : ""}${dayLabel(x.day)}</span>
       <span class="ig-st st-${x.status}" title="${ST_LABEL[x.status]}"></span>
       <button class="ig-move" data-move-open aria-label="Reschedule" title="Reschedule">📅</button>
       <button class="ig-x" data-x aria-label="Remove this post" title="Remove">✕</button>
@@ -1997,7 +1994,7 @@ function slotCard(s){
   const m = s.moment && MOMENTS.find(x => x.id === s.moment);
   return `<div class="slot ${s.status === "posted" ? "done" : ""} ${s.star ? "starred" : ""}" draggable="true" data-slot="${s.id}" style="--pc:${P.c}">
     <div class="slot-p">${s.star ? `<span class="star" title="Starred">★</span>` : ""}${esc(P.label)}${s.auto ? `<span class="slot-auto">${s.star ? "WEEKLY" : "AUTO"}</span>` : ""}</div>
-    ${isLate(s) ? `<div class="slot-late">⚠ Overdue</div>` : s.movedFrom ? `<div class="slot-for">↪ moved from ${dayLabel(s.movedFrom)}</div>` : ""}
+
     <button class="slot-x" data-x aria-label="Remove this post" title="Remove">✕</button>
     ${m ? `<div class="slot-for">for ${esc(m.name)}</div>` : s.series && s.series !== P.label ? `<div class="slot-for">${esc(s.series)}</div>` : ""}
     <div class="slot-t">${esc(s.title) || `<span style="color:var(--dim)">+ Add idea</span>`}</div>
