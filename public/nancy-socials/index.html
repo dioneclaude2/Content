@@ -480,6 +480,11 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .igtile:hover .ig-x{opacity:1}
 @media (hover:none){.ig-x{opacity:.7}}
 .ig-media iframe.ig-full{inset:0;width:100%;height:100%;top:0}
+.d-linkcard{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;margin:0 26px 8px;padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--text)}
+.d-linkcard span{grid-row:1/3;font-size:26px}
+.d-linkcard b{font-size:16px}
+.d-linkcard small{font-size:12px;color:var(--muted)}
+.d-linkcard:hover{border-color:var(--pink)}
 .d-player{margin:0 26px 8px;border-radius:16px;overflow:hidden;background:#000;height:560px}
 .d-player.wide{height:auto;aspect-ratio:16/9}
 .d-player iframe,.d-player video,.d-player img{width:100%;height:100%;border:0;display:block;object-fit:contain;background:#000}
@@ -728,6 +733,14 @@ const normUrl = u => {
   return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u;
 };
 const safeUrl = u => { const n = normUrl(u); return /^https?:\/\//i.test(n) ? n : "#"; };
+/* Friendly names for common link hosts ("Open in Shade"). */
+const linkName = u => {
+  const h = linkHost(u);
+  const known = {"shade.inc": "Shade", "canva.com": "Canva", "pin.it": "Pinterest", "pinterest.com": "Pinterest", "drive.google.com": "Google Drive",
+    "docs.google.com": "Google Docs", "x.com": "X", "twitter.com": "X", "vt.tiktok.com": "TikTok", "tiktok.com": "TikTok", "dropbox.com": "Dropbox", "notion.so": "Notion"};
+  const k = Object.keys(known).find(d => h === d || h.endsWith("." + d));
+  return k ? known[k] : h;
+};
 const linkHost = u => { try { return new URL(normUrl(u)).hostname.replace(/^www\./, ""); } catch { return "link"; } };
 
 /* The page is served at /nancy-socials on Vercel and copied to GitHub Pages
@@ -1230,8 +1243,6 @@ function mediaOf(url){
   if (/figma\.com\/(file|design|proto|board)\//.test(u)) return {kind: "frame", wide: true, src: `https://www.figma.com/embed?embed_host=share&url=${enc(u)}`};
   if ((m = u.match(/open\.spotify\.com\/(track|episode|show|playlist|album)\/([\w]+)/))) return {kind: "frame", src: `https://open.spotify.com/embed/${m[1]}/${m[2]}`};
   if (/facebook\.com\/.+\/(videos|reel)\/|fb\.watch\//.test(u)) return {kind: "frame", tall: true, src: `https://www.facebook.com/plugins/video.php?href=${enc(u)}&show_text=false`};
-  // Shade (shade.inc) share and published links: the web app allows embedding, so show the link itself.
-  if (/^https?:\/\/([\w-]+\.)*shade\.inc\/./i.test(u) && !/^https?:\/\/(www\.)?shade\.inc\/(features|use-cases|pricing|blog)/i.test(u)) return {kind: "frame", src: u};
   // Direct files (including Dropbox share links)
   const file = /dropbox\.com/.test(u) ? u.replace(/([?&])dl=0/, "$1raw=1").replace(/^(?!.*[?&]raw=1)(.*)$/, (x) => x + (x.includes("?") ? "&" : "?") + "raw=1") : u;
   const path = file.split(/[?#]/)[0].toLowerCase();
@@ -1335,7 +1346,10 @@ function addCard({title, moment, platform, ref, by}){
 }
 /* The reference as a player at the top of a side panel (posts and Pipeline cards). */
 function refPlayer(ref){
-  const md = ref && mediaOf(ref); if (!md) return "";
+  if (!ref) return "";
+  const md = mediaOf(ref);
+  // Links that can't play here (Shade, websites…) get a clean card that opens them.
+  if (!md) return `<a class="d-linkcard" href="${esc(safeUrl(ref))}" target="_blank" rel="noopener"><span>🔗</span><b>Open in ${esc(linkName(ref))}</b><small>${esc(linkHost(ref))} ↗</small></a>`;
   const inner = md.kind === "img" ? `<img src="${esc(md.src)}" alt="">` : md.kind === "video" ? `<video src="${esc(md.src)}" controls playsinline></video>`
     : `<iframe src="${esc(md.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
   return `<div class="d-player ${md.wide ? "wide" : ""}">${inner}</div>`;
@@ -1767,7 +1781,7 @@ function tileHTML(x){
   // A reference that can show in the page becomes a live player (loaded when the tile scrolls into view).
   const media = x.ref && mediaOf(x.ref);
   const face = media ? `<div class="ig-wait" data-embed="${esc(media.src)}" data-kind="${media.kind}"></div>`
-    : x.ref ? `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(m ? m.name : P.label)}</b><a class="ig-link" href="${esc(safeUrl(x.ref))}" target="_blank" rel="noopener">🔗 ${esc(linkHost(x.ref))} ↗</a></div>`
+    : x.ref ? `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(m ? m.name : P.label)}</b><a class="ig-link" href="${esc(safeUrl(x.ref))}" target="_blank" rel="noopener">🔗 Open in ${esc(linkName(x.ref))} ↗</a></div>`
     : m ? `<div class="ig-poster" style="--pc:${P.c}"><small>${esc(P.label)}</small><b>${esc(m.name)}</b><span class="ig-when">${esc(mWhen)}</span></div>`
     : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b></div>`;
   const who = [x.film === "none" ? "" : `🎥 ${pname(x.film)}`, x.edit === "none" ? "" : `✂️ ${pname(x.edit)}`].filter(Boolean).join(" · ");
