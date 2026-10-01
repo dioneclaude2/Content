@@ -345,6 +345,9 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .by-pill i,.pill.by i{width:8px;height:8px;border-radius:50%;background:var(--pc)}
 .pill.by.on{background:var(--pc);border-color:var(--pc);color:#140a0f}
 .pill.by.on i{background:#140a0f}
+.d-title-edit{display:block;width:100%;margin:10px 0 14px;padding:6px 8px;background:rgba(0,0,0,.25);border:1px solid transparent;border-radius:10px;color:var(--text);font-size:clamp(24px,4vw,34px);font-weight:900;text-transform:uppercase;letter-spacing:-.03em;line-height:1.05}
+.d-title-edit:hover{border-color:rgba(255,255,255,.2)}
+.d-title-edit:focus{border-color:var(--pink);outline:none;text-transform:none}
 .by-select{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--text);width:100%;margin-top:6px}
 .card-last{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-last b{color:var(--text)}
@@ -479,7 +482,8 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-media iframe.ig-full{inset:0;width:100%;height:100%;top:0}
 .d-player{margin:0 26px 8px;border-radius:16px;overflow:hidden;background:#000;height:560px}
 .d-player.wide{height:auto;aspect-ratio:16/9}
-.d-player iframe{width:100%;height:100%;border:0;display:block}
+.d-player iframe,.d-player video,.d-player img{width:100%;height:100%;border:0;display:block;object-fit:contain;background:#000}
+.ig-media .ig-file{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 .ig-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1.5px dashed var(--line);color:var(--muted);font-size:12px;font-weight:700}
 .ig-add span{font-size:30px;font-weight:300;line-height:1}
 .ig-add:hover{border-color:var(--pink);color:var(--text)}
@@ -1202,14 +1206,41 @@ function watchLinks(list){
   return `<div class="watch">${list.map(x => `<a href="${esc(safeUrl(x.url))}" target="_blank" rel="noopener" title="${esc(x.what || "")}">▶ ${esc(x.account || PLAT_NAMES[x.platform] || "Watch")}</a>`).join("")}</div>`;
 }
 /* Real posts play in place: tap a tile and it swaps to the platform's own embed. */
-function embedSrc(url){
+/* What a reference link can show in the page. Returns {kind, src} or null:
+   kind "ig" (cropped Instagram embed), "img"/"video" (direct files), or "frame" (any other
+   embeddable player: TikTok, YouTube, Google Drive/Docs, Canva, Pinterest, X, Vimeo, Loom,
+   Figma, Spotify, Facebook). Sites that refuse embedding stay as a plain link. */
+function mediaOf(url){
   const u = normUrl(url);
+  if (!/^https?:\/\//i.test(u)) return null;
   let m;
-  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return `https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`;
-  if ((m = u.match(/tiktok\.com\/(?:@[^/]+\/video|v|embed(?:\/v2)?)\/(\d+)/))) return `https://www.tiktok.com/embed/v2/${m[1]}`;
-  const id = ytId(u); if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
+  const enc = encodeURIComponent;
+  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return {kind: "ig", src: `https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`};
+  if ((m = u.match(/tiktok\.com\/(?:@[^/]+\/video|v|embed(?:\/v2)?)\/(\d+)/))) return {kind: "frame", tall: true, src: `https://www.tiktok.com/embed/v2/${m[1]}`};
+  const yt = ytId(u); if (yt) return {kind: "frame", wide: !/shorts\//.test(u), src: `https://www.youtube.com/embed/${yt}`};
+  // Google Drive / Shared Drive files and folders, Docs, Slides, Sheets
+  if ((m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]{10,})/))) return {kind: "frame", src: `https://drive.google.com/file/d/${m[1]}/preview`};
+  if ((m = u.match(/drive\.google\.com\/drive\/(?:u\/\d+\/)?folders\/([\w-]{10,})/))) return {kind: "frame", src: `https://drive.google.com/embeddedfolderview?id=${m[1]}#grid`};
+  if ((m = u.match(/docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([\w-]{10,})/))) return {kind: "frame", src: `https://docs.google.com/${m[1]}/d/${m[2]}/preview`};
+  if ((m = u.match(/canva\.com\/design\/([\w-]+)\/([\w-]+)/))) return {kind: "frame", src: `https://www.canva.com/design/${m[1]}/${m[2]}/view?embed`};
+  if ((m = u.match(/pinterest\.[a-z.]+\/pin\/(?:[\w-]*--)?(\d+)/))) return {kind: "frame", tall: true, src: `https://assets.pinterest.com/ext/embed.html?id=${m[1]}`};
+  if ((m = u.match(/(?:x|twitter)\.com\/[\w]+\/status\/(\d+)/))) return {kind: "frame", tall: true, src: `https://platform.twitter.com/embed/Tweet.html?id=${m[1]}&theme=dark`};
+  if ((m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/))) return {kind: "frame", wide: true, src: `https://player.vimeo.com/video/${m[1]}`};
+  if ((m = u.match(/loom\.com\/(?:share|embed)\/([\w]+)/))) return {kind: "frame", wide: true, src: `https://www.loom.com/embed/${m[1]}`};
+  if (/figma\.com\/(file|design|proto|board)\//.test(u)) return {kind: "frame", wide: true, src: `https://www.figma.com/embed?embed_host=share&url=${enc(u)}`};
+  if ((m = u.match(/open\.spotify\.com\/(track|episode|show|playlist|album)\/([\w]+)/))) return {kind: "frame", src: `https://open.spotify.com/embed/${m[1]}/${m[2]}`};
+  if (/facebook\.com\/.+\/(videos|reel)\/|fb\.watch\//.test(u)) return {kind: "frame", tall: true, src: `https://www.facebook.com/plugins/video.php?href=${enc(u)}&show_text=false`};
+  // Shade (shade.inc) share and published links: the web app allows embedding, so show the link itself.
+  if (/^https?:\/\/([\w-]+\.)*shade\.inc\/./i.test(u) && !/^https?:\/\/(www\.)?shade\.inc\/(features|use-cases|pricing|blog)/i.test(u)) return {kind: "frame", src: u};
+  // Direct files (including Dropbox share links)
+  const file = /dropbox\.com/.test(u) ? u.replace(/([?&])dl=0/, "$1raw=1").replace(/^(?!.*[?&]raw=1)(.*)$/, (x) => x + (x.includes("?") ? "&" : "?") + "raw=1") : u;
+  const path = file.split(/[?#]/)[0].toLowerCase();
+  if (/\.(mp4|mov|m4v|webm)$/.test(path)) return {kind: "video", src: file};
+  if (/\.(jpe?g|png|gif|webp|avif)$/.test(path)) return {kind: "img", src: file};
   return null;
 }
+/* Kept for the places that just need an iframe address. */
+function embedSrc(url){ const m = mediaOf(url); return m && (m.kind === "ig" || m.kind === "frame") ? m.src : null; }
 function videoTiles(list){
   if (!list?.length) return "";
   const playable = list.filter(x => embedSrc(x.url)), rest = list.filter(x => !embedSrc(x.url));
@@ -1309,10 +1340,12 @@ function openCard(id){
     <div class="d-hero">
       <button class="iconbtn d-close" aria-label="Close">✕</button>
       <div class="d-date">Pipeline · ${esc(STAGES[c.stage])} · ${PLAT_NAMES[c.platform]}</div>
-      <div class="d-name">${esc(c.title)}</div>
+      <input class="d-title-edit" id="cardTitle" value="${esc(c.title)}" aria-label="Title" placeholder="Card title">
       ${m ? `<div class="d-chips"><span class="chip">${dot(m)} ${esc(m.name)} · ${dayLabel(m.date)}</span></div>` : ""}
     </div>
     <div class="d-body">
+      <div class="d-block"><label class="eyebrow" for="cardRef">Reference link</label>
+        <input id="cardRef" class="by-select" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Paste any link" value="${esc(c.ref || "")}"></div>
       <div class="d-block"><label class="eyebrow" for="cardBy">Added by</label>
         <select id="cardBy" class="by-select">${`<option value="">No name</option>` + TEAM.map(p => `<option value="${p.id}" ${p.id === c.by ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select></div>
       ${c.ref ? `<div class="d-block"><a class="btn ghost" href="${esc(safeUrl(c.ref))}" target="_blank" rel="noopener">▶ Open reference</a></div>` : ""}
@@ -1320,6 +1353,8 @@ function openCard(id){
     </div>`);
   renderThread($("#cardThread"), c, () => { saveCards(); renderPipe(); });
   $("#cardBy").onchange = e => { c.by = e.target.value; saveCards(); renderPipe(); };
+  $("#cardTitle").onchange = e => { const t = e.target.value.trim(); if (!t){ e.target.value = c.title; return; } c.title = t; saveCards(); renderPipe(); };
+  $("#cardRef").onchange = e => { c.ref = normUrl(e.target.value); saveCards(); renderPipe(); openCard(c.id); };
 }
 
 function renderPipe(){
@@ -1718,12 +1753,11 @@ function renderWeekGrid(){
 }
 function tileHTML(x){
   const P = PILLARS[x.pillar] || PILLARS.meme;
-  const src = x.ref && embedSrc(x.ref);
-  const yt = x.ref && ytId(x.ref);
-  // Every reference is a live player (loaded when the tile scrolls into view).
   const m = x.moment && MOMENTS.find(y => y.id === x.moment);
   const mWhen = m ? (m.end ? `${fmt(m.date)} – ${fmt(m.end)}` : dayLabel(m.date)) : "";
-  const face = src ? `<div class="ig-wait" data-embed="${esc(yt ? `https://www.youtube.com/embed/${yt}` : src)}" data-kind="${yt ? "yt" : /tiktok/.test(src) ? "tt" : "ig"}"></div>`
+  // A reference that can show in the page becomes a live player (loaded when the tile scrolls into view).
+  const media = x.ref && mediaOf(x.ref);
+  const face = media ? `<div class="ig-wait" data-embed="${esc(media.src)}" data-kind="${media.kind}"></div>`
     : x.ref ? `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(m ? m.name : P.label)}</b><a class="ig-link" href="${esc(safeUrl(x.ref))}" target="_blank" rel="noopener">🔗 ${esc(linkHost(x.ref))} ↗</a></div>`
     : m ? `<div class="ig-poster" style="--pc:${P.c}"><small>${esc(P.label)}</small><b>${esc(m.name)}</b><span class="ig-when">${esc(mWhen)}</span></div>`
     : `<div class="ig-poster" style="--pc:${P.c}"><b>${esc(P.label)}</b></div>`;
@@ -1802,8 +1836,10 @@ const embedObserver = "IntersectionObserver" in window ? new IntersectionObserve
 }, {rootMargin: "200px"}) : null;
 function playerHTML(el){
   const k = el.dataset.kind, src = el.dataset.embed;
-  return k === "ig" ? `<iframe data-crop src="${src}" scrolling="no" tabindex="-1"></iframe>`
-    : `<iframe class="ig-full ${k}" src="${src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  if (k === "ig") return `<iframe data-crop src="${src}" scrolling="no" tabindex="-1"></iframe>`;
+  if (k === "img") return `<img class="ig-file" src="${src}" alt="" loading="lazy">`;
+  if (k === "video") return `<video class="ig-file" src="${src}" controls playsinline preload="metadata"></video>`;
+  return `<iframe class="ig-full" src="${src}" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
 }
 function lazyEmbeds(){
   const grid = $("#weekgrid");
@@ -2092,7 +2128,10 @@ function openSlot(id){
       <div class="d-name">${esc(P.label)}</div>
       <p style="margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.5">${esc(P.desc)}</p>
     </div>
-    ${s.ref && embedSrc(s.ref) ? `<div class="d-player ${ytId(s.ref) ? "wide" : ""}"><iframe src="${esc(embedSrc(s.ref).replace("?autoplay=1", ""))}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : ""}
+    ${(() => { const md = s.ref && mediaOf(s.ref); if (!md) return "";
+      const inner = md.kind === "img" ? `<img src="${esc(md.src)}" alt="">` : md.kind === "video" ? `<video src="${esc(md.src)}" controls playsinline></video>`
+        : `<iframe src="${esc(md.src)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+      return `<div class="d-player ${md.wide ? "wide" : ""}">${inner}</div>`; })()}
     <div class="d-body"><div class="form">
       <label>Status<div class="seg5">${STATUSES.map(([k, l]) => `<button type="button" data-st="${k}" class="${s.status === k ? "st-" + k : ""}" aria-pressed="${s.status === k}">${l}</button>`).join("")}</div></label>
       <label>Idea<textarea id="fTitle" placeholder="What's the post?">${esc(s.title)}</textarea></label>
