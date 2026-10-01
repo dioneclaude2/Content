@@ -318,6 +318,12 @@ td.lvl span{display:inline-block;width:10px;height:10px;border-radius:50%}
 .ig-movemenu b{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .ig-movemenu button{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;font-weight:700;color:var(--text);cursor:pointer;text-align:left}
 .ig-movemenu button:hover{border-color:var(--pink)}
+.ig-movemenu button.on{border-color:var(--pink);background:rgba(255,79,139,.15)}
+.mv-sel{font-size:11px;color:var(--muted);padding:2px 2px 0}
+.mv-act{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:2px}
+.ig-movemenu .mv-act button{text-align:center}
+.ig-movemenu .done{background:var(--pink);border-color:var(--pink);color:#fff}
+.ig-movemenu .done:disabled{opacity:.4;cursor:default}
 .ig-movemenu input{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;color:var(--text)}
 .ig-day.late{background:var(--care);color:#1b0d05}
 .slot-late{font-size:11px;font-weight:800;color:var(--care)}
@@ -1705,9 +1711,12 @@ function wireGrid(){
     const s = slotOf(t); if (!s) return;
     if (e.target.closest("[data-x]")) return removeSlot(s);
     if (e.target.closest("[data-move-open]")) return toggleMoveMenu(t, s);
-    if (e.target.closest(".ig-movemenu")){
-      const b = e.target.closest("[data-to]");
-      if (b) moveSlot(s, b.dataset.to);
+    const menu = e.target.closest(".ig-movemenu");
+    if (menu){
+      const pick = e.target.closest("[data-pick]");
+      if (pick) pickMove(menu, pick.dataset.pick);
+      if (e.target.closest("[data-move-cancel]")) menu.remove();
+      if (e.target.closest("[data-move-done]") && menu.dataset.to) moveSlot(s, menu.dataset.to);   // only moves on Done
       return;
     }
     if (e.target.closest("[data-edit]")) return openSlot(s.id);
@@ -1806,7 +1815,8 @@ function renderDays(){
   g.querySelectorAll("[data-add]").forEach(b => b.onclick = () => pickType(b.dataset.add));
 }
 
-/* The 📅 menu on a tile: move the post to today, tomorrow, a week later or any date. */
+/* The 📅 menu on a tile: choose Today, Tomorrow, +1 week or any date, then tap Done
+   to move the post. Nothing changes until Done. */
 function toggleMoveMenu(t, s){
   const open = t.querySelector(".ig-movemenu");
   document.querySelectorAll(".ig-movemenu").forEach(m => m.remove());
@@ -1814,12 +1824,22 @@ function toggleMoveMenu(t, s){
   const media = t.querySelector(".ig-media");
   media.insertAdjacentHTML("beforeend", `<div class="ig-movemenu">
     <b>Move to</b>
-    <button data-to="${todayIso}">Today</button>
-    <button data-to="${iso(addDays(TODAY, 1))}">Tomorrow</button>
-    <button data-to="${iso(addDays(parse(s.day), 7))}">+1 week</button>
+    <button data-pick="${todayIso}">Today</button>
+    <button data-pick="${iso(addDays(TODAY, 1))}">Tomorrow</button>
+    <button data-pick="${iso(addDays(parse(s.day), 7))}">+1 week</button>
     <input type="date" aria-label="Pick a date" value="${s.day}">
+    <span class="mv-sel">Now ${dayLabel(s.day)}</span>
+    <div class="mv-act"><button data-move-cancel>Cancel</button><button data-move-done class="done" disabled>Done</button></div>
   </div>`);
-  media.querySelector(".ig-movemenu input").onchange = e => { if (e.target.value) moveSlot(s, e.target.value); };
+  const menu = media.querySelector(".ig-movemenu");
+  menu.querySelector("input").onchange = e => { if (e.target.value) pickMove(menu, e.target.value); };
+}
+function pickMove(menu, day){
+  menu.dataset.to = day;
+  menu.querySelectorAll("[data-pick]").forEach(b => b.classList.toggle("on", b.dataset.pick === day));
+  menu.querySelector("input").value = day;
+  menu.querySelector(".mv-sel").textContent = `Move to ${dayLabel(day)}`;
+  menu.querySelector("[data-move-done]").disabled = false;
 }
 document.addEventListener("click", e => {
   if (!e.target.closest(".ig-movemenu,[data-move-open]")) document.querySelectorAll(".ig-movemenu").forEach(m => m.remove());
