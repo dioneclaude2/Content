@@ -1595,8 +1595,7 @@ function icsText(owner){
     const d = {id:t.id, date:t.date, label:t.title, owner:t.owner};
     const due = [t.need ? `Need: ${t.need}` : "", t.give ? `Give: ${t.give}` : ""].filter(Boolean).join("\n");
     L.push("BEGIN:VEVENT", `UID:${PID}-p1-${d.id}@nancy-projects`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${D(d.date)}`, `DTEND;VALUE=DATE:${D(addDays(d.date, 1))}`,
-      `SUMMARY:${E(`P1 · ${d.label} · ${CFG.short}`)}`, `DESCRIPTION:${E([`P1 · Priority one for ${CFG.name}. Owner: ${OWNER_LABEL(d.owner)}`, POST_DAYS[d.date]?.t || "", due, `Board: ${url}`].filter(Boolean).join("\n\n"))}`,
-      `URL:${url}`, "TRANSP:TRANSPARENT",
+      `SUMMARY:${E(`P1 · ${d.label} · ${CFG.short}`)}`, `URL:${url}`, "TRANSP:TRANSPARENT",
       "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P3D", `DESCRIPTION:${E(`3 days to ${d.label}`)}`, "END:VALARM",
       "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P1D", `DESCRIPTION:${E(`Tomorrow: ${d.label}`)}`, "END:VALARM", "END:VEVENT");
   });
