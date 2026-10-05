@@ -17,6 +17,9 @@
   --line:rgba(31,18,22,.10); --line-2:rgba(31,18,22,.2);
   --red:#e2445c; --green:#00c875;
   --shadow:0 18px 40px -18px rgba(31,18,22,.35); --r:12px;
+  --pink-grad:linear-gradient(135deg,#ec2f8e 0%,#ff5f7e 55%,#f7a8c8 100%);
+  --dusk:linear-gradient(160deg,#131a5c 0%,#24309a 42%,#6b3f9e 70%,#e0679c 90%,#f7a8c8 100%);
+  --grad:linear-gradient(100deg,#ec2f8e 0%,#ff5f7e 38%,#ff9a4a 68%,#ffd42e 100%);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --ink:#faf3e6; --ink-soft:#d8c7cd; --muted:#a8939b;
@@ -45,7 +48,7 @@ a{color:inherit}
 .side nav{display:grid;gap:2px}
 .side a,.side button{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;font-size:13.5px;color:rgba(250,243,230,.82);text-align:left;width:100%;transition:background .15s}
 .side a:hover,.side button:hover{background:rgba(250,243,230,.08);color:#fff}
-.side a.is-on{background:var(--pink);color:#fff}
+.side a.is-on{background:var(--pink-grad);color:#fff}
 .side .sw{width:10px;height:10px;border-radius:3px;flex:none}
 .side__new{border:1px dashed rgba(250,243,230,.28)!important}
 .side__foot{margin-top:auto;font-size:11px;color:rgba(250,243,230,.4);padding:0 10px;line-height:1.5}
@@ -60,8 +63,8 @@ main{padding:28px 28px 80px;max-width:1240px}
 .btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--line-2);background:var(--row);font-size:13.5px;white-space:nowrap;transition:transform .12s,background .15s,border-color .15s}
 .btn:hover{border-color:var(--ink-soft)}
 .btn:active{transform:scale(.96)}
-.btn--pink{background:var(--pink);border-color:var(--pink);color:#fff}
-.btn--pink:hover{background:var(--pink-deep);border-color:var(--pink-deep)}
+.btn--pink{background:var(--pink-grad);border-color:transparent;color:#fff}
+.btn--pink:hover{filter:brightness(1.06) saturate(1.1)}
 .btn--black{background:var(--black);border-color:var(--black);color:#faf3e6}
 h2{font-family:"Fraunces",serif;font-weight:400;font-size:22px;margin:0 0 12px}
 h2 em{color:var(--pink)}
@@ -72,7 +75,7 @@ h2 em{color:var(--pink)}
 .stat h4{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
 .stat b{font-family:"Fraunces",serif;font-size:40px;font-weight:350;line-height:1}
 .stat.is-red b{color:var(--red)}
-.stat.is-pink{background:var(--pink);border-color:var(--pink);color:#fff}
+.stat.is-pink{background:var(--pink-grad);border-color:transparent;color:#fff}
 .stat.is-pink h4{color:rgba(255,255,255,.85)}
 
 .projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px;margin-bottom:34px}
@@ -91,6 +94,27 @@ h2 em{color:var(--pink)}
 .pcard__open{margin-top:auto;font-weight:600;font-size:13px;color:var(--pink)}
 .pcard__x{position:absolute;top:12px;right:12px;height:26px;padding:0 9px;border-radius:6px;color:var(--muted);font-size:12px;border:1px solid var(--line);background:var(--row);z-index:2}
 .pcard__x:hover{background:var(--wall);color:var(--red)}
+/* Monster Mansion card: the launch site's own look */
+.pcard--monster{background:var(--dusk);border:0;color:#faf3e6;min-height:300px}
+.pcard--monster::before{background:var(--grad);height:6px}
+.pcard--monster::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 32% 8%,#fff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 58% 22%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 76% 12%,#fff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 88% 30%,#fff 50%,transparent 51%);opacity:.6}
+.pcard--monster>*{position:relative;z-index:1}
+.pcard--monster>.pcard__x{position:absolute;z-index:2}
+.pcard--monster .pcard__k{color:#ffd42e}
+.pcard--monster h3{color:#fff}
+.pcard--monster h3 em{font-style:italic;color:#ffd42e}
+.pcard--monster .pcard__meta span{background:rgba(255,255,255,.14);color:#faf3e6}
+.pcard--monster .prog{background:rgba(255,255,255,.18)}
+.pcard--monster .prog i{background:var(--grad)}
+.pcard--monster .pcard__next{color:rgba(250,243,230,.82);border-top-color:rgba(250,243,230,.22)}
+.pcard--monster .pcard__next b{color:#fff}
+.pcard--monster .pcard__open{display:inline-flex;align-self:flex-start;padding:8px 14px;border-radius:999px;background:var(--pink-grad);color:#fff}
+.pcard--monster .pcard__x{background:rgba(255,255,255,.12);border-color:rgba(250,243,230,.3);color:#faf3e6}
+.pcard__thumbs{display:flex;gap:6px}
+.pcard__thumbs img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid rgba(255,255,255,.35);transition:transform .2s}
+.pcard--monster:hover .pcard__thumbs img:nth-child(1){transform:rotate(-6deg) translateY(-3px)}
+.pcard--monster:hover .pcard__thumbs img:nth-child(2){transform:translateY(-5px)}
+.pcard--monster:hover .pcard__thumbs img:nth-child(3){transform:rotate(6deg) translateY(-3px)}
 .pnew{display:grid;place-items:center;text-align:center;gap:8px;border:2px dashed var(--line-2);background:transparent;min-height:240px;color:var(--ink-soft)}
 .pnew:hover{border-color:var(--pink);color:var(--pink)}
 .pnew b{font-family:"Fraunces",serif;font-size:22px;font-weight:400}
@@ -237,7 +261,7 @@ const isDone = t => t.status === "Done" || t.status === "Approved";
 function renderSide(){
   document.getElementById("side").innerHTML = `<div><a href="./" style="padding:0;background:none"><img class="side__logo" src="assets/nancy-cream.svg" alt="Nancy"></a></div>
     <div><div class="side__k">Workspace</div><nav><a href="./" class="is-on">⌂ Home</a></nav></div>
-    <div><div class="side__k">Projects</div><nav>${projects().map(p => `<a href="board/?p=${p.id}"><i class="sw" style="background:${p.color}"></i>${esc(p.name)}</a>`).join("")}<button class="side__new" data-act="new">+ New project</button></nav></div>
+    <div><div class="side__k">Projects</div><nav>${projects().map(p => `<a href="board/?p=${p.id}"><i class="sw" style="background:${p.builtIn ? "var(--dusk)" : p.color}"></i>${esc(p.name)}</a>`).join("")}<button class="side__new" data-act="new">+ New project</button></nav></div>
     <div class="side__foot">Nancy project management · Crystal & Dione</div>`;
 }
 function render(){
@@ -261,10 +285,11 @@ function render(){
     const ms = (cfg.milestones || []).filter(m => m.date >= t).sort((a, b) => a.date.localeCompare(b.date))[0];
     const nx = tasks.filter(x => !isDone(x) && x.date >= t).sort((a, b) => a.date.localeCompare(b.date))[0];
     const start = cfg.start || p.start, end = cfg.end || p.end;
-    return `<a class="pcard" href="board/?p=${p.id}" style="--c:${p.color}">
+    return `<a class="pcard${p.builtIn ? " pcard--monster" : ""}" href="board/?p=${p.id}" style="--c:${p.color}">
       <button class="pcard__x" data-act="del" data-id="${p.id}" title="Remove project" aria-label="Remove ${esc(p.name)}">✕ Remove</button>
       <span class="pcard__k">${esc(p.kicker || "Project")}${start && end ? ` · ${fmtShort(start)} – ${fmtShort(end)}` : ""}</span>
-      <h3>${esc(p.name)}</h3>
+      <h3>${p.builtIn ? `Monster Mansion <em>Vol 1</em>` : esc(p.name)}</h3>
+      ${p.builtIn ? `<div class="pcard__thumbs"><img src="assets/mm/obj-medusa.jpg" alt="Medusa"><img src="assets/mm/obj-jack.jpg" alt="Jack"><img src="assets/mm/obj-lemmy.jpg" alt="Lemmy"></div>` : ""}
       ${p.doc ? `<div class="pcard__meta"><span>${tasks.length - done} open</span>${o ? `<span class="is-red">${o} overdue</span>` : ""}<span>${done} done</span><span>${pct}%</span></div>
       <div class="prog"><i style="width:${pct}%"></i></div>` : `<div class="pcard__meta"><span>Open the board once to load its tasks here</span></div>`}
       <div class="pcard__next">${ms ? `<b>${esc(ms.label)}</b> in ${diff(t, ms.date)} days · ${fmt(ms.date)}<br>` : ""}${nx ? `Next: ${esc(nx.title)} · ${fmtShort(nx.date)}` : p.doc ? "Nothing coming up." : ""}</div>
