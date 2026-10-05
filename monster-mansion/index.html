@@ -239,12 +239,19 @@ main{padding:18px 24px 80px}
 
 /* ---------- timeline ---------- */
 .tl-wrap{overflow-x:auto;background:var(--row);border:1px solid var(--line);border-radius:var(--r)}
-.tl{position:relative;--dw:34px}
+.tl{position:relative;min-width:880px}
+.tl__months{position:relative;height:24px}
+.tl__months .tl__month{position:absolute;top:0}
+.tl__cells{position:absolute;inset:0;display:grid;align-items:center}
+.tl__cells>div{display:flex;justify-content:center;padding:0 1px}
+.tl__bar.is-one{padding:0}
+.tl__key.is-low{top:30px}
+.tl__key.is-end{transform:translateX(-80%);align-items:flex-end}
 .tl__row{display:grid;grid-template-columns:150px 1fr;border-bottom:1px solid var(--line);min-height:36px}
 .tl__row:last-child{border-bottom:0}
 .tl__lab{position:sticky;left:0;background:var(--row);z-index:3;display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:12.5px;border-right:1px solid var(--line)}
 .tl__track{position:relative}
-.tl__days{display:grid;grid-auto-flow:column;grid-auto-columns:var(--dw)}
+.tl__days{display:grid}
 .tl__day{text-align:center;font-size:10px;color:var(--muted);padding:4px 0;border-left:1px solid var(--line);line-height:1.2}
 .tl__day b{display:block;font-size:12px;color:var(--ink);font-weight:500}
 .tl__day.is-we{background:rgba(236,47,142,.05)}
@@ -255,11 +262,11 @@ main{padding:18px 24px 80px}
 .tl__key::after{content:"";width:9px;height:9px;background:var(--pink);transform:rotate(45deg);border-radius:1px}
 .tl__now{position:absolute;top:0;bottom:0;width:2px;background:var(--st-stuck);z-index:2;pointer-events:none}
 .tl__now.lab::before{content:"Today";position:absolute;top:2px;left:4px;font-size:9.5px;font-weight:600;color:var(--st-stuck);font-family:"JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
-.tl__grid{position:absolute;inset:0;display:grid;grid-auto-flow:column;grid-auto-columns:var(--dw);pointer-events:none}
+.tl__grid{position:absolute;inset:0;display:grid;pointer-events:none}
 .tl__grid i{border-left:1px solid var(--line)}
-.tl__post{position:absolute;top:8px;transform:translateX(-50%);min-width:26px;height:22px;padding:0 4px;border-radius:6px;background:var(--pink-soft);color:var(--pink-deep);font-size:10px;font-weight:700;display:grid;place-items:center;cursor:help;border:1px solid color-mix(in srgb,var(--pink) 40%,transparent)}
+.tl__post{position:relative;width:100%;max-width:34px;min-width:0;height:22px;padding:0 1px;letter-spacing:-.02em;border-radius:6px;background:var(--pink-soft);color:var(--pink-deep);font-size:10px;font-weight:700;display:grid;place-items:center;cursor:help;border:1px solid color-mix(in srgb,var(--pink) 40%,transparent)}
 .tl__post.is-big{background:var(--pink);color:#fff}
-.tl__post:hover{transform:translateX(-50%) scale(1.15)}
+.tl__post:hover{transform:scale(1.15);z-index:2}
 .cal__post{font-size:10px;line-height:1.25;color:var(--pink-deep);font-weight:600;cursor:help}
 :root[data-theme="dark"] .cal__post,:root[data-theme="dark"] .tl__post{color:var(--bubble)}
 .ag{display:grid;gap:8px}
@@ -1023,27 +1030,30 @@ function viewTable(){
 
 function viewTimeline(){
   const days = []; for (let d = CAMP_START; d <= CAMP_END; d = addDays(d, 1)) days.push(d);
-  const avail = (document.getElementById("view").clientWidth || innerWidth) - 152;
-  const W = Math.max(22, Math.floor(avail / days.length)), total = days.length * W;
-  const x = d => diff(CAMP_START, d) * W;
-  const list = filtered();
+  const N = days.length, cols = `grid-template-columns:repeat(${N},minmax(0,1fr))`;
+  const pc = d => diff(CAMP_START, d) / N * 100;          // left edge of a day, in %
+  const mid = d => (diff(CAMP_START, d) + .5) / N * 100;  // centre of a day, in %
   const t = todayISO();
-  const nowX = t >= CAMP_START && t <= CAMP_END ? x(t) + W / 2 : null;
+  const showNow = t >= CAMP_START && t <= CAMP_END;
+  const now = showNow ? `<div class="tl__now" style="left:${mid(t)}%"></div>` : "";
+  const grid = `<div class="tl__grid" style="${cols}">${days.map(() => "<i></i>").join("")}</div>`;
   const dayHead = days.map(d => { const dt = parse(d); const we = dt.getDay() === 0 || dt.getDay() === 6;
     return `<div class="tl__day${we ? " is-we" : ""}${doc.keyDays[d] ? " is-key" : ""}">${DOW[dt.getDay()][0]}<b>${dt.getDate()}</b></div>`; }).join("");
-  const grid = `<div class="tl__grid">${days.map(() => "<i></i>").join("")}</div>`;
-  const now = nowX != null ? `<div class="tl__now" style="left:${nowX}px"></div>` : "";
-  const nowLab = nowX != null ? `<div class="tl__now lab" style="left:${nowX}px"></div>` : "";
-  const months = `<div style="position:relative;height:24px"><span class="tl__month" style="position:absolute;left:0">October 2026</span><span class="tl__month" style="position:absolute;left:${x("2026-11-01")}px">November</span></div>`;
-  const phaseBars = PHASES.map(p => `<div class="tl__bar" style="left:${x(p.start) + 2}px;width:${(diff(p.start, p.end) + 1) * W - 4}px;background:${p.c}" title="${esc(p.name)} · ${fmtShort(p.start)}–${fmtShort(p.end)}">${esc(p.name)}</div>`).join("");
-  const posting = Object.entries(POST_DAYS).map(([d, p]) => `<span class="tl__post${/LAUNCH/.test(p.t) ? " is-big" : ""}" style="left:${x(d) + W / 2}px" data-peekpost="${d}">${p.n}</span>`).join("");
-  const keys = Object.entries(doc.keyDays).map(([d, n]) => `<div class="tl__key" style="left:${x(d) + W / 2}px">${esc(n)}</div>`).join("");
-  return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span class="mini">Hover 📣 for what's posting that day · tasks live in Calendar and Table</span></div>
-  <div class="tl-wrap" style="margin-bottom:22px"><div class="tl" style="width:${total + 150}px;--dw:${W}px">
-    <div class="tl__row"><div class="tl__lab"><b>Oct – Nov 2026</b></div><div class="tl__track" style="width:${total}px">${months}<div class="tl__days">${dayHead}</div></div></div>
-    <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track" style="width:${total}px">${grid}${now}${phaseBars}</div></div>
-    <div class="tl__row" style="min-height:40px"><div class="tl__lab">📣 Posting</div><div class="tl__track" style="width:${total}px">${grid}${now}${posting}</div></div>
-    <div class="tl__row" style="min-height:44px"><div class="tl__lab">Key days</div><div class="tl__track" style="width:${total}px">${grid}${now}${keys}${nowX != null ? `<span class="tl__todaylab" style="left:${nowX}px">Today</span>` : ""}</div></div>
+  const months = `<div class="tl__months"><span class="tl__month" style="left:0">October 2026</span><span class="tl__month" style="left:${pc("2026-11-01")}%">November</span></div>`;
+  const phaseBars = PHASES.map(p => { const one = p.start === p.end;
+    return `<div class="tl__bar${one ? " is-one" : ""}" style="left:calc(${pc(p.start)}% + 2px);width:calc(${(diff(p.start, p.end) + 1) / N * 100}% - 4px);background:${p.c}" title="${esc(p.name)} · ${one ? fmt(p.start) : fmtShort(p.start) + "–" + fmtShort(p.end)}">${one ? "" : esc(p.name)}</div>`; }).join("");
+  const posting = `<div class="tl__cells" style="${cols}">${days.map(d => { const P = POST_DAYS[d];
+    return `<div>${P ? `<span class="tl__post${/LAUNCH/.test(P.t) ? " is-big" : ""}" data-peekpost="${d}">${P.n}</span>` : ""}</div>`; }).join("")}</div>`;
+  let prev = null, low = false;
+  const keys = Object.entries(doc.keyDays).sort().map(([d, n]) => {
+    low = prev && diff(prev, d) <= 3 ? !low : false; prev = d;
+    return `<div class="tl__key${low ? " is-low" : ""}${mid(d) > 95 ? " is-end" : ""}" style="left:${mid(d)}%">${esc(n)}</div>`; }).join("");
+  return `<div class="legend"><span class="mini">Phases, what's posting each day (hover 📣 for detail) and key days, 5 Oct – 12 Nov. Tasks live in Calendar and Table.</span></div>
+  <div class="tl-wrap" style="margin-bottom:22px"><div class="tl">
+    <div class="tl__row"><div class="tl__lab"><b>Oct – Nov 2026</b></div><div class="tl__track">${months}<div class="tl__days" style="${cols}">${dayHead}</div></div></div>
+    <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track">${grid}${now}${phaseBars}</div></div>
+    <div class="tl__row" style="min-height:40px"><div class="tl__lab">📣 Posting</div><div class="tl__track">${grid}${now}${posting}</div></div>
+    <div class="tl__row" style="min-height:62px"><div class="tl__lab">Key days</div><div class="tl__track">${grid}${now}${keys}${showNow ? `<span class="tl__todaylab" style="left:${mid(t)}%">Today</span>` : ""}</div></div>
   </div></div>`;
 }
 
