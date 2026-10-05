@@ -1,12 +1,13 @@
-/* Live calendar feed of D-days (the target days) for one person on one board.
+/* Live calendar feed of P1 days (Priority one) for one person on one board.
  *
  *   GET /api/calendar?p=<project>&owner=<owner id>
  *
  * Subscribe in Google Calendar (Other calendars → From URL) and it refreshes by
- * itself. Only D-days go on calendars, never tasks: the person's own D-days plus
- * the ones owned by everyone, with reminders 3 days and 1 day before.
+ * itself. Only P1 items go on calendars, never ordinary tasks: the person's own
+ * P1 days (Medusa teaser drops, giveaway opens, winners announced…), with
+ * reminders 3 days and 1 day before.
  */
-import { hasStore, getBoard, PID_OK, ownedBy, projectName, addDays, boardUrl, ddaysOf } from "./_board.js";
+import { hasStore, getBoard, PID_OK, ownedBy, isDone, isP1, projectName, addDays, boardUrl } from "./_board.js";
 
 const D = d => d.replace(/-/g, "");
 const E = v => String(v ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
@@ -44,12 +45,12 @@ export default async function handler(req, res) {
     "END:VEVENT",
   ];
   const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nancy//Projects//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
-    `X-WR-CALNAME:${E(name)} D-days${who ? " · " + E(who) : ""}`, "REFRESH-INTERVAL;VALUE=DURATION:PT4H", "X-PUBLISHED-TTL:PT4H"];
-  for (const d of ddaysOf(doc).filter(d => !d.done && ownedBy(d, owner))) {
-    const due = (doc.tasks || []).filter(t => t.date === d.date && !t.note).map(t => `• ${t.title}`).join("\n");
-    L.push(...ev(`${p}-dday-${d.id}`, d.date, `🎯 ${d.label} · ${name}`,
-      [`D-day. Owner: ${d.owner === "all" ? "Everyone" : doc.owners?.[d.owner]?.name || d.owner}`, due ? `Due that day:\n${due}` : "", `Board: ${url}`].filter(Boolean).join("\n\n"),
-      [["-P3D", `3 days to ${d.label}`], ["-P1D", `Tomorrow: ${d.label}`]]));
+    `X-WR-CALNAME:${E(name)} P1${who ? " · " + E(who) : ""}`, "REFRESH-INTERVAL;VALUE=DURATION:PT4H", "X-PUBLISHED-TTL:PT4H"];
+  for (const t of (doc.tasks || []).filter(t => t.date && isP1(t) && !isDone(t) && ownedBy(t, owner))) {
+    const ownerName = t.owner === "all" ? "Everyone" : doc.owners?.[t.owner]?.name || t.owner;
+    L.push(...ev(`${p}-p1-${t.id}`, t.date, `P1 · ${t.title} · ${name}`,
+      [`P1 · Priority one. Owner: ${ownerName}`, t.need ? `Need: ${t.need}` : "", t.give ? `Give: ${t.give}` : "", `Board: ${url}`].filter(Boolean).join("\n\n"),
+      [["-P3D", `3 days to go: ${t.title}`], ["-P1D", `Tomorrow: ${t.title}`]]));
   }
   L.push("END:VCALENDAR");
   res.setHeader("Content-Type", "text/calendar; charset=utf-8");

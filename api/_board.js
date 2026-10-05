@@ -55,8 +55,10 @@ export function cors(req, res, methods = "GET, POST, OPTIONS") {
 export const isDone = t => t.status === "Done" || t.status === "Approved";
 export const ownedBy = (t, o) => !o || t.owner === o || t.owner === "all";
 export const projectName = (p, doc) => doc?.config?.short || doc?.config?.name || (p === "monster-mansion" ? "Monster Mansion" : p);
-export const PRI = { p1: "P1 · Launch day", p2: "P2 · High", p3: "P3 · Normal" };
-export const priOf = t => (PRI[t.priority] ? t.priority : "p3");
+/* P1 · Priority one = the specific days we aim for (the only items on calendars); tasks are T1–T3. */
+export const PRI = { p1: "P1 · Priority one", t1: "T1 · Critical task", t2: "T2 · High", t3: "T3 · Normal" };
+export const priOf = t => (PRI[t.priority] ? t.priority : "t3");
+export const isP1 = t => priOf(t) === "p1" && !t.note;
 export const personName = (doc, id) => doc?.people?.[id]?.name || id || "";
 
 /* Dates in Hong Kong time, where the team works. */
@@ -77,8 +79,3 @@ export function fmt(s) {
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const boardUrl = p => `https://dioneclaude2.github.io/Content/projects/board/?p=${p}`;
 
-/* D-days: the board's target days; older boards only have keyDays (owned by everyone). */
-export function ddaysOf(doc) {
-  if (Array.isArray(doc?.ddays)) return doc.ddays.filter(d => d && d.date && d.label);
-  return Object.entries(doc?.keyDays || {}).map(([date, label], i) => ({ id: "d" + i, date, label, owner: "all", done: false }));
-}
