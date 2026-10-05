@@ -622,6 +622,7 @@ footer a{color:var(--ink-soft)}
         <hr>
         <button data-act="theme">Toggle light / dark</button>
         <button data-act="reset" class="danger">Reset to seed data</button>
+        <button data-act="removeProject" class="danger">Remove this project</button>
       </div>
     </details>
   </div>
@@ -1087,7 +1088,8 @@ function tickClock(){
 setInterval(tickClock, 1000);
 function projectList(){
   let list = []; try { list = JSON.parse(localStorage.getItem("pm.projects")) || []; } catch {}
-  return [{id:"monster-mansion", name:"Monster Mansion Vol 1", color:"#ec2f8e"}, ...list.filter(x => x.id !== "monster-mansion")];
+  let hid = []; try { hid = JSON.parse(localStorage.getItem("pm.hidden")) || []; } catch {}
+  return [{id:"monster-mansion", name:"Monster Mansion Vol 1", color:"#ec2f8e"}, ...list.filter(x => x.id !== "monster-mansion")].filter(p => !hid.includes(p.id) || p.id === PID);
 }
 function renderShell(){
   document.title = `${CFG.short} · Projects`;
@@ -1542,6 +1544,14 @@ document.addEventListener("click", e => {
       const dark = ui.theme ? ui.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
       ui.theme = dark ? "light" : "dark"; saveUI(); applyTheme(); break;
     }
+    case "removeProject":
+      if (!confirm(`Remove "${CFG.name}" from your projects?${MM ? " Its tasks are kept, and you can bring it back from the Projects home." : " Its tasks are deleted from this browser; export JSON first if you want a copy."}`)) break;
+      try {
+        if (MM) { const h = JSON.parse(localStorage.getItem("pm.hidden")) || []; localStorage.setItem("pm.hidden", JSON.stringify([...h, PID])); }
+        else { const reg = JSON.parse(localStorage.getItem("pm.projects")) || []; localStorage.setItem("pm.projects", JSON.stringify(reg.filter(x => x.id !== PID))); localStorage.removeItem(LS); localStorage.removeItem(LS_UI); }
+      } catch {}
+      location.href = "../";
+      break;
     case "reset": if (confirm("Replace the whole board with the original seed data? Export first if you want a backup.")) { doc = seedDoc(); save(); renderAll(); toast("Board reset"); } break;
   }
 });
