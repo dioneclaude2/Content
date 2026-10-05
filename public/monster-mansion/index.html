@@ -706,6 +706,26 @@ function migrate(d){
     });
     d.v = 3;
   }
+  if (d.v < 4) {
+    const seed = id => ({status:"Not started", need:"", give:"", notes:"", ...structuredClone(SEED.tasks.find(x => x.id === id))});
+    if (!d.people.sarah) d.people.sarah = structuredClone(SEED.people.sarah);
+    const add = t => { if (!d.tasks.some(x => x.id === t.id)) d.tasks.push({status:"Not started", need:"", give:"", notes:"", owner:"dione", ...t}); };
+    // ITV / Rebel 50 hand-off to Susan happens today (1:37–1:42 in the call)
+    add({...seed("a3"), title:"Ask Susan to fully lead ITV and Rebel 50 on D-day", owner:"dione"});
+    add({...seed("a4"), title:"Tonight's 8pm call: Crystal announces Susan as ITV / Rebel 50 lead", owner:"crystal"});
+    add({...seed("r4"), date:"2026-10-05", title:"Report back to Crystal after Susan's rundown (before the 8pm call)", owner:"dione"});
+    add({...seed("a2"), note:true, title:"Sarah's workshop content goes to Stories only while the feed is curated"});
+    // "These are the two things I'd like you to do today": outliers, competitors, giveaway + drop
+    add({id:"m16", date:"2026-10-05", kind:"do", who:"me", title:"Prio · Drop references: how streetwear / fashion brands tease a limited drop, and the copy", give:"Teaser → drop flow, 20–30 creators, members first, date + clock time", src:"meeting"});
+    add({id:"m15", date:"2026-10-12", kind:"do", who:"me", title:"Find who's invited to Heidiween this year, to seed Medusa looks", src:"meeting"});
+    const MOVE = {r1:"2026-10-05", m4:"2026-10-05", m5:"2026-10-05", r7:"2026-10-06", r10:"2026-10-06"};
+    d.tasks.forEach(t => {
+      if (MOVE[t.id]) t.date = MOVE[t.id];
+      if (t.id === "r7") t.give = "Giveaway ideas drafted today (lifetime supply, Win a Mansion, daily story giveaways, many small wins + one big prize), with entry mechanic and a free way to enter";
+      if (t.id === "r10") t.title = "Try texture / product renders in Crystal's style; send mid-batch before 50";
+    });
+    d.v = 4;
+  }
   d.tasks.forEach(t => { if (!t.owner) t.owner = defaultOwner(t); });
   d.tasks.forEach(t => { if (t.id === "a8" && t.title === "Send the platform title options to Shariebel") Object.assign(t, SEED.tasks.find(x => x.id === "a8")); });
   return d;
@@ -1018,33 +1038,13 @@ function viewTimeline(){
   const phaseBars = PHASES.map(p => `<div class="tl__bar" style="left:${x(p.start) + 2}px;width:${(diff(p.start, p.end) + 1) * W - 4}px;background:${p.c}" title="${esc(p.name)} · ${fmtShort(p.start)}–${fmtShort(p.end)}">${esc(p.name)}</div>`).join("");
   const posting = Object.entries(POST_DAYS).map(([d, p]) => `<span class="tl__post${/LAUNCH/.test(p.t) ? " is-big" : ""}" style="left:${x(d) + W / 2}px" data-peekpost="${d}">${p.n}</span>`).join("");
   const keys = Object.entries(doc.keyDays).map(([d, n]) => `<div class="tl__key" style="left:${x(d) + W / 2}px">${esc(n)}</div>`).join("");
-  let lastPh = null;
-  const agenda = days.filter(d => list.some(t => t.date === d) || POST_DAYS[d] || doc.keyDays[d] || d === t).map(d => {
-    const ph = phaseOf(d), items = list.filter(x => x.date === d);
-    const head = ph.id !== lastPh ? `<div class="ag__ph" style="--c:${ph.c}">${esc(ph.name)}. <em>${esc(ph.em)}</em><span>${ph.start === ph.end ? fmt(ph.start) : fmtShort(ph.start) + " – " + fmtShort(ph.end)}</span></div>` : "";
-    lastPh = ph.id;
-    return `${head}<div class="ag__day${d === t ? " is-today" : ""}${d < t ? " is-past" : ""}" data-dropdate="${d}" style="--c:${ph.c}">
-      <button class="ag__date" data-act="day" data-date="${d}"><b>${parse(d).getDate()}</b><span>${DOW[parse(d).getDay()]} · ${MON[parse(d).getMonth()]}</span>${d === t ? `<i>Today</i>` : ""}</button>
-      <div class="ag__body">
-        ${doc.keyDays[d] ? `<div class="ag__key">◆ ${esc(doc.keyDays[d])}</div>` : ""}
-        ${POST_DAYS[d] ? `<div class="ag__post">📣 <b>${esc(POST_DAYS[d].n)} post${POST_DAYS[d].n === "1" ? "" : "s"}</b> · ${esc(POST_DAYS[d].t)}</div>` : ""}
-        ${items.filter(isNote).map(x => `<div class="ag__note" draggable="true" data-drag="${x.id}" data-preview="${x.id}"><span>📝</span><span class="ag__nt" data-act="edit" data-id="${x.id}">${esc(x.title)}</span><button class="fu" data-act="del" data-id="${x.id}" aria-label="Remove note">✕</button></div>`).join("")}
-        ${items.filter(x => !isNote(x)).map(x => `<div class="ag__it${isDone(x) ? " is-complete" : ""}" draggable="true" data-drag="${x.id}" data-preview="${x.id}" style="--kc:${KINDS[x.kind]?.dot}">
-          <button class="stat ${stCls(x.status)}" data-act="status" data-id="${x.id}">${esc(x.status)}</button>
-          <div class="ag__main" data-act="edit" data-id="${x.id}"><div class="ag__t">${esc(x.title)}</div>
-            <div class="ag__m">${kindPill(x.kind)} <span>${OWNERS[x.owner] || ""} → ${esc(person(x.who).name)}</span>${x.need ? ` · <span>Need: ${esc(x.need)}</span>` : ""}${x.give ? ` · <span>Give: ${esc(x.give)}</span>` : ""}</div></div>
-          <button class="fu" data-act="fu" data-id="${x.id}" title="Copy follow-up">💬</button></div>`).join("")}
-        <span><button class="ag__add" data-act="new" data-date="${d}">+ Add task</button> <button class="ag__add" data-act="new" data-date="${d}" data-note="1">+ Add note</button></span>
-      </div></div>`;
-  }).join("");
-  return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span class="mini">Hover 📣 for what's posting · drag a task onto another day to move it</span></div>
+  return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span class="mini">Hover 📣 for what's posting that day · tasks live in Calendar and Table</span></div>
   <div class="tl-wrap" style="margin-bottom:22px"><div class="tl" style="width:${total + 150}px;--dw:${W}px">
     <div class="tl__row"><div class="tl__lab"><b>Oct – Nov 2026</b></div><div class="tl__track" style="width:${total}px">${months}<div class="tl__days">${dayHead}</div></div></div>
     <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track" style="width:${total}px">${grid}${now}${phaseBars}</div></div>
     <div class="tl__row" style="min-height:40px"><div class="tl__lab">📣 Posting</div><div class="tl__track" style="width:${total}px">${grid}${now}${posting}</div></div>
     <div class="tl__row" style="min-height:44px"><div class="tl__lab">Key days</div><div class="tl__track" style="width:${total}px">${grid}${now}${keys}${nowX != null ? `<span class="tl__todaylab" style="left:${nowX}px">Today</span>` : ""}</div></div>
-  </div></div>
-  <div class="ag">${agenda || `<div class="empty">No items match the filters.</div>`}</div>`;
+  </div></div>`;
 }
 
 function viewCalendar(){
