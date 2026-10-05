@@ -89,8 +89,7 @@ h2 em{color:var(--pink)}
 .pcard__next{font-size:12.5px;color:var(--ink-soft);line-height:1.4;border-top:1px solid var(--line);padding-top:10px}
 .pcard__next b{color:var(--ink);font-weight:500}
 .pcard__open{margin-top:auto;font-weight:600;font-size:13px;color:var(--pink)}
-.pcard__x{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:6px;color:var(--muted);opacity:0}
-.pcard:hover .pcard__x{opacity:1}
+.pcard__x{position:absolute;top:12px;right:12px;height:26px;padding:0 9px;border-radius:6px;color:var(--muted);font-size:12px;border:1px solid var(--line);background:var(--row);z-index:2}
 .pcard__x:hover{background:var(--wall);color:var(--red)}
 .pnew{display:grid;place-items:center;text-align:center;gap:8px;border:2px dashed var(--line-2);background:transparent;min-height:240px;color:var(--ink-soft)}
 .pnew:hover{border-color:var(--pink);color:var(--pink)}
@@ -173,6 +172,7 @@ h2 em{color:var(--pink)}
 
     <h2>My work. <em>Overdue, today and the next 7 days, across every project.</em></h2>
     <section class="work" id="work"></section>
+    <div id="restore" style="margin-top:20px"></div>
   </main>
 </div>
 
@@ -214,8 +214,9 @@ const PAL = ["#ec2f8e","#1f1216","#b8125f","#5e4b52","#e0679c","#8f7480"];
 const MM = {id:"monster-mansion", name:"Monster Mansion Vol 1", color:"#ec2f8e", start:"2026-10-05", end:"2026-11-12", kicker:"Launch · Vol 1",
   milestones:[{label:"Soft launch", date:"2026-10-21"}, {label:"Hard launch", date:"2026-10-29"}], key:"mm.board.v1", builtIn:true};
 function registry(){ return (ls.get("pm.projects") || []).filter(p => p && p.id && p.id !== MM.id); }
+const hidden = () => ls.get("pm.hidden") || [];
 function projects(){
-  return [MM, ...registry().map(p => ({...p, key:`pm.board.${p.id}`}))].map(p => ({...p, doc: ls.get(p.key)}));
+  return [MM, ...registry().map(p => ({...p, key:`pm.board.${p.id}`}))].filter(p => !hidden().includes(p.id)).map(p => ({...p, doc: ls.get(p.key)}));
 }
 
 /* ---------- dates ---------- */
@@ -261,7 +262,7 @@ function render(){
     const nx = tasks.filter(x => !isDone(x) && x.date >= t).sort((a, b) => a.date.localeCompare(b.date))[0];
     const start = cfg.start || p.start, end = cfg.end || p.end;
     return `<a class="pcard" href="board/?p=${p.id}" style="--c:${p.color}">
-      ${p.builtIn ? "" : `<button class="pcard__x" data-act="del" data-id="${p.id}" title="Delete project" aria-label="Delete ${esc(p.name)}">✕</button>`}
+      <button class="pcard__x" data-act="del" data-id="${p.id}" title="Remove project" aria-label="Remove ${esc(p.name)}">✕ Remove</button>
       <span class="pcard__k">${esc(p.kicker || "Project")}${start && end ? ` · ${fmtShort(start)} – ${fmtShort(end)}` : ""}</span>
       <h3>${esc(p.name)}</h3>
       ${p.doc ? `<div class="pcard__meta"><span>${tasks.length - done} open</span>${o ? `<span class="is-red">${o} overdue</span>` : ""}<span>${done} done</span><span>${pct}%</span></div>
@@ -276,6 +277,7 @@ function render(){
       <span class="work__d${x.date < t ? " is-red" : x.date === t ? " is-today" : ""}">${x.date < t ? diff(x.date, t) + "d late" : x.date === t ? "Today" : fmtShort(x.date)}</span>
       <span class="work__t">${esc(x.title)}<small>${esc((x._p.doc?.people?.[x.who]?.name) || x.who || "")}${x.status ? " · " + esc(x.status) : ""}</small></span>
       <span class="tag" style="--c:${x._p.color}">${esc(x._p.name)}</span></a>`).join("") || `<div class="empty">Nothing due. Open a board, or start a new project.</div>`;
+  document.getElementById("restore").innerHTML = hidden().includes(MM.id) ? `<button class="btn" data-act="restore" data-id="${MM.id}">↺ Bring back Monster Mansion Vol 1</button>` : "";
 }
 
 /* ---------- loading event details ---------- */
@@ -380,12 +382,17 @@ document.addEventListener("click", e => {
   const {act, id} = el.dataset;
   if (act === "new") { e.preventDefault(); openModal(); }
   if (act === "close") closeModal();
+  if (act === "restore") { ls.set("pm.hidden", hidden().filter(x => x !== id)); render(); toast("Project restored"); }
   if (act === "prompt") copy(PROMPT + document.getElementById("details").value, "Prompt copied. Paste it into Claude, then paste the JSON it gives back here");
   if (act === "del") {
     e.preventDefault(); e.stopPropagation();
+    if (id === MM.id) {
+      if (confirm("Remove Monster Mansion Vol 1 from your projects? Its tasks are kept, and you can bring it back from the bottom of this page.")) { ls.set("pm.hidden", [...hidden(), id]); render(); toast("Project removed"); }
+      return;
+    }
     const p = registry().find(x => x.id === id);
-    if (p && confirm(`Delete "${p.name}" and its tasks from this browser? Export it from its board first if you want a copy.`)) {
-      ls.set("pm.projects", registry().filter(x => x.id !== id)); ls.del(`pm.board.${id}`); ls.del(`pm.ui.${id}`); render(); toast("Project deleted");
+    if (p && confirm(`Remove "${p.name}" and its tasks from this browser? Export it from its board first if you want a copy.`)) {
+      ls.set("pm.projects", registry().filter(x => x.id !== id)); ls.del(`pm.board.${id}`); ls.del(`pm.ui.${id}`); render(); toast("Project removed");
     }
   }
 });
