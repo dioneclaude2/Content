@@ -968,6 +968,20 @@ if ((doc.priV || 0) < 5) {
   delete doc.ddays;
   doc.priV = 5;
 }
+/* P1 days belong to both handlers; tasks (T1–T3) stay with one person. */
+if ((doc.priV || 0) < 6) { doc.tasks.forEach(t => { if (priOf(t) === "p1") t.owner = "all"; }); doc.priV = 6; }
+/* Vojtech needs 1–2 weeks' notice before any email goes out. */
+if (MM && (doc.priV || 0) < 7) {
+  const add = t => { if (!doc.tasks.some(x => x.id === t.id)) doc.tasks.push({status:"Not started", need:"", give:"", notes:"", src:"meeting", owner:"dione", ...t}); };
+  add({id:"v1", date:"2026-10-06", kind:"chase", who:"crystal", priority:"t1", title:"Clarify with Crystal: Vojtech gets 1–2 weeks' notice before every email", need:"Her OK on the email schedule and who briefs Vojtech"});
+  add({id:"v2", date:"2026-10-07", kind:"send", who:"vojtech", priority:"t1", title:"Reach out to Vojtech: full email schedule, 1–2 weeks ahead of each send", give:"All 6 send dates (18, 21, 27, 29, 31 Oct; 3 Nov), briefs, and the rule: preview to us before anything sends", need:"His confirmation and preview dates"});
+  [["e1","2026-10-18","Email 1 (mosaic tease, guess the monster)"],["e2","2026-10-21","Email 2 (Meet Lemmy, Medusa and Jack)"],["e3","2026-10-27","Email 3 (Something's moving in the Mansion)"],
+   ["e4","2026-10-29","Email 4 (Let the Haunting Begin)"],["e5","2026-10-31","Email 5 (Heidiween)"],["e6","2026-11-03","Email 6 (campaign recap)"]].forEach(([k, send, name]) => {
+    let d = addDays(send, -14); if (d < todayISO()) d = todayISO();
+    add({id:"va-" + k, date:d, kind:"send", who:"vojtech", priority:"t1", title:`Alert Vojtech: ${name} sends ${fmtShort(send)}`, give:"Brief, assets and send date, 2 weeks ahead", need:"Preview link before it sends"});
+  });
+  doc.priV = 7;
+}
 doc.tasks.forEach(t => { if (!t.priority) t.priority = autoPriority(t); });
 ls.set(LS, doc); // keep the stored copy current (migrations, owners) so the Projects home can read it
 let ui = Object.assign({view:"calendar", showDone:true, closed:{done:true}, q:"", owner:"", person:"", type:"", status:"", pri:"", theme:""}, ls.get(LS_UI) || {});
@@ -1130,6 +1144,8 @@ function update(id, patch){
   if (!t) return;
   const was = isDone(t);
   Object.assign(t, patch);
+  if (patch.priority === "p1") t.owner = "all";
+  if (patch.priority && patch.priority !== "p1" && t.owner === "all") t.owner = MM ? defaultOwner(t) : Object.keys(OWNERS)[0];
   if (!was && isDone(t)) burst();
   save(); renderAll();
 }
@@ -1760,6 +1776,7 @@ document.addEventListener("submit", e => {
   const f = Object.fromEntries(new FormData(e.target));
   f.title = f.title.trim();
   f.note = !!f.note;
+  if (f.priority === "p1") f.owner = "all";
   if (!f.title || !f.date) return;
   if (drawerMode === "new") { doc.tasks.push({id:newId(), ...f}); save(); closeDrawer(); renderAll(); toast(`Added to ${phaseOf(f.date).name}`); }
   else { update(drawerId, f); closeDrawer(); toast("Saved"); }
