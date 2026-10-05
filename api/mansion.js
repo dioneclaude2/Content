@@ -5,14 +5,15 @@
  * in its own key; the client keeps the newest copy by updatedAt and never lets
  * an empty doc replace one that has tasks.
  *
- *   GET  /api/mansion          -> { doc }  (doc is null until the first save)
- *   POST /api/mansion  { doc } -> saves the board
+ *   GET  /api/mansion?p=<id>          -> { doc }  (doc is null until the first save)
+ *   POST /api/mansion?p=<id>  { doc } -> saves the board
  *
  * If MANSION_PASSCODE is set, writes need it in the x-passcode header.
  */
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const KEY = "monster-mansion:board";
+/* ?p=<project id> picks the board; Monster Mansion keeps its original key. */
+const keyFor = p => (!p || p === "monster-mansion" ? "monster-mansion:board" : `pm:board:${p}`);
 
 async function redis(cmd) {
   const r = await fetch(URL_, {
@@ -43,6 +44,12 @@ export default async function handler(req, res) {
     res.status(503).json({ error: "no-store" });
     return;
   }
+  const p = String(req.query?.p || "monster-mansion");
+  if (!/^[a-z0-9-]{1,48}$/.test(p)) {
+    res.status(400).json({ error: "bad project" });
+    return;
+  }
+  const KEY = keyFor(p);
   try {
     if (req.method === "GET") {
       const raw = await redis(["GET", KEY]);
@@ -59,7 +66,7 @@ export default async function handler(req, res) {
       }
       const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
       const doc = body.doc;
-      if (!doc || !Array.isArray(doc.tasks) || !doc.tasks.length || typeof doc.updatedAt !== "number") {
+      if (!doc || !Array.isArray(doc.tasks) || typeof doc.updatedAt !== "number") {
         res.status(400).json({ error: "bad doc" });
         return;
       }
