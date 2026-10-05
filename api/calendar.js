@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   const ev = (uid, date, summary, desc, alarms = []) => [
     "BEGIN:VEVENT", `UID:${uid}@nancy-projects`, `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${D(date)}`, `DTEND;VALUE=DATE:${D(addDays(date, 1))}`,
-    `SUMMARY:${E(summary)}`, `DESCRIPTION:${E(desc)}`, `URL:${url}`, "TRANSP:TRANSPARENT",
+    `SUMMARY:${E(summary)}`, `URL:${url}`, "TRANSP:TRANSPARENT",
     ...alarms.flatMap(([trig, txt]) => ["BEGIN:VALARM", "ACTION:DISPLAY", `TRIGGER:${trig}`, `DESCRIPTION:${E(txt)}`, "END:VALARM"]),
     "END:VEVENT",
   ];
