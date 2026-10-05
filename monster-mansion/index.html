@@ -269,6 +269,10 @@ main{padding:18px 24px 80px}
 .cal__d.is-out{background:var(--wall);opacity:.55}
 .cal__d.is-camp{box-shadow:inset 0 3px 0 var(--pc)}
 .cal__n{font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;color:var(--ink-soft)}
+.cal__add{margin-left:auto;width:20px;height:20px;border-radius:5px;font-size:14px;line-height:1;color:var(--muted);opacity:0}
+.cal__d:hover .cal__add,.cal__add:focus{opacity:1}
+.cal__add:hover{background:var(--pink);color:#fff}
+@media (hover:none){.cal__add{opacity:1}}
 .cal__d.is-today .cal__n b{background:var(--st-stuck);color:#fff;border-radius:999px;padding:0 6px}
 .cal__key{font-size:9.5px;font-family:"JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--pink);font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cal__it{font-size:11px;line-height:1.25;padding:3px 5px;border-radius:4px;background:var(--wall);border-left:3px solid var(--sc);cursor:pointer;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -521,9 +525,9 @@ const POSTS = [
 ];
 const AV_COLORS = ["#ec2f8e","#6b3f9e","#2b2f9e","#b8125f","#579bfc","#037f4c","#c2410c","#5e4b52","#0e7490","#9a3412","#4a2a86","#be185d","#15803d","#475569","#8c857f"];
 const VIEWS = [
-  {id:"table", label:"Main table"},
-  {id:"timeline", label:"Timeline"},
   {id:"calendar", label:"Calendar"},
+  {id:"table", label:"Table"},
+  {id:"timeline", label:"Timeline"},
   {id:"kanban", label:"Kanban"},
   {id:"people", label:"By person"},
   {id:"posts", label:"Posts & counts"},
@@ -553,8 +557,9 @@ function migrate(d){
   return d;
 }
 migrate(doc);
-let ui = Object.assign({view:"table", showDone:true, closed:{done:true}, q:"", owner:"", person:"", type:"", status:"", theme:""}, ls.get(LS_UI) || {});
+let ui = Object.assign({view:"calendar", showDone:true, closed:{done:true}, q:"", owner:"", person:"", type:"", status:"", theme:""}, ls.get(LS_UI) || {});
 ui.q = "";
+if (!ui.v2) { ui.view = "calendar"; ui.v2 = 1; }
 
 function save(){
   doc.updatedAt = Date.now();
@@ -740,7 +745,7 @@ function renderFilters(){
   document.getElementById("showDone").checked = ui.showDone;
 }
 function renderFlags(){
-  if (!["table","dash"].includes(ui.view)) { document.getElementById("flagsWrap").innerHTML = ""; return; }
+  if (!["calendar","table","dash"].includes(ui.view)) { document.getElementById("flagsWrap").innerHTML = ""; return; }
   const open = FLAGS.filter(f => !doc.flags[f.id]).length;
   document.getElementById("flagsWrap").innerHTML = `
     <div class="flags__head"><h2>Raise with Crystal. <em>${open ? open + " open" : "All cleared"}</em></h2></div>
@@ -863,7 +868,7 @@ function viewCalendar(){
         const items = list.filter(x => x.date === s);
         const ph = inCamp ? phaseOf(s) : null;
         return `<div class="cal__d${out ? " is-out" : ""}${s === t ? " is-today" : ""}${inCamp && !out ? " is-camp" : ""}" style="${ph ? `--pc:${ph.c}` : ""}">
-          <div class="cal__n"><b>${d.getDate()}</b></div>
+          <div class="cal__n"><b>${d.getDate()}</b>${out ? "" : `<button class="cal__add" data-act="new" data-date="${s}" title="Add task on ${fmt(s)}" aria-label="Add task on ${fmt(s)}">+</button>`}</div>
           ${doc.keyDays[s] && !out ? `<div class="cal__key">◆ ${esc(doc.keyDays[s])}</div>` : ""}
           ${out ? "" : items.map(x => `<div class="cal__it${x.kind === "post" ? " is-post" : ""}${isDone(x) ? " is-complete" : ""}" style="--sc:var(--${stCls(x.status).replace("st-", "st-")})" data-act="edit" data-id="${x.id}" title="${esc(person(x.who).name + " · " + x.status)}">${esc(x.title)}</div>`).join("")}
         </div>`;
@@ -1070,7 +1075,7 @@ function maybeNotify(){
 const VIEW_FN = {table:viewTable, timeline:viewTimeline, calendar:viewCalendar, kanban:viewKanban, people:viewPeople, posts:viewPosts, dash:viewDash};
 function renderAll(){
   renderLaunch(); renderTabs(); renderOwnerSeg(); renderFlags(); renderBadge();
-  document.getElementById("view").innerHTML = (VIEW_FN[ui.view] || viewTable)();
+  document.getElementById("view").innerHTML = (VIEW_FN[ui.view] || viewCalendar)();
   renderDrawer();
 }
 function applyTheme(){ if (ui.theme) document.documentElement.dataset.theme = ui.theme; else delete document.documentElement.dataset.theme; }
@@ -1097,7 +1102,7 @@ document.addEventListener("click", e => {
     case "grp": ui.closed[id] = !ui.closed[id]; saveUI(); renderAll(); break;
     case "status": e.stopPropagation(); openStatusPop(el, id); break;
     case "edit": if (e.target.closest("input,select,textarea")) break; openDrawer("edit", id); break;
-    case "new": { const ph = PHASES.find(p => p.id === el.dataset.phase); drawerDate = ph ? (todayISO() >= ph.start && todayISO() <= ph.end ? todayISO() : ph.start) : todayISO(); openDrawer("new"); break; }
+    case "new": { const ph = PHASES.find(p => p.id === el.dataset.phase); drawerDate = el.dataset.date ? el.dataset.date : ph ? (todayISO() >= ph.start && todayISO() <= ph.end ? todayISO() : ph.start) : todayISO(); openDrawer("new"); break; }
     case "today": openDrawer("today"); break;
     case "close": closeDrawer(); break;
     case "fu": copy(followUp(doc.tasks.find(x => x.id === id)), "Follow-up copied. Paste into WhatsApp or Slack"); break;
