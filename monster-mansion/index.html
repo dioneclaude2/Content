@@ -86,6 +86,10 @@ a{color:inherit}
 .toggle input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
 .toggle input:checked{background:var(--pink)}
 .toggle input:checked::after{transform:translateX(12px)}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:7px;overflow:hidden;height:32px;background:var(--card)}
+.seg button{padding:0 12px;font-size:13px;border-right:1px solid var(--line-2)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--wall);font-weight:500}
 .bar__right{margin-left:auto;display:flex;gap:8px;align-items:center}
 .sync{font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .sync i{width:7px;height:7px;border-radius:50%;background:var(--st-none);display:inline-block}
@@ -126,8 +130,8 @@ main{padding:18px 24px 80px}
 .prog i{display:block;height:100%;background:var(--st-done)}
 .tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--line);background:var(--row)}
 .grp.is-closed .tbl-wrap{display:none}
-.tbl{min-width:1440px}
-.tr{display:grid;grid-template-columns:6px minmax(420px,2.2fr) 140px 112px 140px 128px minmax(190px,1.4fr) minmax(190px,1.4fr) 116px 92px;border-bottom:1px solid var(--line);align-items:stretch}
+.tbl{min-width:1560px}
+.tr{display:grid;grid-template-columns:6px minmax(420px,2.2fr) 112px 140px 112px 140px 128px minmax(190px,1.4fr) minmax(190px,1.4fr) 116px 92px;border-bottom:1px solid var(--line);align-items:stretch}
 .tr:last-child{border-bottom:0}
 .tr>*{min-width:0;border-right:1px solid var(--line);display:flex;align-items:center;padding:6px 10px}
 .tr>*:last-child{border-right:0}
@@ -164,7 +168,7 @@ main{padding:18px 24px 80px}
 .k-do{background:var(--wall-2);color:var(--ink-soft);border-color:var(--line-2)}
 :root[data-theme="dark"] .k-chase,:root[data-theme="dark"] .k-send,:root[data-theme="dark"] .k-approve{filter:saturate(.8) brightness(.9)}
 .sel-pill{appearance:none;-webkit-appearance:none;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:500;cursor:pointer;max-width:100%;text-align:center}
-.c-type,.c-person,.c-src,.c-due,.c-fu{justify-content:center}
+.c-type,.c-owner,.c-person,.c-src,.c-due,.c-fu{justify-content:center}
 .who{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:100%;border-radius:999px;padding:2px 8px 2px 2px;border:1px solid transparent;position:relative}
 .who:hover{border-color:var(--line-2)}
 .who select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
@@ -363,18 +367,19 @@ footer a{color:var(--ink-soft)}
   .tbl-wrap{border:0;background:transparent;overflow:visible}
   .tbl{min-width:0;display:grid;gap:8px}
   .tr.th{display:none}
-  .tr.row{grid-template-columns:5px 1fr 1fr;grid-template-areas:"s t t" "s p ty" "s st du" "s n n" "s g g" "s sr fu";background:var(--row);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .tr.row{grid-template-columns:5px 1fr 1fr;grid-template-areas:"s t t" "s o p" "s st du" "s ty sr" "s n n" "s g g" "s fu fu";background:var(--row);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
   .tr.row>*{border-right:0;padding:6px 10px}
   .tr.row>.strip{grid-area:s;padding:0}
   .tr.row>.c-title{grid-area:t;position:static}
-  .tr.row>.c-person{grid-area:p;justify-content:flex-start}
-  .tr.row>.c-type{grid-area:ty;justify-content:flex-end}
+  .tr.row>.c-owner{grid-area:o;justify-content:flex-start}
+  .tr.row>.c-person{grid-area:p;justify-content:flex-end}
+  .tr.row>.c-type{grid-area:ty;justify-content:flex-start}
   .tr.row>.c-stat{grid-area:st;padding:4px 10px !important}
   .tr.row>.c-stat .stat{border-radius:6px;min-height:32px}
   .tr.row>.c-due{grid-area:du;justify-content:flex-end}
   .tr.row>.c-need{grid-area:n}
   .tr.row>.c-give{grid-area:g}
-  .tr.row>.c-src{grid-area:sr;justify-content:flex-start}
+  .tr.row>.c-src{grid-area:sr;justify-content:flex-end}
   .tr.row>.c-fu{grid-area:fu;justify-content:flex-end}
   .c-need:empty,.c-give:empty{display:none}
   .c-need .in-txt::placeholder,.c-give .in-txt::placeholder{color:var(--muted)}
@@ -406,7 +411,7 @@ footer a{color:var(--ink-soft)}
   <div class="hero">
     <div>
       <h1>Borrow reach. <em>Then chase everyone.</em></h1>
-      <p>Who to follow up with, what about, and when, from today to the Vol 2 decision on 12 Nov. Crystal first, then stakeholders and partners.</p>
+      <p>Run by Crystal and Dione. Everyone else is who we coordinate with: who to follow up with, what about, and when, from today to the Vol 2 decision on 12 Nov.</p>
     </div>
     <div class="launch" id="launch"></div>
   </div>
@@ -415,6 +420,7 @@ footer a{color:var(--ink-soft)}
 
 <div class="bar" id="bar">
   <button class="btn btn--pink" data-act="new">+ Add task</button>
+  <div class="seg" id="ownerSeg" role="group" aria-label="Owner"></div>
   <input class="search" id="q" type="search" placeholder="Search" aria-label="Search items">
   <select class="sel" id="fPerson" aria-label="Filter by person"></select>
   <select class="sel" id="fType" aria-label="Filter by type"></select>
@@ -478,6 +484,9 @@ const KINDS = {
   post:{label:"Goes live", cls:"k-post", dot:"#ec2f8e"},
   do:{label:"My task", cls:"k-do", dot:"#8c857f"},
 };
+const OWNERS = {dione:"Dione", crystal:"Crystal"};
+const ownerAv = o => `<span class="av" style="background:${o === "crystal" ? avColor("crystal") : "#1f1216"}">${o === "crystal" ? "CR" : "DI"}</span>`;
+function defaultOwner(t){ return (t.who === "crystal" && (t.kind === "approve" || t.kind === "post")) || ["a4","r5"].includes(t.id) ? "crystal" : "dione"; }
 const SRC = {meeting:"From the call", site:"From the site", suggested:"Suggested date"};
 const PHASES = [
   {id:"lock", name:"Lock + build", em:"Everything decided by the 8th.", start:"2026-10-05", end:"2026-10-14", c:"#8c857f"},
@@ -539,11 +548,12 @@ if (!doc || !Array.isArray(doc.tasks) || !doc.tasks.length) doc = seedDoc();
 doc.flags ||= {};
 function migrate(d){
   if (d.people?.me?.name === "Me") d.people.me = structuredClone(SEED.people.me);
+  d.tasks.forEach(t => { if (!t.owner) t.owner = defaultOwner(t); });
   d.tasks.forEach(t => { if (t.id === "a8" && t.title === "Send the platform title options to Shariebel") Object.assign(t, SEED.tasks.find(x => x.id === "a8")); });
   return d;
 }
 migrate(doc);
-let ui = Object.assign({view:"table", showDone:true, closed:{done:true}, q:"", person:"", type:"", status:"", theme:""}, ls.get(LS_UI) || {});
+let ui = Object.assign({view:"table", showDone:true, closed:{done:true}, q:"", owner:"", person:"", type:"", status:"", theme:""}, ls.get(LS_UI) || {});
 ui.q = "";
 
 function save(){
@@ -655,6 +665,7 @@ function filtered({ignoreDone = false} = {}){
   const q = ui.q.trim().toLowerCase();
   return doc.tasks.filter(t => {
     if (!ignoreDone && !ui.showDone && isDone(t)) return false;
+    if (ui.owner && t.owner !== ui.owner) return false;
     if (ui.person && t.who !== ui.person) return false;
     if (ui.type && t.kind !== ui.type) return false;
     if (ui.status && t.status !== ui.status) return false;
@@ -716,10 +727,13 @@ function renderTabs(){
   document.getElementById("tabs").innerHTML = VIEWS.map(v =>
     `<button class="tab" role="tab" aria-selected="${ui.view === v.id}" data-view="${v.id}">${v.label}</button>`).join("");
 }
+function renderOwnerSeg(){
+  document.getElementById("ownerSeg").innerHTML = [["", "Both"], ["dione", "Dione"], ["crystal", "Crystal"]].map(([k, l]) => `<button data-act="owner" data-id="${k}" aria-pressed="${ui.owner === k}">${l}</button>`).join("");
+}
 function renderFilters(){
   const ppl = Object.entries(doc.people);
   const fP = document.getElementById("fPerson"), fT = document.getElementById("fType"), fS = document.getElementById("fStatus");
-  fP.innerHTML = `<option value="">All people</option>` + ppl.map(([id, p]) => `<option value="${id}">${esc(p.name)}</option>`).join("");
+  fP.innerHTML = `<option value="">Coordinate with: all</option>` + ppl.map(([id, p]) => `<option value="${id}">${esc(p.name)}</option>`).join("");
   fT.innerHTML = `<option value="">All types</option>` + Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
   fS.innerHTML = `<option value="">All statuses</option>` + STATUSES.map(s => `<option>${s.id}</option>`).join("");
   fP.value = ui.person; fT.value = ui.type; fS.value = ui.status;
@@ -738,7 +752,7 @@ function renderFlags(){
 }
 function todayBuckets(){
   const t = todayISO(), wk = addDays(t, 7);
-  const open = doc.tasks.filter(x => !isDone(x)).sort(byDate);
+  const open = doc.tasks.filter(x => !isDone(x) && (!ui.owner || x.owner === ui.owner)).sort(byDate);
   return {
     over: open.filter(x => x.date < t),
     today: open.filter(x => x.date === t),
@@ -758,6 +772,8 @@ function rowHTML(t, color){
   return `<div class="tr row${isDone(t) ? " is-complete" : ""}" data-id="${t.id}" style="--c:${color}">
     <div class="strip"></div>
     <div class="c-title"><textarea class="in-title" rows="1" data-f="title" data-id="${t.id}" aria-label="Item">${esc(t.title)}</textarea><span class="row-acts"><button class="fu" data-act="edit" data-id="${t.id}" title="Edit task">✎ Edit</button><button class="fu fu--del" data-act="del" data-id="${t.id}" title="Remove task" aria-label="Remove task">✕</button></span></div>
+    <div class="c-owner"><label class="who" title="Handled by">${ownerAv(t.owner)}<span>${OWNERS[t.owner] || "—"}</span>
+      <select data-f="owner" data-id="${t.id}" aria-label="Owner">${Object.entries(OWNERS).map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${v}</option>`).join("")}</select></label></div>
     <div class="c-person"><label class="who" title="${esc(p.role)}">${av(t.who)}<span>${esc(p.name)}</span>
       <select data-f="who" data-id="${t.id}" aria-label="Person">${Object.entries(doc.people).map(([id, x]) => `<option value="${id}"${id === t.who ? " selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label></div>
     <div class="c-type"><select class="sel-pill ${KINDS[t.kind]?.cls}" data-f="kind" data-id="${t.id}" aria-label="Type">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}"${k === t.kind ? " selected" : ""}>${v.label}</option>`).join("")}</select></div>
@@ -769,7 +785,7 @@ function rowHTML(t, color){
     <div class="c-fu"><button class="fu" data-act="fu" data-id="${t.id}" title="Copy a WhatsApp / Slack follow-up">💬 Copy</button></div>
   </div>`;
 }
-const HEAD = `<div class="tr th"><div class="strip"></div><div class="c-title">Item</div><div>Person</div><div>Type</div><div>Status</div><div>Due date</div><div>I need from them</div><div>They need from me</div><div>Source</div><div>Follow-up</div></div>`;
+const HEAD = `<div class="tr th"><div class="strip"></div><div class="c-title">Item</div><div>Owner</div><div>Coordinate with</div><div>Type</div><div>Status</div><div>Due date</div><div>I need from them</div><div>They need from me</div><div>Source</div><div>Follow-up</div></div>`;
 
 function viewTable(){
   const list = filtered();
@@ -874,8 +890,16 @@ function viewKanban(){
 function viewPeople(){
   const list = filtered({ignoreDone:true});
   const t = todayISO();
-  const order = ["crystal", ...Object.keys(doc.people).filter(k => k !== "crystal" && k !== "me"), "me"];
-  return `<div class="ppl">${order.filter(id => doc.people[id]).map(id => {
+  const order = ["crystal", ...Object.keys(doc.people).filter(k => k !== "crystal" && k !== "me")];
+  const ownerCards = Object.entries(OWNERS).map(([o, name]) => {
+    const all = doc.tasks.filter(x => x.owner === o), open = all.filter(x => !isDone(x)), over = open.filter(isOver);
+    return `<div class="pc" style="border-top:4px solid ${o === "crystal" ? "var(--pink)" : "var(--ink)"}"><div class="pc__h">${ownerAv(o)}<div><b>${name}</b><small>${o === "crystal" ? "Creative and art direction. Approves visuals, grid, teasers, go/no-go." : "The chess player. Places every asset, chases everyone, owns views and reporting."}</small></div></div>
+      <div class="pc__stats"><span>${open.length} open</span>${over.length ? `<span class="is-red">${over.length} overdue</span>` : ""}<span>${open.filter(x => x.date === t).length} today</span><span>${all.length - open.length} done</span></div>
+      <div><button class="btn btn--sm" data-act="owner" data-id="${o}">Show only ${name}'s tasks</button></div></div>`;
+  }).join("");
+  return `<h3 class="serif" style="font-weight:400;font-size:20px;margin-bottom:10px">Handlers. <em style="color:var(--pink)">Crystal and Dione run it.</em></h3><div class="ppl" style="margin-bottom:26px">${ownerCards}</div>
+  <h3 class="serif" style="font-weight:400;font-size:20px;margin-bottom:10px">Coordinate with. <em style="color:var(--ink-soft)">Who we chase, and what for.</em></h3>
+  <div class="ppl">${order.filter(id => doc.people[id]).map(id => {
     const p = doc.people[id];
     const mine = list.filter(x => x.who === id);
     if (!mine.length && (ui.person || ui.q || ui.type || ui.status)) return "";
@@ -976,14 +1000,17 @@ function renderDrawer(){
     return;
   }
   const isNew = drawerMode === "new";
-  const t = isNew ? {id:"", title:"", who:"crystal", kind:"chase", status:"Not started", date:drawerDate || todayISO(), need:"", give:"", src:"meeting", notes:""} : doc.tasks.find(x => x.id === drawerId);
+  const t = isNew ? {id:"", title:"", who:"crystal", kind:"chase", owner:ui.owner || "dione", status:"Not started", date:drawerDate || todayISO(), need:"", give:"", src:"meeting", notes:""} : doc.tasks.find(x => x.id === drawerId);
   if (!t) { closeDrawer(); return; }
   title.innerHTML = isNew ? `New task. <em>Who, what, when.</em>` : `${esc(phaseOf(t.date).name)}. <em>${fmt(t.date)}</em>`;
   const ppl = Object.entries(doc.people).map(([id, p]) => `<option value="${id}"${id === t.who ? " selected" : ""}>${esc(p.name)}</option>`).join("");
   body.innerHTML = `<form id="editForm">
     <label class="field"><span>Item</span><input name="title" value="${esc(t.title)}" required></label>
     <div class="row2">
-      <label class="field"><span>Person</span><select name="who">${ppl}</select></label>
+      <label class="field"><span>Owner</span><select name="owner">${Object.entries(OWNERS).map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+      <label class="field"><span>Coordinate with</span><select name="who">${ppl}</select></label>
+    </div>
+    <div class="row2">
       <label class="field"><span>Type</span><select name="kind">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}"${k === t.kind ? " selected" : ""}>${v.label}</option>`).join("")}</select></label>
     </div>
     <div class="field"><span>Status</span><div class="statrow">${STATUSES.map(s => `<button type="button" class="stat ${s.cls}" data-setstat="${esc(s.id)}" aria-pressed="${s.id === t.status}">${esc(s.id)}</button>`).join("")}</div><input type="hidden" name="status" value="${esc(t.status)}"></div>
@@ -1042,7 +1069,7 @@ function maybeNotify(){
 /* ---------- render ---------- */
 const VIEW_FN = {table:viewTable, timeline:viewTimeline, calendar:viewCalendar, kanban:viewKanban, people:viewPeople, posts:viewPosts, dash:viewDash};
 function renderAll(){
-  renderLaunch(); renderTabs(); renderFlags(); renderBadge();
+  renderLaunch(); renderTabs(); renderOwnerSeg(); renderFlags(); renderBadge();
   document.getElementById("view").innerHTML = (VIEW_FN[ui.view] || viewTable)();
   renderDrawer();
 }
@@ -1066,6 +1093,7 @@ document.addEventListener("click", e => {
   const {act, id} = el.dataset;
   if (el.closest(".menu__pop")) document.getElementById("dataMenu").open = false;
   switch (act) {
+    case "owner": ui.owner = id; saveUI(); renderAll(); break;
     case "grp": ui.closed[id] = !ui.closed[id]; saveUI(); renderAll(); break;
     case "status": e.stopPropagation(); openStatusPop(el, id); break;
     case "edit": if (e.target.closest("input,select,textarea")) break; openDrawer("edit", id); break;
@@ -1108,7 +1136,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "Enter" && e.target.matches("[data-add]") && e.target.value.trim()) {
     const ph = PHASES.find(p => p.id === e.target.dataset.add);
     const date = todayISO() >= ph.start && todayISO() <= ph.end ? todayISO() : ph.start;
-    doc.tasks.push({id:newId(), date, kind:"do", who:"me", title:e.target.value.trim(), status:"Not started", need:"", give:"", notes:"", src:"meeting"});
+    doc.tasks.push({id:newId(), date, kind:"do", who:"me", owner:ui.owner || "dione", title:e.target.value.trim(), status:"Not started", need:"", give:"", notes:"", src:"meeting"});
     save(); renderAll();
     document.querySelector(`[data-add="${ph.id}"]`)?.focus();
     toast(`Added to ${ph.name}`);
