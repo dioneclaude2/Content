@@ -163,7 +163,9 @@ main{padding:18px 24px 80px}
 .c-stat{padding:0 !important}
 .stat{width:100%;height:100%;min-height:38px;color:#fff;font-size:12.5px;font-weight:500;display:grid;place-items:center;text-align:center;padding:4px 6px;line-height:1.2}
 .stat:hover{filter:brightness(1.07)}
-.st-none{background:var(--st-none);color:#16206b}.st-wait{background:var(--st-wait)}.st-review{background:var(--st-review)}.st-approved{background:var(--st-approved)}.st-done{background:var(--st-done)}.st-stuck{background:var(--st-stuck)}
+.st-none{background:var(--st-none);color:#16206b}
+.st-note{background:#f8e6a0;color:#5b4a12;font-style:italic;cursor:default}
+.tr.row.is-note .in-title{font-style:italic;color:var(--ink-soft)}.st-wait{background:var(--st-wait)}.st-review{background:var(--st-review)}.st-approved{background:var(--st-approved)}.st-done{background:var(--st-done)}.st-stuck{background:var(--st-stuck)}
 .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:500;white-space:nowrap;border:1px solid transparent}
 .k-chase{background:#fff0dc;color:#9a5300;border-color:#f3cf9c}
 .k-send{background:#e3eefe;color:#1f4f9a;border-color:#b9d1f7}
@@ -287,9 +289,16 @@ main{padding:18px 24px 80px}
 .ag__t{font-size:13.5px;font-weight:500;line-height:1.3}
 .ag__main:hover .ag__t{color:var(--pink)}
 .ag__m{font-size:11.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+.ag__note{display:flex;gap:8px;align-items:center;font-size:12.5px;font-style:italic;color:var(--ink-soft);background:#fff8dc;border:1px dashed #ecd78a;border-radius:7px;padding:5px 8px;cursor:grab}
+:root[data-theme="dark"] .ag__note{background:rgba(248,230,160,.08)}
+.ag__nt{flex:1;cursor:pointer}
+.ag__nt:hover{color:var(--pink)}
+.ag__note .fu{height:22px;padding:0 6px}
 .ag__add{justify-self:start;font-size:12px;color:var(--muted);padding:2px 6px;border-radius:5px}
 .ag__add:hover{background:var(--pink);color:#fff}
 @media (max-width:760px){.ag__day{grid-template-columns:64px 1fr}.ag__date{padding:10px 8px}.ag__date b{font-size:24px}.ag__it{grid-template-columns:1fr auto}.ag__it .stat{grid-column:1/-1;order:2}}
+.tl__todaylab{position:absolute;bottom:5px;transform:translateX(-50%);background:var(--st-stuck);color:#fff;font-family:"JetBrains Mono",monospace;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:4px;z-index:3}
+.tl__month{z-index:1}
 .tl__chip{position:absolute;height:22px;min-width:22px;border-radius:999px;display:grid;place-items:center;font-size:10.5px;font-weight:600;color:#fff;transform:translateX(-50%);cursor:pointer;border:2px solid var(--row);padding:0 5px}
 .tl__chip:hover{transform:translateX(-50%) scale(1.15);z-index:4}
 .tl__chip.is-complete{opacity:.4}
@@ -318,6 +327,7 @@ main{padding:18px 24px 80px}
 .cal__it:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 6px 14px -6px color-mix(in srgb,var(--kc) 70%,transparent)}
 .cal__it.is-post{background:color-mix(in srgb,var(--pink) 22%,var(--row))}
 .cal__it.is-dragging{opacity:.4}
+.cal__it.is-note{background:transparent;border-left:2px dashed #e7c200;font-style:italic;color:var(--ink-soft)}
 .cal__st{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;border:1.5px solid var(--row);box-shadow:0 0 0 1px var(--line-2);cursor:pointer;transition:transform .15s}
 .cal__st:hover{transform:scale(1.5)}
 .cal__d.is-over{background:color-mix(in srgb,var(--pink) 14%,var(--row));outline:2px dashed var(--pink);outline-offset:-3px}
@@ -669,6 +679,33 @@ function migrate(d){
     delete d.people.sarah; delete d.people.shariebel;
     d.v = 2;
   }
+  if (d.v < 3) {
+    /* Notes = reminders and context, not deliverables. */
+    const NOTES = ["b1","a5","a9","p2","h4","m8","m10"];
+    /* Re-dated so each step lands after what it depends on. */
+    const MOVE = {
+      m11:"2026-10-09", m12:"2026-10-09",   // after the 8 Oct co-author + lock decisions
+      m2:"2026-10-12",                      // after Crystal's grid (7 Oct) and assets
+      s4:"2026-10-14",                      // gifting must ship before the 29 Oct reveal
+      t5:"2026-10-15",                      // plan B makeup artists need ~2 weeks to film
+    };
+    const RENAME = {
+      b1:"Vojtech always sends us emails to review before they go out",
+      r2:"Top 20+ Halloween transformation creators (3M+) to Crystal",
+      a5:"Higgsfield MCP is reconnected to your own account before renders",
+      a9:"Launch site timeline is broken into deadlines on this board",
+      p2:"From today every post carries the dated tease \"Thu 29 Oct, 9pm ET\"",
+      h4:"Daily gift every day through 4 Nov; Mansion posts 1–3 a day",
+      m8:"Keep Crystal looped on timeline changes",
+      m10:"Chase Crystal for assets as they come in",
+    };
+    d.tasks.forEach(t => {
+      if (NOTES.includes(t.id)) t.note = true;
+      if (MOVE[t.id]) t.date = MOVE[t.id];
+      if (RENAME[t.id]) t.title = RENAME[t.id];
+    });
+    d.v = 3;
+  }
   d.tasks.forEach(t => { if (!t.owner) t.owner = defaultOwner(t); });
   d.tasks.forEach(t => { if (t.id === "a8" && t.title === "Send the platform title options to Shariebel") Object.assign(t, SEED.tasks.find(x => x.id === "a8")); });
   return d;
@@ -761,7 +798,8 @@ function rel(s){
 /* ---------- task helpers ---------- */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const isDone = t => t.status === "Done" || t.status === "Approved";
-const isOver = t => !isDone(t) && t.date < todayISO();
+const isNote = t => !!t.note;
+const isOver = t => !isDone(t) && !isNote(t) && t.date < todayISO();
 const phaseOf = date => PHASES.find(p => date <= p.end) || PHASES[PHASES.length-1];
 const person = id => doc.people[id] || {name:id || "—", role:""};
 const stCls = s => (STATUSES.find(x => x.id === s) || STATUSES[0]).cls;
@@ -789,7 +827,9 @@ function filtered({ignoreDone = false} = {}){
     if (!ignoreDone && !ui.showDone && isDone(t)) return false;
     if (ui.owner && t.owner !== ui.owner) return false;
     if (ui.person && t.who !== ui.person) return false;
-    if (ui.type && t.kind !== ui.type) return false;
+    if (ui.type === "note") { if (!isNote(t)) return false; }
+    else if (ui.type === "task") { if (isNote(t)) return false; }
+    else if (ui.type && t.kind !== ui.type) return false;
     if (ui.status && t.status !== ui.status) return false;
     if (q) {
       const hay = [t.title, t.need, t.give, t.notes, person(t.who).name, KINDS[t.kind]?.label, t.status].join(" ").toLowerCase();
@@ -886,7 +926,7 @@ function renderFilters(){
   const ppl = Object.entries(doc.people);
   const fP = document.getElementById("fPerson"), fT = document.getElementById("fType"), fS = document.getElementById("fStatus");
   fP.innerHTML = `<option value="">Coordinate with: all</option>` + ppl.map(([id, p]) => `<option value="${id}">${esc(p.name)}</option>`).join("");
-  fT.innerHTML = `<option value="">All types</option>` + Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
+  fT.innerHTML = `<option value="">Tasks + notes</option><option value="task">Tasks only</option><option value="note">📝 Notes only</option>` + Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
   fS.innerHTML = `<option value="">All statuses</option>` + STATUSES.map(s => `<option>${s.id}</option>`).join("");
   fP.value = ui.person; fT.value = ui.type; fS.value = ui.status;
   document.getElementById("showDone").checked = ui.showDone;
@@ -904,7 +944,7 @@ function renderFlags(){
 }
 function todayBuckets(){
   const t = todayISO(), wk = addDays(t, 7);
-  const open = doc.tasks.filter(x => !isDone(x) && (!ui.owner || x.owner === ui.owner)).sort(byDate);
+  const open = doc.tasks.filter(x => !isDone(x) && !isNote(x) && (!ui.owner || x.owner === ui.owner)).sort(byDate);
   return {
     over: open.filter(x => x.date < t),
     today: open.filter(x => x.date === t),
@@ -921,7 +961,7 @@ function renderBadge(){
 /* ---------- views ---------- */
 function rowHTML(t, color){
   const p = person(t.who);
-  return `<div class="tr row${isDone(t) ? " is-complete" : ""}" data-id="${t.id}" style="--c:${color}">
+  return `<div class="tr row${isDone(t) ? " is-complete" : ""}${isNote(t) ? " is-note" : ""}" data-id="${t.id}" style="--c:${color}">
     <div class="strip"></div>
     <div class="c-title"><textarea class="in-title" rows="1" data-f="title" data-id="${t.id}" aria-label="Item">${esc(t.title)}</textarea><span class="row-acts"><button class="fu" data-act="edit" data-id="${t.id}" title="Edit task">✎ Edit</button><button class="fu fu--del" data-act="del" data-id="${t.id}" title="Remove task" aria-label="Remove task">✕</button></span></div>
     <div class="c-owner"><label class="who" title="Handled by">${ownerAv(t.owner)}<span>${OWNERS[t.owner] || "—"}</span>
@@ -929,7 +969,7 @@ function rowHTML(t, color){
     <div class="c-person"><label class="who" title="${esc(p.role)}">${av(t.who)}<span>${esc(p.name)}</span>
       <select data-f="who" data-id="${t.id}" aria-label="Person">${Object.entries(doc.people).map(([id, x]) => `<option value="${id}"${id === t.who ? " selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label></div>
     <div class="c-type"><select class="sel-pill ${KINDS[t.kind]?.cls}" data-f="kind" data-id="${t.id}" aria-label="Type">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}"${k === t.kind ? " selected" : ""}>${v.label}</option>`).join("")}</select></div>
-    <div class="c-stat"><button class="stat ${stCls(t.status)}" data-act="status" data-id="${t.id}">${esc(t.status)}</button></div>
+    <div class="c-stat">${isNote(t) ? `<span class="stat st-note">📝 Note</span>` : `<button class="stat ${stCls(t.status)}" data-act="status" data-id="${t.id}">${esc(t.status)}</button>`}</div>
     <div class="c-due">${dueCell(t)}</div>
     <div class="c-need"><textarea class="in-txt" rows="1" data-f="need" data-id="${t.id}" placeholder="I need from them…" aria-label="I need from them">${esc(t.need)}</textarea></div>
     <div class="c-give"><textarea class="in-txt" rows="1" data-f="give" data-id="${t.id}" placeholder="They need from me…" aria-label="They need from me">${esc(t.give)}</textarea></div>
@@ -963,7 +1003,8 @@ function viewTable(){
 
 function viewTimeline(){
   const days = []; for (let d = CAMP_START; d <= CAMP_END; d = addDays(d, 1)) days.push(d);
-  const W = 34, total = days.length * W;
+  const avail = (document.getElementById("view").clientWidth || innerWidth) - 152;
+  const W = Math.max(22, Math.floor(avail / days.length)), total = days.length * W;
   const x = d => diff(CAMP_START, d) * W;
   const list = filtered();
   const t = todayISO();
@@ -987,20 +1028,21 @@ function viewTimeline(){
       <div class="ag__body">
         ${doc.keyDays[d] ? `<div class="ag__key">◆ ${esc(doc.keyDays[d])}</div>` : ""}
         ${POST_DAYS[d] ? `<div class="ag__post">📣 <b>${esc(POST_DAYS[d].n)} post${POST_DAYS[d].n === "1" ? "" : "s"}</b> · ${esc(POST_DAYS[d].t)}</div>` : ""}
-        ${items.map(x => `<div class="ag__it${isDone(x) ? " is-complete" : ""}" draggable="true" data-drag="${x.id}" data-preview="${x.id}" style="--kc:${KINDS[x.kind]?.dot}">
+        ${items.filter(isNote).map(x => `<div class="ag__note" draggable="true" data-drag="${x.id}" data-preview="${x.id}"><span>📝</span><span class="ag__nt" data-act="edit" data-id="${x.id}">${esc(x.title)}</span><button class="fu" data-act="del" data-id="${x.id}" aria-label="Remove note">✕</button></div>`).join("")}
+        ${items.filter(x => !isNote(x)).map(x => `<div class="ag__it${isDone(x) ? " is-complete" : ""}" draggable="true" data-drag="${x.id}" data-preview="${x.id}" style="--kc:${KINDS[x.kind]?.dot}">
           <button class="stat ${stCls(x.status)}" data-act="status" data-id="${x.id}">${esc(x.status)}</button>
           <div class="ag__main" data-act="edit" data-id="${x.id}"><div class="ag__t">${esc(x.title)}</div>
             <div class="ag__m">${kindPill(x.kind)} <span>${OWNERS[x.owner] || ""} → ${esc(person(x.who).name)}</span>${x.need ? ` · <span>Need: ${esc(x.need)}</span>` : ""}${x.give ? ` · <span>Give: ${esc(x.give)}</span>` : ""}</div></div>
           <button class="fu" data-act="fu" data-id="${x.id}" title="Copy follow-up">💬</button></div>`).join("")}
-        <button class="ag__add" data-act="new" data-date="${d}">+ Add task</button>
+        <span><button class="ag__add" data-act="new" data-date="${d}">+ Add task</button> <button class="ag__add" data-act="new" data-date="${d}" data-note="1">+ Add note</button></span>
       </div></div>`;
   }).join("");
   return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span class="mini">Hover 📣 for what's posting · drag a task onto another day to move it</span></div>
-  <div class="tl-wrap" style="margin-bottom:22px"><div class="tl" style="width:${total + 150}px">
+  <div class="tl-wrap" style="margin-bottom:22px"><div class="tl" style="width:${total + 150}px;--dw:${W}px">
     <div class="tl__row"><div class="tl__lab"><b>Oct – Nov 2026</b></div><div class="tl__track" style="width:${total}px">${months}<div class="tl__days">${dayHead}</div></div></div>
-    <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track" style="width:${total}px">${grid}${nowLab}${phaseBars}</div></div>
+    <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track" style="width:${total}px">${grid}${now}${phaseBars}</div></div>
     <div class="tl__row" style="min-height:40px"><div class="tl__lab">📣 Posting</div><div class="tl__track" style="width:${total}px">${grid}${now}${posting}</div></div>
-    <div class="tl__row" style="min-height:44px"><div class="tl__lab">Key days</div><div class="tl__track" style="width:${total}px">${grid}${now}${keys}</div></div>
+    <div class="tl__row" style="min-height:44px"><div class="tl__lab">Key days</div><div class="tl__track" style="width:${total}px">${grid}${now}${keys}${nowX != null ? `<span class="tl__todaylab" style="left:${nowX}px">Today</span>` : ""}</div></div>
   </div></div>
   <div class="ag">${agenda || `<div class="empty">No items match the filters.</div>`}</div>`;
 }
@@ -1026,7 +1068,7 @@ function viewCalendar(){
           <div class="cal__n">${out ? `<b>${d.getDate()}</b>` : `<button class="cal__num" data-act="day" data-date="${s}" title="Open ${fmt(s)}"><b>${d.getDate()}</b></button>`}${out ? "" : `<button class="cal__add" data-act="new" data-date="${s}" title="Add task on ${fmt(s)}" aria-label="Add task on ${fmt(s)}">+</button>`}</div>
           ${doc.keyDays[s] && !out ? `<div class="cal__key">◆ ${esc(doc.keyDays[s])}</div>` : ""}
           ${POST_DAYS[s] && !out ? `<div class="cal__post" data-peekpost="${s}">📣 ${esc(POST_DAYS[s].n)} post${POST_DAYS[s].n === "1" ? "" : "s"}</div>` : ""}
-          ${out ? "" : items.map(x => `<div class="cal__it${x.kind === "post" ? " is-post" : ""}${isDone(x) ? " is-complete" : ""}" style="--kc:${KINDS[x.kind]?.dot}" draggable="true" data-drag="${x.id}" data-act="edit" data-id="${x.id}" data-preview="${x.id}"><button class="cal__st ${stCls(x.status)}" data-act="status" data-id="${x.id}" aria-label="Status: ${esc(x.status)}"></button>${esc(x.title)}</div>`).join("")}
+          ${out ? "" : items.map(x => `<div class="cal__it${isNote(x) ? " is-note" : ""}${x.kind === "post" ? " is-post" : ""}${isDone(x) ? " is-complete" : ""}" style="--kc:${KINDS[x.kind]?.dot}" draggable="true" data-drag="${x.id}" data-act="edit" data-id="${x.id}" data-preview="${x.id}">${isNote(x) ? "📝 " : `<button class="cal__st ${stCls(x.status)}" data-act="status" data-id="${x.id}" aria-label="Status: ${esc(x.status)}"></button>`}${esc(x.title)}</div>`).join("")}
         </div>`;
       }).join("")}</div></div>`;
   };
@@ -1037,7 +1079,7 @@ function viewCalendar(){
 function viewKanban(){
   const list = filtered();
   return `<div class="kb">${STATUSES.filter(s => ui.showDone || !["Done","Approved"].includes(s.id)).map(s => {
-    const items = list.filter(t => t.status === s.id);
+    const items = list.filter(t => t.status === s.id && !isNote(t));
     return `<div class="kb__col" data-drop="${esc(s.id)}"><div class="kb__h ${s.cls}"><span>${esc(s.id)}</span><span>${items.length}</span></div>
       <div class="kb__list">${items.map(t => { const ph = phaseOf(t.date); return `
         <div class="card" draggable="true" data-drag="${t.id}" data-act="edit" data-id="${t.id}" data-preview="${t.id}" style="--pc:${ph.c}">
@@ -1116,7 +1158,7 @@ function viewDash(){
   const open = doc.tasks.filter(x => !isDone(x));
   const over = open.filter(isOver).sort(byDate);
   const appr = open.filter(x => x.kind === "approve" && x.date <= wk).sort(byDate);
-  const waiting = open.filter(x => x.status === "Waiting on them" || (x.kind === "chase" && x.who !== "me")).sort(byDate);
+  const waiting = open.filter(x => !isNote(x)).filter(x => x.status === "Waiting on them" || (x.kind === "chase" && x.who !== "me")).sort(byDate);
   const dSoft = diff(t, SOFT), dHard = diff(todayISO(), HARD);
   const done = doc.tasks.filter(isDone).length;
   const li = x => `<li data-act="edit" data-id="${x.id}">${av(x.who)}<span class="t">${esc(x.title)}<small>${esc(person(x.who).name)} · ${esc(x.status)}</small></span><span class="due${isOver(x) ? " is-over" : ""}${x.date === t ? " is-today" : ""}"><b>${fmtShort(x.date)}</b><small>${rel(x.date)}</small></span></li>`;
@@ -1135,7 +1177,7 @@ function viewDash(){
 }
 
 /* ---------- drawer: edit + today ---------- */
-let drawerMode = null, drawerId = null, drawerDate = null;
+let drawerMode = null, drawerId = null, drawerDate = null, drawerNote = false;
 function openDrawer(mode, id){
   drawerMode = mode; drawerId = id;
   document.getElementById("drawer").classList.add("is-on");
@@ -1167,13 +1209,13 @@ function renderDrawer(){
       <div class="titem__a"><button class="btn btn--sm" data-act="fu" data-id="${x.id}" title="Copy follow-up">💬</button><button class="btn btn--sm" data-act="snooze" data-id="${x.id}" data-n="1" title="Move to tomorrow">+1d</button><button class="btn btn--sm" data-act="markDone" data-id="${x.id}" title="Mark done">✓</button></div></div>`;
     const sec = (h, arr, color) => `<div class="today-sec"><h4><i class="dot" style="background:${color}"></i>${h} · ${arr.length}</h4>${arr.map(item).join("") || `<div class="mini">Nothing.</div>`}</div>`;
     body.innerHTML = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"><button class="btn" data-act="digest">Copy daily digest</button><button class="btn" data-act="notify">Browser reminders</button></div>
-      ${sec("Overdue", b.over, "var(--st-stuck)")}${sec("Due today", b.today, "var(--pink)")}${sec("Next 7 days", b.next, "var(--st-review)")}`;
+      ${sec("Overdue", b.over, "var(--st-stuck)")}${(() => { const n = doc.tasks.filter(x => isNote(x) && x.date <= addDays(todayISO(), 7) && x.date >= addDays(todayISO(), -1) && (!ui.owner || x.owner === ui.owner)); return n.length ? `<div class="today-sec"><h4>📝 Notes · ${n.length}</h4>${n.map(x => `<div class="ag__note" style="margin-bottom:5px"><span class="ag__nt" data-act="edit" data-id="${x.id}">${esc(x.title)} <span class="mini">· ${fmtShort(x.date)}</span></span></div>`).join("")}</div>` : ""; })()}${sec("Due today", b.today, "var(--pink)")}${sec("Next 7 days", b.next, "var(--st-review)")}`;
     return;
   }
   const isNew = drawerMode === "new";
-  const t = isNew ? {id:"", title:"", who:"crystal", kind:"chase", owner:ui.owner || "dione", status:"Not started", date:drawerDate || todayISO(), need:"", give:"", src:"meeting", notes:""} : doc.tasks.find(x => x.id === drawerId);
+  const t = isNew ? {id:"", title:"", who:"crystal", kind:"chase", owner:ui.owner || "dione", note:drawerNote, status:"Not started", date:drawerDate || todayISO(), need:"", give:"", src:"meeting", notes:""} : doc.tasks.find(x => x.id === drawerId);
   if (!t) { closeDrawer(); return; }
-  title.innerHTML = isNew ? `New task. <em>Who, what, when.</em>` : `${esc(phaseOf(t.date).name)}. <em>${fmt(t.date)}</em>`;
+  title.innerHTML = isNew ? (drawerNote ? `New note. <em>Something to remember.</em>` : `New task. <em>Who, what, when.</em>`) : `${esc(phaseOf(t.date).name)}. <em>${fmt(t.date)}</em>`;
   const ppl = Object.entries(doc.people).map(([id, p]) => `<option value="${id}"${id === t.who ? " selected" : ""}>${esc(p.name)}</option>`).join("");
   body.innerHTML = `<form id="editForm">
     <label class="field"><span>Item</span><input name="title" value="${esc(t.title)}" required></label>
@@ -1184,6 +1226,7 @@ function renderDrawer(){
     <div class="row2">
       <label class="field"><span>Type</span><select name="kind">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}"${k === t.kind ? " selected" : ""}>${v.label}</option>`).join("")}</select></label>
     </div>
+    <label class="toggle" style="margin-bottom:13px"><input type="checkbox" name="note"${t.note ? " checked" : ""}> 📝 This is a note (a reminder, not a deliverable)</label>
     <div class="field"><span>Status</span><div class="statrow">${STATUSES.map(s => `<button type="button" class="stat ${s.cls}" data-setstat="${esc(s.id)}" aria-pressed="${s.id === t.status}">${esc(s.id)}</button>`).join("")}</div><input type="hidden" name="status" value="${esc(t.status)}"></div>
     <div class="row2">
       <label class="field"><span>Due date</span><input type="date" name="date" value="${t.date}" required></label>
@@ -1269,7 +1312,7 @@ document.addEventListener("click", e => {
     case "grp": ui.closed[id] = !ui.closed[id]; saveUI(); renderAll(); break;
     case "status": e.stopPropagation(); openStatusPop(el, id); break;
     case "edit": if (e.target.closest("input,select,textarea")) break; openDrawer("edit", id); break;
-    case "new": { const ph = PHASES.find(p => p.id === el.dataset.phase); drawerDate = el.dataset.date ? el.dataset.date : ph ? (todayISO() >= ph.start && todayISO() <= ph.end ? todayISO() : ph.start) : todayISO(); openDrawer("new"); break; }
+    case "new": { const ph = PHASES.find(p => p.id === el.dataset.phase); drawerNote = !!el.dataset.note; drawerDate = el.dataset.date ? el.dataset.date : ph ? (todayISO() >= ph.start && todayISO() <= ph.end ? todayISO() : ph.start) : todayISO(); openDrawer("new"); break; }
     case "today": openDrawer("today"); break;
     case "close": closeDrawer(); break;
     case "fu": copy(followUp(doc.tasks.find(x => x.id === id)), "Follow-up copied. Paste into WhatsApp or Slack"); break;
@@ -1345,6 +1388,7 @@ document.addEventListener("submit", e => {
   e.preventDefault();
   const f = Object.fromEntries(new FormData(e.target));
   f.title = f.title.trim();
+  f.note = !!f.note;
   if (!f.title || !f.date) return;
   if (drawerMode === "new") { doc.tasks.push({id:newId(), ...f}); save(); closeDrawer(); renderAll(); toast(`Added to ${phaseOf(f.date).name}`); }
   else { update(drawerId, f); closeDrawer(); toast("Saved"); }
@@ -1402,12 +1446,13 @@ if (matchMedia("(hover: hover)").matches) {
 /* Keyboard shortcuts: N add task, T today, / search, 1–7 views */
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input,textarea,select,[contenteditable]")) return;
-  if (e.key === "n") { e.preventDefault(); drawerDate = todayISO(); openDrawer("new"); }
+  if (e.key === "n") { e.preventDefault(); drawerDate = todayISO(); drawerNote = false; openDrawer("new"); }
   else if (e.key === "t") openDrawer("today");
   else if (e.key === "/") { e.preventDefault(); document.getElementById("q").focus(); }
   else if (/^[1-7]$/.test(e.key)) { ui.view = VIEWS[+e.key - 1].id; saveUI(); renderAll(); }
 });
 addEventListener("scroll", closePop, {passive:true});
+let rzT; addEventListener("resize", () => { clearTimeout(rzT); rzT = setTimeout(() => { if (ui.view === "timeline") renderAll(); }, 150); });
 
 /* ---------- boot ---------- */
 applyTheme();
