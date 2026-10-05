@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nancy Projects</title>
+<meta name="description" content="Nancy project management: every event and launch, who to chase and when.">
+<link rel="icon" href="assets/nancy-cream.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ec2f8e; --pink-deep:#b8125f; --pink-soft:#ffd9ec; --black:#1f1216;
+  --ink:#1f1216; --ink-soft:#5e4b52; --muted:#8f7480;
+  --wall:#faf3e6; --wall-2:#f3e7d3; --card:#fffdf9; --row:#ffffff; --row-hover:#fff4f9;
+  --line:rgba(31,18,22,.10); --line-2:rgba(31,18,22,.2);
+  --red:#e2445c; --green:#00c875;
+  --shadow:0 18px 40px -18px rgba(31,18,22,.35); --r:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#faf3e6; --ink-soft:#d8c7cd; --muted:#a8939b;
+  --wall:#141012; --wall-2:#231b1e; --card:#1b1517; --row:#201a1c; --row-hover:#2a2124;
+  --line:rgba(250,243,230,.10); --line-2:rgba(250,243,230,.2); --pink-soft:#4a1f33;
+}}
+:root[data-theme="dark"]{
+  --ink:#faf3e6; --ink-soft:#d8c7cd; --muted:#a8939b;
+  --wall:#141012; --wall-2:#231b1e; --card:#1b1517; --row:#201a1c; --row-hover:#2a2124;
+  --line:rgba(250,243,230,.10); --line-2:rgba(250,243,230,.2); --pink-soft:#4a1f33;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,sans-serif;background:var(--wall);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;font-size:14px;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+.mini{font-size:11.5px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.shell{display:grid;grid-template-columns:224px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;background:var(--black);color:#faf3e6;display:flex;flex-direction:column;padding:18px 12px;gap:18px;overflow-y:auto}
+.side__logo{width:82px;display:block;margin:4px 8px 0}
+.side__k{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(250,243,230,.45);padding:0 10px;margin-bottom:6px}
+.side nav{display:grid;gap:2px}
+.side a,.side button{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;font-size:13.5px;color:rgba(250,243,230,.82);text-align:left;width:100%;transition:background .15s}
+.side a:hover,.side button:hover{background:rgba(250,243,230,.08);color:#fff}
+.side a.is-on{background:var(--pink);color:#fff}
+.side .sw{width:10px;height:10px;border-radius:3px;flex:none}
+.side__new{border:1px dashed rgba(250,243,230,.28)!important}
+.side__foot{margin-top:auto;font-size:11px;color:rgba(250,243,230,.4);padding:0 10px;line-height:1.5}
+
+main{padding:28px 28px 80px;max-width:1240px}
+.hero{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.hero .kicker{color:var(--pink);display:block;margin-bottom:10px}
+.hero h1{font-family:"Fraunces",serif;font-weight:300;letter-spacing:-.025em;line-height:.98;font-size:clamp(34px,5vw,60px)}
+.hero h1 em{font-style:italic;color:var(--pink)}
+.hero p{margin-top:10px;color:var(--ink-soft);max-width:60ch}
+.hero__cta{margin-left:auto;display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--line-2);background:var(--row);font-size:13.5px;white-space:nowrap;transition:transform .12s,background .15s,border-color .15s}
+.btn:hover{border-color:var(--ink-soft)}
+.btn:active{transform:scale(.96)}
+.btn--pink{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn--pink:hover{background:var(--pink-deep);border-color:var(--pink-deep)}
+.btn--black{background:var(--black);border-color:var(--black);color:#faf3e6}
+h2{font-family:"Fraunces",serif;font-weight:400;font-size:22px;margin:0 0 12px}
+h2 em{color:var(--pink)}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:30px}
+.stat{background:var(--row);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;transition:transform .18s,box-shadow .18s}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stat h4{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
+.stat b{font-family:"Fraunces",serif;font-size:40px;font-weight:350;line-height:1}
+.stat.is-red b{color:var(--red)}
+.stat.is-pink{background:var(--pink);border-color:var(--pink);color:#fff}
+.stat.is-pink h4{color:rgba(255,255,255,.85)}
+
+.projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px;margin-bottom:34px}
+.pcard{position:relative;display:flex;flex-direction:column;gap:12px;background:var(--row);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-decoration:none;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.pcard::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:var(--c)}
+.pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.pcard__k{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--c)}
+.pcard h3{font-family:"Fraunces",serif;font-weight:400;font-size:24px;line-height:1.05}
+.pcard__meta{display:flex;gap:6px;flex-wrap:wrap}
+.pcard__meta span{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--wall)}
+.pcard__meta .is-red{background:var(--red);color:#fff}
+.prog{height:8px;border-radius:999px;background:var(--wall-2);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--c);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.pcard__next{font-size:12.5px;color:var(--ink-soft);line-height:1.4;border-top:1px solid var(--line);padding-top:10px}
+.pcard__next b{color:var(--ink);font-weight:500}
+.pcard__open{margin-top:auto;font-weight:600;font-size:13px;color:var(--pink)}
+.pcard__x{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:6px;color:var(--muted);opacity:0}
+.pcard:hover .pcard__x{opacity:1}
+.pcard__x:hover{background:var(--wall);color:var(--red)}
+.pnew{display:grid;place-items:center;text-align:center;gap:8px;border:2px dashed var(--line-2);background:transparent;min-height:240px;color:var(--ink-soft)}
+.pnew:hover{border-color:var(--pink);color:var(--pink)}
+.pnew b{font-family:"Fraunces",serif;font-size:22px;font-weight:400}
+
+.work{background:var(--row);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.work__row{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);text-decoration:none}
+.work__row:last-child{border-bottom:0}
+.work__row:hover{background:var(--row-hover)}
+.work__d{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+.work__d.is-red{color:var(--red);font-weight:700}
+.work__d.is-today{color:var(--pink);font-weight:700}
+.work__t{font-size:13.5px;min-width:0}
+.work__t small{display:block;font-size:11.5px;color:var(--muted)}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;color:#fff;background:var(--c);white-space:nowrap}
+.empty{padding:18px;color:var(--muted);text-align:center}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(15,10,12,.45);z-index:70;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.is-on{opacity:1;pointer-events:auto}
+.modal{position:fixed;top:50%;left:50%;width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow-y:auto;background:var(--card);border-radius:16px;box-shadow:var(--shadow);z-index:80;padding:24px;transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:all .2s}
+.modal.is-on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
+.modal h3{font-family:"Fraunces",serif;font-weight:400;font-size:28px;margin-bottom:4px}
+.modal h3 em{color:var(--pink)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 18px}
+.steps div{background:var(--wall);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink-soft);line-height:1.4}
+.steps b{display:block;color:var(--pink);font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;margin-bottom:3px}
+.field{display:grid;gap:5px;margin-bottom:12px}
+.field>span{font-size:11px;color:var(--muted);font-family:"JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}
+.field input,.field textarea{border:1px solid var(--line-2);background:var(--row);border-radius:8px;padding:9px 11px;font-size:13.5px;width:100%}
+.field textarea{min-height:200px;resize:vertical;font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.5}
+.field input:focus,.field textarea:focus{border-color:var(--pink);outline:0}
+.row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.drop{border:2px dashed var(--line-2);border-radius:10px;padding:12px;text-align:center;font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.is-over{border-color:var(--pink);background:var(--row-hover)}
+.preview{background:var(--wall);border-radius:10px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;color:var(--ink-soft);display:none}
+.preview.is-on{display:block}
+.preview b{color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);background:var(--black);color:#faf3e6;padding:10px 16px;border-radius:9px;font-size:13px;opacity:0;transition:all .2s;z-index:100;pointer-events:none}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+.notice{background:var(--pink-soft);border-left:4px solid var(--pink);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:13px}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto;padding:10px 12px;gap:10px}
+  .side .side__k,.side .side__foot{display:none}
+  .side nav{display:flex;gap:4px}
+  .side>div{display:contents}
+  .side a,.side button{white-space:nowrap;padding:6px 10px;width:auto}
+  .side__logo{width:60px;margin:0 6px 0 0}
+  main{padding:20px 16px 60px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero__cta{margin-left:0}
+  .steps,.row3{grid-template-columns:1fr}
+  .work__row{grid-template-columns:76px minmax(0,1fr)}
+  .work__row .tag{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="side"></aside>
+  <main>
+    <div id="notice"></div>
+    <section class="hero">
+      <div>
+        <span class="kicker">Nancy · Project management</span>
+        <h1>Every launch. <em>One place to chase it.</em></h1>
+        <p>Each event is its own project. Load its details and the tasks, dates and people come in ready to chase. Run by Crystal and Dione.</p>
+      </div>
+      <div class="hero__cta"><button class="btn btn--pink" data-act="new">+ New project</button></div>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <h2>Projects. <em>What we're running.</em></h2>
+    <section class="projects" id="projects"></section>
+
+    <h2>My work. <em>Overdue, today and the next 7 days, across every project.</em></h2>
+    <section class="work" id="work"></section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <h3 id="mTitle">New project. <em>Load it and go.</em></h3>
+  <p class="mini">Paste the event brief, call notes or a context file. Task lists in JSON load exactly; plain notes load every line that has a date.</p>
+  <div class="steps">
+    <div><b>01 · DETAILS</b>Paste or drop the brief, timeline, call notes or context .md.</div>
+    <div><b>02 · TASKS</b>Best results: ask Claude to turn it into the task JSON (button below), then paste that.</div>
+    <div><b>03 · CHASE</b>Open the board: calendar, timeline, follow-ups, Today panel.</div>
+  </div>
+  <form id="newForm">
+    <div class="row3">
+      <label class="field"><span>Project name</span><input name="name" required placeholder="e.g. Cancun pop-up"></label>
+      <label class="field"><span>Starts</span><input type="date" name="start"></label>
+      <label class="field"><span>Ends</span><input type="date" name="end"></label>
+    </div>
+    <label class="drop" id="drop">Drop a .md, .txt or .json file here, or click to choose<input type="file" id="file" accept=".md,.txt,.json,text/plain,application/json" class="sr"></label>
+    <label class="field"><span>Event details</span><textarea name="details" id="details" placeholder="Paste the brief, timeline, call notes, or the task JSON…"></textarea></label>
+    <div class="preview" id="preview"></div>
+    <div class="acts">
+      <button class="btn btn--pink" type="submit">Create project</button>
+      <button class="btn" type="button" data-act="prompt">Copy prompt for Claude</button>
+      <button class="btn" type="button" data-act="close" style="margin-left:auto">Cancel</button>
+    </div>
+  </form>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- storage ---------- */
+const ls = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+const PAL = ["#ec2f8e","#1f1216","#b8125f","#5e4b52","#e0679c","#8f7480"];
+const MM = {id:"monster-mansion", name:"Monster Mansion Vol 1", color:"#ec2f8e", start:"2026-10-05", end:"2026-11-12", kicker:"Launch · Vol 1",
+  milestones:[{label:"Soft launch", date:"2026-10-21"}, {label:"Hard launch", date:"2026-10-29"}], key:"mm.board.v1", builtIn:true};
+function registry(){ return (ls.get("pm.projects") || []).filter(p => p && p.id && p.id !== MM.id); }
+function projects(){
+  return [MM, ...registry().map(p => ({...p, key:`pm.board.${p.id}`}))].map(p => ({...p, doc: ls.get(p.key)}));
+}
+
+/* ---------- dates ---------- */
+const pad = n => String(n).padStart(2, "0");
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const today = () => iso(new Date());
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+const diff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const fmtShort = s => { const d = parse(s); return `${d.getDate()} ${MON[d.getMonth()]}`; };
+const fmt = s => { const d = parse(s); return `${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`; };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const isDone = t => t.status === "Done" || t.status === "Approved";
+
+/* ---------- render ---------- */
+function renderSide(){
+  document.getElementById("side").innerHTML = `<div><a href="./" style="padding:0;background:none"><img class="side__logo" src="assets/nancy-cream.svg" alt="Nancy"></a></div>
+    <div><div class="side__k">Workspace</div><nav><a href="./" class="is-on">⌂ Home</a></nav></div>
+    <div><div class="side__k">Projects</div><nav>${projects().map(p => `<a href="board/?p=${p.id}"><i class="sw" style="background:${p.color}"></i>${esc(p.name)}</a>`).join("")}<button class="side__new" data-act="new">+ New project</button></nav></div>
+    <div class="side__foot">Nancy project management · Crystal & Dione</div>`;
+}
+function render(){
+  renderSide();
+  const t = today(), wk = addDays(t, 7);
+  const ps = projects();
+  const all = ps.flatMap(p => (p.doc?.tasks || []).filter(x => !x.note).map(x => ({...x, _p:p})));
+  const open = all.filter(x => !isDone(x));
+  const over = open.filter(x => x.date < t), due = open.filter(x => x.date === t), next = open.filter(x => x.date > t && x.date <= wk);
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><h4>Active projects</h4><b>${ps.length}</b></div>
+    <div class="stat${over.length ? " is-red" : ""}"><h4>Overdue</h4><b>${over.length}</b></div>
+    <div class="stat is-pink"><h4>Due today</h4><b>${due.length}</b></div>
+    <div class="stat"><h4>Next 7 days</h4><b>${next.length}</b></div>`;
+
+  document.getElementById("projects").innerHTML = ps.map(p => {
+    const tasks = (p.doc?.tasks || []).filter(x => !x.note);
+    const done = tasks.filter(isDone).length, pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+    const o = tasks.filter(x => !isDone(x) && x.date < t).length;
+    const cfg = p.builtIn ? p : (p.doc?.config || p);
+    const ms = (cfg.milestones || []).filter(m => m.date >= t).sort((a, b) => a.date.localeCompare(b.date))[0];
+    const nx = tasks.filter(x => !isDone(x) && x.date >= t).sort((a, b) => a.date.localeCompare(b.date))[0];
+    const start = cfg.start || p.start, end = cfg.end || p.end;
+    return `<a class="pcard" href="board/?p=${p.id}" style="--c:${p.color}">
+      ${p.builtIn ? "" : `<button class="pcard__x" data-act="del" data-id="${p.id}" title="Delete project" aria-label="Delete ${esc(p.name)}">✕</button>`}
+      <span class="pcard__k">${esc(p.kicker || "Project")}${start && end ? ` · ${fmtShort(start)} – ${fmtShort(end)}` : ""}</span>
+      <h3>${esc(p.name)}</h3>
+      ${p.doc ? `<div class="pcard__meta"><span>${tasks.length - done} open</span>${o ? `<span class="is-red">${o} overdue</span>` : ""}<span>${done} done</span><span>${pct}%</span></div>
+      <div class="prog"><i style="width:${pct}%"></i></div>` : `<div class="pcard__meta"><span>Open the board once to load its tasks here</span></div>`}
+      <div class="pcard__next">${ms ? `<b>${esc(ms.label)}</b> in ${diff(t, ms.date)} days · ${fmt(ms.date)}<br>` : ""}${nx ? `Next: ${esc(nx.title)} · ${fmtShort(nx.date)}` : p.doc ? "Nothing coming up." : ""}</div>
+      <span class="pcard__open">Open board →</span>
+    </a>`;
+  }).join("") + `<button class="pcard pnew" data-act="new"><div><b>+ New project</b><div class="mini">Load the event details, tasks preload</div></div></button>`;
+
+  const list = [...over, ...due, ...next].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 25);
+  document.getElementById("work").innerHTML = list.map(x => `<a class="work__row" href="board/?p=${x._p.id}">
+      <span class="work__d${x.date < t ? " is-red" : x.date === t ? " is-today" : ""}">${x.date < t ? diff(x.date, t) + "d late" : x.date === t ? "Today" : fmtShort(x.date)}</span>
+      <span class="work__t">${esc(x.title)}<small>${esc((x._p.doc?.people?.[x.who]?.name) || x.who || "")}${x.status ? " · " + esc(x.status) : ""}</small></span>
+      <span class="tag" style="--c:${x._p.color}">${esc(x._p.name)}</span></a>`).join("") || `<div class="empty">Nothing due. Open a board, or start a new project.</div>`;
+}
+
+/* ---------- loading event details ---------- */
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 32) || "project";
+const MONTHS = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11};
+function findDate(line, year){
+  let m = line.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/);
+  if (m) return {date:`${m[1]}-${m[2]}-${m[3]}`, raw:m[0]};
+  m = line.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sept?|oct|nov|dec)[a-z]*\.?(?:,?\s+(20\d\d))?/i);
+  if (m) return {date:iso(new Date(+(m[3] || year), MONTHS[m[2].toLowerCase()], +m[1])), raw:m[0]};
+  m = line.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sept?|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s+(20\d\d))?/i);
+  if (m) return {date:iso(new Date(+(m[3] || year), MONTHS[m[1].toLowerCase()], +m[2])), raw:m[0]};
+  return null;
+}
+function guessKind(s){
+  if (/approv|sign[- ]?off|go\s*\/\s*no|confirm|decide|lock/i.test(s)) return "approve";
+  if (/follow up|chase|get .* from|waiting|ask /i.test(s)) return "chase";
+  if (/\bsend|share|brief\b/i.test(s)) return "send";
+  if (/live|launch|post|announce|reveal|drop|sends|goes out|opens/i.test(s)) return "post";
+  return "do";
+}
+function parseDetails(text, year){
+  const blocks = [...text.matchAll(/```(?:json)?\s*([\s\S]*?)```/g)].map(m => m[1]);
+  for (const b of [text.trim(), ...blocks]) {
+    try { const j = JSON.parse(b); if (j && Array.isArray(j.tasks)) return {json:j}; } catch {}
+  }
+  const tasks = [], keyDays = {};
+  text.split(/\r?\n/).forEach((line, i) => {
+    const f = findDate(line, year); if (!f) return;
+    let title = line.replace(f.raw, " ").replace(/^[\s>*#\-|•\d.]+/, "").replace(/\|/g, " · ").replace(/\*\*/g, "").replace(/\s*·\s*·\s*/g, " · ").replace(/^[\s·:,–-]+|[\s·:,–-]+$/g, "").replace(/\s{2,}/g, " ").trim();
+    if (title.length < 3) return;
+    if (title.length > 160) title = title.slice(0, 157) + "…";
+    tasks.push({id:"t" + i, date:f.date, kind:guessKind(title), who:"me", title, src:"meeting"});
+    if (/launch|deadline|lock|reveal|event day|d-day|decide/i.test(title) && !keyDays[f.date]) keyDays[f.date] = title.split(/[·:,(]/)[0].trim().slice(0, 24);
+  });
+  return {json:{tasks, keyDays, people:{}}, loose:true};
+}
+function buildDoc(name, start, end, text){
+  const year = (start || today()).slice(0, 4);
+  const {json, loose} = parseDetails(text || "", year);
+  const people = {me:{name:"Dione", role:"Dione's own tasks."}, crystal:{name:"Crystal", role:"Creative director."}, ...(json.people || {})};
+  const tasks = (json.tasks || []).filter(t => t && t.title && t.date).map((t, i) => ({
+    status:"Not started", need:"", give:"", notes:"", src:"meeting", kind:"do", who:"me", ...t,
+    id:String(t.id || "t" + i), owner:t.owner || (t.who === "crystal" && t.kind === "approve" ? "crystal" : "dione"),
+  }));
+  tasks.forEach(t => { if (!people[t.who]) people[t.who] = {name:String(t.who).replace(/[-_]/g, " ").replace(/\b\w/g, c => c.toUpperCase()), role:""}; });
+  const cfg = {owners:{dione:"Dione", crystal:"Crystal"}, ...(json.project || {}), name};
+  if (start) cfg.start = start;
+  if (end) cfg.end = end;
+  if (!cfg.milestones && json.keyDays) cfg.milestones = Object.entries(json.keyDays).sort().slice(-2).map(([date, label]) => ({label, date}));
+  return {doc:{v:1, updatedAt:Date.now(), config:cfg, people, tasks, keyDays:json.keyDays || {}, flags:{}}, loose};
+}
+function updatePreview(){
+  const f = document.getElementById("newForm");
+  const txt = f.details.value;
+  const el = document.getElementById("preview");
+  if (!txt.trim()) { el.classList.remove("is-on"); return; }
+  const {doc, loose} = buildDoc(f.name.value || "Project", f.start.value, f.end.value, txt);
+  const dates = doc.tasks.map(t => t.date).sort();
+  el.classList.add("is-on");
+  el.innerHTML = doc.tasks.length
+    ? `<b>${doc.tasks.length} tasks</b> will load${dates.length ? `, ${fmtShort(dates[0])} – ${fmtShort(dates[dates.length - 1])}` : ""}${loose ? " (read from lines with dates; for owners, notes and what's needed both ways, use the Claude prompt)" : " from the task JSON"}. ${Object.keys(doc.keyDays).length} key days, ${Object.keys(doc.people).length} people.`
+    : `No dated lines or task JSON found yet. Use <b>Copy prompt for Claude</b>, paste its answer here.`;
+}
+const PROMPT = `Turn the event details below into a project board JSON for Nancy's project manager. Owners are only Crystal ("crystal") and Dione ("dione"); everyone else is someone we coordinate with. Reply with one JSON code block only, in this shape:
+
+{
+  "project": {
+    "name": "Event name",
+    "short": "Short name",
+    "kicker": "Nancy · Event type",
+    "h1": ["First half of a headline.", "Italic second half."],
+    "sub": "One sentence on what this board is for.",
+    "start": "YYYY-MM-DD", "end": "YYYY-MM-DD",
+    "phases": [{"name": "Prep", "em": "short line", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}],
+    "milestones": [{"label": "Event day", "date": "YYYY-MM-DD", "note": "Sat 14 Nov · 7pm"}],
+    "flags": [{"id": "f1", "k": "Budget", "t": "Short flag", "d": "What to raise and why"}],
+    "flagsTitle": "Raise with Crystal.",
+    "links": [{"label": "Brief", "url": "https://..."}]
+  },
+  "people": {"crystal": {"name": "Crystal", "role": "..."}, "me": {"name": "Dione", "role": "..."}, "vendor": {"name": "...", "role": "..."}},
+  "tasks": [
+    {"id": "t1", "date": "YYYY-MM-DD", "kind": "chase|send|approve|post|do", "who": "person id", "owner": "dione|crystal",
+     "title": "Specific action", "need": "What Dione needs from them", "give": "What they need from Dione",
+     "src": "meeting|site|suggested", "note": false}
+  ],
+  "keyDays": {"YYYY-MM-DD": "Label"}
+}
+
+Rules: kind chase = we need something from them, send = they need something from us, approve = approval gate, post = goes live, do = own task. Use note: true for reminders that aren't deliverables. Only include tasks for this event. Order each step after what it depends on; mark buffer dates you propose with src "suggested". Be as specific as the details allow.
+
+EVENT DETAILS:
+`;
+
+/* ---------- events ---------- */
+function toast(msg){ const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("is-on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("is-on"), 2400); }
+async function copy(text, msg){ try { await navigator.clipboard.writeText(text); } catch { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch {} ta.remove(); } toast(msg); }
+function openModal(){ document.getElementById("modal").classList.add("is-on"); document.getElementById("scrim").classList.add("is-on"); setTimeout(() => document.querySelector("#newForm [name=name]").focus(), 50); }
+function closeModal(){ document.getElementById("modal").classList.remove("is-on"); document.getElementById("scrim").classList.remove("is-on"); }
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const {act, id} = el.dataset;
+  if (act === "new") { e.preventDefault(); openModal(); }
+  if (act === "close") closeModal();
+  if (act === "prompt") copy(PROMPT + document.getElementById("details").value, "Prompt copied. Paste it into Claude, then paste the JSON it gives back here");
+  if (act === "del") {
+    e.preventDefault(); e.stopPropagation();
+    const p = registry().find(x => x.id === id);
+    if (p && confirm(`Delete "${p.name}" and its tasks from this browser? Export it from its board first if you want a copy.`)) {
+      ls.set("pm.projects", registry().filter(x => x.id !== id)); ls.del(`pm.board.${id}`); ls.del(`pm.ui.${id}`); render(); toast("Project deleted");
+    }
+  }
+});
+document.getElementById("scrim").addEventListener("click", closeModal);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+const form = document.getElementById("newForm");
+form.addEventListener("input", updatePreview);
+function loadFile(file){
+  file.text().then(txt => {
+    form.details.value = txt;
+    if (!form.name.value) { const h = txt.match(/^#\s+(.+)$/m); form.name.value = (h ? h[1] : file.name.replace(/\.[^.]+$/, "")).replace(/[—–-].*context.*$/i, "").trim().slice(0, 60); }
+    updatePreview(); toast(`Loaded ${file.name}`);
+  });
+}
+document.getElementById("file").addEventListener("change", e => { if (e.target.files[0]) loadFile(e.target.files[0]); e.target.value = ""; });
+const drop = document.getElementById("drop");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("is-over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("is-over"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("is-over"); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const name = form.name.value.trim(); if (!name) return;
+  const {doc} = buildDoc(name, form.start.value, form.end.value, form.details.value);
+  const id = `${slug(name)}-${Math.random().toString(36).slice(2, 6)}`;
+  const color = PAL[(registry().length + 1) % PAL.length];
+  const dates = doc.tasks.map(t => t.date).sort();
+  const okDoc = ls.set(`pm.board.${id}`, doc);
+  const okReg = ls.set("pm.projects", [...registry(), {id, name, color, kicker:doc.config.kicker || "Project", start:doc.config.start || dates[0] || "", end:doc.config.end || dates[dates.length - 1] || ""}]);
+  if (!okDoc || !okReg) { toast("Couldn't save in this browser (storage blocked)"); return; }
+  location.href = `board/?p=${id}`;
+});
+
+/* ---------- boot ---------- */
+const q = new URLSearchParams(location.search);
+if (q.get("missing")) document.getElementById("notice").innerHTML = `<div class="notice">That project isn't saved in this browser. Projects live on the device they were made on until shared sync is switched on.</div>`;
+render();
+if (q.get("new")) openModal();
+addEventListener("storage", render);
+</script>
+</body>
+</html>
