@@ -12,5 +12,15 @@
         }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/alerts?kind=daily",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/alerts?kind=weekly",
+      "schedule": "30 0 * * 1"
+    }
   ]
 }

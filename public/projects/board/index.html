@@ -326,11 +326,11 @@ select.pri{height:24px;border-radius:6px;font-size:11.5px}
 .tl__day{text-align:center;font-size:10px;color:var(--muted);padding:4px 0;border-left:1px solid var(--line);line-height:1.2}
 .tl__day b{display:block;font-size:12px;color:var(--ink);font-weight:500}
 .tl__day.is-we{background:rgba(236,47,142,.05)}
-.tl__day.is-key b{color:var(--pink)}
+.tl__day.is-key b{color:#00a862}
 .tl__month{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 8px;color:var(--ink-soft)}
 .tl__bar{position:absolute;top:7px;bottom:7px;border-radius:6px;color:#fff;font-size:11.5px;font-weight:500;padding:0 8px;display:flex;align-items:center;white-space:nowrap;overflow:hidden}
-.tl__key{position:absolute;top:6px;transform:translateX(-50%);font-size:10.5px;font-weight:600;color:var(--pink);white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:2px}
-.tl__key::after{content:"";width:9px;height:9px;background:var(--pink);transform:rotate(45deg);border-radius:1px}
+.tl__key{position:absolute;top:6px;transform:translateX(-50%);font-size:10.5px;font-weight:600;color:#00a862;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tl__key::after{content:"";width:9px;height:9px;background:#00c875;transform:rotate(45deg);border-radius:1px}
 .tl__now{position:absolute;top:0;bottom:0;width:2px;background:var(--st-stuck);z-index:2;pointer-events:none}
 .tl__now.lab::before{content:"Today";position:absolute;top:2px;left:4px;font-size:9.5px;font-weight:600;color:var(--st-stuck);font-family:"JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
 .tl__grid{position:absolute;inset:0;display:grid;pointer-events:none}
@@ -431,7 +431,7 @@ select.pri{height:24px;border-radius:6px;font-size:11.5px}
 .cal__add:hover{background:var(--pink);color:#fff}
 @media (hover:none){.cal__add{opacity:1}}
 .cal__d.is-today .cal__n b{background:var(--st-stuck);color:#fff;border-radius:999px;padding:0 6px}
-.cal__key{font-size:9.5px;font-family:"JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--pink);font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cal__key{font-size:9.5px;font-family:"JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#00c875;border-radius:4px;padding:1px 5px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cal__it{font-size:11px;line-height:1.3;padding:4px 6px;border-radius:6px;background:color-mix(in srgb,var(--kc) 16%,var(--row));border-left:3px solid var(--kc);cursor:grab;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;transition:transform .15s,box-shadow .15s}
 .cal__it:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 6px 14px -6px color-mix(in srgb,var(--kc) 70%,transparent)}
 .cal__it.is-post{background:color-mix(in srgb,var(--pink) 22%,var(--row))}
@@ -464,6 +464,30 @@ select.pri{height:24px;border-radius:6px;font-size:11.5px}
 .ppl{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:14px}
 .pc{background:var(--row);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
 .pc__h{display:flex;gap:10px;align-items:center}
+.dd-head h3{font-weight:400;font-size:22px}
+.dd-head h3 em{color:#00a862}
+.dd-head p{margin:4px 0 14px;max-width:70ch}
+.dd-add{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.dd-add input,.dd-add select{height:36px;border:1px solid var(--line-2);border-radius:8px;background:var(--row);padding:0 10px}
+.dd-add input[name=label]{flex:1;min-width:200px}
+.dd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:12px}
+.dd{background:var(--row);border:1px solid var(--line);border-top:5px solid #00c875;border-radius:var(--r);padding:14px;display:grid;gap:8px;transition:transform .18s,box-shadow .18s}
+.dd:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.dd.is-today{background:linear-gradient(135deg,#00c875,#2bd99a);color:#fff;border-color:transparent}
+.dd.is-late{border-top-color:#e2445c}
+.dd.is-done{opacity:.55}
+.dd__n{font-family:"Fraunces",serif;font-size:44px;line-height:1;font-weight:350;color:#00a862}
+.dd.is-late .dd__n{color:#e2445c;font-size:30px}
+.dd.is-today .dd__n{color:#fff}
+.dd__n small{font-family:"Inter",sans-serif;font-size:13px;color:var(--muted);margin-left:4px}
+.dd__label{font-family:"Fraunces",serif;font-size:19px;border:1px solid transparent;border-radius:6px;padding:3px 5px;margin:0 -5px;background:transparent}
+.dd__label:hover{border-color:var(--line-2)}
+.dd__label:focus{border-color:#00c875;outline:0;background:var(--card)}
+.dd__row{display:flex;gap:6px;align-items:center}
+.dd__row input,.dd__row select{height:28px;border:1px solid var(--line-2);border-radius:6px;background:var(--card);padding:0 6px;font-size:12px}
+.pc--add{border:2px dashed var(--line-2);background:transparent;text-align:left;justify-content:center;cursor:pointer;color:var(--ink-soft)}
+.pc--add:hover{border-color:var(--pink);color:var(--pink)}
+.pc--add b{font-family:"Fraunces",serif;font-weight:400;font-size:20px}
 .pc__h .av{width:38px;height:38px;font-size:13px}
 .pc__h b{font-size:15px;font-weight:600;display:block}
 .pc__h small{font-size:12px;color:var(--muted);line-height:1.35;display:block}
@@ -622,7 +646,7 @@ footer a{color:var(--ink-soft)}
     <details class="menu" id="dataMenu">
       <summary class="btn" aria-label="More">⋯</summary>
       <div class="menu__pop">
-        <button data-act="ics">📅 Add to calendar (.ics)</button>
+        <button data-act="ics">📅 D-days to calendar (.ics)</button>
         <button data-act="digest">Copy daily digest</button>
         <button data-act="notify">Turn on browser reminders</button>
         <hr>
@@ -715,7 +739,14 @@ const LAUNCH_ADDS = [
   {id:"m6", date:"2026-10-12", kind:"send", who:"creators", owner:"dione", title:"Reach creators, with the time they should be posting", give:"Exact post time per creator in the 29 Oct 9pm ET – 1 Nov window (their local time too)", need:"Confirmation of their slot", src:"meeting"},
 ];
 
-const ownerAv = o => `<span class="av" style="background:${o === "crystal" ? avColor("crystal") : "#1f1216"}">${o === "crystal" ? "CR" : "DI"}</span>`;
+const OWNER_PAL = ["#1f1216","#ec2f8e","#6b3f9e","#b8125f","#0e7490","#c2410c","#15803d"];
+function ownerAv(o){
+  if (o === "all") return `<span class="av" style="background:linear-gradient(135deg,#ec2f8e,#1f1216)" title="Everyone">ALL</span>`;
+  const keys = Object.keys(OWNERS), name = OWNERS[o] || o || "?";
+  const c = o === "crystal" ? "#ec2f8e" : o === "dione" ? "#1f1216" : OWNER_PAL[keys.indexOf(o) % OWNER_PAL.length];
+  return `<span class="av" style="background:${c}" title="${esc(name)}">${esc(name.slice(0, 2).toUpperCase())}</span>`;
+}
+const ownedBy = (t, o) => !o || t.owner === o || t.owner === "all";
 function defaultOwner(t){ return (t.who === "crystal" && (t.kind === "approve" || t.kind === "post")) || ["a4","r5"].includes(t.id) ? "crystal" : "dione"; }
 /* Priority: P1 = launch-critical (key days, go-lives, gates the launch depends on),
    P2 = has an outside dependency or goes public, P3 = everything else. */
@@ -725,9 +756,12 @@ const PRIORITIES = {
   p3:{label:"P3 · Normal", short:"P3", c:"#579bfc"},
 };
 const P1_RE = /prio ·|soft launch|hard launch|go \/ no-go|prize value|reveal|winners announced|^decide|giveaway mechanic|handle and the|handle and hellonancy|medusa teaser|run of show|museum grid|event day/i;
+/* P1 = launch days: whatever goes live on a launch day (tease, soft/hard launch, event day, drop). */
+const LAUNCH_RE = /launch|tease|drop|event|reveal|d-day|opening|premiere/i;
+const isLaunchDay = d => LAUNCH_RE.test(doc.keyDays[d] || "") || (CFG.milestones || []).some(m => m.date === d);
 function autoPriority(t){
   if (t.note) return "p3";
-  if (P1_RE.test(t.title) || (t.kind === "post" && doc.keyDays[t.date]) || (t.kind === "approve" && doc.keyDays[t.date])) return "p1";
+  if (P1_RE.test(t.title) || (t.kind === "post" && isLaunchDay(t.date))) return "p1";
   if (t.kind === "approve" || t.kind === "post" || (t.kind === "chase" && t.who !== "me") || t.kind === "send") return "p2";
   return "p3";
 }
@@ -767,6 +801,7 @@ const MM_POSTS = [
 const AV_COLORS = ["#ec2f8e","#6b3f9e","#2b2f9e","#b8125f","#579bfc","#037f4c","#f2a01e","#e0679c","#0e7490","#e5542b","#4a2a86","#d62976","#15803d","#16206b","#c2410c"];
 const ALL_VIEWS = [
   {id:"calendar", label:"Calendar"},
+  {id:"ddays", label:"🎯 D-days"},
   {id:"table", label:"Table"},
   {id:"timeline", label:"Timeline"},
   {id:"kanban", label:"Kanban"},
@@ -923,10 +958,26 @@ function buildCfg(c, tasks){
 }
 const CFG = MM ? MM_CFG : buildCfg(doc.config, doc.tasks);
 const PHASES = CFG.phases, CAMP_START = CFG.start, CAMP_END = CFG.end;
-const FLAGS = CFG.flags, POSTS = CFG.posts || null, POST_DAYS = CFG.postDays, OWNERS = CFG.owners;
+/* Owners (handlers) live on the board so people can be added with a role; emails are kept server-side only. */
+if (!doc.owners) doc.owners = Object.fromEntries(Object.entries(CFG.owners).map(([k, n]) => [k, {name:n, role:(CFG.ownerRoles || {})[k] || ""}]));
+/* D-days = the days we're aiming for (day of the drop, launch day, event day). */
+if (!Array.isArray(doc.ddays)) doc.ddays = Object.entries(doc.keyDays || {}).sort().map(([date, label], i) => ({id:"d" + i, date, label, owner:"all", done:false}));
+function syncKeyDays(){
+  const k = {};
+  doc.ddays.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(d => { k[d.date] = k[d.date] ? k[d.date] + " · " + d.label : d.label; });
+  doc.keyDays = k;
+}
+syncKeyDays();
+const OWNERS = Object.fromEntries(Object.entries(doc.owners).map(([k, v]) => [k, v.name]));
+const OWNER_ROLES = Object.fromEntries(Object.entries(doc.owners).map(([k, v]) => [k, v.role || ""]));
+const OWNER_LABEL = o => o === "all" ? "Everyone" : (OWNERS[o] || "—");
+const FLAGS = CFG.flags, POSTS = CFG.posts || null, POST_DAYS = CFG.postDays;
 const VIEWS = ALL_VIEWS.filter(v => v.id !== "posts" || POSTS);
-doc.tasks.forEach(t => { if (!OWNERS[t.owner]) t.owner = Object.keys(OWNERS)[0]; });
-if (doc.priV !== 2) { doc.tasks.forEach(t => { t.priority = autoPriority(t); }); doc.priV = 2; }
+doc.tasks.forEach(t => { if (!OWNERS[t.owner] && t.owner !== "all") t.owner = Object.keys(OWNERS)[0]; });
+if ((doc.priV || 0) < 4) {
+  doc.tasks.forEach(t => { t.priority = autoPriority(t); if (t.owner === "all") t.owner = MM ? defaultOwner(t) : Object.keys(OWNERS)[0]; });
+  doc.priV = 4;
+}
 doc.tasks.forEach(t => { if (!t.priority) t.priority = autoPriority(t); });
 ls.set(LS, doc); // keep the stored copy current (migrations, owners) so the Projects home can read it
 let ui = Object.assign({view:"calendar", showDone:true, closed:{done:true}, q:"", owner:"", person:"", type:"", status:"", pri:"", theme:""}, ls.get(LS_UI) || {});
@@ -1024,7 +1075,7 @@ function filtered({ignoreDone = false} = {}){
   const q = ui.q.trim().toLowerCase();
   return doc.tasks.filter(t => {
     if (!ignoreDone && !ui.showDone && isDone(t)) return false;
-    if (ui.owner && t.owner !== ui.owner) return false;
+    if (ui.owner && !ownedBy(t, ui.owner)) return false;
     if (ui.person && t.who !== ui.person) return false;
     if (ui.type === "note") { if (!isNote(t)) return false; }
     else if (ui.type === "task") { if (isNote(t)) return false; }
@@ -1145,7 +1196,7 @@ function renderTabs(){
 function renderOwnerSeg(){
   const seg = document.getElementById("ownerSeg");
   if (Object.keys(OWNERS).length < 2) { seg.style.display = "none"; return; }
-  seg.innerHTML = [["", "Both"], ...Object.entries(OWNERS)].map(([k, l]) => `<button data-act="owner" data-id="${k}" aria-pressed="${ui.owner === k}">${l}</button>`).join("");
+  seg.innerHTML = [["", Object.keys(OWNERS).length > 2 ? "All" : "Both"], ...Object.entries(OWNERS)].map(([k, l]) => `<button data-act="owner" data-id="${k}" aria-pressed="${ui.owner === k}">${l}</button>`).join("");
 }
 function renderFilters(){
   const ppl = Object.entries(doc.people);
@@ -1172,7 +1223,7 @@ function renderFlags(){
 }
 function todayBuckets(){
   const t = todayISO(), wk = addDays(t, 7);
-  const open = doc.tasks.filter(x => !isDone(x) && !isNote(x) && (!ui.owner || x.owner === ui.owner)).sort(byDate);
+  const open = doc.tasks.filter(x => !isDone(x) && !isNote(x) && ownedBy(x, ui.owner)).sort(byDate);
   return {
     over: open.filter(x => x.date < t),
     today: open.filter(x => x.date === t),
@@ -1192,8 +1243,8 @@ function rowHTML(t, color){
   return `<div class="tr row${isDone(t) ? " is-complete" : ""}${isNote(t) ? " is-note" : ""}" data-id="${t.id}" style="--c:${color}">
     <div class="strip"></div>
     <div class="c-title"><textarea class="in-title" rows="1" data-f="title" data-id="${t.id}" aria-label="Item">${esc(t.title)}</textarea><span class="row-acts"><button class="fu" data-act="edit" data-id="${t.id}" title="Edit task">✎ Edit</button><button class="fu fu--del" data-act="del" data-id="${t.id}" title="Remove task" aria-label="Remove task">✕</button></span></div>
-    <div class="c-owner"><label class="who" title="Handled by">${ownerAv(t.owner)}<span>${OWNERS[t.owner] || "—"}</span>
-      <select data-f="owner" data-id="${t.id}" aria-label="Owner">${Object.entries(OWNERS).map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${v}</option>`).join("")}</select></label></div>
+    <div class="c-owner"><label class="who" title="Handled by">${ownerAv(t.owner)}<span>${esc(OWNER_LABEL(t.owner))}</span>
+      <select data-f="owner" data-id="${t.id}" aria-label="Owner">${[...Object.entries(OWNERS), ["all", "Everyone"]].map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${esc(v)}</option>`).join("")}</select></label></div>
     <div class="c-person"><label class="who" title="${esc(p.role)}">${av(t.who)}<span>${esc(p.name)}</span>
       <select data-f="who" data-id="${t.id}" aria-label="Person">${Object.entries(doc.people).map(([id, x]) => `<option value="${id}"${id === t.who ? " selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label></div>
     <div class="c-pri"><select class="sel-pill pri pri-${priOf(t)}" data-f="priority" data-id="${t.id}" aria-label="Priority">${Object.entries(PRIORITIES).map(([k, v]) => `<option value="${k}"${k === priOf(t) ? " selected" : ""}>${v.short}</option>`).join("")}</select></div>
@@ -1274,7 +1325,7 @@ function viewTimeline(){
   <div class="tl-wrap gt-wrap"><div class="gt">
     <div class="gt__head"><div class="gt__lab"><b>${esc(CFG.short)}</b><span class="mini">${fmtShort(CAMP_START)} – ${fmtShort(CAMP_END)}</span></div><div class="gt__track"><div class="tl__months">${monthsHtml}</div><div class="tl__days" style="${cols}">${dayHead}</div></div></div>
     <div class="gt__fixed"><div class="gt__lab">Phases</div><div class="gt__track">${grid}${phaseBars}</div></div>
-    ${Object.keys(doc.keyDays).length ? `<div class="gt__fixed" style="min-height:58px"><div class="gt__lab">Key days</div><div class="gt__track">${grid}${keys}</div></div>` : ""}
+    ${Object.keys(doc.keyDays).length ? `<div class="gt__fixed" style="min-height:58px"><div class="gt__lab">🎯 D-days</div><div class="gt__track">${grid}${keys}</div></div>` : ""}
     ${rows || `<div class="empty">No tasks match the filters.</div>`}
     ${showNow ? `<div class="gt__now" style="--p:${mid(t) / 100}"><span>Today</span></div>` : ""}
   </div></div>`;
@@ -1299,7 +1350,7 @@ function viewCalendar(){
         const ph = inCamp ? phaseOf(s) : null;
         return `<div ${out ? "" : `data-dropdate="${s}"`} class="cal__d${out ? " is-out" : ""}${s === t ? " is-today" : ""}${inCamp && !out ? " is-camp" : ""}" style="${ph ? `--pc:${ph.c}` : ""}">
           <div class="cal__n">${out ? `<b>${d.getDate()}</b>` : `<button class="cal__num" data-act="day" data-date="${s}" title="Open ${fmt(s)}"><b>${d.getDate()}</b></button>`}${out ? "" : `<button class="cal__add" data-act="new" data-date="${s}" title="Add task on ${fmt(s)}" aria-label="Add task on ${fmt(s)}">+</button>`}</div>
-          ${doc.keyDays[s] && !out ? `<div class="cal__key">◆ ${esc(doc.keyDays[s])}</div>` : ""}
+          ${doc.keyDays[s] && !out ? `<div class="cal__key" title="D-day">🎯 ${esc(doc.keyDays[s])}</div>` : ""}
           ${POST_DAYS[s] && !out ? `<div class="cal__post" data-peekpost="${s}">📣 ${esc(POST_DAYS[s].n)} post${POST_DAYS[s].n === "1" ? "" : "s"}</div>` : ""}
           ${out ? "" : items.map(x => `<div class="cal__it pri-${priOf(x)}-it${isNote(x) ? " is-note" : ""}${x.kind === "post" ? " is-post" : ""}${isDone(x) ? " is-complete" : ""}" style="--kc:${KINDS[x.kind]?.dot}" draggable="true" data-drag="${x.id}" data-act="edit" data-id="${x.id}" data-preview="${x.id}">${isNote(x) ? "📝 " : `<button class="cal__st ${stCls(x.status)}" data-act="status" data-id="${x.id}" aria-label="Status: ${esc(x.status)}"></button>`}${esc(x.title)}</div>`).join("")}
         </div>`;
@@ -1313,6 +1364,22 @@ function viewCalendar(){
       } return out.join(""); })()}</div>`;
 }
 
+function viewDdays(){
+  const t = todayISO();
+  const list = doc.ddays.filter(d => ownedBy(d, ui.owner) && (ui.showDone || !d.done)).sort((a, b) => a.date.localeCompare(b.date));
+  const ownerOpts = sel => [...Object.entries(OWNERS), ["all", "Everyone"]].map(([k, v]) => `<option value="${k}"${k === sel ? " selected" : ""}>${esc(v)}</option>`).join("");
+  return `<div class="dd-head"><h3 class="serif">D-days. <em>The days we're aiming for.</em></h3>
+      <p class="mini">Day of the drop, launch day, event day. These are the only things that go on calendars, each on its owner's calendar, with reminders 3 days and 1 day before. Overdue D-days are emailed to their owner.</p></div>
+    <form class="dd-add" id="ddAdd"><input name="label" placeholder="e.g. Day of the drop" required aria-label="D-day name"><input type="date" name="date" required value="${t}" aria-label="Date"><select name="owner" aria-label="Owner">${ownerOpts("all")}</select><button class="btn btn--pink" type="submit">+ Add D-day</button></form>
+    <div class="dd-grid">${list.map(d => { const n = diff(t, d.date), late = !d.done && n < 0;
+      return `<div class="dd${d.done ? " is-done" : ""}${late ? " is-late" : ""}${n === 0 ? " is-today" : ""}">
+        <div class="dd__n">${d.done ? "✓" : n === 0 ? "Today" : late ? `${-n}d late` : n}<small>${!d.done && n > 0 ? (n === 1 ? "day" : "days") : ""}</small></div>
+        <input class="dd__label" value="${esc(d.label)}" data-dd="label" data-id="${d.id}" aria-label="D-day name">
+        <div class="dd__row"><input type="date" value="${d.date}" data-dd="date" data-id="${d.id}" aria-label="Date"><select data-dd="owner" data-id="${d.id}" aria-label="Owner">${ownerOpts(d.owner)}</select></div>
+        <div class="dd__row"><span class="mini">${fmt(d.date)}${POST_DAYS[d.date] ? " · 📣 " + esc(POST_DAYS[d.date].n) : ""}</span><span style="margin-left:auto;display:flex;gap:4px"><button class="btn btn--sm" data-act="ddDone" data-id="${d.id}">${d.done ? "↺ Reopen" : "✓ Done"}</button><button class="btn btn--sm" data-act="ddDel" data-id="${d.id}" aria-label="Remove D-day">✕</button></span></div>
+      </div>`; }).join("") || `<div class="empty">No D-days yet. Add the days you're aiming for.</div>`}</div>
+    <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">${Object.entries(OWNERS).map(([k, v]) => `<button class="btn" data-act="icsOwner" data-id="${k}">📅 ${esc(v)}'s D-days (.ics)</button><button class="btn" data-act="subOwner" data-id="${k}">🔗 ${esc(v)}'s live calendar link</button>`).join("")}</div>`;
+}
 function viewKanban(){
   const list = filtered();
   return `<div class="kb">${STATUSES.filter(s => ui.showDone || !["Done","Approved"].includes(s.id)).map(s => {
@@ -1332,11 +1399,11 @@ function viewPeople(){
   const t = todayISO();
   const order = ["crystal", ...Object.keys(doc.people).filter(k => k !== "crystal" && k !== "me")];
   const ownerCards = Object.entries(OWNERS).map(([o, name]) => {
-    const all = doc.tasks.filter(x => x.owner === o), open = all.filter(x => !isDone(x)), over = open.filter(isOver);
-    return `<div class="pc" style="border-top:4px solid ${o === "crystal" ? "var(--pink)" : "var(--black)"}"><div class="pc__h">${ownerAv(o)}<div><b>${name}</b><small>${esc(CFG.ownerRoles[o] || "")}</small></div></div>
-      <div class="pc__stats"><span>${open.length} open</span>${over.length ? `<span class="is-red">${over.length} overdue</span>` : ""}<span>${open.filter(x => x.date === t).length} today</span><span>${all.length - open.length} done</span></div>
-      <div><button class="btn btn--sm" data-act="owner" data-id="${o}">Show only ${name}'s tasks</button></div></div>`;
-  }).join("");
+    const all = doc.tasks.filter(x => ownedBy(x, o)), open = all.filter(x => !isDone(x) && !isNote(x)), over = open.filter(isOver);
+    return `<div class="pc" style="border-top:4px solid ${o === "crystal" ? "var(--pink)" : "var(--black)"}"><div class="pc__h">${ownerAv(o)}<div><b>${esc(name)}</b><small>${esc(OWNER_ROLES[o] || "No role yet")}</small></div></div>
+      <div class="pc__stats"><span>${open.length} open</span>${over.length ? `<span class="is-red">${over.length} overdue</span>` : ""}<span>${open.filter(x => x.date === t).length} today</span><span>${open.filter(x => priOf(x) === "p1").length} critical</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn--sm" data-act="owner" data-id="${o}">Only ${esc(name)}'s tasks</button><button class="btn btn--sm" data-act="icsOwner" data-id="${o}">📅 ${esc(name)}'s D-days</button><button class="btn btn--sm" data-act="subOwner" data-id="${o}">🔗 Live calendar link</button><button class="btn btn--sm" data-act="editOwner" data-id="${o}">✎ Role & email</button></div></div>`;
+  }).join("") + `<button class="pc pc--add" data-act="addOwner"><b>+ Add a person</b><small>Give them a role. They get their own calendar and email alerts for tasks under their name.</small></button>`;
   return `<h3 class="serif" style="font-weight:400;font-size:20px;margin-bottom:10px">Handlers. <em style="color:var(--pink)">${esc(Object.values(OWNERS).join(" and "))} run it.</em></h3><div class="ppl" style="margin-bottom:26px">${ownerCards}</div>
   <h3 class="serif" style="font-weight:400;font-size:20px;margin-bottom:10px">Coordinate with. <em style="color:var(--ink-soft)">Who we chase, and what for.</em></h3>
   <div class="ppl">${order.filter(id => doc.people[id]).map(id => {
@@ -1434,9 +1501,24 @@ function renderDrawer(){
     const ph = phaseOf(drawerDate);
     title.innerHTML = `${fmt(drawerDate)}. <em>${esc(doc.keyDays[drawerDate] || ph.name)}</em>`;
     body.innerHTML = `${POST_DAYS[drawerDate] ? `<div class="flag" style="margin-bottom:14px"><span class="kicker">📣 Posting · ${esc(POST_DAYS[drawerDate].n)}</span>${esc(POST_DAYS[drawerDate].t)}</div>` : ""}<button class="btn btn--pink" data-act="new" data-date="${drawerDate}" style="margin-bottom:14px">+ Add task on ${fmtShort(drawerDate)}</button>
-      ${items.map(x => `<div class="titem">${av(x.who)}<div><div class="titem__t" data-act="edit" data-id="${x.id}">${esc(x.title)}</div><div class="titem__m">${OWNERS[x.owner] || ""} → ${esc(person(x.who).name)} · ${KINDS[x.kind]?.label}</div></div>
+      ${items.map(x => `<div class="titem">${av(x.who)}<div><div class="titem__t" data-act="edit" data-id="${x.id}">${esc(x.title)}</div><div class="titem__m">${esc(OWNER_LABEL(x.owner))} → ${esc(person(x.who).name)} · ${KINDS[x.kind]?.label}</div></div>
         <div class="titem__a"><button class="stat ${stCls(x.status)}" style="border-radius:6px;min-height:28px;font-size:11px;width:96px" data-act="status" data-id="${x.id}">${esc(x.status)}</button></div></div>`).join("") || `<div class="mini">Nothing on this day yet.</div>`}
       <div style="display:flex;gap:6px;margin-top:16px"><button class="btn btn--sm" data-act="day" data-date="${addDays(drawerDate, -1)}">← ${fmtShort(addDays(drawerDate, -1))}</button><button class="btn btn--sm" data-act="day" data-date="${addDays(drawerDate, 1)}">${fmtShort(addDays(drawerDate, 1))} →</button></div>`;
+    return;
+  }
+  if (drawerMode === "owner") {
+    const isNew = !drawerId, o = isNew ? {name:"", role:""} : doc.owners[drawerId];
+    title.innerHTML = isNew ? `New person. <em>Who and what they own.</em>` : `${esc(o.name)}. <em>Role & alerts.</em>`;
+    body.innerHTML = `<form id="ownerForm">
+      <label class="field"><span>Name</span><input name="name" value="${esc(o.name)}" required></label>
+      <label class="field"><span>Role</span><textarea name="role" placeholder="e.g. Creative director: approves visuals, grid, go/no-go">${esc(o.role)}</textarea></label>
+      <label class="field"><span>Email for alerts and calendar</span><input type="email" name="email" placeholder="name@company.com" autocomplete="off"></label>
+      <p class="mini" id="emailState" style="margin:-6px 0 14px">${syncOK ? "Saved privately on the server, never shown on the board." : "Email alerts switch on once shared saving is live. You can still set the role now."}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn--pink" type="submit">${isNew ? "Add person" : "Save"}</button>
+      ${!isNew && Object.keys(doc.owners).length > 1 ? `<button class="btn btn--ghost danger" type="button" data-act="delOwner" data-id="${drawerId}">Remove person</button>` : ""}</div>
+      <p class="mini" style="margin-top:16px">Their calendar gets only their D-days. Email: every Monday, this week's tasks plus anything left from last week and upcoming D-days; every day, overdue tasks, tasks due soon and close or overdue D-days.</p>
+    </form>`;
+    if (!isNew && syncOK) fetch(API + "&emails=1", {cache:"no-store"}).then(r => r.json()).then(j => { const m = j.emails?.[drawerId]; if (m) document.getElementById("emailState").textContent = `Alerts go to ${m}. Type a new address to change it.`; }).catch(() => {});
     return;
   }
   if (drawerMode === "today") {
@@ -1445,10 +1527,12 @@ function renderDrawer(){
     const item = x => `<div class="titem">${av(x.who)}<div><div class="titem__t" data-act="edit" data-id="${x.id}">${esc(x.title)}</div><div class="titem__m">${esc(person(x.who).name)} · ${KINDS[x.kind]?.label} · ${fmtShort(x.date)} (${rel(x.date)}) · ${esc(x.status)}</div></div>
       <div class="titem__a"><button class="btn btn--sm" data-act="fu" data-id="${x.id}" title="Copy follow-up">💬</button><button class="btn btn--sm" data-act="snooze" data-id="${x.id}" data-n="1" title="Move to tomorrow">+1d</button><button class="btn btn--sm" data-act="markDone" data-id="${x.id}" title="Mark done">✓</button></div></div>`;
     const sec = (h, arr, color) => `<div class="today-sec"><h4><i class="dot" style="background:${color}"></i>${h} · ${arr.length}</h4>${arr.map(item).join("") || `<div class="mini">Nothing.</div>`}</div>`;
-    body.innerHTML = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"><button class="btn" data-act="digest">Copy daily digest</button><button class="btn" data-act="ics">📅 Add to calendar</button><button class="btn" data-act="notify">Browser reminders</button></div>
-      ${(() => { const t0 = todayISO(), d3 = addDays(t0, 3); const hp = doc.tasks.filter(x => !isDone(x) && !isNote(x) && priOf(x) === "p1" && x.date >= t0 && x.date <= d3 && (!ui.owner || x.owner === ui.owner)).sort(byDate);
-        return `<div class="today-sec heads"><h4><i class="dot" style="background:#e2445c"></i>P1 heads-up · next 3 days · ${hp.length}</h4>${hp.map(item).join("") || `<div class="mini">No critical tasks in the next 3 days.</div>`}</div>`; })()}
-      ${sec("Overdue", b.over, "var(--st-stuck)")}${(() => { const n = doc.tasks.filter(x => isNote(x) && x.date <= addDays(todayISO(), 7) && x.date >= addDays(todayISO(), -1) && (!ui.owner || x.owner === ui.owner)); return n.length ? `<div class="today-sec"><h4>📝 Notes · ${n.length}</h4>${n.map(x => `<div class="ag__note" style="margin-bottom:5px"><span class="ag__nt" data-act="edit" data-id="${x.id}">${esc(x.title)} <span class="mini">· ${fmtShort(x.date)}</span></span></div>`).join("")}</div>` : ""; })()}${sec("Due today", b.today, "var(--pink)")}${sec("Next 7 days", b.next, "var(--st-review)")}`;
+    body.innerHTML = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"><button class="btn" data-act="digest">Copy daily digest</button><button class="btn" data-act="ics">📅 D-days to calendar</button><button class="btn" data-act="notify">Browser reminders</button></div>
+      ${(() => { const t0 = todayISO(), d3 = addDays(t0, 3); const hp = doc.tasks.filter(x => !isDone(x) && !isNote(x) && priOf(x) === "p1" && x.date >= t0 && x.date <= d3 && ownedBy(x, ui.owner)).sort(byDate);
+        return `<div class="today-sec heads"><h4><i class="dot" style="background:#e2445c"></i>P1 heads-up · next 3 days · ${hp.length}</h4>${hp.map(item).join("") || `<div class="mini">Nothing critical in the next 3 days.</div>`}</div>`; })()}
+      ${(() => { const t0 = todayISO(); const dd = doc.ddays.filter(d => !d.done && ownedBy(d, ui.owner) && d.date <= addDays(t0, 14)).sort((a, b) => a.date.localeCompare(b.date));
+        return dd.length ? `<div class="today-sec"><h4><i class="dot" style="background:#00c875"></i>🎯 D-days · next 2 weeks · ${dd.length}</h4>${dd.map(d => `<div class="titem"><span class="av" style="background:#00c875">🎯</span><div><div class="titem__t" data-view="ddays">${esc(d.label)}</div><div class="titem__m">${fmt(d.date)} · ${d.date < t0 ? diff(d.date, t0) + "d late" : rel(d.date)} · ${esc(OWNER_LABEL(d.owner))}</div></div><div></div></div>`).join("")}</div>` : ""; })()}
+      ${sec("Overdue", b.over, "var(--st-stuck)")}${(() => { const n = doc.tasks.filter(x => isNote(x) && x.date <= addDays(todayISO(), 7) && x.date >= addDays(todayISO(), -1) && ownedBy(x, ui.owner)); return n.length ? `<div class="today-sec"><h4>📝 Notes · ${n.length}</h4>${n.map(x => `<div class="ag__note" style="margin-bottom:5px"><span class="ag__nt" data-act="edit" data-id="${x.id}">${esc(x.title)} <span class="mini">· ${fmtShort(x.date)}</span></span></div>`).join("")}</div>` : ""; })()}${sec("Due today", b.today, "var(--pink)")}${sec("Next 7 days", b.next, "var(--st-review)")}`;
     return;
   }
   const isNew = drawerMode === "new";
@@ -1459,7 +1543,7 @@ function renderDrawer(){
   body.innerHTML = `<form id="editForm">
     <label class="field"><span>Item</span><input name="title" value="${esc(t.title)}" required></label>
     <div class="row2">
-      <label class="field"><span>Owner</span><select name="owner">${Object.entries(OWNERS).map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+      <label class="field"><span>Owner</span><select name="owner">${[...Object.entries(OWNERS), ["all", "Everyone"]].map(([k, v]) => `<option value="${k}"${k === t.owner ? " selected" : ""}>${esc(v)}</option>`).join("")}</select></label>
       <label class="field"><span>Coordinate with</span><select name="who">${ppl}</select></label>
     </div>
     <div class="row2">
@@ -1504,44 +1588,29 @@ function openStatusPop(btn, id){
 function closePop(){ document.getElementById("pop")?.remove(); }
 
 /* ---------- calendar export (.ics): all-day events, Monday rundowns, 3-day alerts on P1 ---------- */
-function icsText(){
+function icsText(owner){
   const D = d => d.replace(/-/g, "");
   const E = v => String(v ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
   const fold = l => { const ch = [...l], out = []; for (let i = 0; i < ch.length; i += 60) out.push((i ? " " : "") + ch.slice(i, i + 60).join("")); return out.join("\r\n"); };
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   const url = location.href.split("#")[0];
-  const ev = (uid, date, summary, desc, alarms = []) => [
-    "BEGIN:VEVENT", `UID:${uid}@nancy-projects`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${D(date)}`, `DTEND;VALUE=DATE:${D(addDays(date, 1))}`,
-    `SUMMARY:${E(summary)}`, `DESCRIPTION:${E(desc)}`, `URL:${url}`, "TRANSP:TRANSPARENT",
-    ...alarms.flatMap(([trig, txt]) => ["BEGIN:VALARM", "ACTION:DISPLAY", `TRIGGER:${trig}`, `DESCRIPTION:${E(txt)}`, "END:VALARM"]),
-    "END:VEVENT"];
-  const tasks = doc.tasks.filter(t => !isDone(t) && !isNote(t)).sort(byDate);
-  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nancy//Projects//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", `X-WR-CALNAME:${E(CFG.short)} · Nancy`];
-  tasks.forEach(t => {
-    const pr = priOf(t), P = PRIORITIES[pr];
-    const desc = [`${P.label} · ${KINDS[t.kind]?.label || ""} · ${t.status}`, `Owner: ${OWNERS[t.owner] || ""} · With: ${person(t.who).name}`,
-      t.need ? `I need from them: ${t.need}` : "", t.give ? `They need from me: ${t.give}` : "", t.notes || "", `Board: ${url}`].filter(Boolean).join("\n");
-    const alarms = pr === "p1" ? [["-P3D", `3 days to go: ${t.title}`], ["-P1D", `Tomorrow: ${t.title}`]] : pr === "p2" ? [["-P1D", `Tomorrow: ${t.title}`]] : [];
-    L.push(...ev(`${PID}-${t.id}`, t.date, `[${P.short}] ${t.title} · ${person(t.who).name}`, desc, alarms));
+  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nancy//Projects//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", `X-WR-CALNAME:${E(CFG.short)} D-days${owner ? " · " + E(OWNER_LABEL(owner)) : ""}`];
+  doc.ddays.filter(d => !d.done && ownedBy(d, owner)).forEach(d => {
+    const due = doc.tasks.filter(t => t.date === d.date && !isNote(t)).map(t => `• ${t.title}`).join("\n");
+    L.push("BEGIN:VEVENT", `UID:${PID}-dday-${d.id}@nancy-projects`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${D(d.date)}`, `DTEND;VALUE=DATE:${D(addDays(d.date, 1))}`,
+      `SUMMARY:${E(`🎯 ${d.label} · ${CFG.short}`)}`, `DESCRIPTION:${E([`D-day for ${CFG.name}. Owner: ${OWNER_LABEL(d.owner)}`, POST_DAYS[d.date]?.t || "", due ? "Due that day:\n" + due : "", `Board: ${url}`].filter(Boolean).join("\n\n"))}`,
+      `URL:${url}`, "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P3D", `DESCRIPTION:${E(`3 days to ${d.label}`)}`, "END:VALARM",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P1D", `DESCRIPTION:${E(`Tomorrow: ${d.label}`)}`, "END:VALARM", "END:VEVENT");
   });
-  Object.entries(doc.keyDays).forEach(([d, n]) => L.push(...ev(`${PID}-key-${d}`, d, `◆ ${CFG.short}: ${n}`, POST_DAYS[d]?.t || n, [["-P3D", `3 days to ${n}`]])));
-  // Monday rundown: everything due that week
-  let mon = parse(CAMP_START); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
-  for (let m = iso(mon); m <= CAMP_END; m = addDays(m, 7)) {
-    const sun = addDays(m, 6), wk = tasks.filter(t => t.date >= m && t.date <= sun);
-    if (!wk.length) continue;
-    const p1 = wk.filter(t => priOf(t) === "p1").length;
-    const body = wk.map(t => `${fmtShort(t.date)} · [${PRIORITIES[priOf(t)].short}] ${t.title} (${person(t.who).name})`).join("\n");
-    L.push(...ev(`${PID}-week-${m}`, m, `📋 ${CFG.short} · week of ${fmtShort(m)}: ${wk.length} tasks${p1 ? `, ${p1} critical` : ""}`, body, [["PT9H", "This week's rundown"]]));
-  }
   L.push("END:VCALENDAR");
   return L.map(fold).join("\r\n");
 }
-function downloadICS(){
-  const blob = new Blob([icsText()], {type:"text/calendar"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${PID}-calendar.ics`; a.click();
+function downloadICS(owner){
+  const blob = new Blob([icsText(owner)], {type:"text/calendar"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${PID}${owner ? "-" + owner : ""}-calendar.ics`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  toast("Calendar file downloaded. Open it to add to Google / Apple Calendar");
+  toast("D-days calendar downloaded. Open it to add to Google / Apple Calendar");
 }
 
 /* ---------- digest + reminders ---------- */
@@ -1564,7 +1633,7 @@ function maybeNotify(){
 }
 
 /* ---------- render ---------- */
-const VIEW_FN = {table:viewTable, timeline:viewTimeline, calendar:viewCalendar, kanban:viewKanban, people:viewPeople, posts:viewPosts, dash:viewDash};
+const VIEW_FN = {ddays:viewDdays, table:viewTable, timeline:viewTimeline, calendar:viewCalendar, kanban:viewKanban, people:viewPeople, posts:viewPosts, dash:viewDash};
 function renderAll(){
   renderLaunch(); renderTabs(); renderOwnerSeg(); renderFlags(); renderBadge();
   document.getElementById("view").innerHTML = (VIEW_FN[ui.view] || viewCalendar)();
@@ -1610,7 +1679,7 @@ document.addEventListener("click", e => {
     case "del": if (confirm(`Remove "${doc.tasks.find(x => x.id === id)?.title}"? (Marking it Done keeps it in the record instead.)`)) { doc.tasks = doc.tasks.filter(x => x.id !== id); save(); closeDrawer(); renderAll(); } break;
     case "flag": doc.flags[id] = !doc.flags[id]; save(); renderFlags(); break;
     case "digest": copy(digest(), "Daily digest copied"); break;
-    case "ics": downloadICS(); break;
+    case "ics": downloadICS(ui.owner || undefined); break;
     case "notify":
       if (!("Notification" in window)) { toast("This browser doesn't support notifications"); break; }
       Notification.requestPermission().then(p => { if (p === "granted") { try { localStorage.removeItem("mm.notified"); } catch {} maybeNotify(); toast("Reminders on. You'll get one a day when you open the board"); } else toast("Notifications blocked"); });
@@ -1625,6 +1694,17 @@ document.addEventListener("click", e => {
       const dark = ui.theme ? ui.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
       ui.theme = dark ? "light" : "dark"; saveUI(); applyTheme(); break;
     }
+    case "ddDone": { const d = doc.ddays.find(x => x.id === id); d.done = !d.done; if (d.done) burst(); save(); renderAll(); break; }
+    case "ddDel": { const d = doc.ddays.find(x => x.id === id); if (confirm(`Remove the D-day "${d.label}"?`)) { doc.ddays = doc.ddays.filter(x => x.id !== id); syncKeyDays(); save(); renderAll(); } break; }
+    case "addOwner": drawerId = null; openDrawer("owner", null); break;
+    case "editOwner": openDrawer("owner", id); break;
+    case "delOwner": {
+      if (!confirm(`Remove ${doc.owners[id].name}? Their tasks move to ${Object.values(doc.owners).find((v, i) => Object.keys(doc.owners)[i] !== id).name}.`)) break;
+      const to = Object.keys(doc.owners).find(k => k !== id);
+      doc.tasks.forEach(t => { if (t.owner === id) t.owner = to; }); delete doc.owners[id]; save(); location.reload(); break;
+    }
+    case "icsOwner": downloadICS(id); break;
+    case "subOwner": copy(`https://content-nine-topaz.vercel.app/api/calendar?p=${PID}&owner=${id}`, `Live calendar link for ${OWNER_LABEL(id)} copied. In Google Calendar: Other calendars → + → From URL (works once shared saving is live)`); break;
     case "removeProject":
       if (!confirm(`Remove "${CFG.name}" from your projects?${MM ? " Its tasks are kept, and you can bring it back from the Projects home." : " Its tasks are deleted from this browser; export JSON first if you want a copy."}`)) break;
       try {
@@ -1651,6 +1731,10 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("change", e => {
   const el = e.target;
+  if (el.dataset.dd) {
+    const d = doc.ddays.find(x => x.id === el.dataset.id); if (!d || !el.value.trim()) return;
+    d[el.dataset.dd] = el.value.trim(); syncKeyDays(); save(); renderAll(); return;
+  }
   if (el.dataset.f && el.dataset.id) {
     const v = el.value;
     if (el.dataset.f === "title" && !v.trim()) { renderAll(); return; }
@@ -1676,6 +1760,33 @@ document.addEventListener("change", e => {
 });
 document.getElementById("q").addEventListener("input", e => { ui.q = e.target.value; renderAll(); });
 document.getElementById("scrim").addEventListener("click", closeDrawer);
+document.addEventListener("submit", e => {
+  if (e.target.id !== "ddAdd") return;
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target));
+  if (!f.label.trim() || !f.date) return;
+  doc.ddays.push({id:"d" + Date.now().toString(36), date:f.date, label:f.label.trim(), owner:f.owner || "all", done:false});
+  syncKeyDays(); save(); renderAll(); toast(`🎯 ${f.label.trim()} added`);
+});
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "ownerForm") return;
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target));
+  const name = f.name.trim(); if (!name) return;
+  let id = drawerId;
+  if (!id) { id = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "person"; while (doc.owners[id]) id += "-2"; }
+  doc.owners[id] = {name, role:f.role.trim()};
+  save();
+  if (f.email.trim()) {
+    try {
+      const headers = {"Content-Type":"application/json"}; const pass = localStorage.getItem(LS_PASS); if (pass) headers["x-passcode"] = pass;
+      const r = await fetch(API + "&emails=1", {method:"POST", headers, body:JSON.stringify({owner:id, email:f.email.trim()})});
+      if (!r.ok) throw new Error(r.status);
+      toast("Saved. Alerts will go to " + f.email.trim());
+    } catch { toast("Role saved. The email couldn't be saved yet, it needs shared saving switched on"); }
+  } else toast("Saved");
+  setTimeout(() => location.reload(), 900);
+});
 document.addEventListener("submit", e => {
   if (e.target.id !== "editForm") return;
   e.preventDefault();
@@ -1723,7 +1834,7 @@ if (matchMedia("(hover: hover)").matches) {
     const t = doc.tasks.find(x => x.id === el.dataset.preview); if (!t) return;
     peek.style.setProperty("--kc", KINDS[t.kind]?.dot);
     peek.innerHTML = `<b>${esc(t.title)}</b><div class="row">${kindPill(t.kind)}<span class="pill ${stCls(t.status)}" style="color:#fff">${esc(t.status)}</span><span class="mini">${fmt(t.date)} · ${rel(t.date)}</span></div>
-      <div class="row">${ownerAv(t.owner)}<span>${OWNERS[t.owner] || ""}</span><span class="mini">with</span>${av(t.who)}<span>${esc(person(t.who).name)}</span></div>
+      <div class="row">${ownerAv(t.owner)}<span>${esc(OWNER_LABEL(t.owner))}</span><span class="mini">with</span>${av(t.who)}<span>${esc(person(t.who).name)}</span></div>
       ${t.need ? `<p><span>I need from them</span>${esc(t.need)}</p>` : ""}${t.give ? `<p><span>They need from me</span>${esc(t.give)}</p>` : ""}`;
     const r = el.getBoundingClientRect();
     let left = r.right + 10, top = r.top;
