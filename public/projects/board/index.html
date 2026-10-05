@@ -1355,7 +1355,7 @@ function viewCalendar(){
     return `<div class="cal"><h3>${label} <em>${em}</em></h3><div class="cal__w">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x => `<div class="cal__dow">${x}</div>`).join("")}
       ${cells.map(d => {
         const s = iso(d), out = d.getMonth() !== m, inCamp = s >= CAMP_START && s <= CAMP_END;
-        const items = list.filter(x => x.date === s);
+        const items = list.filter(x => x.date === s && !isNote(x));
         const ph = inCamp ? phaseOf(s) : null;
         return `<div ${out ? "" : `data-dropdate="${s}"`} class="cal__d${out ? " is-out" : ""}${s === t ? " is-today" : ""}${inCamp && !out ? " is-camp" : ""}" style="${ph ? `--pc:${ph.c}` : ""}">
           <div class="cal__n">${out ? `<b>${d.getDate()}</b>` : `<button class="cal__num" data-act="day" data-date="${s}" title="Open ${fmt(s)}"><b>${d.getDate()}</b></button>`}${out ? "" : `<button class="cal__add" data-act="new" data-date="${s}" title="Add task on ${fmt(s)}" aria-label="Add task on ${fmt(s)}">+</button>`}</div>
