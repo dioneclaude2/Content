@@ -60,6 +60,48 @@ a{color:inherit}
 .side__new{border:1px dashed rgba(250,243,230,.28)}
 .side__foot{margin-top:auto;font-size:11px;color:rgba(250,243,230,.4);padding:0 10px;line-height:1.5}
 
+/* ---------- products strip (PDP) ---------- */
+.pdp{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;padding:0 24px 18px;overflow-x:auto;scrollbar-width:none}
+.pdp:empty{display:none}
+.pdp::-webkit-scrollbar{display:none}
+.pdp__card{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:var(--row);border:1px solid var(--line);text-decoration:none;transition:transform .2s,box-shadow .2s}
+.pdp__card:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:var(--shadow)}
+.pdp__img{display:block;aspect-ratio:16/10;overflow:hidden;background:#d9d6d2}
+.pdp__img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.pdp__card:hover .pdp__img img{transform:scale(1.08)}
+.pdp__txt{padding:9px 12px 11px;display:grid;gap:2px}
+.pdp__txt b{font-family:"Fraunces",serif;font-weight:400;font-size:18px;font-style:italic}
+.pdp__txt small{font-size:11.5px;color:var(--ink-soft);line-height:1.35}
+
+/* ---------- Monster Mansion theme: the launch site's own look ---------- */
+html.theme-monster{--st-none:#a9c9ec}
+html.theme-monster .st-none,html.theme-monster .kb__h.st-none{color:#16206b}
+html.theme-monster .side{background:linear-gradient(180deg,#131a5c 0%,#24309a 55%,#6b3f9e 100%)}
+html.theme-monster .side a.is-on{background:var(--yellow);color:#16206b}
+html.theme-monster .top{background:linear-gradient(180deg,#131a5c 0%,#24309a 46%,#6b3f9e 74%,#e0679c 92%,#f7a8c8 100%);color:#faf3e6;border-bottom:0;position:relative;overflow:hidden}
+html.theme-monster .top::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 32% 8%,#fff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 58% 22%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 76% 12%,#fff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 88% 30%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 22% 36%,#fff 50%,transparent 51%);opacity:.7;animation:twinkle 4s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.35}to{opacity:.85}}
+html.theme-monster .top>*{position:relative}
+html.theme-monster .crumb,html.theme-monster .crumb a{color:rgba(250,243,230,.7)}
+html.theme-monster .crumb b{color:#faf3e6}
+html.theme-monster .crumb a:hover{color:var(--yellow)}
+html.theme-monster .top__links a{background:transparent;border-color:rgba(250,243,230,.3);color:#faf3e6}
+html.theme-monster .top__links a:hover{border-color:var(--yellow);color:var(--yellow)}
+html.theme-monster .hero .kicker{color:var(--yellow)}
+html.theme-monster .hero h1 em{color:var(--yellow)}
+html.theme-monster .hero p{color:rgba(250,243,230,.8)}
+html.theme-monster .launch__box{background:rgba(19,26,92,.35);border-color:rgba(250,243,230,.3);backdrop-filter:blur(6px)}
+html.theme-monster .launch__box.is-pink{background:var(--pink);border-color:var(--pink)}
+html.theme-monster .launch__t{color:rgba(250,243,230,.78)}
+html.theme-monster .launch__live{color:var(--yellow)}
+html.theme-monster .pdp__card{background:rgba(255,255,255,.1);border-color:rgba(250,243,230,.22);backdrop-filter:blur(8px);color:#faf3e6}
+html.theme-monster .pdp__txt small{color:rgba(250,243,230,.75)}
+html.theme-monster .tabs{background:rgba(22,32,107,.6);backdrop-filter:blur(6px)}
+html.theme-monster .tab{color:rgba(250,243,230,.8)}
+html.theme-monster .tab:hover{color:#fff}
+html.theme-monster .tab[aria-selected="true"]{color:var(--yellow);border-bottom-color:var(--yellow)}
+html.theme-monster .hero h1{color:#fff}
+
 /* ---------- header ---------- */
 .top{background:var(--wall);color:var(--ink);border-bottom:1px solid var(--line)}
 .top__bar{display:flex;align-items:center;gap:12px;padding:16px 24px 0}
@@ -554,6 +596,7 @@ footer a{color:var(--ink-soft)}
     <div><span class="kicker" id="kick"></span><h1 id="h1"></h1><p id="sub"></p></div>
     <div class="launch" id="launch"></div>
   </div>
+  <div class="pdp" id="pdp"></div>
   <div class="tabs" role="tablist" id="tabs"></div>
 </header>
 
@@ -666,7 +709,7 @@ const ownerAv = o => `<span class="av" style="background:${o === "crystal" ? avC
 function defaultOwner(t){ return (t.who === "crystal" && (t.kind === "approve" || t.kind === "post")) || ["a4","r5"].includes(t.id) ? "crystal" : "dione"; }
 const SRC = {meeting:"From the call", site:"From the site", suggested:"Suggested date"};
 const MM_PHASES = [
-  {id:"lock", name:"Lock + build", em:"Everything decided by the 8th.", start:"2026-10-05", end:"2026-10-14", c:"#1f1216"},
+  {id:"lock", name:"Lock + build", em:"Everything decided by the 8th.", start:"2026-10-05", end:"2026-10-14", c:"#2b2f9e"},
   {id:"tease", name:"Tease", em:"Medusa first, dated on every post.", start:"2026-10-15", end:"2026-10-20", c:"#e07aa8"},
   {id:"soft", name:"Soft launch", em:"On sale, giveaway opens.", start:"2026-10-21", end:"2026-10-21", c:"#ec2f8e"},
   {id:"museum", name:"The Museum", em:"9–12 posts, light on product.", start:"2026-10-22", end:"2026-10-28", c:"#6f9fd6"},
@@ -822,6 +865,14 @@ const MM_CFG = {
     {label:"Soft launch", date:"2026-10-21", note:"Wed 21 Oct · on sale, Email 2, Win a Mansion opens"},
     {label:"Hard launch", date:"2026-10-29", at:Date.UTC(2026, 9, 30, 1, 0), note:"Thu 29 Oct 9pm ET · Fri 30 Oct 9am HKT / PHT"},
   ],
+  theme:"monster",
+  products:[
+    {name:"Medusa", line:"The octopus leg. Glossy, slimy tentacles.", img:"../assets/mm/obj-medusa.jpg"},
+    {name:"Jack", line:"The pumpkin. Fairy beauty, honey-glazed.", img:"../assets/mm/obj-jack.jpg"},
+    {name:"Lemmy", line:"The lips. Futuristic lipstick.", img:"../assets/mm/obj-lemmy.jpg"},
+    {name:"The Mansion", line:"Win a Mansion · numbered Vol 1 run.", img:"../assets/mm/mansion.jpg"},
+  ],
+  productsUrl:"https://launch-nancy-monstermansion.vercel.app/",
   links:[
     {label:"Launch site", url:"https://launch-nancy-monstermansion.vercel.app/"},
     {label:"Brief", url:"https://nancy-monstermansion.vercel.app"},
@@ -1050,6 +1101,10 @@ function renderShell(){
   document.getElementById("sub").textContent = CFG.sub || `${fmt(CAMP_START)} – ${fmt(CAMP_END)}`;
   const links = CFG.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
   document.getElementById("links").innerHTML = links;
+  if (CFG.theme) document.documentElement.classList.add("theme-" + CFG.theme);
+  document.getElementById("pdp").innerHTML = (CFG.products || []).map(pr => `<a class="pdp__card" href="${esc(CFG.productsUrl || "#")}" target="_blank" rel="noopener">
+      <span class="pdp__img"><img src="${esc(pr.img)}" alt="${esc(pr.name)}" loading="lazy"></span>
+      <span class="pdp__txt"><b>${esc(pr.name)}</b><small>${esc(pr.line)}</small></span></a>`).join("");
   document.getElementById("footName").textContent = `Nancy · ${CFG.name}`;
   document.getElementById("footLinks").innerHTML = CFG.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join("");
 }
