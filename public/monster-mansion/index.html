@@ -255,6 +255,41 @@ main{padding:18px 24px 80px}
 .tl__now.lab::before{content:"Today";position:absolute;top:2px;left:4px;font-size:9.5px;font-weight:600;color:var(--st-stuck);font-family:"JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
 .tl__grid{position:absolute;inset:0;display:grid;grid-auto-flow:column;grid-auto-columns:var(--dw);pointer-events:none}
 .tl__grid i{border-left:1px solid var(--line)}
+.tl__post{position:absolute;top:8px;transform:translateX(-50%);min-width:26px;height:22px;padding:0 4px;border-radius:6px;background:var(--pink-soft);color:var(--pink-deep);font-size:10px;font-weight:700;display:grid;place-items:center;cursor:help;border:1px solid color-mix(in srgb,var(--pink) 40%,transparent)}
+.tl__post.is-big{background:var(--pink);color:#fff}
+.tl__post:hover{transform:translateX(-50%) scale(1.15)}
+.cal__post{font-size:10px;line-height:1.25;color:var(--pink-deep);font-weight:600;cursor:help}
+:root[data-theme="dark"] .cal__post,:root[data-theme="dark"] .tl__post{color:var(--bubble)}
+.ag{display:grid;gap:8px}
+.ag__ph{font-family:"Fraunces",serif;font-size:21px;color:var(--c);margin:16px 0 2px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ag__ph em{color:var(--ink-soft);font-weight:300}
+.ag__ph span{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ag__day{display:grid;grid-template-columns:96px 1fr;background:var(--row);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:var(--r);overflow:hidden;transition:box-shadow .15s,transform .15s}
+.ag__day:hover{box-shadow:var(--shadow)}
+.ag__day.is-today{box-shadow:0 0 0 2px var(--pink)}
+.ag__day.is-past{opacity:.7}
+.ag__day.is-over{outline:2px dashed var(--pink);outline-offset:-3px}
+.ag__date{display:flex;flex-direction:column;align-items:flex-start;padding:12px;border-right:1px solid var(--line);text-align:left;background:color-mix(in srgb,var(--c) 8%,var(--row))}
+.ag__date b{font-family:"Fraunces",serif;font-size:30px;font-weight:400;line-height:1}
+.ag__date span{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.ag__date i{font-style:normal;margin-top:6px;background:var(--pink);color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600}
+.ag__date:hover b{color:var(--pink)}
+.ag__body{padding:10px 12px;display:grid;gap:7px;min-width:0}
+.ag__key{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);font-weight:700}
+.ag__post{font-size:12.5px;background:color-mix(in srgb,var(--pink) 12%,var(--row));border-radius:7px;padding:7px 10px;line-height:1.4}
+.ag__post b{color:var(--pink-deep)}
+.ag__it{display:grid;grid-template-columns:118px 1fr auto;gap:10px;align-items:center;padding:6px 8px 6px 0;border-radius:7px;border-left:3px solid var(--kc);padding-left:8px;background:color-mix(in srgb,var(--kc) 7%,var(--row));cursor:grab;transition:transform .12s}
+.ag__it:hover{transform:translateX(3px)}
+.ag__it .stat{border-radius:6px;min-height:28px;font-size:11.5px}
+.ag__it.is-complete .ag__t{text-decoration:line-through;color:var(--muted)}
+.ag__it.is-dragging{opacity:.4}
+.ag__main{min-width:0;cursor:pointer}
+.ag__t{font-size:13.5px;font-weight:500;line-height:1.3}
+.ag__main:hover .ag__t{color:var(--pink)}
+.ag__m{font-size:11.5px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+.ag__add{justify-self:start;font-size:12px;color:var(--muted);padding:2px 6px;border-radius:5px}
+.ag__add:hover{background:var(--pink);color:#fff}
+@media (max-width:760px){.ag__day{grid-template-columns:64px 1fr}.ag__date{padding:10px 8px}.ag__date b{font-size:24px}.ag__it{grid-template-columns:1fr auto}.ag__it .stat{grid-column:1/-1;order:2}}
 .tl__chip{position:absolute;height:22px;min-width:22px;border-radius:999px;display:grid;place-items:center;font-size:10.5px;font-weight:600;color:#fff;transform:translateX(-50%);cursor:pointer;border:2px solid var(--row);padding:0 5px}
 .tl__chip:hover{transform:translateX(-50%) scale(1.15);z-index:4}
 .tl__chip.is-complete{opacity:.4}
@@ -522,6 +557,44 @@ const KINDS = {
   do:{label:"My task", cls:"k-do", dot:"#e7c200"},
 };
 const OWNERS = {dione:"Dione", crystal:"Crystal"};
+/* What goes out each day. n = short count for the timeline, t = detail. */
+const POST_DAYS = (() => {
+  const m = {
+    "2026-10-15": {n:"1", t:"Medusa teaser · Mansion IG Story 9:16 · dated \"Thu 29 Oct, 9pm ET\""},
+    "2026-10-16": {n:"1", t:"Dated tease · Mansion account (count TBD with Crystal)"},
+    "2026-10-17": {n:"1", t:"Dated tease · Mansion account (count TBD with Crystal)"},
+    "2026-10-18": {n:"2", t:"Mosaic tease · Mansion account + Email 1 (guess the monster)"},
+    "2026-10-19": {n:"1", t:"Dated tease · Mansion account (count TBD with Crystal)"},
+    "2026-10-20": {n:"1", t:"Dated tease · Mansion account (count TBD with Crystal)"},
+    "2026-10-21": {n:"2", t:"SOFT LAUNCH · launch post + Email 2 \"Meet Lemmy, Medusa and Jack\" · Win a Mansion opens"},
+    "2026-10-29": {n:"5+", t:"HARD LAUNCH 9pm ET (9am HKT 30 Oct) · celebrity co-authored reel × @hellonancy_official · 3 team posts · Email 4 · creator wave starts"},
+    "2026-10-31": {n:"3+", t:"Heidiween · 2–3 guests seeded · Email 5 · Mansion 1–3 posts · creators"},
+    "2026-11-03": {n:"2+", t:"Email 6 recap · Mansion 1–3 posts"},
+    "2026-11-05": {n:"1+", t:"Winners announced (IG only) · Mansion 1–3 posts"},
+  };
+  for (let d = 22; d <= 28; d++) { const k = `2026-10-${d}`; m[k] = {n:"1–2", t:"The Museum · 1–2 posts on the Mansion account (9–12 total), light on product" + (d === 27 ? " · Email 3 \"Something's moving in the Mansion\"" : "")}; }
+  ["2026-10-30","2026-11-01"].forEach(k => m[k] = {n:"3+", t:"Creator wave (30 creators, 72h) · Mansion 1–3 posts · repost every tag · daily gift"});
+  ["2026-11-02","2026-11-04"].forEach(k => m[k] = {n:"1–3", t:"Mansion 1–3 posts · daily gift · repost every tag"});
+  for (let d = 6; d <= 12; d++) m[`2026-11-${String(d).padStart(2, "0")}`] = {n:"1–3", t:"Keep loud · Mansion 1–3 posts · repost every tag"};
+  return m;
+})();
+/* Tasks that aren't about the Monster launch (hiring, ITV/Rebel 10, LinkedIn, workshop) */
+const NOT_LAUNCH = ["a2","a3","a4","a7","a8","r4","r5","r6","r8","r9","l7","x1"];
+const LAUNCH_ADDS = [
+  {id:"m8", date:"2026-10-06", kind:"chase", who:"crystal", owner:"dione", title:"Follow up with Crystal on timelines", need:"Her OK on this board's dates, especially the suggested ones", src:"meeting"},
+  {id:"m1", date:"2026-10-06", kind:"chase", who:"crystal", owner:"dione", title:"What are we missing: how many connected experiences can we have?", need:"Agree the list: Mansion account, main account, creators, email, gifting, PR, giveaway, pop-up/Horrorland", src:"meeting"},
+  {id:"m4", date:"2026-10-06", kind:"do", who:"me", owner:"dione", title:"Outlier videos: what looks good in the last 60 days", give:"Shortlist of outlier reels to replicate for the Mansion account", src:"meeting"},
+  {id:"m5", date:"2026-10-07", kind:"do", who:"me", owner:"dione", title:"Competitors: how they ran Halloween and limited drops", give:"Scan of competitor launches, giveaways and drop mechanics", src:"meeting"},
+  {id:"m7", date:"2026-10-07", kind:"do", who:"crystal", owner:"dione", title:"Make sure we have the manpower: who does what on each launch day", need:"Crystal's OK on the rota", give:"Owner per channel for 15 Oct, 21 Oct, 29 Oct and the 72h wave", src:"meeting"},
+  {id:"m10", date:"2026-10-07", kind:"chase", who:"crystal", owner:"dione", title:"Follow up with Crystal for assets", need:"Teaser, Museum and launch assets, with dates she'll deliver them", src:"meeting"},
+  {id:"m3", date:"2026-10-08", kind:"chase", who:"crystal", owner:"dione", title:"Who should we co-author with?", need:"Decision: celebrity × @hellonancy_official, team accounts, which creators", src:"meeting"},
+  {id:"m11", date:"2026-10-08", kind:"do", who:"crystal", owner:"dione", title:"What to put on the Monster Mansion account", need:"Crystal's sign-off", give:"Content plan: teasers, Museum posts, giveaway, reposts, daily gifts", src:"meeting"},
+  {id:"m12", date:"2026-10-08", kind:"do", who:"crystal", owner:"dione", title:"What to put on the main account", need:"Crystal's sign-off", give:"Big co-authored reels only; the rest lives on the Mansion account", src:"meeting"},
+  {id:"m2", date:"2026-10-09", kind:"do", who:"crystal", owner:"dione", title:"Prepare the 9–12 Museum posts before launch", need:"Assets from Crystal", give:"Post-by-post plan for 21–28 Oct", src:"meeting"},
+  {id:"m13", date:"2026-10-09", kind:"do", who:"creators", owner:"dione", title:"Creators to co-post: shortlist", give:"Who co-posts with the Mansion account vs. the 30-creator wave", src:"meeting"},
+  {id:"m6", date:"2026-10-12", kind:"send", who:"creators", owner:"dione", title:"Reach creators, with the time they should be posting", give:"Exact post time per creator in the 29 Oct 9pm ET – 1 Nov window (their local time too)", need:"Confirmation of their slot", src:"meeting"},
+];
+
 const ownerAv = o => `<span class="av" style="background:${o === "crystal" ? avColor("crystal") : "#16206b"}">${o === "crystal" ? "CR" : "DI"}</span>`;
 function defaultOwner(t){ return (t.who === "crystal" && (t.kind === "approve" || t.kind === "post")) || ["a4","r5"].includes(t.id) ? "crystal" : "dione"; }
 const SRC = {meeting:"From the call", site:"From the site", suggested:"Suggested date"};
@@ -574,17 +647,28 @@ const ls = {
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 function seedDoc(){
-  return {
+  return migrate({
     v:1, updatedAt:0, people: structuredClone(SEED.people),
     tasks: SEED.tasks.map(t => ({status:"Not started", need:"", give:"", notes:"", ...t})),
     keyDays: {...SEED.keyDays}, flags:{},
-  };
+  });
 }
 let doc = ls.get(LS);
 if (!doc || !Array.isArray(doc.tasks) || !doc.tasks.length) doc = seedDoc();
 doc.flags ||= {};
 function migrate(d){
   if (d.people?.me?.name === "Me") d.people.me = structuredClone(SEED.people.me);
+  if ((d.v || 1) < 2) {
+    d.tasks = d.tasks.filter(t => !NOT_LAUNCH.includes(t.id));
+    LAUNCH_ADDS.forEach(a => { if (!d.tasks.some(t => t.id === a.id)) d.tasks.push({status:"Not started", need:"", give:"", notes:"", ...a}); });
+    d.tasks.forEach(t => {
+      if (t.id === "r2") { t.date = "2026-10-05"; t.title = "Today: top 20+ Halloween transformation creators (3M+)"; }
+      if (t.id === "b1") { t.date = "2026-10-05"; t.title = "Today: have Vojtech send us the teaser email to review first"; }
+      if (["r1","r7","l2"].includes(t.id) && !t.title.startsWith("Prio")) t.title = "Prio · " + t.title;
+    });
+    delete d.people.sarah; delete d.people.shariebel;
+    d.v = 2;
+  }
   d.tasks.forEach(t => { if (!t.owner) t.owner = defaultOwner(t); });
   d.tasks.forEach(t => { if (t.id === "a8" && t.title === "Send the platform title options to Shariebel") Object.assign(t, SEED.tasks.find(x => x.id === "a8")); });
   return d;
@@ -891,26 +975,34 @@ function viewTimeline(){
   const nowLab = nowX != null ? `<div class="tl__now lab" style="left:${nowX}px"></div>` : "";
   const months = `<div style="position:relative;height:24px"><span class="tl__month" style="position:absolute;left:0">October 2026</span><span class="tl__month" style="position:absolute;left:${x("2026-11-01")}px">November</span></div>`;
   const phaseBars = PHASES.map(p => `<div class="tl__bar" style="left:${x(p.start) + 2}px;width:${(diff(p.start, p.end) + 1) * W - 4}px;background:${p.c}" title="${esc(p.name)} · ${fmtShort(p.start)}–${fmtShort(p.end)}">${esc(p.name)}</div>`).join("");
+  const posting = Object.entries(POST_DAYS).map(([d, p]) => `<span class="tl__post${/LAUNCH/.test(p.t) ? " is-big" : ""}" style="left:${x(d) + W / 2}px" data-peekpost="${d}">${p.n}</span>`).join("");
   const keys = Object.entries(doc.keyDays).map(([d, n]) => `<div class="tl__key" style="left:${x(d) + W / 2}px">${esc(n)}</div>`).join("");
-  const ppl = Object.keys(doc.people).filter(id => list.some(t => t.who === id));
-  const lanes = ppl.map(id => {
-    const items = list.filter(t => t.who === id);
-    const byDay = {};
-    items.forEach(t => (byDay[t.date] ||= []).push(t));
-    const chips = Object.entries(byDay).map(([d, arr]) => {
-      if (d < CAMP_START || d > CAMP_END) return "";
-      return arr.map((t, i) => `<button class="tl__chip${isDone(t) ? " is-complete" : ""}" style="left:${x(d) + W / 2}px;top:${7 + i * 24}px;background:${KINDS[t.kind]?.dot}" data-act="edit" data-id="${t.id}" data-preview="${t.id}">${t.status === "Done" || t.status === "Approved" ? "✓" : isOver(t) ? "!" : ""}</button>`).join("");
-    }).join("");
-    const h = Math.max(36, 14 + Math.max(...Object.values(byDay).map(a => a.length)) * 24);
-    return `<div class="tl__row" style="min-height:${h}px"><div class="tl__lab">${av(id)}${esc(person(id).name)}</div><div class="tl__track" style="width:${total}px">${grid}${now}${chips}</div></div>`;
+  let lastPh = null;
+  const agenda = days.filter(d => list.some(t => t.date === d) || POST_DAYS[d] || doc.keyDays[d] || d === t).map(d => {
+    const ph = phaseOf(d), items = list.filter(x => x.date === d);
+    const head = ph.id !== lastPh ? `<div class="ag__ph" style="--c:${ph.c}">${esc(ph.name)}. <em>${esc(ph.em)}</em><span>${ph.start === ph.end ? fmt(ph.start) : fmtShort(ph.start) + " – " + fmtShort(ph.end)}</span></div>` : "";
+    lastPh = ph.id;
+    return `${head}<div class="ag__day${d === t ? " is-today" : ""}${d < t ? " is-past" : ""}" data-dropdate="${d}" style="--c:${ph.c}">
+      <button class="ag__date" data-act="day" data-date="${d}"><b>${parse(d).getDate()}</b><span>${DOW[parse(d).getDay()]} · ${MON[parse(d).getMonth()]}</span>${d === t ? `<i>Today</i>` : ""}</button>
+      <div class="ag__body">
+        ${doc.keyDays[d] ? `<div class="ag__key">◆ ${esc(doc.keyDays[d])}</div>` : ""}
+        ${POST_DAYS[d] ? `<div class="ag__post">📣 <b>${esc(POST_DAYS[d].n)} post${POST_DAYS[d].n === "1" ? "" : "s"}</b> · ${esc(POST_DAYS[d].t)}</div>` : ""}
+        ${items.map(x => `<div class="ag__it${isDone(x) ? " is-complete" : ""}" draggable="true" data-drag="${x.id}" data-preview="${x.id}" style="--kc:${KINDS[x.kind]?.dot}">
+          <button class="stat ${stCls(x.status)}" data-act="status" data-id="${x.id}">${esc(x.status)}</button>
+          <div class="ag__main" data-act="edit" data-id="${x.id}"><div class="ag__t">${esc(x.title)}</div>
+            <div class="ag__m">${kindPill(x.kind)} <span>${OWNERS[x.owner] || ""} → ${esc(person(x.who).name)}</span>${x.need ? ` · <span>Need: ${esc(x.need)}</span>` : ""}${x.give ? ` · <span>Give: ${esc(x.give)}</span>` : ""}</div></div>
+          <button class="fu" data-act="fu" data-id="${x.id}" title="Copy follow-up">💬</button></div>`).join("")}
+        <button class="ag__add" data-act="new" data-date="${d}">+ Add task</button>
+      </div></div>`;
   }).join("");
-  return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span>✓ done · ! overdue · click a dot to open</span></div>
-  <div class="tl-wrap"><div class="tl" style="width:${total + 150}px">
+  return `<div class="legend">${Object.values(KINDS).map(k => `<span><i class="dot" style="background:${k.dot}"></i>${k.label}</span>`).join("")}<span class="mini">Hover 📣 for what's posting · drag a task onto another day to move it</span></div>
+  <div class="tl-wrap" style="margin-bottom:22px"><div class="tl" style="width:${total + 150}px">
     <div class="tl__row"><div class="tl__lab"><b>Oct – Nov 2026</b></div><div class="tl__track" style="width:${total}px">${months}<div class="tl__days">${dayHead}</div></div></div>
     <div class="tl__row" style="min-height:40px"><div class="tl__lab">Phases</div><div class="tl__track" style="width:${total}px">${grid}${nowLab}${phaseBars}</div></div>
+    <div class="tl__row" style="min-height:40px"><div class="tl__lab">📣 Posting</div><div class="tl__track" style="width:${total}px">${grid}${now}${posting}</div></div>
     <div class="tl__row" style="min-height:44px"><div class="tl__lab">Key days</div><div class="tl__track" style="width:${total}px">${grid}${now}${keys}</div></div>
-    ${lanes || `<div class="empty">No items match the filters.</div>`}
-  </div></div>`;
+  </div></div>
+  <div class="ag">${agenda || `<div class="empty">No items match the filters.</div>`}</div>`;
 }
 
 function viewCalendar(){
@@ -933,6 +1025,7 @@ function viewCalendar(){
         return `<div ${out ? "" : `data-dropdate="${s}"`} class="cal__d${out ? " is-out" : ""}${s === t ? " is-today" : ""}${inCamp && !out ? " is-camp" : ""}" style="${ph ? `--pc:${ph.c}` : ""}">
           <div class="cal__n">${out ? `<b>${d.getDate()}</b>` : `<button class="cal__num" data-act="day" data-date="${s}" title="Open ${fmt(s)}"><b>${d.getDate()}</b></button>`}${out ? "" : `<button class="cal__add" data-act="new" data-date="${s}" title="Add task on ${fmt(s)}" aria-label="Add task on ${fmt(s)}">+</button>`}</div>
           ${doc.keyDays[s] && !out ? `<div class="cal__key">◆ ${esc(doc.keyDays[s])}</div>` : ""}
+          ${POST_DAYS[s] && !out ? `<div class="cal__post" data-peekpost="${s}">📣 ${esc(POST_DAYS[s].n)} post${POST_DAYS[s].n === "1" ? "" : "s"}</div>` : ""}
           ${out ? "" : items.map(x => `<div class="cal__it${x.kind === "post" ? " is-post" : ""}${isDone(x) ? " is-complete" : ""}" style="--kc:${KINDS[x.kind]?.dot}" draggable="true" data-drag="${x.id}" data-act="edit" data-id="${x.id}" data-preview="${x.id}"><button class="cal__st ${stCls(x.status)}" data-act="status" data-id="${x.id}" aria-label="Status: ${esc(x.status)}"></button>${esc(x.title)}</div>`).join("")}
         </div>`;
       }).join("")}</div></div>`;
@@ -1061,7 +1154,7 @@ function renderDrawer(){
     const items = filtered().filter(x => x.date === drawerDate);
     const ph = phaseOf(drawerDate);
     title.innerHTML = `${fmt(drawerDate)}. <em>${esc(doc.keyDays[drawerDate] || ph.name)}</em>`;
-    body.innerHTML = `<button class="btn btn--pink" data-act="new" data-date="${drawerDate}" style="margin-bottom:14px">+ Add task on ${fmtShort(drawerDate)}</button>
+    body.innerHTML = `${POST_DAYS[drawerDate] ? `<div class="flag" style="margin-bottom:14px"><span class="kicker">📣 Posting · ${esc(POST_DAYS[drawerDate].n)}</span>${esc(POST_DAYS[drawerDate].t)}</div>` : ""}<button class="btn btn--pink" data-act="new" data-date="${drawerDate}" style="margin-bottom:14px">+ Add task on ${fmtShort(drawerDate)}</button>
       ${items.map(x => `<div class="titem">${av(x.who)}<div><div class="titem__t" data-act="edit" data-id="${x.id}">${esc(x.title)}</div><div class="titem__m">${OWNERS[x.owner] || ""} → ${esc(person(x.who).name)} · ${KINDS[x.kind]?.label}</div></div>
         <div class="titem__a"><button class="stat ${stCls(x.status)}" style="border-radius:6px;min-height:28px;font-size:11px;width:96px" data-act="status" data-id="${x.id}">${esc(x.status)}</button></div></div>`).join("") || `<div class="mini">Nothing on this day yet.</div>`}
       <div style="display:flex;gap:6px;margin-top:16px"><button class="btn btn--sm" data-act="day" data-date="${addDays(drawerDate, -1)}">← ${fmtShort(addDays(drawerDate, -1))}</button><button class="btn btn--sm" data-act="day" data-date="${addDays(drawerDate, 1)}">${fmtShort(addDays(drawerDate, 1))} →</button></div>`;
@@ -1239,7 +1332,7 @@ document.addEventListener("change", e => {
       const d = JSON.parse(txt);
       if (!d || !Array.isArray(d.tasks) || !d.tasks.length) throw new Error("no tasks");
       if (!confirm(`Replace the board with ${d.tasks.length} items from this file?`)) return;
-      doc = {v:1, people: d.people || doc.people, keyDays: d.keyDays || doc.keyDays, flags: d.flags || {},
+      doc = {v:2, people: d.people || doc.people, keyDays: d.keyDays || doc.keyDays, flags: d.flags || {},
         tasks: d.tasks.map(t => ({status:"Not started", need:"", give:"", notes:"", src:"meeting", kind:"do", who:"me", ...t, id: t.id || newId()}))};
       save(); renderAll(); toast("Imported");
     }).catch(() => toast("That file isn't a board export")).finally(() => { el.value = ""; });
@@ -1279,6 +1372,16 @@ const peek = document.createElement("div"); peek.className = "peek"; document.bo
 function hidePeek(){ peek.classList.remove("is-on"); }
 if (matchMedia("(hover: hover)").matches) {
   document.addEventListener("mouseover", e => {
+    const pp = e.target.closest("[data-peekpost]");
+    if (pp) {
+      const d = pp.dataset.peekpost, P = POST_DAYS[d];
+      peek.style.setProperty("--kc", "#ec2f8e");
+      peek.innerHTML = `<b>📣 ${fmt(d)} · ${esc(P.n)} post${P.n === "1" ? "" : "s"}</b><p>${esc(P.t)}</p>`;
+      const r = pp.getBoundingClientRect();
+      peek.classList.add("is-on");
+      peek.style.left = Math.min(r.left, innerWidth - 290) + "px"; peek.style.top = Math.min(r.bottom + 8, innerHeight - peek.offsetHeight - 8) + "px";
+      return;
+    }
     const el = e.target.closest("[data-preview]"); if (!el) return;
     const t = doc.tasks.find(x => x.id === el.dataset.preview); if (!t) return;
     peek.style.setProperty("--kc", KINDS[t.kind]?.dot);
@@ -1292,7 +1395,7 @@ if (matchMedia("(hover: hover)").matches) {
     top = Math.min(top, innerHeight - peek.offsetHeight - 8);
     peek.style.left = left + "px"; peek.style.top = Math.max(8, top) + "px";
   });
-  document.addEventListener("mouseout", e => { const el = e.target.closest("[data-preview]"); if (el && !el.contains(e.relatedTarget)) hidePeek(); });
+  document.addEventListener("mouseout", e => { const el = e.target.closest("[data-preview],[data-peekpost]"); if (el && !el.contains(e.relatedTarget)) hidePeek(); });
   addEventListener("scroll", hidePeek, {passive: true});
 }
 
