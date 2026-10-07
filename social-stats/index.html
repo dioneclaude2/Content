@@ -237,7 +237,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js";
+import * as E from "./engine.js?v=b160047";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -414,7 +414,7 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js");
+    const { buildPdf } = await import("./pdf.js?v=b160047");
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -2230,7 +2230,7 @@ function renderSettings(D){
    has real invoices, and a report someone deleted isn't re-created. */
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=b160047", { cache: "no-cache" })).json(); } catch { return; }
   const chip = document.getElementById("sync");
   const label = chip.querySelector("span"), before = label.textContent;
   label.textContent = "Updating from Google Sheets…";
