@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js";
+import * as E from "./engine.js?v=dev";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 79, 139], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
