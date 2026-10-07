@@ -539,6 +539,7 @@ function renderReports(D){
 }
 
 /* ───────── create: which report? ───────── */
+let lastImport = "";                                            // the last workbook import's results, kept across redraws
 function renderNew(D){
   const events = Object.values(D.reports).filter(r => r.type === "event").sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
   app.innerHTML = `<h1>What do you want to <span class="serif">make?</span></h1>
@@ -559,7 +560,15 @@ function renderNew(D){
         <span class="pw">Every Monday</span>
       </button>
     </div>
-    ${events.length ? `<p class="small muted">A costing report can be linked to an event at any time — from either report.</p>` : ""}`;
+    <div class="card sec">
+      <h3>…or import from Google Sheets</h3>
+      <p class="sub" style="margin-top:0">Paste a Google Sheets link. Every tab it recognises becomes a report: weekly report tabs → weekly reports, event tables → event reports (with costs from a “Total Spend” tab), lists of invoices or costs → costing reports for review. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="wb-url" class="grow" placeholder="https://docs.google.com/spreadsheets/d/…">
+        <button class="btn pink" id="wb-go">Import</button>
+      </div>
+      <div id="wb-res" class="result ok">${lastImport}</div>
+    </div>`;
   app.querySelector(".choose").insertAdjacentHTML("afterend", `
     <div class="card sec" id="cost-form" hidden>
       <h3>Which event is this costing for?</h3>
@@ -574,6 +583,18 @@ function renderNew(D){
   evIn.oninput = () => (go.disabled = !evIn.value.trim());
   evIn.onkeydown = e => { if (e.key === "Enter" && evIn.value.trim()) go.click(); };
   go.onclick = () => { const id = startCosting(evIn.value.trim()); location.hash = `#/r/${id}/add`; };
+  const wbGo = document.getElementById("wb-go"), wbRes = document.getElementById("wb-res");
+  wbGo.onclick = async () => {
+    wbGo.disabled = true; wbRes.className = "result"; wbRes.textContent = "Reading the sheet…";
+    try {
+      const out = await importWorkbook(document.getElementById("wb-url").value, t => (wbRes.textContent = t));
+      const made = out.filter(x => x.id);
+      wbRes.className = made.length ? "result ok" : "result err";
+      wbRes.innerHTML = lastImport = (made.length ? `Imported ${made.length} report${made.length > 1 ? "s" : ""}:` : "Nothing in that sheet looked like a report.")
+        + `<div class="list">${out.map(x => `<div class="li"><span class="chip k">${esc(x.kind)}</span><span class="grow">${esc(x.tab)}${x.note ? ` <span class="muted small">· ${esc(x.note)}</span>` : ""}</span>${x.id ? `<a class="btn ghost sm" href="#/r/${x.id}/${x.kind === "Costing" ? "add" : "summary"}">Open</a>` : ""}</div>`).join("")}</div>`;
+    } catch (e) { wbRes.className = "result err"; wbRes.textContent = e.message; }
+    wbGo.disabled = false;
+  };
   app.querySelectorAll("[data-new]").forEach(b => b.onclick = () => {
     if (b.dataset.new !== "costing") return newReport(b.dataset.new);
     form.hidden = false; evIn.focus(); form.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1369,6 +1390,17 @@ async function readFileToInvoices(f){
   throw new Error("Unsupported file type");
 }
 
+/* put read invoices in a costing report's review list (duplicates flagged and unticked) */
+function queueInvoices(costingId, items){
+  const cur = db().reports[costingId] || {};
+  const next = [...(QUEUE.get(costingId) || [])];
+  for (const x of items) {
+    const dup = !x.error && (E.isDuplicate(x, cur) || next.some(y => !y.error && y.amount === x.amount && y.vendor === x.vendor && (y.invoiceNo || "") === (x.invoiceNo || "")));
+    next.push({ ...x, dup, use: !x.error && !dup && x.amount != null });
+  }
+  QUEUE.set(costingId, next);
+}
+
 function costingAdd(body, rep, CR){
   const q = QUEUE.get(rep.id) || [];
   const sureChip = x => `<span class="chip ${x.sure === "high" ? "yes" : x.sure === "medium" ? "k" : "no"}" title="${esc((x.reasons || []).join(" · "))}">${x.sure === "high" ? "Sure" : x.sure === "medium" ? "Check" : "Guess"}</span>`;
@@ -1407,6 +1439,7 @@ function costingAdd(body, rep, CR){
       <div id="k-status" class="result"></div>
       <p class="small dim">Invoices are read in this browser — the files aren't uploaded or kept. Put the Drive link in “Receipt link” if you want the file on record.</p>
     </div>
+    <div class="sec"><div class="row"><input type="text" id="k-gs" class="grow" placeholder="…or a Google Sheets link to a list of invoices / costs"><button class="btn sm" id="k-gsgo">Import sheet</button></div></div>
     <div class="sec"><details><summary>…or paste a list of invoices from Sheets</summary>
       <p class="sub">One row per invoice with a header row, e.g. <span class="kbd">Payee · Description · Amount · Currency · Date · Invoice # · Type</span>. Type is optional — without it each row is sorted by its words.</p>
       <textarea id="k-paste" placeholder="Paste rows…" style="min-height:90px"></textarea>
@@ -1421,15 +1454,7 @@ function costingAdd(body, rep, CR){
     </div>`;
 
   const setQ = list => { QUEUE.set(rep.id, list); render(); };
-  const enqueue = items => {
-    const cur = db().reports[rep.id];
-    const next = [...(QUEUE.get(rep.id) || [])];
-    for (const x of items) {
-      const dup = !x.error && (E.isDuplicate(x, cur) || next.some(y => !y.error && y.amount === x.amount && y.vendor === x.vendor && (y.invoiceNo || "") === (x.invoiceNo || "")));
-      next.push({ ...x, dup, use: !x.error && !dup && x.amount != null });
-    }
-    setQ(next);
-  };
+  const enqueue = items => { queueInvoices(rep.id, items); render(); };
   const handle = async all => {
     const files = all.filter(f => READABLE.test(f.name) || /^image\//.test(f.type) || f.type === "application/pdf");
     const skipped = all.length - files.length;
@@ -1455,6 +1480,18 @@ function costingAdd(body, rep, CR){
   drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); handle(await filesFromDrop(e.dataTransfer)); };
   const fold = body.querySelector("#k-folder");
   fold.onchange = () => handle([...fold.files].filter(f => !f.name.startsWith(".")));
+  body.querySelector("#k-gsgo").onclick = async () => {
+    const url = body.querySelector("#k-gs").value;
+    const m = url.match(/spreadsheets\/d\/([\w-]{20,})/);
+    if (!m) return toast("That isn't a Google Sheets link");
+    const gid = (url.match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+    try {
+      const rows = E.mapInvoiceRows(E.parseTable(await sheetCsv(m[1], gid))).filter(r => r.amount != null);
+      if (!rows.length) return toast("No costs found in that tab — it needs a header row with an Amount column");
+      enqueue(rows.map(r => ({ ...r, fileName: "Google Sheet" })));
+      toast(`${rows.length} costs read — review below`);
+    } catch (e) { toast(e.message); }
+  };
   body.querySelector("#k-pastego").onclick = () => {
     const rows = E.mapInvoiceRows(E.parseTable(body.querySelector("#k-paste").value));
     if (!rows.length) return toast("Nothing found — include the header row");
@@ -1593,6 +1630,51 @@ function importEventTab(text, url, repId, costs){
 
 /* #/import?sheet=ID&gid=G                    → one report
    #/import?sheet=ID&events=G1,G2&totals=GT    → every event tab, with costs from the Total Spend tab */
+/* All tabs of a workbook (Google's sheet viewer lists them), else just the tab in the link. */
+async function listTabs(sheetId, fallbackGid){
+  try {
+    const html = await (await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/htmlview`)).text();
+    const tabs = [...html.matchAll(/\{name: "((?:[^"\\]|\\.)*)", pageUrl: "[^"]*?gid=(\d+)/g)].map(m => ({ name: m[1].replace(/\\(.)/g, "$1"), gid: m[2] }));
+    if (tabs.length) return tabs;
+  } catch {}
+  return [{ name: "", gid: fallbackGid || "0" }];
+}
+
+/* Import every recognisable tab: weekly report → weekly, event table → event (+ costs), cost list → costing (for review). */
+async function importWorkbook(url, progress = () => {}){
+  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
+  if (!m) throw new Error("That isn't a Google Sheets link.");
+  const sid = m[1], gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  const tabs = await listTabs(sid, gid);
+  progress(`Reading ${tabs.length} tab${tabs.length > 1 ? "s" : ""}…`);
+  const texts = Object.fromEntries(await Promise.all(tabs.map(async t => [t.gid, await sheetCsv(sid, t.gid).catch(() => "")])));
+  // a cross-event summary tab supplies each event's influencer / non-influencer costs
+  let costsBy = {};
+  for (const t of tabs) { const c = E.parseEventTotals(texts[t.gid]); if (Object.keys(c).length) { costsBy = { ...costsBy, ...c }; t.totals = true; } }
+  const out = [];
+  for (const t of tabs) {
+    const text = texts[t.gid], link = sheetLink(sid, t.gid), tab = t.name || "Sheet";
+    if (!text) { out.push({ tab, kind: "Skipped", note: "couldn't open this tab" }); continue; }
+    if (t.totals) { out.push({ tab, kind: "Costs summary", note: "used for each event's costs" }); continue; }
+    try {
+      if (E.isEventSheet(text)) {
+        const name = E.parseEventSheet(text).name;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        out.push({ tab, kind: "Event", id: importEventTab(text, link, null, costsBy[key]).id, note: key ? "with costs" : "" });
+      } else if (E.parseReportSheet(text).posts.length) {
+        out.push({ tab, kind: "Weekly", id: (await importSheet(link)).id });
+      } else {
+        const rows = E.mapInvoiceRows(E.parseTable(text)).filter(r => r.amount != null);
+        if (!rows.length) { out.push({ tab, kind: "Skipped", note: "not a report, event table or cost list" }); continue; }
+        const id = startCosting(tab === "Sheet" ? "Imported costs" : tab);
+        queueInvoices(id, rows.map(r => ({ ...r, fileName: `${tab} (Google Sheet)` })));
+        out.push({ tab, kind: "Costing", id, note: `${rows.length} costs waiting for review` });
+      }
+    } catch (e) { out.push({ tab, kind: "Skipped", note: e.message }); }
+  }
+  return out;
+}
+
 async function renderImport(q){
   if (q.get("events")) {
     app.innerHTML = `<h1>Importing events…</h1><p class="sub" id="imp-st">Reading the Google Sheet.</p>`;
@@ -2004,7 +2086,10 @@ async function refreshFromSources(){
     }
   }
   label.textContent = before;
-  if (n) { localStorage.setItem("ss.sourcesAt", String(Date.now())); render(); }
+  if (n) {
+    localStorage.setItem("ss.sourcesAt", String(Date.now()));
+    if (route().name !== "new" && !editing()) render();          // never redraw a page someone is working on
+  }
   sync.show(sync.state);                                       // badge: "Live from Google Sheets · <time>"
   if (failed) toast(`Couldn't read ${failed} sheet tab${failed > 1 ? "s" : ""} — check they're shared “Anyone with the link”.`);
 }
