@@ -206,6 +206,10 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hb .ht{height:12px;background:var(--line-2);border-radius:4px;overflow:hidden}
 .hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
 .warnc{color:var(--warn)}
+.chip.rt-organic{background:var(--good-bg);color:var(--good)}
+.chip.rt-boosted{background:var(--pink-soft);color:#C2185B}
+.chip.rt-unknown{background:var(--warn-bg);color:var(--warn)}
+ol.top li .chip{margin-top:4px}
 
 
 @media print{
@@ -824,7 +828,7 @@ function tiles(list){
 function rankHTML(R){
   return `<div class="grid g3">${Object.entries(R.rankings).map(([name, list]) => `<div class="card" style="padding:14px">
     <h3>${esc(name)}</h3>
-    ${list.length ? `<ol style="margin:0;padding-left:18px;display:grid;gap:8px">${list.map(r => `<li style="font-size:12.5px;line-height:1.45">${link(r, 50)}<br><span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${F.int(r.views)} views · ${F.int(r.reach)} reach · <b>${F.pct(r.er)}</b> · ${r.boosted ? "Boosted" + (r.campaigns ? " (" + esc(r.campaigns) + ")" : "") : "Organic"}</span></li>`).join("")}</ol>` : `<p class="small muted">${/lowest/i.test(name) ? "Every post in this group is already in its top 3." : "No posts in this group."}</p>`}
+    ${list.length ? `<ol style="margin:0;padding-left:18px;display:grid;gap:8px">${list.map(r => `<li style="font-size:12.5px;line-height:1.45">${link(r, 50)}<br><span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${F.int(r.views)} views · ${F.int(r.reach)} reach · <b>${F.pct(r.er)}</b>${r.campaigns ? ` · ${esc(r.campaigns)}` : ""}</span><br>${reachChip(r)}</li>`).join("")}</ol>` : `<p class="small muted">${/lowest/i.test(name) ? "Every post in this group is already in its top 3." : "No posts in this group."}</p>`}
   </div>`).join("")}</div>`;
 }
 
@@ -1085,12 +1089,13 @@ function miniCmp(R, P, names){
   return `<div class="tw"><table><thead><tr><th></th><th class="n">This</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
 
+const reachChip = r => { const t = E.reachType(r); return `<span class="chip rt-${t.kind}" title="${esc(t.label)}">${esc(t.label)}</span>`; };
 function topPosts(R, by = "views", n = 3){
   const list = by === "er"
     ? [...R.contentRows].filter(r => r.er != null).sort((a, b) => b.er - a.er).slice(0, n)
     : [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
   if (!list.length) return `<p class="small muted">${by === "er" && R.contentRows.length ? "Needs likes, comments, saves and shares per post — not in this data yet." : "No posts yet."}</p>`;
-  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${by === "er" ? `<b>${F.pct(r.er)}</b> eng. · ${F.int(r.views)} views` : `<b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.`}${r.boosted ? " · boosted" : ""}</span></li>`).join("")}</ol>`;
+  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${by === "er" ? `<b>${F.pct(r.er)}</b> eng. · ${F.int(r.views)} views` : `<b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.`}</span>${reachChip(r)}</li>`).join("")}</ol>`;
 }
 
 function issuesLine(rep, R){

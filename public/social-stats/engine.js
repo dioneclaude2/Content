@@ -1366,3 +1366,13 @@ export function splitInvoicePages(pages) {
   }
   return out;
 }
+
+/** Organic or boosted, for labelling a post: how much of its views came from ads. */
+export function reachType(r) {
+  if (r.boosted && r.views) {
+    const share = r.paid / r.views;
+    return { kind: "boosted", share, label: `Boosted · ${(share * 100).toFixed(share < 0.01 ? 2 : 0)}% of views from ads`, short: `Boosted ${(share * 100).toFixed(share < 0.01 ? 2 : 0)}% paid` };
+  }
+  if (r.boostedFlag) return { kind: "unknown", share: null, label: "Ran as an ad · no ad data yet", short: "Ad, no data" };
+  return { kind: "organic", share: 0, label: "Pure organic", short: "Organic" };
+}

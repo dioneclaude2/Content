@@ -208,3 +208,7 @@ assert.equal(uber.vendor, "Uber");
 assert.match(uber.item, /^Trip to Arthur Ashe Stadium/);
 assert.equal(uber.category, "Flights / transportation");
 console.log("vendor tests passed");
+assert.equal(E.reachType({ boosted: true, views: 1000, paid: 250 }).label, "Boosted · 25% of views from ads");
+assert.equal(E.reachType({ boosted: false, boostedFlag: false }).short, "Organic");
+assert.equal(E.reachType({ boosted: false, boostedFlag: true }).kind, "unknown");
+console.log("reach label tests passed");
