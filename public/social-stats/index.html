@@ -207,6 +207,7 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
 .warnc{color:var(--warn)}
 
+
 @media print{
   .top,.subtabs,.tbl-tools,.noprint,.btn{display:none!important}
   body{background:#fff}
@@ -392,6 +393,52 @@ function toast(msg, action){
   clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), action ? 7000 : 2600);
 }
 
+/* ───────── PDF to send ─────────
+   A real document (selectable text, proper tables, page numbers) built by pdf.js with jsPDF.
+   summary = founder version (portrait) · full = every table (landscape) · costing = costing report.
+   Desktop: downloads the file. Phones: opens the share sheet (WhatsApp, Mail, Slack…). */
+let pdfBusy = false;
+async function exportPDF(id, mode){
+  if (pdfBusy) return;
+  const D = db(), rep = D.reports[id];
+  if (!rep) return;
+  pdfBusy = true;
+  toast("Making the PDF…");
+  try {
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js", "jspdf");
+    if (!window.jspdf.jsPDF.API.autoTable) await new Promise((ok, no) => {
+      const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
+      sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
+    });
+    const { buildPdf } = await import("./pdf.js");
+    let args;
+    if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
+    else {
+      const R = E.buildReport(rep, D, D.settings);
+      const pr = prevFor(rep, D);
+      args = { rep, R, P: pr ? E.buildReport(pr, D, D.settings) : null, mode, settings: D.settings };
+    }
+    const doc = buildPdf(args);
+    const kind = rep.type === "week" ? "Weekly social report" : rep.type === "costing" ? "Costing report" : "Event report";
+    const name = rep.type === "costing" ? (rep.eventName || rep.name) : rep.name;
+    const file = `${kind} - ${(name || "report").replace(/[\\/:*?"<>|]+/g, "-")}${mode === "full" ? " (full)" : ""}.pdf`;
+    const pdf = new File([doc.output("blob")], file, { type: "application/pdf" });
+    if (matchMedia("(pointer: coarse)").matches && navigator.canShare?.({ files: [pdf] })) {
+      await navigator.share({ files: [pdf], title: `${kind}: ${name}` }).catch(() => {});
+    } else {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(pdf); a.download = file; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      toast("PDF downloaded");
+    }
+  } catch (e) {
+    console.error(e); toast("Couldn't make the PDF — try again");
+  } finally { pdfBusy = false; }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pdf]");
+  if (b) { e.preventDefault(); exportPDF(b.dataset.pdfId, b.dataset.pdf); }
+});
+
 /* Delete a whole report (any type). Its posts and ad exports stay in the library. */
 function deleteReport(rep){
   const D = db();
@@ -478,6 +525,7 @@ function renderDashboard(D){
           <div class="hb-name">${esc(rep.name)}</div>
           <div class="small muted">${F.date(rep.start)}–${F.dateY(rep.end)} · data pulled ${F.dateY(rep.dataDate)}</div></div>
         ${picker}
+        <button class="btn ghost" data-pdf="summary" data-pdf-id="${rep.id}" title="Download this summary as a PDF to send">⬇ PDF</button>
         <a class="btn" href="#/r/${rep.id}/full">View report →</a>
       </div>
       ${rep.type === "week" ? weeklySummaryHTML(rep, R, P, D) : eventSummaryHTML(rep, R, P, D)}
@@ -698,7 +746,8 @@ function renderReport(D, id, tab, q){
       </div>
       <div class="row noprint">
         <button class="btn ghost sm" id="csv">Download CSV</button>
-        <button class="btn ghost sm" onclick="print()">Print / PDF</button>
+        <button class="btn ghost sm" data-pdf="summary" data-pdf-id="${id}">⬇ PDF · Summary</button>
+        <button class="btn ghost sm" data-pdf="full" data-pdf-id="${id}">⬇ PDF · Full report</button>
         <button class="btn ghost sm" id="share">Copy link</button>
         <button class="btn danger sm" id="hdr-del">Delete report</button>
       </div>
@@ -1158,7 +1207,7 @@ function renderCosting(D, rep, tab){
       <div class="row noprint">
         <button class="btn ghost sm" id="k-csv">Export CSV</button>
         <button class="btn ghost sm" id="k-tsv">Copy for Sheets</button>
-        <button class="btn ghost sm" onclick="print()">Print / PDF</button>
+        <button class="btn ghost sm" data-pdf="costing" data-pdf-id="${rep.id}">⬇ PDF</button>
         <button class="btn danger sm" id="hdr-del">Delete report</button>
       </div>
     </div>
