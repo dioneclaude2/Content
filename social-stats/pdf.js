@@ -97,7 +97,7 @@ function sheet(orientation) {
     P.y += 34;
   };
   /* a table; numeric columns right-aligned; rows can be {total} or {shade} */
-  P.table = (head, rows, { num = [], widths = {}, font = 8.5, title, status, links } = {}) => {
+  P.table = (head, rows, { num = [], widths = {}, font = 8.5, title, status, links, reach } = {}) => {
     if (title) P.h2(title);
     const body = rows.map(r => (Array.isArray(r) ? r : r.cells).map(c => clean(c)));
     const columnStyles = {};
@@ -119,6 +119,10 @@ function sheet(orientation) {
           if (r.total) { d.cell.styles.fontStyle = "bold"; d.cell.styles.fillColor = TINT; }
           if (r.shade) d.cell.styles.fillColor = [252, 247, 242];
           if (r.muted) d.cell.styles.textColor = MUTED;
+        }
+        if (reach != null && d.column.index === reach) {                  // organic green, boosted pink
+          d.cell.styles.fontStyle = "bold";
+          d.cell.styles.textColor = /^Organic/.test(d.cell.raw) ? GOOD : /^Boosted/.test(d.cell.raw) ? [194, 24, 91] : WARN;
         }
         if (status != null && d.column.index === status) {
           const s = Object.values(STATUS).find(([w]) => w === d.cell.raw);
@@ -192,9 +196,9 @@ function topTables(P, R) {
   for (const [title, by] of [["Top 3 posts by views", "views"], ["Top 3 posts by engagement rate", "er"]]) {
     const list = topRows(R, by);
     if (!list.length) { P.h2(title); P.para(by === "er" ? "Needs likes, comments, saves and shares per post — not in this data yet." : "No posts yet.", { color: MUTED, size: 9 }); continue; }
-    P.table(["#", "Post", "Account", "Format", "Views", "Eng. rate", "Boosted"],
-      list.map((r, i) => [i + 1, (r.content || r.id).slice(0, 70), r.collab ? r.account : "Hello Nancy", r.format, F.int(r.views), F.pct(r.er), r.boosted ? "Yes" : "No"]),
-      { title, num: [0, 4, 5], widths: { 0: 18, 1: P.inner * 0.42 }, links: list.map(r => ({ 1: r.link })) });
+    P.table(["#", "Post", "Account", "Format", "Views", "Eng. rate", "Organic / boosted"],
+      list.map((r, i) => [i + 1, (r.content || r.id).slice(0, 70), r.collab ? r.account : "Hello Nancy", r.format, F.int(r.views), F.pct(r.er), E.reachType(r).short]),
+      { title, num: [0, 4, 5], widths: { 0: 18, 1: P.inner * 0.36 }, reach: 6, links: list.map(r => ({ 1: r.link })) });
   }
 }
 function compareTable(P, R, Pv, names, title) {
