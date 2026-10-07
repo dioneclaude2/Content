@@ -151,6 +151,10 @@ td.wrap{white-space:normal;min-width:220px}
 .rundown ul{padding-left:20px;margin:6px 0}
 
 .empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+.toast-btn{margin-left:12px;background:var(--pink);color:#fff;border:0;border-radius:999px;padding:4px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.selbar{position:sticky;top:64px;z-index:15;display:flex;gap:10px;align-items:center;background:var(--ink);color:#fff;border-radius:14px;padding:10px 14px;margin-top:16px;font-weight:700;font-size:13px}
+.selbar #selcount{margin-right:auto}
+.selbar .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.2)}
 details summary{cursor:pointer;font-weight:700;font-size:12.5px}
 .kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--tint);padding:1px 6px;border-radius:5px}
@@ -246,7 +250,14 @@ function put(key, value){
   saveLocal();
   sync.queue(key);
 }
-const del = key => put(key, { deleted: true });
+/* Deleting keeps the record, marked deleted, so it can be restored from Settings › Recently deleted. */
+const del = (key, extra = {}) => put(key, { ...(docs[key] || {}), ...extra, deleted: true, deletedAt: Date.now() });
+const restore = key => {
+  const { deleted, deletedAt, wasFor, ...rest } = docs[key] || {};
+  put(key, rest);
+  const ev = wasFor && docs["ss.report." + wasFor];                 // a costing report goes back to its event
+  if (ev && !ev.deleted && !ev.costingId) put("ss.report." + wasFor, { ...ev, costingId: rest.id });
+};
 
 function db(){
   const out = { settings: { ...E.DEFAULT_SETTINGS }, posts: {}, imports: {}, reports: {} };
@@ -354,10 +365,31 @@ const KIND = { post: "", extra: "Extra post", separate: "Separate ad version", o
 const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 const evColours = rep => E.EVENT_COLOURS[rep.colour] || (rep.type === "week" ? ["#FFE3EE", "#FFF4F8"] : E.EVENT_COLOURS.Pink);
 
-function toast(msg){
+function toast(msg, action){
   const t = document.getElementById("toast");
   t.textContent = msg; t.hidden = false;
-  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600);
+  if (action) {
+    const b = document.createElement("button");
+    b.className = "toast-btn"; b.textContent = action.label;
+    b.onclick = () => { t.hidden = true; action.fn(); };
+    t.append(b);
+  }
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), action ? 7000 : 2600);
+}
+
+/* Delete a whole report (any type). Its posts and ad exports stay in the library. */
+function deleteReport(rep){
+  const D = db();
+  const label = rep.type === "costing" ? `the costing report for “${rep.eventName || rep.name}”` : `“${rep.name}”`;
+  if (!confirm(`Delete ${label}?\n\nYou can restore it later from Settings › Recently deleted.`)) return;
+  let wasFor = null;
+  if (rep.type === "costing") {                                   // unlink it from its event (relinked on restore)
+    const ev = Object.values(D.reports).find(r => r.costingId === rep.id);
+    if (ev) { put("ss.report." + ev.id, { ...ev, costingId: null }); wasFor = ev.id; }
+  }
+  del("ss.report." + rep.id, wasFor ? { wasFor } : {});
+  location.hash = "#/reports";
+  toast("Report deleted", { label: "Undo", fn: () => { restore("ss.report." + rep.id); location.hash = `#/r/${rep.id}`; render(); } });
 }
 async function copy(text, msg = "Copied"){
   try { await navigator.clipboard.writeText(text); toast(msg); }
@@ -609,10 +641,12 @@ function renderReport(D, id, tab, q){
         <button class="btn ghost sm" id="csv">Download CSV</button>
         <button class="btn ghost sm" onclick="print()">Print / PDF</button>
         <button class="btn ghost sm" id="share">Copy link</button>
+        <button class="btn danger sm" id="hdr-del">Delete report</button>
       </div>
     </div>
     <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
     <div id="body"></div>`;
+  document.getElementById("hdr-del").onclick = () => deleteReport(rep);
   document.getElementById("share").onclick = () => copy(location.href.replace(/#.*/, "") + `#/r/${id}`, "Link copied");
   document.getElementById("csv").onclick = () => downloadCSV(rep);
   const body = document.getElementById("body");
@@ -1049,7 +1083,7 @@ const QUEUE = new Map();                           // costing id -> invoices rea
 
 function renderCosting(D, rep, tab){
   const CR = E.buildCosting(rep, D, D.settings);
-  const eventName = rep.eventName || CR.event?.name || "";
+  const eventName = rep.eventName || CR.event?.name || (rep.name && rep.name !== "New costing" ? rep.name.replace(/\s+costs$/i, "") : "");
   const [c1, c2] = evColours(rep);
   document.documentElement.style.setProperty("--ev", c1);
   document.documentElement.style.setProperty("--ev2", c2);
@@ -1066,6 +1100,7 @@ function renderCosting(D, rep, tab){
         <button class="btn ghost sm" id="k-csv">Export CSV</button>
         <button class="btn ghost sm" id="k-tsv">Copy for Sheets</button>
         <button class="btn ghost sm" onclick="print()">Print / PDF</button>
+        <button class="btn danger sm" id="hdr-del">Delete report</button>
       </div>
     </div>
     <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${rep.id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
@@ -1074,6 +1109,7 @@ function renderCosting(D, rep, tab){
     const blob = new Blob([costingRows(CR).map(r => r.map(c => csvCell(String(c ?? ""))).join(",")).join("\n")], { type: "text/csv" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${(rep.name || "costing").replace(/[^\w]+/g, "-")}.csv`; a.click();
   };
+  document.getElementById("hdr-del").onclick = () => deleteReport(rep);
   document.getElementById("k-tsv").onclick = () => copy(costingRows(CR).map(r => r.join("\t")).join("\n"), "Costs copied — paste into Sheets");
   const body = document.getElementById("body");
   if (!eventName) {                                            // nothing else until it has an event
@@ -1139,12 +1175,13 @@ function costingLines(body, rep, CR, D){
   const linked = CR.event;
   const curOpts = cur => [...new Set([...Object.keys(CR.fx), cur])].map(c => `<option ${c === cur ? "selected" : ""}>${esc(c)}</option>`).join("");
   const inp = (list, i, k, v, w = 120, type = "text") => `<input class="ed" style="width:${w}px" type="${type}" data-l="${list}:${i}:${k}" value="${esc(v ?? "")}">`;
-  const infRows = CR.influencers.map((l, i) => `<tr><td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete">×</button></td></tr>`);
-  const evRow = (l, i) => `<tr><td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete">×</button></td></tr>`;
+  const pick = (list, i) => `<td><input type="checkbox" data-pick="${list}:${i}" aria-label="Select line"></td>`;
+  const infRows = CR.influencers.map((l, i) => `<tr>${pick("influencers", i)}<td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete this expense">🗑</button></td></tr>`);
+  const evRow = (l, i) => `<tr>${pick("eventCosts", i)}<td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete this expense">🗑</button></td></tr>`;
   const evRows = E.COST_CATEGORIES.flatMap(cat => {
     const ls = CR.eventCosts.filter(l => l.category === cat);
     if (!ls.length) return [];
-    return [`<tr class="seg"><td colspan="7">${esc(cat)} · ${ls.length}</td><td class="n">${F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0))}</td><td colspan="3"></td></tr>`, ...ls.map(l => evRow(l, l.i))];
+    return [`<tr class="seg"><td colspan="8">${esc(cat)} · ${ls.length}</td><td class="n">${F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0))}</td><td colspan="3"></td></tr>`, ...ls.map(l => evRow(l, l.i))];
   });
   body.innerHTML = `
     <div class="sec"><h2>Details</h2><div class="card"><div class="fields">
@@ -1161,14 +1198,15 @@ function costingLines(body, rep, CR, D){
     <div class="row" style="margin-top:14px"><button class="btn danger sm" id="k-del">Delete costing report</button></div></div></div>
 
     ${CR.flags.filter(f => f.level === "bad").length ? `<div class="sec">${flagsHTML({ flags: CR.flags.filter(f => f.level === "bad"), rep }, 0)}</div>` : ""}
+    <div class="selbar" id="selbar" hidden><span id="selcount"></span><button class="btn danger sm" id="seldel">Delete selected</button><button class="btn ghost sm" id="selnone">Clear selection</button></div>
     <div class="sec"><h2>Influencers &amp; models</h2>
-      ${infRows.length ? `<div class="tw"><table><thead><tr><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
-        <tr class="total"><td colspan="5">Influencers total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      ${infRows.length ? `<div class="tw"><table><thead><tr><th><input type="checkbox" data-pickall="influencers" aria-label="Select all"></th><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
+        <tr class="total"><td colspan="6">Influencers total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
       <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addinf">+ Add influencer</button></div>
     </div>
     <div class="sec"><h2>Event costs</h2>
-      ${evRows.length ? `<div class="tw"><table><thead><tr><th>Category</th><th>Item</th><th>Vendor</th><th>Date</th><th>Qty</th><th>Unit price</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${evRows.join("")}
-        <tr class="total"><td colspan="7">Event costs total</td><td class="n">${F.usd(CR.T.eventCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      ${evRows.length ? `<div class="tw"><table><thead><tr><th><input type="checkbox" data-pickall="eventCosts" aria-label="Select all"></th><th>Category</th><th>Item</th><th>Vendor</th><th>Date</th><th>Qty</th><th>Unit price</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${evRows.join("")}
+        <tr class="total"><td colspan="8">Event costs total</td><td class="n">${F.usd(CR.T.eventCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
       <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addcost">+ Add cost</button></div>
     </div>
     <div class="sec"><div class="flag info"><b>Total</b><span>${F.usd(CR.T.total)} — influencers ${F.usd(CR.T.influencerCost)} + event costs ${F.usd(CR.T.eventCost)}. Ads are counted in the event report, from the ad exports.</span></div></div>`;
@@ -1192,11 +1230,7 @@ function costingLines(body, rep, CR, D){
   };
   body.querySelectorAll("[data-kfx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...CR.fx, [el.dataset.kfx]: v } }); render(); });
   body.querySelector("#k-fxnew").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...CR.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
-  body.querySelector("#k-del").onclick = () => {
-    if (!confirm(`Delete “${rep.name}”?`)) return;
-    if (linked) put("ss.report." + linked.id, { ...db().reports[linked.id], costingId: null });
-    del("ss.report." + rep.id); location.hash = "#/reports";
-  };
+  body.querySelector("#k-del").onclick = () => deleteReport(db().reports[rep.id]);
   const NUMS = new Set(["fee", "qty", "unit"]);
   body.querySelectorAll("[data-l]").forEach(el => el.onchange = () => {
     const [list, i, k] = el.dataset.l.split(":");
@@ -1205,10 +1239,30 @@ function costingLines(body, rep, CR, D){
     lines[+i] = { ...lines[+i], [k]: NUMS.has(k) ? E.num(el.value) : el.value };
     save({ [list]: lines }); render();
   });
-  body.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
-    const [list, i] = b.dataset.del.split(":"); const cur = db().reports[rep.id];
-    save({ [list]: (cur[list] || []).filter((_, j) => j !== +i) }); render();
+  /* delete one or many expenses — always undoable */
+  const deleteLines = picks => {
+    const cur = db().reports[rep.id];
+    const before = { influencers: cur.influencers || [], eventCosts: cur.eventCosts || [] };
+    const drop = { influencers: new Set(), eventCosts: new Set() };
+    for (const p of picks) { const [list, i] = p.split(":"); drop[list].add(+i); }
+    save({ influencers: before.influencers.filter((_, j) => !drop.influencers.has(j)), eventCosts: before.eventCosts.filter((_, j) => !drop.eventCosts.has(j)) });
+    render();
+    const n = picks.length;
+    toast(`Deleted ${n} expense${n > 1 ? "s" : ""}`, { label: "Undo", fn: () => { save(before); render(); } });
+  };
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteLines([b.dataset.del]));
+  const picked = () => [...body.querySelectorAll("[data-pick]:checked")].map(x => x.dataset.pick);
+  const syncBar = () => {
+    const n = picked().length;
+    body.querySelector("#selbar").hidden = !n;
+    body.querySelector("#selcount").textContent = `${n} selected`;
+  };
+  body.querySelectorAll("[data-pick]").forEach(x => x.onchange = syncBar);
+  body.querySelectorAll("[data-pickall]").forEach(x => x.onchange = () => {
+    body.querySelectorAll(`[data-pick^="${x.dataset.pickall}:"]`).forEach(c => (c.checked = x.checked)); syncBar();
   });
+  body.querySelector("#seldel").onclick = () => { const p = picked(); if (p.length) deleteLines(p); };
+  body.querySelector("#selnone").onclick = () => { body.querySelectorAll("[data-pick],[data-pickall]").forEach(c => (c.checked = false)); syncBar(); };
   body.querySelectorAll("[data-move]").forEach(b => b.onclick = () => {          // wrong list? flip it
     const [list, i] = b.dataset.move.split(":"); const cur = db().reports[rep.id];
     const l = cur[list][+i];
@@ -1656,7 +1710,7 @@ function renderData(body, rep, R, D){
   if (rep.fresh) { nm.focus(); nm.select(); } bind("#d-start", "start"); bind("#d-end", "end"); bind("#d-data", "dataDate"); bind("#d-colour", "colour");
   body.querySelectorAll("[data-fx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...R.fx, [el.dataset.fx]: v } }); render(); });
   body.querySelector("#fx-new").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...R.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
-  body.querySelector("#d-del").onclick = () => { if (confirm(`Delete “${rep.name}”? Posts and ad exports stay in the library.`)) { del("ss.report." + rep.id); location.hash = "#/"; } };
+  body.querySelector("#d-del").onclick = () => deleteReport(db().reports[rep.id]);
   body.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => copy(TEMPLATES[b.dataset.tpl] + "\n", "Header row copied — paste it into row 1 of the sheet"));
 
   body.querySelector("#g-go").onclick = async () => {
@@ -1857,6 +1911,14 @@ function renderSettings(D){
     <div class="card"><h3>Default FX (USD per 1 unit)</h3><div class="fields" style="margin-top:10px">
       ${Object.entries(s.fx).filter(([c]) => c !== "USD").map(([c, v]) => `<label class="f">${c}<input type="text" data-sfx="${c}" value="${v}"></label>`).join("")}
     </div></div>
+    <div class="card"><h3>Recently deleted</h3>
+      ${(() => {
+        const gone = Object.entries(docs).filter(([k, v]) => k.startsWith("ss.report.") && v?.deleted && v.deletedAt && Date.now() - v.deletedAt < 90 * 864e5)
+          .sort((a, b) => b[1].deletedAt - a[1].deletedAt);
+        return gone.length ? `<div class="list">${gone.map(([k, v]) => `<div class="li"><span class="chip k">${v.type === "week" ? "Weekly" : v.type === "costing" ? "Costing" : "Event"}</span><span class="grow">${esc(v.eventName || v.name || "Untitled")} <span class="muted small">· deleted ${new Date(v.deletedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span></span><button class="btn ghost sm" data-restore="${k}">Restore</button></div>`).join("")}</div>`
+          : `<p class="small muted">Nothing deleted in the last 90 days.</p>`;
+      })()}
+    </div>
     <div class="card"><h3>Sync &amp; backup</h3>
       <p class="sub">Status: <b>${document.getElementById("sync").innerText}</b>. Data is shared through the Vercel API (Upstash). If it says “This browser only”, the API isn't live yet and everything is saved in this browser.</p>
       <div class="row" style="margin-top:12px"><button class="btn sm" id="bk">Download backup</button><label class="btn ghost sm">Restore backup<input type="file" id="rs" accept=".json" hidden></label><button class="btn ghost sm" id="pc">Team passcode</button></div>
@@ -1883,6 +1945,7 @@ function renderSettings(D){
     } catch { toast("That file isn't a Social Stats backup"); }
   };
   document.getElementById("pc").onclick = askPass;
+  app.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { restore(b.dataset.restore); toast("Restored"); render(); });
 }
 
 render();
