@@ -224,7 +224,7 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
     <a href="#/ads" data-r="ads">Ad exports</a>
     <a href="#/settings" data-r="settings">Settings</a>
   </nav>
-  <button class="sync" id="sync" data-s="off" title="Sync status"><i></i><span>This browser only</span></button>
+  <button class="sync" id="sync" data-s="off" title="Sync status" hidden><i></i><span></span></button>
 </div></header>
 <main id="app"></main>
 <div class="toast" id="toast" hidden></div>
@@ -288,6 +288,7 @@ const sync = {
     const at = +(localStorage.getItem("ss.sourcesAt") || 0);
     const live = s === "off" && at;
     el.dataset.s = live ? "sheets" : s;
+    el.hidden = s === "off";                                     // only shown once team sync exists
     el.querySelector("span").textContent = live
       ? `Live from Google Sheets · ${new Date(at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`
       : { off: "Saved in this browser", ok: "Synced with team", saving: "Saving…", error: "Offline — retrying" }[s];
