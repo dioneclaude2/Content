@@ -450,7 +450,8 @@ function renderDashboard(D){
   const q = route().q;
   // latest week that has posts, unless one was picked
   const wk = D.reports[q.get("w")] || weeks.find(r => E.buildReport(r, D, D.settings).contentRows.length) || weeks[0];
-  const ev = D.reports[q.get("e")] || events[0];
+  // latest event that has posts (an empty draft doesn't take over the home page)
+  const ev = D.reports[q.get("e")] || events.find(r => (r.postIds || []).length) || events[0];
 
   const block = (title, rep, list, key, empty) => {
     const picker = list.length > 1 ? `<select class="pickrep" data-key="${key}">${list.map(r => `<option value="${r.id}" ${r.id === rep?.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>` : "";
