@@ -195,3 +195,16 @@ for (const g of ["0", "1433892578", "868315963", "392856255"]) {
   console.log(`  ${ev.name}: ${ev.posts.length} posts, ${ev.ads.length} ad rows, data ${ev.dataDate} — totals match`);
 }
 console.log("event sheet tests passed");
+
+// one PDF with several invoices is split by page; one invoice over two pages is not
+const two = E.splitInvoicePages(["Studio A\nInvoice # 1\nTotal $100.00", "Hotel B\nInvoice # 2\nTotal due $250.00"]);
+assert.equal(two.length, 2);
+assert.equal(E.readInvoice(two[1]).amount, 250);
+assert.equal(E.splitInvoicePages(["Studio A\nInvoice # 1\nLine items…", "continued\nTotal $100.00"]).length, 1);
+assert.equal(E.splitInvoicePages(["A\nTotal $1.00", "terms and conditions", "B\nTotal $2.00"]).length, 2);
+console.log("multi-invoice pdf tests passed");
+const uber = E.readInvoice("Uber Receipt\nDate: 30 Aug 2026\nTrip to Arthur Ashe Stadium   $64.20\nTotal $64.20");
+assert.equal(uber.vendor, "Uber");
+assert.match(uber.item, /^Trip to Arthur Ashe Stadium/);
+assert.equal(uber.category, "Flights / transportation");
+console.log("vendor tests passed");

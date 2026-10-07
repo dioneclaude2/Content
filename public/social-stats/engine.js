@@ -988,7 +988,14 @@ export function readInvoice(text, fileName = "") {
     const m = lines[i].match(/^(?:from|bill from|billed by|issued by|payee|vendor|supplier|pay to|name)\s*[:\-]\s*(.*)$/i);
     if (m) vendor = (m[1] || lines[i + 1] || "").trim();
   }
-  if (!vendor) vendor = lines.find(l => l.length >= 2 && l.length <= 60 && !/invoice|receipt|tax|date|bill to|page|total|amount|^\d|^#|@/i.test(l) && !OURS.test(l)) || "";
+  // otherwise the first short line with no amount, minus words like "Invoice"/"Receipt" ("Uber Receipt" → "Uber")
+  if (!vendor) {
+    for (const l of lines) {
+      if (/date|bill to|page|total|amount|^\d|^#|@|invoice\s*(no|#|number)/i.test(l) || OURS.test(l) || amountsIn(l).length) continue;
+      const v = l.replace(/\b(tax\s+)?(invoice|receipt|bill|statement|quotation)\b/gi, "").replace(/^[\s:–-]+|[\s:–-]+$/g, "").trim();
+      if (v.length >= 2 && v.length <= 60) { vendor = v; break; }
+    }
+  }
   vendor = vendor.replace(OURS, "").replace(/\s{2,}/g, " ").trim();
 
   const c = classifyCost(`${src}\n${fileName.replace(/[_\-.]+/g, " ")}`);
@@ -1087,6 +1094,10 @@ export function buildCosting(rep, db, settings = DEFAULT_SETTINGS) {
   const dups = [...seen.values()].filter(n => n > 1).length;
   if (dups) flags.push({ level: "warn", text: `${dups} possible duplicate invoice${dups > 1 ? "s" : ""} (same invoice number, or same payee + amount + date).` });
 
+  // imported summary totals + real invoices = the same money counted twice
+  const sheetLines = [...infl, ...costs].filter(l => l.source === "Total Spend tab");
+  if (sheetLines.length && sheetLines.length < infl.length + costs.length)
+    flags.push({ level: "bad", text: "This costing still has the summary totals imported from the sheet, plus individual invoices — the same costs are probably counted twice. Delete the “total from sheet” lines once all invoices are in (or delete the invoices)." });
   const influencerCost = sum(infl, l => l.usd);
   const eventCost = sum(costs, l => l.usd);
   const byCategory = COST_CATEGORIES.map(k => ({ category: k, usd: sum(costs.filter(l => l.category === k), l => l.usd), lines: costs.filter(l => l.category === k).length }))
@@ -1334,6 +1345,24 @@ export function parseEventTotals(text) {
         if (/^cost\b/i.test(rows[k][j] || "")) { out[name] = { influencerCost: num(rows[k][ci]), eventCost: num(rows[k][cn]) }; break; }
       }
     });
+  }
+  return out;
+}
+
+/** A PDF can hold one invoice over several pages, or a stack of invoices (one per page).
+    Pages are split only when two or more of them each carry their own total. */
+export function splitInvoicePages(pages) {
+  const texts = (pages || []).map(t => String(t || "")).filter(t => t.trim());
+  if (texts.length < 2) return [texts.join("\n")];
+  const hasTotal = t => t.split(/\n+/).some(l => /grand total|total due|amount due|balance due|total payable|\btotal\b/i.test(l)
+    && !/sub\s*-?total/i.test(l) && amountsIn(l).length);
+  const own = texts.filter(hasTotal).length;
+  if (own < 2) return [texts.join("\n")];
+  // pages without a total (cover sheets, terms) stay attached to the invoice before them
+  const out = [];
+  for (const t of texts) {
+    if (hasTotal(t) || !out.length) out.push(t);
+    else out[out.length - 1] += "\n" + t;
   }
   return out;
 }

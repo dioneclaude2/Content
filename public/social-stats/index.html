@@ -191,6 +191,9 @@ ol.top li span{display:block;font-size:12px;margin-top:2px}
 .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--line);border-radius:20px;padding:36px 16px;background:var(--paper);cursor:pointer;text-align:center}
 .drop b{font-size:17px}.drop span{color:var(--muted);font-size:12.5px}
 .drop.over,.drop:hover{border-color:var(--pink);background:var(--pink-soft)}
+.prog{height:6px;background:var(--line-2);border-radius:4px;overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;width:0;background:var(--pink);transition:width .2s}
+tr.seg td{background:var(--tint);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hbars{display:grid;gap:8px}
 .hb{display:grid;grid-template-columns:minmax(110px,170px) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
@@ -511,11 +514,28 @@ function renderNew(D){
       </button>
     </div>
     ${events.length ? `<p class="small muted">A costing report can be linked to an event at any time — from either report.</p>` : ""}`;
-  app.querySelectorAll("[data-new]").forEach(b => b.onclick = () => newReport(b.dataset.new));
+  app.querySelector(".choose").insertAdjacentHTML("afterend", `
+    <div class="card sec" id="cost-form" hidden>
+      <h3>Which event is this costing for?</h3>
+      <p class="sub" style="margin-top:0">Every costing report belongs to one event. Pick an existing event or type a new name.</p>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="cost-ev" class="grow" list="ev-names" placeholder="Event name, e.g. US Open" autocomplete="off">
+        <datalist id="ev-names">${events.map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
+        <button class="btn pink" id="cost-go" disabled>Start costing →</button>
+      </div>
+    </div>`);
+  const form = document.getElementById("cost-form"), evIn = document.getElementById("cost-ev"), go = document.getElementById("cost-go");
+  evIn.oninput = () => (go.disabled = !evIn.value.trim());
+  evIn.onkeydown = e => { if (e.key === "Enter" && evIn.value.trim()) go.click(); };
+  go.onclick = () => { const id = startCosting(evIn.value.trim()); location.hash = `#/r/${id}/add`; };
+  app.querySelectorAll("[data-new]").forEach(b => b.onclick = () => {
+    if (b.dataset.new !== "costing") return newReport(b.dataset.new);
+    form.hidden = false; evIn.focus(); form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 }
 
 function newReport(type){
-  if (type === "costing") { const id = newCosting({}); location.hash = `#/r/${id}/costs`; return; }
+  if (type === "costing") { location.hash = "#/new"; return; }
   const id = uid();
   const t = today();
   let rep;
@@ -530,6 +550,17 @@ function newReport(type){
   rep.fx = { ...db().settings.fx };
   put("ss.report." + id, rep);
   location.hash = `#/r/${id}/data`;
+}
+
+/* A costing report for an event name: links to the event report of the same name when there is one. */
+function startCosting(eventName){
+  const D = db();
+  const ev = Object.values(D.reports).find(r => r.type === "event" && r.name.trim().toLowerCase() === eventName.toLowerCase());
+  if (ev?.costingId && D.reports[ev.costingId]) return ev.costingId;               // that event already has one: open it
+  const id = newCosting({ name: eventName, eventName, start: ev?.start || today(), end: ev?.end || today(), colour: ev?.colour
+    || Object.keys(E.EVENT_COLOURS).find(k => eventName.toLowerCase().includes(k.toLowerCase())) || "Pink" });
+  if (ev) put("ss.report." + ev.id, { ...ev, costingId: id });
+  return id;
 }
 
 function newCosting(fields){
@@ -1018,6 +1049,7 @@ const QUEUE = new Map();                           // costing id -> invoices rea
 
 function renderCosting(D, rep, tab){
   const CR = E.buildCosting(rep, D, D.settings);
+  const eventName = rep.eventName || CR.event?.name || "";
   const [c1, c2] = evColours(rep);
   document.documentElement.style.setProperty("--ev", c1);
   document.documentElement.style.setProperty("--ev2", c2);
@@ -1027,7 +1059,7 @@ function renderCosting(D, rep, tab){
     <div class="rhead" style="--ev:${c1}">
       <div class="grow">
         <div class="small muted"><a href="#/reports">Reports</a> / Costing</div>
-        <h1 style="margin-top:6px">${esc(rep.name || "Untitled")}</h1>
+        <h1 style="margin-top:6px">${esc(eventName || "Untitled event")}</h1>
         <div class="titleline">Costing report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${CR.T.lines} lines${CR.event ? ` · for <a href="#/r/${CR.event.id}">${esc(CR.event.name)}</a>` : ""}</div>
       </div>
       <div class="row noprint">
@@ -1044,6 +1076,21 @@ function renderCosting(D, rep, tab){
   };
   document.getElementById("k-tsv").onclick = () => copy(costingRows(CR).map(r => r.join("\t")).join("\n"), "Costs copied — paste into Sheets");
   const body = document.getElementById("body");
+  if (!eventName) {                                            // nothing else until it has an event
+    body.innerHTML = `<div class="sec card"><h3>Which event is this costing for?</h3>
+      <div class="row" style="margin-top:10px"><input type="text" id="k-evname" class="grow" list="ev-names2" placeholder="Event name">
+      <datalist id="ev-names2">${Object.values(D.reports).filter(r => r.type === "event").map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
+      <button class="btn pink" id="k-evgo">Save</button></div></div>`;
+    document.getElementById("k-evgo").onclick = () => {
+      const v = document.getElementById("k-evname").value.trim();
+      if (!v) return toast("Type the event name");
+      const ev = Object.values(db().reports).find(r => r.type === "event" && r.name.trim().toLowerCase() === v.toLowerCase() && !r.costingId);
+      put("ss.report." + rep.id, { ...db().reports[rep.id], name: v, eventName: v, fresh: false });
+      if (ev) put("ss.report." + ev.id, { ...ev, costingId: rep.id });
+      render();
+    };
+    return;
+  }
   if (tab === "costs") return costingLines(body, rep, CR, D);
   if (tab === "add") return costingAdd(body, rep, CR);
   costingSummary(body, rep, CR);
@@ -1093,10 +1140,15 @@ function costingLines(body, rep, CR, D){
   const curOpts = cur => [...new Set([...Object.keys(CR.fx), cur])].map(c => `<option ${c === cur ? "selected" : ""}>${esc(c)}</option>`).join("");
   const inp = (list, i, k, v, w = 120, type = "text") => `<input class="ed" style="width:${w}px" type="${type}" data-l="${list}:${i}:${k}" value="${esc(v ?? "")}">`;
   const infRows = CR.influencers.map((l, i) => `<tr><td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete">×</button></td></tr>`);
-  const evRows = CR.eventCosts.map((l, i) => `<tr><td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete">×</button></td></tr>`);
+  const evRow = (l, i) => `<tr><td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete">×</button></td></tr>`;
+  const evRows = E.COST_CATEGORIES.flatMap(cat => {
+    const ls = CR.eventCosts.filter(l => l.category === cat);
+    if (!ls.length) return [];
+    return [`<tr class="seg"><td colspan="7">${esc(cat)} · ${ls.length}</td><td class="n">${F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0))}</td><td colspan="3"></td></tr>`, ...ls.map(l => evRow(l, l.i))];
+  });
   body.innerHTML = `
     <div class="sec"><h2>Details</h2><div class="card"><div class="fields">
-      <label class="f">Name<input type="text" id="k-name" value="${esc(rep.name || "")}"></label>
+      <label class="f">Event name *<input type="text" id="k-name" value="${esc(rep.eventName || CR.event?.name || rep.name || "")}"></label>
       <label class="f">Start<input type="date" id="k-start" value="${rep.start || ""}"></label>
       <label class="f">End<input type="date" id="k-end" value="${rep.end || ""}"></label>
       <label class="f">For event report<select id="k-event"><option value="">Not linked</option>${events.map(e => `<option value="${e.id}" ${linked?.id === e.id ? "selected" : ""} ${e.costingId && e.costingId !== rep.id ? "disabled" : ""}>${esc(e.name)}${e.costingId && e.costingId !== rep.id ? " (has its own)" : ""}</option>`).join("")}</select></label>
@@ -1108,6 +1160,7 @@ function costingLines(body, rep, CR, D){
     </details>
     <div class="row" style="margin-top:14px"><button class="btn danger sm" id="k-del">Delete costing report</button></div></div></div>
 
+    ${CR.flags.filter(f => f.level === "bad").length ? `<div class="sec">${flagsHTML({ flags: CR.flags.filter(f => f.level === "bad"), rep }, 0)}</div>` : ""}
     <div class="sec"><h2>Influencers &amp; models</h2>
       ${infRows.length ? `<div class="tw"><table><thead><tr><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
         <tr class="total"><td colspan="5">Influencers total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
@@ -1122,7 +1175,11 @@ function costingLines(body, rep, CR, D){
 
   const save = patch => put("ss.report." + rep.id, { ...db().reports[rep.id], ...patch });
   const nm = body.querySelector("#k-name");
-  nm.onchange = () => { const colour = Object.keys(E.EVENT_COLOURS).find(k => nm.value.toLowerCase().includes(k.toLowerCase())); save({ name: nm.value, fresh: false, ...(colour && rep.fresh ? { colour } : {}) }); render(); };
+  nm.onchange = () => {
+    const v = nm.value.trim();
+    if (!v) { toast("A costing report needs its event name"); nm.value = rep.eventName || rep.name || ""; return; }
+    save({ name: v, eventName: v, fresh: false }); render();
+  };
   if (rep.fresh) { nm.focus(); nm.select(); }
   body.querySelector("#k-start").onchange = e => { save({ start: e.target.value }); render(); };
   body.querySelector("#k-end").onchange = e => { save({ end: e.target.value }); render(); };
@@ -1186,11 +1243,12 @@ async function ocr(img){
   return data.text || "";
 }
 /* PDF text, rebuilt into lines by position; scanned PDFs fall back to reading the page image */
-async function pdfText(file){
+async function pdfPages(file){
   const lib = await loadPdf();
   const doc = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
-  let text = "";
-  for (let p = 1; p <= Math.min(doc.numPages, 4); p++) {
+  const pages = [];
+  for (let p = 1; p <= Math.min(doc.numPages, 40); p++) {
+    let text = "";
     const page = await doc.getPage(p);
     const tc = await page.getTextContent();
     const rows = new Map();
@@ -1200,23 +1258,39 @@ async function pdfText(file){
       if (!rows.has(y)) rows.set(y, []);
       rows.get(y).push(it);
     }
-    text += [...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, its]) => its.sort((a, b) => a.transform[4] - b.transform[4]).map(i => i.str).join("  ")).join("\n") + "\n";
-  }
-  if (text.replace(/\s/g, "").length < 40) {                     // a scan: no text layer
-    text = "";
-    for (let p = 1; p <= Math.min(doc.numPages, 2); p++) {
-      const page = await doc.getPage(p);
+    text = [...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, its]) => its.sort((a, b) => a.transform[4] - b.transform[4]).map(i => i.str).join("  ")).join("\n");
+    if (text.replace(/\s/g, "").length < 40 && p <= 15) {        // a scanned page: no text layer, read the image
       const vp = page.getViewport({ scale: 2 });
       const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
       await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
-      text += await ocr(c) + "\n";
+      text = await ocr(c);
     }
+    pages.push(text);
   }
-  return text;
+  return pages;
+}
+const READABLE = /\.(pdf|png|jpe?g|webp|gif|bmp|csv|tsv|txt)$/i;
+/* everything inside dropped folders (skips hidden and unreadable files) */
+async function filesFromDrop(dt){
+  const entries = [...dt.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
+  if (!entries.length) return [...dt.files];
+  const out = [];
+  const walk = async entry => {
+    if (entry.name.startsWith(".")) return;
+    if (entry.isFile) { const f = await new Promise((ok, no) => entry.file(ok, no)); out.push(f); return; }
+    const reader = entry.createReader();
+    let batch;
+    do { batch = await new Promise((ok, no) => reader.readEntries(ok, no)); for (const e of batch) await walk(e); } while (batch.length);
+  };
+  for (const e of entries) await walk(e);
+  return out;
 }
 async function readFileToInvoices(f){
   const name = f.name || "file";
-  if (/\.pdf$/i.test(name) || f.type === "application/pdf") return [E.readInvoice(await pdfText(f), name)];
+  if (/\.pdf$/i.test(name) || f.type === "application/pdf") {
+    const parts = E.splitInvoicePages(await pdfPages(f));
+    return parts.map((t, i) => E.readInvoice(t, parts.length > 1 ? `${name} · invoice ${i + 1} of ${parts.length}` : name));
+  }
   if (/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp)$/i.test(name)) return [E.readInvoice(await ocr(f), name)];
   if (/\.(csv|tsv|txt)$/i.test(name)) {
     const text = await f.text();
@@ -1230,7 +1304,7 @@ async function readFileToInvoices(f){
 function costingAdd(body, rep, CR){
   const q = QUEUE.get(rep.id) || [];
   const sureChip = x => `<span class="chip ${x.sure === "high" ? "yes" : x.sure === "medium" ? "k" : "no"}" title="${esc((x.reasons || []).join(" · "))}">${x.sure === "high" ? "Sure" : x.sure === "medium" ? "Check" : "Guess"}</span>`;
-  const rows = q.map((x, i) => `<tr class="${x.error ? "adrow" : ""}">
+  const qRow = (x, i) => `<tr class="${x.error ? "adrow" : ""}">
     <td><input type="checkbox" data-q="${i}:use" ${x.use ? "checked" : ""} ${x.error ? "disabled" : ""}></td>
     <td class="cap small" title="${esc(x.fileName)}">${esc(x.fileName || "pasted")}${x.dup ? `<br><span class="down">possible duplicate</span>` : ""}${x.error ? `<br><span class="down">${esc(x.error)}</span>` : ""}</td>
     ${x.error ? `<td colspan="10"></td>` : `
@@ -1244,12 +1318,24 @@ function costingAdd(body, rep, CR){
     <td class="n">${F.usd(E.toUSD(x.amount, x.currency, CR.fx))}</td>
     <td><input class="ed" style="width:90px" data-q="${i}:invoiceNo" value="${esc(x.invoiceNo || "")}"></td>
     <td>${sureChip(x)}</td>`}
-    <td><button class="x" data-qdel="${i}">×</button></td></tr>`);
+    <td><button class="x" data-qdel="${i}">×</button></td></tr>`;
+  // grouped by segment: influencers & models first, then each event-cost category, then anything unreadable
+  const seg = x => x.error ? "Couldn't read" : x.type === "influencer" ? "Influencers & models" : (x.category || "Other");
+  const order = ["Influencers & models", ...E.COST_CATEGORIES, "Couldn't read"];
+  const rows = order.flatMap(name => {
+    const idx = q.map((x, i) => i).filter(i => seg(q[i]) === name);
+    if (!idx.length) return [];
+    const usd = idx.filter(i => q[i].use).reduce((a, i) => a + (E.toUSD(q[i].amount, q[i].currency, CR.fx) || 0), 0);
+    return [`<tr class="seg"><td colspan="9">${esc(name)} · ${idx.length}</td><td class="n">${name === "Couldn't read" ? "" : F.usd(usd)}</td><td colspan="3"></td></tr>`, ...idx.map(i => qRow(q[i], i))];
+  });
   const n = q.filter(x => x.use && !x.error).length;
+  const segTotals = order.slice(0, -1).map(name => [name, q.filter(x => !x.error && x.use && seg(x) === name).reduce((a, x) => a + (E.toUSD(x.amount, x.currency, CR.fx) || 0), 0)]).filter(([, v]) => v);
   body.innerHTML = `
     <div class="sec"><h2>Drop invoices</h2>
       <label class="drop" id="drop"><input type="file" id="k-files" multiple accept=".pdf,image/*,.csv,.tsv,.txt" hidden>
-        <b>Drop invoices here</b><span>or click to choose · PDFs, photos (JPG/PNG), or a CSV list · many at once</span></label>
+        <b>Drop invoices or a whole folder here</b><span>or click to choose files · PDFs (one or many invoices each), photos (JPG/PNG), or a CSV list</span></label>
+      <div class="row" style="margin-top:10px"><label class="btn ghost sm">Choose a folder…<input type="file" id="k-folder" webkitdirectory multiple hidden></label></div>
+      <div id="k-prog" class="prog" hidden><i></i></div>
       <div id="k-status" class="result"></div>
       <p class="small dim">Invoices are read in this browser — the files aren't uploaded or kept. Put the Drive link in “Receipt link” if you want the file on record.</p>
     </div>
@@ -1261,6 +1347,7 @@ function costingAdd(body, rep, CR){
     <div class="sec"><h2>Review before adding${q.length ? ` · ${q.length}` : ""}</h2>
       ${q.length ? `<p class="sub" style="margin:-4px 0 12px">Check the type, amount and currency — hover the Sure/Check/Guess chip to see why it was sorted that way. Models, influencers and creators go to the influencer list; everything else goes to event costs under its category.</p>
         <div class="tw"><table><thead><tr><th></th><th>File</th><th>Goes to</th><th>Category</th><th>Payee / creator</th><th>What for</th><th>Date</th><th>Amount</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Read</th><th></th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
+        ${segTotals.length ? `<div class="mini" style="margin-top:12px">${segTotals.map(([k, v]) => `<div><span>${esc(k)}</span><b>${F.usd(v)}</b></div>`).join("")}<div><span>Ticked total</span><b>${F.usd(segTotals.reduce((a, [, v]) => a + v, 0))}</b></div></div>` : ""}
         <div class="row" style="margin-top:12px"><button class="btn pink" id="k-commit" ${n ? "" : "disabled"}>Add ${n} to this costing report</button><button class="btn ghost sm" id="k-clear">Clear list</button></div>`
       : `<div class="empty">Nothing waiting. Drop invoices above.</div>`}
     </div>`;
@@ -1275,25 +1362,31 @@ function costingAdd(body, rep, CR){
     }
     setQ(next);
   };
-  const handle = async files => {
-    const st = () => document.getElementById("k-status");
+  const handle = async all => {
+    const files = all.filter(f => READABLE.test(f.name) || /^image\//.test(f.type) || f.type === "application/pdf");
+    const skipped = all.length - files.length;
+    if (!files.length) return toast("No invoices found — PDFs, photos or CSVs");
+    const st = () => document.getElementById("k-status"), pg = () => document.getElementById("k-prog");
     const out = [];
     let i = 0;
     for (const f of files) {
       i++;
       if (st()) { st().className = "result"; st().textContent = `Reading ${i} of ${files.length}: ${f.name}…${/^image\//.test(f.type) ? " (photos take a few seconds)" : ""}`; }
+      if (pg()) { pg().hidden = false; pg().firstChild.style.width = `${((i - 1) / files.length) * 100}%`; }
       try { out.push(...await readFileToInvoices(f)); }
       catch (e) { out.push({ fileName: f.name, error: e.message || "Couldn't read this file" }); }
     }
     enqueue(out);
-    const s2 = st(); if (s2) { s2.className = "result ok"; s2.textContent = `Read ${files.length} file${files.length > 1 ? "s" : ""} — review below.`; }
+    const s2 = st(); if (s2) { s2.className = "result ok"; s2.textContent = `Read ${files.length} file${files.length > 1 ? "s" : ""} → ${out.filter(x => !x.error).length} invoice${out.length === 1 ? "" : "s"}${skipped ? ` (skipped ${skipped} other file${skipped > 1 ? "s" : ""})` : ""} — review below.`; }
   };
   const inp = body.querySelector("#k-files");
   inp.onchange = () => handle([...inp.files]);
   const drop = body.querySelector("#drop");
   drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
   drop.ondragleave = () => drop.classList.remove("over");
-  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); handle([...e.dataTransfer.files]); };
+  drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); handle(await filesFromDrop(e.dataTransfer)); };
+  const fold = body.querySelector("#k-folder");
+  fold.onchange = () => handle([...fold.files].filter(f => !f.name.startsWith(".")));
   body.querySelector("#k-pastego").onclick = () => {
     const rows = E.mapInvoiceRows(E.parseTable(body.querySelector("#k-paste").value));
     if (!rows.length) return toast("Nothing found — include the header row");
@@ -1411,7 +1504,7 @@ function importEventTab(text, url, repId, costs){
       eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
     };
     const existing = rep.costingId && D.reports[rep.costingId];
-    if (!existing) patch.costingId = newCosting({ name: `${S.name} costs`, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
     else if ((existing.influencers || []).every(l => l.source === "Total Spend tab") && (existing.eventCosts || []).every(l => l.source === "Total Spend tab"))
       put("ss.report." + existing.id, { ...existing, ...lines });      // refresh only if nobody has added real invoices
   }
@@ -1629,7 +1722,7 @@ function renderData(body, rep, R, D){
     const kn = body.querySelector("#k-new");
     if (kn) kn.onclick = () => {
       const cur = db().reports[rep.id];
-      const id = newCosting({ name: `${cur.name} costs`, start: cur.start, end: cur.end, colour: cur.colour,
+      const id = newCosting({ name: cur.name, eventName: cur.name, start: cur.start, end: cur.end, colour: cur.colour,
         influencers: cur.influencers || [], eventCosts: cur.eventCosts || [] });          // carries over any old lines
       save({ costingId: id }); location.hash = `#/r/${id}/add`;
     };
