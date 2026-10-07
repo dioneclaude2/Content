@@ -912,10 +912,12 @@ function miniCmp(R, P, names){
   return `<div class="tw"><table><thead><tr><th></th><th class="n">This</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
 
-function topPosts(R, n = 3){
-  const list = [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
+function topPosts(R, by = "views", n = 3){
+  const list = by === "er"
+    ? [...R.contentRows].filter(r => r.er != null).sort((a, b) => b.er - a.er).slice(0, n)
+    : [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
   if (!list.length) return `<p class="small muted">No posts yet.</p>`;
-  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · <b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.${r.boosted ? " · boosted" : ""}</span></li>`).join("")}</ol>`;
+  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${by === "er" ? `<b>${F.pct(r.er)}</b> eng. · ${F.int(r.views)} views` : `<b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.`}${r.boosted ? " · boosted" : ""}</span></li>`).join("")}</ol>`;
 }
 
 function issuesLine(rep, R){
@@ -956,9 +958,10 @@ function eventSummaryHTML(rep, R, P){
       <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}</p></div>
     </div>
     <div class="grid g2" style="margin-top:14px">
-      <div class="card"><h3>Top posts</h3>${topPosts(R)}</div>
-      <div class="card"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+      <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
+      <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
+    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
@@ -995,9 +998,10 @@ function weeklySummaryHTML(rep, R, P){
       ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}</p></div>
     </div>
     <div class="grid g2" style="margin-top:14px">
-      <div class="card"><h3>Top posts</h3>${topPosts(R)}</div>
-      <div class="card"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+      <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
+      <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
+    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
