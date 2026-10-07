@@ -36,7 +36,7 @@ a{color:inherit}
 .nav a.on{background:var(--ink);color:#fff}
 .sync{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
 .sync i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
-.sync[data-s=ok] i{background:#2BB673}.sync[data-s=saving] i{background:#F5A623}.sync[data-s=error] i{background:var(--bad)}
+.sync[data-s=ok] i,.sync[data-s=sheets] i{background:#2BB673}.sync[data-s=saving] i{background:#F5A623}.sync[data-s=error] i{background:var(--bad)}
 @media (max-width:640px){.nav{order:3;width:100%}}
 
 main{max-width:1440px;margin:0 auto;padding:26px var(--pad) 120px}
@@ -284,7 +284,16 @@ const sync = {
     sync.state = s;
     const el = document.getElementById("sync");
     el.dataset.s = s;
-    el.querySelector("span").textContent = { off: "This browser only", ok: "Synced with team", saving: "Saving…", error: "Offline — retrying" }[s];
+    // no team store yet, but the reports come from Google Sheets — every browser sees those
+    const at = +(localStorage.getItem("ss.sourcesAt") || 0);
+    const live = s === "off" && at;
+    el.dataset.s = live ? "sheets" : s;
+    el.querySelector("span").textContent = live
+      ? `Live from Google Sheets · ${new Date(at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`
+      : { off: "Saved in this browser", ok: "Synced with team", saving: "Saving…", error: "Offline — retrying" }[s];
+    el.title = live
+      ? "Reports are read from the team's Google Sheets every time the page opens, so every browser and device sees them. Click to refresh now. (Invoices and edits made inside the app are saved in this browser until team sync is switched on.)"
+      : s === "ok" ? "Everything is shared with the team." : "Click to retry.";
   },
   queue(k){
     sync.pending.add(k);
@@ -341,7 +350,7 @@ function askPass(){
   const p = prompt("Social Stats needs the team passcode to save. Enter it:");
   if (p) { try { localStorage.setItem("ss.passcode", p); } catch {} sync.flush(); }
 }
-document.getElementById("sync").onclick = () => sync.pull();
+document.getElementById("sync").onclick = () => { sync.pull(); refreshFromSources(); };
 setInterval(() => { if (!document.hidden && !editing()) sync.pull(); }, 30000);
 addEventListener("focus", () => sync.pull());
 const editing = () => { const a = document.activeElement; return a && /INPUT|TEXTAREA|SELECT/.test(a.tagName); };
@@ -1995,6 +2004,7 @@ async function refreshFromSources(){
   }
   label.textContent = before;
   if (n) { localStorage.setItem("ss.sourcesAt", String(Date.now())); render(); }
+  sync.show(sync.state);                                       // badge: "Live from Google Sheets · <time>"
   if (failed) toast(`Couldn't read ${failed} sheet tab${failed > 1 ? "s" : ""} — check they're shared “Anyone with the link”.`);
 }
 
