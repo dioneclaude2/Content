@@ -1,9 +1,55 @@
 {
   "_about": "Google Sheets the site reads on every visit, so every device shows the same reports. Sheets must be shared as 'Anyone with the link can view'.",
   "weekly": [
-    { "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA", "gid": "0" }
+    {
+      "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
+      "gid": "0"
+    }
   ],
   "events": [
-    { "sheet": "1Uaemp2aPcmFQaXJLMf2i3oUBxTo5ucdy5RkE4v_ed84", "tabs": ["0", "1433892578", "868315963", "392856255"], "totals": "1197350775" }
-  ]
+    {
+      "sheet": "1Uaemp2aPcmFQaXJLMf2i3oUBxTo5ucdy5RkE4v_ed84",
+      "tabs": [
+        "0",
+        "1433892578",
+        "868315963",
+        "392856255"
+      ],
+      "totals": "1197350775"
+    }
+  ],
+  "account": {
+    "asOf": "2026-10-07",
+    "source": "Instagram Professional dashboard › Account insights",
+    "periods": [
+      {
+        "label": "Last 30 days",
+        "views": 13550000,
+        "days": 30
+      },
+      {
+        "label": "Last 90 days",
+        "range": "9 Jul – 7 Oct",
+        "views": 46700000,
+        "days": 91
+      },
+      {
+        "label": "Last 6 months",
+        "views": 71800000,
+        "days": 183
+      },
+      {
+        "label": "Last 12 months",
+        "views": 108800000,
+        "days": 365
+      },
+      {
+        "label": "All available",
+        "range": "about 2 years",
+        "views": 112900000,
+        "days": 730,
+        "approx": true
+      }
+    ]
+  }
 }
