@@ -389,6 +389,7 @@ function render(){
       return renderReport(D, r.parts[1], r.parts[2] || "summary", r.q);
     }
     if (r.name === "new") return renderNew(D);
+    if (r.name === "import") return renderImport(r.q);
     if (r.name === "reports") return renderReports(D);
     if (r.name === "compare") return renderCompare(D, r.q);
     if (r.name === "posts") return renderPosts(D, r.q);
@@ -520,7 +521,7 @@ function newReport(type){
   let rep;
   if (type === "week") {
     const d = new Date(t + "T12:00:00Z");
-    const back = ((d.getUTCDay() + 6) % 7) + 7;                // Monday of last week
+    const back = d.getUTCDay() + 7;                             // weeks run Sunday–Saturday: Sunday of last week
     const start = E.addDays(t, -back), end = E.addDays(start, 6);
     rep = { id, type, name: `Week of ${F.date(start)}`, start, end, dataDate: t, importIds: [], account: {}, otherSpend: [], colour: "" };
   } else {
@@ -1318,6 +1319,70 @@ function costingAdd(body, rep, CR){
   };
 }
 
+/* ───────── Google Sheet import ─────────
+   Reads a link-shared sheet as CSV (Google allows this from the browser) and loads its
+   posts, per-post ad numbers and account summary into a report. */
+async function importSheet(url, repId){
+  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
+  if (!m) throw new Error("That isn't a Google Sheets link.");
+  const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  let text;
+  try {
+    const r = await fetch(`https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv&gid=${gid}`);
+    text = r.ok ? await r.text() : "";
+  } catch { text = ""; }
+  if (!text || /^\s*<!doctype|<html/i.test(text)) throw new Error("Couldn't open the sheet. Share it as “Anyone with the link can view” and try again.");
+  const S = E.parseReportSheet(text);
+  if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
+
+  let rep = repId ? db().reports[repId] : null;
+  if (!rep) {                                                  // one-click import: make the report
+    const type = S.type || "week", id = uid();
+    rep = { id, type, name: type === "week" ? `Week of ${F.date(S.range?.start || today())}` : (S.title.split("·")[0].trim() || "Imported event"),
+      start: S.range?.start || today(), end: S.range?.end || today(), dataDate: S.pulled || today(), importIds: [], postIds: [], account: {},
+      otherSpend: [], influencers: [], eventCosts: [], colour: type === "week" ? "" : "Pink", fx: { ...db().settings.fx } };
+  }
+  const pulled = S.pulled || rep.dataDate || today();
+  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.type === "event" ? rep.id : null);
+  for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+
+  const patch = { sheetUrl: url, dataDate: rep.dataDate || pulled };
+  if (rep.type === "event") patch.postIds = [...new Set([...(rep.postIds || []), ...S.posts.map(p => p.id)])];
+  if (S.range && (rep.fresh || !repId)) Object.assign(patch, { start: S.range.start, end: S.range.end });
+  if (rep.type === "week") {
+    const acc = { ...(rep.account || {}) };
+    for (const [k, v] of Object.entries(S.account)) if (v != null) acc[k] = v;     // the sheet's numbers win on refresh
+    patch.account = acc;
+  }
+  // per-post ad numbers from the sheet stand in for a Meta export, unless a real export is attached
+  const D = db();
+  const realExports = (rep.importIds || []).filter(i => D.imports[i] && !D.imports[i].fromSheet);
+  let sheetImp = (rep.importIds || []).find(i => D.imports[i]?.fromSheet);
+  if (S.ads.length && !realExports.length) {
+    const id = sheetImp || uid();
+    put("ss.import." + id, { id, name: "Ad numbers from the report sheet", fromSheet: true, level: "ad", hasViews: true, hasFollows: false, hasPostIds: true,
+      rows: S.ads.map((a, i) => ({ ...a, i })), rangeStart: S.range?.start || null, rangeEnd: pulled, uploaded: today(),
+      warnings: ["Taken from the sheet's ad columns — upload the Meta export for campaigns and follows."] });
+    patch.importIds = [...new Set([...(rep.importIds || []), id])];
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch, fresh: false });
+  const acc = Object.keys(S.account).length;
+  return { id: rep.id, msg: `Read ${S.posts.length} posts (pulled ${F.date(pulled)})${S.ads.length ? `, ${S.ads.length} boosted post${S.ads.length > 1 ? "s" : ""} with ad numbers` : ""}${acc ? `, ${acc} account numbers` : ""}.${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
+}
+
+async function renderImport(q){
+  const url = q.get("sheet") ? `https://docs.google.com/spreadsheets/d/${q.get("sheet")}/edit#gid=${q.get("gid") || 0}` : "";
+  app.innerHTML = `<h1>Importing…</h1><p class="sub">Reading the Google Sheet.</p>`;
+  const existing = Object.values(db().reports).find(r => r.sheetUrl && r.sheetUrl.includes(q.get("sheet") || "§"));
+  try {
+    const { id } = await importSheet(url, existing?.id);
+    toast("Imported from Google Sheet");
+    location.replace(`#/r/${id}/summary`);
+  } catch (e) {
+    app.innerHTML = `<h1>Couldn't import</h1><div class="flag bad" style="margin-top:14px"><b>Error</b><span>${esc(e.message)}</span></div><p><a class="btn" href="#/">Home</a></p>`;
+  }
+}
+
 /* ───────── add data ───────── */
 function renderData(body, rep, R, D){
   const isEv = rep.type === "event";
@@ -1330,6 +1395,12 @@ function renderData(body, rep, R, D){
   const candidates = isEv ? Object.values(D.posts).filter(p => !(rep.postIds || []).includes(p.id)).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 300) : [];
 
   body.innerHTML = `
+  <div class="sec"><h2>Import from Google Sheet</h2><div class="card">
+    <p class="sub" style="margin-top:0">Paste the link to the team's report sheet — posts, ad spend and account numbers are read straight from it. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
+    <div class="row" style="margin-top:10px"><input type="text" id="g-url" class="grow" placeholder="https://docs.google.com/spreadsheets/d/…" value="${esc(rep.sheetUrl || "")}"><button class="btn" id="g-go">${rep.sheetUrl ? "Refresh from sheet" : "Import"}</button></div>
+    <div id="g-res" class="result"></div>
+  </div></div>
+
   <div class="sec"><h2>Report details</h2><div class="card"><div class="fields">
     <label class="f">Name<input type="text" id="d-name" value="${esc(rep.name || "")}"></label>
     <label class="f">${isEv ? "Start" : "Week starts"}<input type="date" id="d-start" value="${rep.start || ""}"></label>
@@ -1422,6 +1493,15 @@ function renderData(body, rep, R, D){
   body.querySelector("#fx-new").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...R.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
   body.querySelector("#d-del").onclick = () => { if (confirm(`Delete “${rep.name}”? Posts and ad exports stay in the library.`)) { del("ss.report." + rep.id); location.hash = "#/"; } };
   body.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => copy(TEMPLATES[b.dataset.tpl] + "\n", "Header row copied — paste it into row 1 of the sheet"));
+
+  body.querySelector("#g-go").onclick = async () => {
+    const res = body.querySelector("#g-res");
+    res.className = "result"; res.textContent = "Reading the sheet…";
+    try {
+      const { msg } = await importSheet(body.querySelector("#g-url").value, rep.id);
+      render(); const r2 = document.getElementById("g-res"); r2.className = "result ok"; r2.innerHTML = msg;
+    } catch (e) { res.className = "result err"; res.textContent = e.message; }
+  };
 
   /* posts */
   body.querySelector("#p-go").onclick = () => {

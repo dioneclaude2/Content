@@ -138,3 +138,29 @@ assert.equal(E.r2(CR.T.total), 200);
 assert.equal(CR.event.id, "e1");
 assert.ok(E.insights([R, W, prev]).length > 0);
 console.log("invoice + costing tests passed");
+
+// ── importing the team's weekly report sheet (27 Sep – 3 Oct 2026) ──
+import { readFileSync } from "node:fs";
+const S = E.parseReportSheet(readFileSync(new URL("./fixture-weekly-sheet.csv", import.meta.url), "utf8"));
+assert.deepEqual(S.range, { start: "2026-09-27", end: "2026-10-03" });
+assert.equal(S.pulled, "2026-10-06");
+assert.equal(S.type, "week");
+assert.equal(S.posts.length, 13);
+assert.equal(S.posts.find(p => p.id === "Dd_UGgDuaUw").collab, true);
+assert.equal(S.ads.length, 1);
+assert.equal(S.ads[0].views, 101);
+assert.equal(S.account.views, 1181247);
+assert.equal(S.account.viewsPrev, 2588630);
+assert.equal(S.account.interactions, 4527);
+assert.equal(S.account.interactionsPrev, 17587);
+assert.equal(E.r2(S.account.followersPct * 100), 2.8);
+assert.equal(S.account.netFollowers, undefined);
+// the report built from it matches the sheet's own totals
+const sdb = { posts: E.mergePosts({}, S.posts, S.pulled), imports: { s1: { id: "s1", name: "sheet", rows: S.ads.map((a, i) => ({ ...a, i })), level: "ad", hasViews: true, hasFollows: false } }, reports: {} };
+const SR = E.buildReport({ id: "ws", type: "week", ...S.range, dataDate: S.pulled, importIds: ["s1"], account: S.account }, sdb);
+assert.equal(SR.T.postViews, 273484);
+assert.equal(SR.T.paidViews, 101);
+assert.equal(SR.T.interactions, 7065);
+assert.equal(E.r2(SR.T.er * 100), 2.58);
+assert.equal(E.r2(SR.T.adsCPM), 53.37);
+console.log("sheet import tests passed");
