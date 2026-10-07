@@ -246,7 +246,10 @@ try { docs = JSON.parse(localStorage.getItem(LS) || "{}"); } catch { docs = {}; 
 const saveLocal = () => { try { localStorage.setItem(LS, JSON.stringify(docs)); } catch { toast("This browser's storage is full — sync still saves to the team copy."); } };
 
 function put(key, value){
-  docs[key] = { ...value, updatedAt: Date.now() };
+  const { updatedAt: _a, ...next } = value || {};
+  const { updatedAt: _b, ...prev } = docs[key] || {};
+  if (docs[key] && JSON.stringify(next) === JSON.stringify(prev)) return;     // nothing changed: don't save or sync
+  docs[key] = { ...next, updatedAt: Date.now() };
   saveLocal();
   sync.queue(key);
 }
@@ -1483,16 +1486,25 @@ async function sheetCsv(sheetId, gid){
   return text;
 }
 
+const sheetLink = (id, gid) => `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${gid}`;
+const sameSheet = (a, b) => {
+  const k = u => { const m = String(u || "").match(/spreadsheets\/d\/([\w-]{20,})/); return m ? m[1] + ":" + ((String(u).match(/[#&?]gid=(\d+)/) || [])[1] || "0") : ""; };
+  return !!k(a) && k(a) === k(b);
+};
+/* a report made from this sheet tab that someone deleted — don't bring it back */
+const deletedFromSheet = url => Object.values(docs).some(v => v?.deleted && v.sheetUrl && sameSheet(v.sheetUrl, url));
+
 async function importSheet(url, repId, costs){
   const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
   if (!m) throw new Error("That isn't a Google Sheets link.");
   const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  url = sheetLink(m[1], gid);
   const text = await sheetCsv(m[1], gid);
   if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
-  let rep = repId ? db().reports[repId] : null;
+  let rep = repId ? db().reports[repId] : Object.values(db().reports).find(r => r.type !== "costing" && sameSheet(r.sheetUrl, url)) || null;
   if (!rep) {                                                  // one-click import: make the report
     const type = S.type || "week", id = uid();
     rep = { id, type, name: type === "week" ? `Week of ${F.date(S.range?.start || today())}` : (S.title.split("·")[0].trim() || "Imported event"),
@@ -1532,7 +1544,7 @@ function importEventTab(text, url, repId, costs){
   const S = E.parseEventSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
   const D = db();
-  let rep = repId ? D.reports[repId] : Object.values(D.reports).find(r => r.type === "event" && r.sheetUrl === url);
+  let rep = repId ? D.reports[repId] : Object.values(D.reports).find(r => r.type === "event" && sameSheet(r.sheetUrl, url));
   if (!rep) {
     const colour = Object.keys(E.EVENT_COLOURS).find(k => S.name.toLowerCase().includes(k.toLowerCase()))
       || (/london fashion/i.test(S.name) ? "LFW" : "Pink");
@@ -1558,7 +1570,9 @@ function importEventTab(text, url, repId, costs){
       eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
     };
     const existing = rep.costingId && D.reports[rep.costingId];
-    if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    const deletedOne = Object.values(docs).some(v => v?.deleted && v.type === "costing" && v.wasFor === rep.id);
+    if (deletedOne && !existing) { /* someone deleted this event's costing: leave it deleted */ }
+    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
     else if ((existing.influencers || []).every(l => l.source === "Total Spend tab") && (existing.eventCosts || []).every(l => l.source === "Total Spend tab"))
       put("ss.report." + existing.id, { ...existing, ...lines });      // refresh only if nobody has added real invoices
   }
@@ -1576,7 +1590,7 @@ async function renderImport(q){
       const costsBy = q.get("totals") ? E.parseEventTotals(await sheetCsv(sid, q.get("totals"))) : {};
       const done = [];
       for (const gid of q.get("events").split(",")) {
-        const url = `https://docs.google.com/spreadsheets/d/${sid}/edit#gid=${gid}`;
+        const url = sheetLink(sid, gid);
         const text = await sheetCsv(sid, gid);
         const name = E.parseEventSheet(text).name;
         document.getElementById("imp-st").textContent = `Importing ${name}…`;
@@ -1592,9 +1606,8 @@ async function renderImport(q){
   }
   const url = q.get("sheet") ? `https://docs.google.com/spreadsheets/d/${q.get("sheet")}/edit#gid=${q.get("gid") || 0}` : "";
   app.innerHTML = `<h1>Importing…</h1><p class="sub">Reading the Google Sheet.</p>`;
-  const existing = Object.values(db().reports).find(r => r.sheetUrl && r.sheetUrl.includes(q.get("sheet") || "§"));
   try {
-    const { id } = await importSheet(url, existing?.id);
+    const { id } = await importSheet(url);
     toast("Imported from Google Sheet");
     location.replace(`#/r/${id}/summary`);
   } catch (e) {
@@ -1948,7 +1961,44 @@ function renderSettings(D){
   app.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { restore(b.dataset.restore); toast("Restored"); render(); });
 }
 
+/* ───────── live from Google Sheets ─────────
+   sources.json lists the team's sheets; every visit re-reads them, so any device
+   (and anyone with the link) sees the same, current reports. Invoices and edits
+   made in the app stay on top: a refresh never replaces a costing report that
+   has real invoices, and a report someone deleted isn't re-created. */
+async function refreshFromSources(){
+  let src;
+  try { src = await (await fetch("sources.json", { cache: "no-cache" })).json(); } catch { return; }
+  const chip = document.getElementById("sync");
+  const label = chip.querySelector("span"), before = label.textContent;
+  label.textContent = "Updating from Google Sheets…";
+  let n = 0, failed = 0;
+  for (const w of src.weekly || []) {
+    const url = sheetLink(w.sheet, w.gid || "0");
+    if (deletedFromSheet(url)) continue;
+    try { await importSheet(url); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+  }
+  for (const e of src.events || []) {
+    let costsBy = {};
+    try { if (e.totals) costsBy = E.parseEventTotals(await sheetCsv(e.sheet, e.totals)); } catch { failed++; }
+    for (const gid of e.tabs || []) {
+      const url = sheetLink(e.sheet, gid);
+      if (deletedFromSheet(url)) continue;
+      try {
+        const text = await sheetCsv(e.sheet, gid);
+        const name = E.parseEventSheet(text).name;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        importEventTab(text, url, null, costsBy[key]); n++;
+      } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
+    }
+  }
+  label.textContent = before;
+  if (n) { localStorage.setItem("ss.sourcesAt", String(Date.now())); render(); }
+  if (failed) toast(`Couldn't read ${failed} sheet tab${failed > 1 ? "s" : ""} — check they're shared “Anyone with the link”.`);
+}
+
 render();
 sync.pull();
+refreshFromSources();
 </script>
 </html>

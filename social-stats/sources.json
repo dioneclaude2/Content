@@ -1,0 +1,9 @@
+{
+  "_about": "Google Sheets the site reads on every visit, so every device shows the same reports. Sheets must be shared as 'Anyone with the link can view'.",
+  "weekly": [
+    { "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA", "gid": "0" }
+  ],
+  "events": [
+    { "sheet": "1Uaemp2aPcmFQaXJLMf2i3oUBxTo5ucdy5RkE4v_ed84", "tabs": ["0", "1433892578", "868315963", "392856255"], "totals": "1197350775" }
+  ]
+}
