@@ -2,15 +2,15 @@
 <html lang="en">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Social Stats</title>
+<title>Nancy Social Stats</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF4F8B'/><path d='M8 22V14M14 22V9M20 22v-6M26 22V12' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=dev">
 <style>
 :root{
-  --bg:#FBF7F2; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
-  --line:#EAE1DA; --line-2:#F3ECE6; --pink:#FF4F8B; --pink-soft:#FFE3EE;
+  --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
+  --line:#EAE1DA; --line-2:#F3ECE6; --pink:#FF00D1; --pink-soft:#FFE0F8;
   --good:#11734b; --good-bg:#DDF3E8; --warn:#8A5A00; --warn-bg:#FFF1CC; --bad:#b10202; --bad-bg:#ffcfc9;
   --head:#140D11; --tint:#F7F1EC; --pad:16px;
   --serif:'Instrument Serif',Georgia,serif;
@@ -27,9 +27,19 @@ a{color:inherit}
 /* header */
 .top{position:sticky;top:0;z-index:20;background:rgba(251,247,242,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .top-in{max-width:1440px;margin:0 auto;padding:12px var(--pad);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.brand{display:flex;align-items:baseline;gap:7px;text-decoration:none}
-.brand b{font-size:19px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
-.brand span{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--pink)}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.brand img{width:34px;height:34px;display:block}
+.brand b{font-size:18px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
+.brand span{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--pink);margin-left:-2px}
+/* home banner with the cream wordmark */
+.banner{display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:var(--ink);border-radius:26px;padding:26px 28px;color:#FCF6EB;position:relative;overflow:hidden}
+.banner::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--pink);opacity:.9}
+.banner > *{position:relative;z-index:1}
+.banner .wm{height:58px;width:auto;display:block}
+.banner .ttl{font-family:var(--serif);font-style:italic;font-size:34px;color:#FCF6EB;line-height:1}
+.banner p{margin:6px 0 0;color:rgba(252,246,235,.72);font-size:13.5px}
+.banner .btn.pink{background:#FCF6EB;color:var(--ink)}
+@media (max-width:640px){.banner .wm{height:42px}.banner .ttl{font-size:28px}}
 .nav{display:flex;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px;overflow-x:auto;scrollbar-width:none}
 .nav a{padding:7px 13px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.03em;text-decoration:none;color:var(--muted);white-space:nowrap}
 .nav a:hover{color:var(--ink)}
@@ -100,7 +110,7 @@ td.wrap{white-space:normal;min-width:220px}
 .chip.no{background:#ffcfc9;color:#b10202}
 .chip.k{background:var(--tint);color:var(--muted);font-weight:700}
 .chip.collab{background:#EDE4FF;color:#5B34C9}
-.chip.nancy{background:var(--pink-soft);color:#C2185B}
+.chip.nancy{background:var(--pink-soft);color:#B0008F}
 .miss{color:var(--bad);font-weight:700;font-size:12px;white-space:normal}
 .up{color:var(--good)}.down{color:var(--bad)}
 .bench-good{color:var(--good);font-weight:700}.bench-bad{color:var(--bad);font-weight:700}
@@ -207,7 +217,7 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
 .warnc{color:var(--warn)}
 .chip.rt-organic{background:var(--good-bg);color:var(--good)}
-.chip.rt-boosted{background:var(--pink-soft);color:#C2185B}
+.chip.rt-boosted{background:var(--pink-soft);color:#B0008F}
 .chip.rt-unknown{background:var(--warn-bg);color:var(--warn)}
 ol.top li .chip{margin-top:4px}
 
@@ -222,7 +232,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><b>Social</b><span>Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=dev" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -355,7 +365,7 @@ const sync = {
   },
 };
 function askPass(){
-  const p = prompt("Social Stats needs the team passcode to save. Enter it:");
+  const p = prompt("Nancy Social Stats needs the team passcode to save. Enter it:");
   if (p) { try { localStorage.setItem("ss.passcode", p); } catch {} sync.flush(); }
 }
 document.getElementById("sync").onclick = () => { sync.pull(); refreshFromSources(); };
@@ -402,6 +412,12 @@ function toast(msg, action){
    summary = founder version (portrait) · full = every table (landscape) · costing = costing report.
    Desktop: downloads the file. Phones: opens the share sheet (WhatsApp, Mail, Slack…). */
 let pdfBusy = false;
+/* jsPDF can't draw SVG: turn the logo into a PNG once */
+const svgToPng = (src, size) => new Promise((ok, no) => {
+  const img = new Image();
+  img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = size; c.getContext("2d").drawImage(img, 0, 0, size, size); ok(c.toDataURL("image/png")); };
+  img.onerror = no; img.src = src;
+});
 async function exportPDF(id, mode){
   if (pdfBusy) return;
   const D = db(), rep = D.reports[id];
@@ -415,6 +431,7 @@ async function exportPDF(id, mode){
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
     const { buildPdf } = await import("./pdf.js?v=dev");
+    const logo = await svgToPng("logo-circle.svg?v=dev", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -422,7 +439,7 @@ async function exportPDF(id, mode){
       const pr = prevFor(rep, D);
       args = { rep, R, P: pr ? E.buildReport(pr, D, D.settings) : null, mode, settings: D.settings };
     }
-    const doc = buildPdf(args);
+    const doc = buildPdf({ ...args, logo });
     const kind = rep.type === "week" ? "Weekly social report" : rep.type === "costing" ? "Costing report" : "Event report";
     const name = rep.type === "costing" ? (rep.eventName || rep.name) : rep.name;
     const file = `${kind} - ${(name || "report").replace(/[\\/:*?"<>|]+/g, "-")}${mode === "full" ? " (full)" : ""}.pdf`;
@@ -537,9 +554,10 @@ function renderDashboard(D){
   };
 
   app.innerHTML = `
-    <div class="row" style="align-items:flex-end">
-      <div class="grow"><h1>Social <span class="serif">Stats</span></h1>
-      <p class="sub">What we posted, what it reached, and what it cost per 1,000 views.</p></div>
+    <div class="banner">
+      <img class="wm" src="logo-wordmark-cream.svg?v=dev" alt="Nancy">
+      <div class="grow"><div class="ttl">Social Stats</div>
+      <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
     </div>
     ${block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
@@ -2209,7 +2227,7 @@ function renderSettings(D){
   document.getElementById("bk").onclick = () => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([JSON.stringify(docs, null, 1)], { type: "application/json" }));
-    a.download = `social-stats-backup-${today()}.json`; a.click();
+    a.download = `nancy-social-stats-backup-${today()}.json`; a.click();
   };
   document.getElementById("rs").onchange = async e => {
     const f = e.target.files[0]; if (!f) return;
@@ -2217,7 +2235,7 @@ function renderSettings(D){
       const data = JSON.parse(await f.text()); let n = 0;
       for (const [k, v] of Object.entries(data)) if (/^ss\./.test(k) && v && (!docs[k] || (v.updatedAt || 0) > (docs[k].updatedAt || 0))) { docs[k] = v; sync.queue(k); n++; }
       saveLocal(); render(); toast(`Restored ${n} newer records`);
-    } catch { toast("That file isn't a Social Stats backup"); }
+    } catch { toast("That file isn't a Nancy Social Stats backup"); }
   };
   document.getElementById("pc").onclick = askPass;
   app.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { restore(b.dataset.restore); toast("Restored"); render(); });

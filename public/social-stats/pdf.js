@@ -1,4 +1,4 @@
-/* Social Stats → a real PDF document (vector text, proper tables), not a picture of the page.
+/* Nancy Social Stats → a real PDF document (vector text, proper tables), not a picture of the page.
  * Uses jsPDF + jspdf-autotable (loaded by the page). One builder per report:
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
@@ -6,7 +6,7 @@
 import * as E from "./engine.js?v=dev";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
-const PINK = [255, 79, 139], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
+const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
 
 /* standard PDF fonts only know Western characters: drop emoji, straighten quotes */
 const clean = s => String(s ?? "")
@@ -25,7 +25,7 @@ const chg = c => c.change == null ? "—" : c.rate ? `${c.change >= 0 ? "+" : ""
 const STATUS = { "🟢": ["Better", GOOD], "🔴": ["Worse", BAD], "🟡": ["Flat", MUTED] };
 
 /* ───────── page furniture ───────── */
-function sheet(orientation) {
+function sheet(orientation, logo) {
   const doc = new window.jspdf.jsPDF({ unit: "pt", format: "a4", orientation });
   const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 40;
   const P = { doc, W, H, M, y: M, inner: W - 2 * M };
@@ -35,9 +35,11 @@ function sheet(orientation) {
 
   P.header = (label, title, sub, accent = PINK) => {
     doc.setFillColor(...accent); doc.rect(0, 0, W, 6, "F");
-    P.font(8, "bold"); P.color(PINK); doc.text("HELLO NANCY", M, P.y + 4, { charSpace: 1 });
-    const bw = doc.getTextWidth("HELLO NANCY") + 11 * 1;                    // text width + letter spacing
-    P.color(DIM); doc.text("·  SOCIAL STATS  ·  " + clean(label).toUpperCase(), M + bw + 6, P.y + 4, { charSpace: 0.6 });
+    let x = M;
+    if (logo) { doc.addImage(logo, "PNG", M, P.y - 9, 18, 18); x += 25; }
+    P.font(8, "bold"); P.color(PINK); doc.text("NANCY SOCIAL STATS", x, P.y + 4, { charSpace: 1 });
+    const bw = doc.getTextWidth("NANCY SOCIAL STATS") + 18 * 1;            // text width + letter spacing
+    P.color(DIM); doc.text("·  " + clean(label).toUpperCase(), x + bw + 6, P.y + 4, { charSpace: 0.6 });
     P.y += 30;
     P.font(24, "bold"); P.color(INK);
     for (const l of doc.splitTextToSize(clean(title), P.inner)) { doc.text(l, M, P.y); P.y += 26; }
@@ -224,9 +226,9 @@ function notes(P, R) {
 }
 
 /* ───────── weekly ───────── */
-function weekly(rep, R, Pv, mode, settings) {
+function weekly(rep, R, Pv, mode, settings, logo) {
   const full = mode === "full";
-  const P = sheet(full ? "landscape" : "portrait");
+  const P = sheet(full ? "landscape" : "portrait", logo);
   const T = R.T, A = R.account || {};
   const C = Pv ? Object.fromEntries(E.compareReports(R, Pv).map(c => [c.name, c])) : {};
   const ch = n => (C[n] && C[n].change != null ? ` · ${chg(C[n])} vs last week` : "");
@@ -262,7 +264,7 @@ function weekly(rep, R, Pv, mode, settings) {
   }
   if (rep.rundown) { P.h2("Rundown"); P.markdown(rep.rundown); }
   notes(P, R);
-  return P.finish(`Weekly social report · ${rep.name} · ${F.date(rep.start)} – ${F.date(rep.end)}`);
+  return P.finish(`Nancy Social Stats · Weekly social report · ${rep.name} · ${F.date(rep.start)} – ${F.date(rep.end)}`);
 }
 
 function campaigns(P, R) {
@@ -273,9 +275,9 @@ function campaigns(P, R) {
 }
 
 /* ───────── event ───────── */
-function event(rep, R, Pv, mode) {
+function event(rep, R, Pv, mode, logo) {
   const full = mode === "full";
-  const P = sheet(full ? "landscape" : "portrait");
+  const P = sheet(full ? "landscape" : "portrait", logo);
   const T = R.T, S = R.score;
   P.header("Event report" + (full ? "" : " · summary"), rep.name,
     `${F.date(rep.start)} – ${F.date(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.date(R.dataDate)}`);
@@ -330,12 +332,12 @@ function event(rep, R, Pv, mode) {
   }
   if (rep.rundown) { P.h2("Rundown"); P.markdown(rep.rundown); }
   notes(P, R);
-  return P.finish(`Event report · ${rep.name} · ${F.date(rep.start)} – ${F.date(rep.end)}`);
+  return P.finish(`Nancy Social Stats · Event report · ${rep.name} · ${F.date(rep.start)} – ${F.date(rep.end)}`);
 }
 
 /* ───────── costing ───────── */
-function costing(rep, CR) {
-  const P = sheet("portrait");
+function costing(rep, CR, logo) {
+  const P = sheet("portrait", logo);
   const T = CR.T, Ev = CR.E, name = rep.eventName || CR.event?.name || rep.name;
   P.header("Costing report", name, `${F.date(rep.start)} – ${F.date(rep.end)} · ${T.lines} lines${CR.event ? ` · for the ${CR.event.name} event report` : ""} · money in USD`);
   P.kpis([
@@ -369,10 +371,10 @@ function costing(rep, CR) {
     ["Organic CPM", Ev.T.organicCPM == null ? "—" : F.usd(Ev.T.organicCPM)], ["Ads CPM", F.usd(Ev.T.adsCPM)],
     ["Influencer cost per 1,000 collab views", F.usd(Ev.T.influencerPer1kCollab)],
   ], { title: `${CR.event.name} — results`, num: [1] });
-  return P.finish(`Costing report · ${name}`);
+  return P.finish(`Nancy Social Stats · Costing report · ${name}`);
 }
 
-export function buildPdf({ rep, R, P, CR, mode, settings }) {
-  if (rep.type === "costing") return costing(rep, CR);
-  return rep.type === "week" ? weekly(rep, R, P, mode, settings) : event(rep, R, P, mode);
+export function buildPdf({ rep, R, P, CR, mode, settings, logo }) {
+  if (rep.type === "costing") return costing(rep, CR, logo);
+  return rep.type === "week" ? weekly(rep, R, P, mode, settings, logo) : event(rep, R, P, mode, logo);
 }

@@ -13,6 +13,7 @@ mkdir -p "$W/social-stats"
 for f in index.html engine.js pdf.js sources.json; do
   git show "HEAD:public/social-stats/$f" | sed "s/?v=dev/?v=$V/g" > "$W/social-stats/$f"
 done
+for f in logo-circle.svg logo-wordmark-cream.svg; do git show "HEAD:public/social-stats/$f" > "$W/social-stats/$f"; done
 cd "$W"
 git add social-stats
 if git diff --cached --quiet; then echo "gh-pages already up to date"; else
