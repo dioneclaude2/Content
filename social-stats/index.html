@@ -801,7 +801,7 @@ function eventHTML(rep, R, P, D){
       ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
       ["Eng. rate", F.pct(T.er), `benchmark ${F.pct(R.bench)}`],
       ["Engagements", F.big(T.interactions), `${F.usd(T.costPerEngagement)} each`],
-      ["Follows", F.int((T.adFollows || 0) + T.postFollows), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
+      ["Follows", T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0)), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
     ])}</div>
     <div class="sec"><h2>Event table</h2>
       ${R.rows.length ? tbl("t-event", ["Sr. no.", "Platform", "Format", "Link", "Boosted", N("Amount spent (USD)"), N("Total views"), N("Organic views"), N("Boosted views"), N("Boosted CPM"), "Note"], evRows, { ev: true })
@@ -916,7 +916,7 @@ function topPosts(R, by = "views", n = 3){
   const list = by === "er"
     ? [...R.contentRows].filter(r => r.er != null).sort((a, b) => b.er - a.er).slice(0, n)
     : [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
-  if (!list.length) return `<p class="small muted">No posts yet.</p>`;
+  if (!list.length) return `<p class="small muted">${by === "er" && R.contentRows.length ? "Needs likes, comments, saves and shares per post — not in this data yet." : "No posts yet."}</p>`;
   return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${by === "er" ? `<b>${F.pct(r.er)}</b> eng. · ${F.int(r.views)} views` : `<b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.`}${r.boosted ? " · boosted" : ""}</span></li>`).join("")}</ol>`;
 }
 
@@ -928,7 +928,7 @@ function issuesLine(rep, R){
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
-    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views, with ${F.pct(T.er)} engagement.` : "Add posts and ad exports to see how this event did.");
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this event did.");
   const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
   return `
     <p class="headline">${esc(head)}</p>
@@ -936,13 +936,13 @@ function eventSummaryHTML(rep, R, P){
       <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.pct(T.pctOrganic)} organic</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
-      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${erNote}</div></div>
+      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
     </div>
     <div class="mini">
       <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
       <div><span>Organic CPM</span><b>${T.organicCPM == null ? "—" : F.usd(T.organicCPM)}</b></div>
       <div><span>Cost per follow</span><b>${or(T.costPerFollow, F.usd)}</b></div>
-      <div><span>Follows</span><b>${F.int((T.adFollows || 0) + T.postFollows)}</b></div>
+      <div><span>Follows</span><b>${T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0))}</b></div>
       <div><span>Cost per engagement</span><b>${or(T.costPerEngagement, F.usd)}</b></div>
     </div>
     <div class="grid g2" style="margin-top:14px">
@@ -955,7 +955,7 @@ function eventSummaryHTML(rep, R, P){
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
       ], F.int)}
-      <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}</p></div>
+      <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
     </div>
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
@@ -1326,16 +1326,22 @@ function costingAdd(body, rep, CR){
 /* ───────── Google Sheet import ─────────
    Reads a link-shared sheet as CSV (Google allows this from the browser) and loads its
    posts, per-post ad numbers and account summary into a report. */
-async function importSheet(url, repId){
-  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
-  if (!m) throw new Error("That isn't a Google Sheets link.");
-  const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+async function sheetCsv(sheetId, gid){
   let text;
   try {
-    const r = await fetch(`https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv&gid=${gid}`);
+    const r = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
     text = r.ok ? await r.text() : "";
   } catch { text = ""; }
   if (!text || /^\s*<!doctype|<html/i.test(text)) throw new Error("Couldn't open the sheet. Share it as “Anyone with the link can view” and try again.");
+  return text;
+}
+
+async function importSheet(url, repId, costs){
+  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
+  if (!m) throw new Error("That isn't a Google Sheets link.");
+  const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  const text = await sheetCsv(m[1], gid);
+  if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
@@ -1374,7 +1380,69 @@ async function importSheet(url, repId){
   return { id: rep.id, msg: `Read ${S.posts.length} posts (pulled ${F.date(pulled)})${S.ads.length ? `, ${S.ads.length} boosted post${S.ads.length > 1 ? "s" : ""} with ad numbers` : ""}${acc ? `, ${acc} account numbers` : ""}.${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
 }
 
+/* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
+function importEventTab(text, url, repId, costs){
+  const S = E.parseEventSheet(text);
+  if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
+  const D = db();
+  let rep = repId ? D.reports[repId] : Object.values(D.reports).find(r => r.type === "event" && r.sheetUrl === url);
+  if (!rep) {
+    const colour = Object.keys(E.EVENT_COLOURS).find(k => S.name.toLowerCase().includes(k.toLowerCase()))
+      || (/london fashion/i.test(S.name) ? "LFW" : "Pink");
+    rep = { id: uid(), type: "event", name: S.name, colour, postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
+  }
+  const pulled = S.dataDate || rep.dataDate || today();
+  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.id);
+  for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+  const patch = { sheetUrl: url, start: S.range?.start || rep.start || today(), end: S.range?.end || rep.end || today(), dataDate: pulled,
+    postIds: [...new Set([...(rep.postIds || []), ...S.postIds])], sheetNotes: S.sheetNotes, fresh: false };
+  const realExports = (rep.importIds || []).filter(i => D.imports[i] && !D.imports[i].fromSheet);
+  if (S.ads.length && !realExports.length) {
+    const id = (rep.importIds || []).find(i => D.imports[i]?.fromSheet) || uid();
+    put("ss.import." + id, { id, name: `${S.name} — ad numbers from the event sheet`, fromSheet: true, level: "ad", hasViews: true, hasFollows: false, hasPostIds: true,
+      rows: S.ads.map((a, i) => ({ ...a, i })), rangeStart: S.range?.start || null, rangeEnd: pulled, uploaded: today(),
+      warnings: ["Taken from the event sheet's rows — upload the Meta exports for ad-level detail and follows."] });
+    patch.importIds = [...new Set([...(rep.importIds || []), id])];
+  }
+  // costs from the Total Spend tab become this event's costing report (two summary lines until invoices are added)
+  if (costs && (costs.influencerCost != null || costs.eventCost != null)) {
+    const lines = {
+      influencers: costs.influencerCost != null ? [{ creator: "Influencer invoices (total from sheet)", deliverables: "", fee: costs.influencerCost, currency: "USD", source: "Total Spend tab" }] : [],
+      eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
+    };
+    const existing = rep.costingId && D.reports[rep.costingId];
+    if (!existing) patch.costingId = newCosting({ name: `${S.name} costs`, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    else if ((existing.influencers || []).every(l => l.source === "Total Spend tab") && (existing.eventCosts || []).every(l => l.source === "Total Spend tab"))
+      put("ss.report." + existing.id, { ...existing, ...lines });      // refresh only if nobody has added real invoices
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch });
+  return { id: rep.id, msg: `Read ${S.posts.length} posts and ${S.ads.length} ad rows for ${esc(S.name)} (data ${F.date(pulled)}).${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
+}
+
+/* #/import?sheet=ID&gid=G                    → one report
+   #/import?sheet=ID&events=G1,G2&totals=GT    → every event tab, with costs from the Total Spend tab */
 async function renderImport(q){
+  if (q.get("events")) {
+    app.innerHTML = `<h1>Importing events…</h1><p class="sub" id="imp-st">Reading the Google Sheet.</p>`;
+    try {
+      const sid = q.get("sheet");
+      const costsBy = q.get("totals") ? E.parseEventTotals(await sheetCsv(sid, q.get("totals"))) : {};
+      const done = [];
+      for (const gid of q.get("events").split(",")) {
+        const url = `https://docs.google.com/spreadsheets/d/${sid}/edit#gid=${gid}`;
+        const text = await sheetCsv(sid, gid);
+        const name = E.parseEventSheet(text).name;
+        document.getElementById("imp-st").textContent = `Importing ${name}…`;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        done.push(importEventTab(text, url, null, costsBy[key]).id);
+      }
+      toast(`Imported ${done.length} events`);
+      location.replace("#/");
+    } catch (e) {
+      app.innerHTML = `<h1>Couldn't import</h1><div class="flag bad" style="margin-top:14px"><b>Error</b><span>${esc(e.message)}</span></div><p><a class="btn" href="#/">Home</a></p>`;
+    }
+    return;
+  }
   const url = q.get("sheet") ? `https://docs.google.com/spreadsheets/d/${q.get("sheet")}/edit#gid=${q.get("gid") || 0}` : "";
   app.innerHTML = `<h1>Importing…</h1><p class="sub">Reading the Google Sheet.</p>`;
   const existing = Object.values(db().reports).find(r => r.sheetUrl && r.sheetUrl.includes(q.get("sheet") || "§"));
