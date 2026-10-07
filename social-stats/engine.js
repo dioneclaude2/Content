@@ -86,8 +86,19 @@ export const daysBetween = (a, b) => Math.round((new Date(b + "T12:00:00Z") - ne
 
 /** Pasted Google Sheets (tabs) or a CSV file → { headers, rows: [{header: cell}] }. */
 export function parseTable(text) {
+  const rows = parseRows(text);
+  if (!rows.length) return { headers: [], rows: [] };
+  const headers = rows[0].map(h => h.trim());
+  return {
+    headers,
+    rows: rows.slice(1).map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] ?? "").trim()]))),
+  };
+}
+
+/** Every non-blank row as an array of cells (tabs, commas or semicolons; quoted cells may hold newlines). */
+export function parseRows(text) {
   text = String(text || "").replace(/^﻿/, "").replace(/\r\n?/g, "\n").trim();
-  if (!text) return { headers: [], rows: [] };
+  if (!text) return [];
   const first = text.split("\n")[0];
   const delim = first.includes("\t") ? "\t" : first.split(";").length > first.split(",").length ? ";" : ",";
   const out = [];
@@ -104,13 +115,7 @@ export function parseTable(text) {
     else cell += c;
   }
   row.push(cell); out.push(row);
-  const rows = out.filter(r => r.some(c => c.trim()));
-  if (!rows.length) return { headers: [], rows: [] };
-  const headers = rows[0].map(h => h.trim());
-  return {
-    headers,
-    rows: rows.slice(1).map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] ?? "").trim()]))),
-  };
+  return out.filter(r => r.some(c => c.trim()));
 }
 
 /** Find the column whose header matches one of the patterns (first pattern wins). */
@@ -184,6 +189,7 @@ export function mapPosts(table) {
   const posts = [];
   table.rows.forEach((r, i) => {
     const code = shortcode(r[c.link]) || shortcode(r[c.postId]);
+    if (!code && /^total/i.test(Object.values(r)[0] || "")) return;
     if (!code) { if (Object.values(r).some(Boolean)) errors.push(`Row ${i + 2}: no usable Instagram link.`); return; }
     const account = (r[c.account] || "").trim();
     const collab = c.collab ? yes(r[c.collab]) : /collab/i.test(account) || (!!account && !NANCY.test(account));
@@ -1138,5 +1144,97 @@ export function insights(built, settings = DEFAULT_SETTINGS) {
   if (lastWeek?.account?.pctTarget != null) out.push({ tone: lastWeek.account.pctTarget >= 1 ? "good" : "warn", text: `Account views reached ${pc(lastWeek.account.pctTarget)} of the weekly share of the ${(settings.target.views / 1e6).toFixed(0)}M target.` });
   for (const R of built) if (R.T?.adsCPM != null && (R.T.adsCPM > settings.cpmRange[1] * 2 || R.T.adsCPM < settings.cpmRange[0] / 2))
     out.push({ tone: "bad", text: `${R.rep.name}: ads CPM ${usd2(R.T.adsCPM)} is far outside the usual $${settings.cpmRange[0]}–$${settings.cpmRange[1]} — check the ad export.` });
+  return out;
+}
+
+/* ───────── importing an existing report sheet (Google Sheets CSV) ─────────
+   Reads the team's weekly/event report sheets as they are today: a title row,
+   the post table (header row with Link + Views) up to its Total row, and the
+   summary block underneath. Only numbers that are in the sheet are taken. */
+
+const MON = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12 };
+
+/** "27 Sep – 3 Oct 2026" / "Sep 27 – Oct 3, 2026" → {start, end} */
+export function rangeFrom(text) {
+  const s = String(text || "");
+  let m = s.match(/(\d{1,2})\s+([A-Za-z]{3,9})\.?\s*(\d{4})?\s*[–—-]\s*(\d{1,2})\s+([A-Za-z]{3,9})\.?\s+(\d{4})/);
+  if (m && MON[m[2].slice(0, 3).toLowerCase()] && MON[m[5].slice(0, 3).toLowerCase()]) {
+    const y2 = +m[6], m1 = MON[m[2].slice(0, 3).toLowerCase()], m2 = MON[m[5].slice(0, 3).toLowerCase()];
+    const y1 = m[3] ? +m[3] : m1 > m2 ? y2 - 1 : y2;
+    return { start: ymd(y1, m1, +m[1]), end: ymd(y2, m2, +m[4]) };
+  }
+  m = s.match(/([A-Za-z]{3,9})\.?\s+(\d{1,2}),?\s*(\d{4})?\s*[–—-]\s*([A-Za-z]{3,9})?\.?\s*(\d{1,2}),?\s+(\d{4})/);
+  if (m && MON[m[1].slice(0, 3).toLowerCase()]) {
+    const m1 = MON[m[1].slice(0, 3).toLowerCase()], m2 = m[4] && MON[m[4].slice(0, 3).toLowerCase()] ? MON[m[4].slice(0, 3).toLowerCase()] : m1;
+    const y2 = +m[6], y1 = m[3] ? +m[3] : m1 > m2 ? y2 - 1 : y2;
+    return { start: ymd(y1, m1, +m[2]), end: ymd(y2, m2, +m[5]) };
+  }
+  return null;
+}
+
+export function parseReportSheet(text) {
+  const rows = parseRows(text).map(r => r.map(c => String(c ?? "").trim()));   // every row, title included
+  const out = { title: "", range: null, pulled: null, posts: [], ads: [], account: {}, notes: [], type: null };
+  out.title = (rows.find(r => r[0]) || [""])[0];
+  out.range = rangeFrom(out.title);
+  const pm = out.title.match(/pulled\s+(.+)$/i);
+  out.pulled = pm ? toDate(pm[1].trim()) : null;
+  out.type = /weekly/i.test(out.title) ? "week" : /event/i.test(out.title) ? "event" : null;
+
+  /* the post table */
+  const hi = rows.findIndex(r => r.some(c => /^link$/i.test(c)) && r.some(c => /^views$/i.test(c)));
+  if (hi < 0) { out.notes.push("No post table found (needs a header row with Link and Views)."); return out; }
+  const header = rows[hi];
+  let end = rows.findIndex((r, i) => i > hi && (/^total/i.test(r[0]) || !r.some(Boolean)));
+  if (end < 0) end = rows.length;
+  const table = { headers: header, rows: rows.slice(hi + 1, end).map(r => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ""]))) };
+  const mapped = mapPosts(table);
+  out.posts = mapped.posts;
+  out.notes.push(...mapped.errors);
+
+  /* ad numbers already worked out per post in the sheet (no Meta export behind them) */
+  const cSpend = col(header, /^ad spend/, /amount spent/), cPaid = col(header, /^paid views/), cCamp = col(header, /^ad campaign/, /^campaign/);
+  if (cSpend || cPaid) {
+    for (const r of table.rows) {
+      const spend = num(r[cSpend]) || 0, views = num(r[cPaid]) || 0;
+      if (!spend && !views) continue;
+      const cur = (cSpend.match(/\(([A-Z]{3})\)/) || [])[1] || "USD";
+      const camp = r[cCamp] || "";
+      out.ads.push({
+        ad: r[col(header, /^content/, /caption/)] || "", campaign: /^https?:/i.test(camp) || !camp || camp === "0" ? "From the report sheet" : camp,
+        adset: "", spend, currency: cur, views, impressions: null, reach: null, follows: null,
+        postId: "", permalink: r[col(header, /^link/)] || "", start: null, end: null, results: null, indicator: "",
+      });
+    }
+  }
+
+  /* the summary block underneath */
+  const below = rows.slice(end + 1);
+  const find = re => below.find(r => re.test(r[0] || ""));
+  const nums = s => (String(s || "").match(/\d[\d,]*(?:\.\d+)?%?/g) || []).map(x => num(x));
+  const views = find(/^views\b.*account/i) || find(/^account views/i);
+  if (views) {
+    out.account.views = num(views[1]);
+    const lw = String(views[2] || "").match(/last week\s*\(([\d,]+)\)/i);
+    if (lw) out.account.viewsPrev = num(lw[1]);
+  }
+  const eng = find(/^engagement rate/i);
+  if (eng) {
+    const m = String(eng[2] || "").match(/\(([\d,]+)\s*vs\s*([\d,]+)\s*interactions\)/i);
+    if (m) { out.account.interactions = num(m[1]); out.account.interactionsPrev = num(m[2]); }
+  }
+  const split = find(/followers\s*\/\s*non-followers/i);
+  if (split) {
+    const p = nums(split[1]).filter(x => x != null && x <= 1);
+    if (p.length >= 2) { out.account.followersPct = p[0]; out.account.nonFollowersPct = p[1]; }
+  }
+  const mf = find(/^male\s*\/\s*female/i);
+  if (mf) {
+    const p = nums(mf[1]).filter(x => x != null && x <= 1);
+    if (p.length >= 2) { out.account.malePct = p[0]; out.account.femalePct = p[1]; }
+  }
+  const fol = find(/^followers? (increase|change|gained)/i) || find(/^net follow/i);
+  if (fol && !/follows from this week|isn.t shown/i.test(fol[2] || "")) out.account.netFollowers = num(fol[1]);
+  else if (fol) out.notes.push("The sheet's “Followers increase” is follows from posts, not net follower change — left blank.");
   return out;
 }
