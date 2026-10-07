@@ -155,6 +155,49 @@ td.wrap{white-space:normal;min-width:220px}
 details summary{cursor:pointer;font-weight:700;font-size:12.5px}
 .kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--tint);padding:1px 6px;border-radius:5px}
 
+/* home + summaries */
+:root{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a}
+.btn.big{padding:13px 22px;font-size:13.5px}
+.home-block{background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--ev,var(--pink));border-radius:22px;padding:20px}
+.hb-head{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:6px}
+.hb-kind{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.hb-name{font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 0}
+.headline{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.35;margin:12px 0 16px;max-width:60ch}
+.tiles.big{grid-template-columns:repeat(2,1fr)}
+@media (min-width:900px){.tiles.big{grid-template-columns:repeat(4,1fr)}}
+.tiles.big .v{font-size:32px}
+.tile.hero{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tile.hero .k,.tile.hero .s{color:rgba(255,255,255,.7)}
+.mini{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:12px;padding:12px 16px;background:var(--tint);border-radius:14px;font-size:12.5px}
+.mini span{color:var(--muted);margin-right:6px}
+.splitbar{display:flex;gap:2px;height:16px;margin:10px 0 12px}
+.splitbar i{border-radius:4px;min-width:4px}
+.legend{display:grid;gap:6px;font-size:12.5px}
+.legend div{display:grid;grid-template-columns:12px 1fr auto 58px;gap:8px;align-items:center}
+.legend .sw{width:10px;height:10px;border-radius:3px}
+.legend .muted{text-align:right}
+ol.top{margin:0;padding-left:18px;display:grid;gap:9px;font-size:13px}
+ol.top li span{display:block;font-size:12px;margin-top:2px}
+.vtip{position:fixed;z-index:60;background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;pointer-events:none;max-width:280px}
+/* chooser */
+.choose{display:grid;gap:14px}
+@media (min-width:900px){.choose{grid-template-columns:repeat(3,1fr)}}
+.pick{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px;cursor:pointer;min-height:220px}
+.pick:hover{border-color:var(--ink);box-shadow:0 10px 30px rgba(20,13,17,.08)}
+.pick .pk{font-size:24px;font-weight:900;letter-spacing:-.02em}
+.pick .pd{color:var(--muted);line-height:1.5;font-size:13.5px}
+.pick .pw{margin-top:auto;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--pink)}
+/* costing */
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--line);border-radius:20px;padding:36px 16px;background:var(--paper);cursor:pointer;text-align:center}
+.drop b{font-size:17px}.drop span{color:var(--muted);font-size:12.5px}
+.drop.over,.drop:hover{border-color:var(--pink);background:var(--pink-soft)}
+input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
+.hbars{display:grid;gap:8px}
+.hb{display:grid;grid-template-columns:minmax(110px,170px) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.hb .ht{height:12px;background:var(--line-2);border-radius:4px;overflow:hidden}
+.hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.warnc{color:var(--warn)}
+
 @media print{
   .top,.subtabs,.tbl-tools,.noprint,.btn{display:none!important}
   body{background:#fff}
@@ -167,7 +210,8 @@ details summary{cursor:pointer;font-weight:700;font-size:12.5px}
 <header class="top"><div class="top-in">
   <a class="brand" href="#/"><b>Social</b><span>Stats</span></a>
   <nav class="nav" id="nav">
-    <a href="#/" data-r="home">Reports</a>
+    <a href="#/" data-r="home">Home</a>
+    <a href="#/reports" data-r="reports">Reports</a>
     <a href="#/compare" data-r="compare">Compare</a>
     <a href="#/posts" data-r="posts">Posts</a>
     <a href="#/ads" data-r="ads">Ad exports</a>
@@ -337,28 +381,86 @@ addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
 const app = document.getElementById("app");
 function render(){
   const r = route(), D = db();
-  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.r === (r.name === "r" ? "home" : r.name)));
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.r === (r.name === "r" || r.name === "new" ? "reports" : r.name)));
   try {
-    if (r.name === "r" && r.parts[1]) return renderReport(D, r.parts[1], r.parts[2] || "report", r.q);
+    if (r.name === "r" && r.parts[1]) {
+      const rp = D.reports[r.parts[1]];
+      if (rp?.type === "costing") return renderCosting(D, rp, r.parts[2] || "summary");
+      return renderReport(D, r.parts[1], r.parts[2] || "summary", r.q);
+    }
+    if (r.name === "new") return renderNew(D);
+    if (r.name === "reports") return renderReports(D);
     if (r.name === "compare") return renderCompare(D, r.q);
     if (r.name === "posts") return renderPosts(D, r.q);
     if (r.name === "ads") return renderAds(D);
     if (r.name === "settings") return renderSettings(D);
-    renderHome(D);
+    renderDashboard(D);
   } catch (e) {
     console.error(e);
     app.innerHTML = `<div class="flag bad"><b>Error</b>${esc(e.message)}</div>`;
   }
 }
 
-/* ───────── home: every report ───────── */
-function renderHome(D){
+/* ───────── home: the two summaries founders read ─────────
+   Top: the weekly report. Below: the event report. Only the summary — "View report"
+   opens the full one. A picker swaps which week / event is shown (latest by default). */
+function renderDashboard(D){
   const reps = Object.values(D.reports);
   const weeks = reps.filter(r => r.type === "week").sort((a, b) => (a.start < b.start ? 1 : -1));
-  const events = reps.filter(r => r.type === "event").sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
-  const card = rep => {
+  const events = reps.filter(r => r.type === "event").sort((a, b) => ((a.end || "") < (b.end || "") ? 1 : -1));
+  const q = route().q;
+  // latest week that has posts, unless one was picked
+  const wk = D.reports[q.get("w")] || weeks.find(r => E.buildReport(r, D, D.settings).contentRows.length) || weeks[0];
+  const ev = D.reports[q.get("e")] || events[0];
+
+  const block = (title, rep, list, key, empty) => {
+    const picker = list.length > 1 ? `<select class="pickrep" data-key="${key}">${list.map(r => `<option value="${r.id}" ${r.id === rep?.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>` : "";
+    if (!rep) return `<section class="sec"><h2>${title}</h2><div class="empty">${empty}</div></section>`;
     const R = E.buildReport(rep, D, D.settings);
-    const [c1, c2] = evColours(rep);
+    const pr = prevFor(rep, D);
+    const P = pr ? E.buildReport(pr, D, D.settings) : null;
+    const [c1] = evColours(rep);
+    return `<section class="sec home-block" style="--ev:${c1}">
+      <div class="hb-head">
+        <div class="grow"><div class="hb-kind">${title}</div>
+          <div class="hb-name">${esc(rep.name)}</div>
+          <div class="small muted">${F.date(rep.start)}–${F.dateY(rep.end)} · data pulled ${F.dateY(rep.dataDate)}</div></div>
+        ${picker}
+        <a class="btn" href="#/r/${rep.id}/full">View report →</a>
+      </div>
+      ${rep.type === "week" ? weeklySummaryHTML(rep, R, P, D) : eventSummaryHTML(rep, R, P, D)}
+    </section>`;
+  };
+
+  app.innerHTML = `
+    <div class="row" style="align-items:flex-end">
+      <div class="grow"><h1>Social <span class="serif">Stats</span></h1>
+      <p class="sub">What we posted, what it reached, and what it cost per 1,000 views.</p></div>
+      <a class="btn pink big" href="#/new">+ Create a report</a>
+    </div>
+    ${block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
+    ${block("Event report", ev, events, "e", `No event report yet. <a href="#/new">Create one</a> for any event, launch or ad push.`)}`;
+  app.querySelectorAll(".pickrep").forEach(sel => sel.onchange = () => {
+    const p = new URLSearchParams(route().q); p.set(sel.dataset.key, sel.value);
+    location.hash = `#/?${p}`;
+  });
+}
+
+/* ───────── all reports ───────── */
+function renderReports(D){
+  const reps = Object.values(D.reports);
+  const sortStart = (a, b) => ((a.start || "") < (b.start || "") ? 1 : -1);
+  const card = rep => {
+    const [c1] = evColours(rep);
+    if (rep.type === "costing") {
+      const CR = E.buildCosting(rep, D, D.settings);
+      return `<a class="rcard" href="#/r/${rep.id}" style="--ev:${c1}"><div class="band"></div>
+        <div class="small muted">Costing${CR.event ? ` · for ${esc(CR.event.name)}` : ""}</div>
+        <div class="t">${esc(rep.name || "Untitled")}</div>
+        <div class="d">${F.dateY(rep.start)} → ${F.dateY(rep.end)} · ${CR.T.lines} lines</div>
+        <div class="m"><div><b>${F.usd(CR.T.total)}</b>total</div><div><b>${F.usd(CR.T.influencerCost)}</b>influencers</div><div><b>${F.usd(CR.T.eventCost)}</b>event</div><div><b>${CR.T.creators}</b>creators</div></div></a>`;
+    }
+    const R = E.buildReport(rep, D, D.settings);
     const bad = R.flags.filter(f => f.level === "bad").length;
     return `<a class="rcard" href="#/r/${rep.id}" style="--ev:${c1}">
       <div class="band"></div>
@@ -372,24 +474,47 @@ function renderHome(D){
         <div><b>${F.usd(R.T.totalSpend)}</b>spend</div>
       </div></a>`;
   };
+  const group = (title, type, empty) => {
+    const list = reps.filter(r => r.type === type).sort(sortStart);
+    return `<div class="sec"><h2>${title}</h2>${list.length ? `<div class="rcards">${list.map(card).join("")}</div>` : `<div class="empty">${empty}</div>`}</div>`;
+  };
   app.innerHTML = `
     <div class="row" style="align-items:flex-end">
-      <div class="grow"><h1>Social <span class="serif">Stats</span></h1>
-      <p class="sub">Every weekly and event report in one place, from one post list and one set of ad exports. Paste the data in once and the numbers work themselves out.</p></div>
-      <button class="btn pink" id="newWeek">+ Weekly report</button>
-      <button class="btn" id="newEvent">+ Event report</button>
+      <div class="grow"><h1>Reports</h1><p class="sub">Every costing, event and weekly report.</p></div>
+      <a class="btn pink" href="#/new">+ Create a report</a>
     </div>
-    <div class="sec"><h2>Events &amp; launches</h2>
-      ${events.length ? `<div class="rcards">${events.map(card).join("")}</div>` : `<div class="empty">No event reports yet. Start one for any event, launch or ad push.</div>`}
+    ${group("Events &amp; launches", "event", "No event reports yet.")}
+    ${group("Costing", "costing", "No costing reports yet.")}
+    ${group("Weekly", "week", "No weekly reports yet.")}`;
+}
+
+/* ───────── create: which report? ───────── */
+function renderNew(D){
+  const events = Object.values(D.reports).filter(r => r.type === "event").sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  app.innerHTML = `<h1>What do you want to <span class="serif">make?</span></h1>
+    <div class="sec choose">
+      <button class="pick" data-new="costing">
+        <span class="pk">Costing report</span>
+        <span class="pd">What an event cost. Drop in invoices — PDFs or photos — and it reads them: models and influencers go to the influencer list, production, venue, travel and the rest go to event costs.</span>
+        <span class="pw">For: event costing person</span>
+      </button>
+      <button class="pick" data-new="event">
+        <span class="pk">Event report</span>
+        <span class="pd">What an event, launch or ad push reached: views, engagement, ad spend and CPM, with costs pulled from its costing report.</span>
+        <span class="pw">For: founders · organic + ads people</span>
+      </button>
+      <button class="pick" data-new="week">
+        <span class="pk">Weekly report</span>
+        <span class="pd">Last week's posts against the week before: account views vs target, engagement, ad spend, blended CPM.</span>
+        <span class="pw">Every Monday</span>
+      </button>
     </div>
-    <div class="sec"><h2>Weekly reports</h2>
-      ${weeks.length ? `<div class="rcards">${weeks.map(card).join("")}</div>` : `<div class="empty">No weekly reports yet. Each Monday, start one for the week before.</div>`}
-    </div>`;
-  document.getElementById("newWeek").onclick = () => newReport("week");
-  document.getElementById("newEvent").onclick = () => newReport("event");
+    ${events.length ? `<p class="small muted">A costing report can be linked to an event at any time — from either report.</p>` : ""}`;
+  app.querySelectorAll("[data-new]").forEach(b => b.onclick = () => newReport(b.dataset.new));
 }
 
 function newReport(type){
+  if (type === "costing") { const id = newCosting({}); location.hash = `#/r/${id}/costs`; return; }
   const id = uid();
   const t = today();
   let rep;
@@ -406,13 +531,20 @@ function newReport(type){
   location.hash = `#/r/${id}/data`;
 }
 
+function newCosting(fields){
+  const id = uid(), t = today();
+  put("ss.report." + id, { id, type: "costing", name: "New costing", start: t, end: t, colour: "Pink", influencers: [], eventCosts: [],
+    fx: { ...db().settings.fx }, fresh: !fields.name, ...fields });
+  return id;
+}
+
 /* ───────── a report ───────── */
 function prevFor(rep, D){
   if (rep.type === "week") {
     const p = rep.prevId ? D.reports[rep.prevId] : E.previousWeek(rep, D.reports);
     return p || null;
   }
-  return rep.compareId ? D.reports[rep.compareId] || null : null;
+  return rep.compareId ? D.reports[rep.compareId] || null : E.previousEvent(rep, D.reports);
 }
 
 function renderReport(D, id, tab, q){
@@ -433,11 +565,11 @@ function renderReport(D, id, tab, q){
   const title = rep.type === "week"
     ? `Weekly Social Report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${D.settings.account} · ${T.posts} posts · Instagram data pulled ${F.dateY(R.dataDate)}`
     : `${esc(rep.name)} · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.dateY(R.dataDate)}`;
-  const tabs = [["report", "Report"], ["data", "Add data"], ["match", "Ad matching"], ["checks", `Checks${nFix ? `<span class="cnt">${nFix}</span>` : ""}`]];
+  const tabs = [["summary", "Summary"], ["full", "Full report"], ["data", "Add data"], ["match", "Ad matching"], ["checks", `Checks${nFix ? `<span class="cnt">${nFix}</span>` : ""}`]];
   app.innerHTML = `
     <div class="rhead" style="--ev:${c1}">
       <div class="grow">
-        <div class="small muted"><a href="#/">Reports</a> / ${rep.type === "week" ? "Weekly" : "Event"}</div>
+        <div class="small muted"><a href="#/reports">Reports</a> / ${rep.type === "week" ? "Weekly" : "Event"}</div>
         <h1 style="margin-top:6px">${esc(rep.name || "Untitled")}</h1>
         <div class="titleline">${title}</div>
       </div>
@@ -455,6 +587,7 @@ function renderReport(D, id, tab, q){
   if (tab === "data") return renderData(body, rep, R, D);
   if (tab === "match") return renderMatch(body, rep, R, D);
   if (tab === "checks") return renderChecks(body, R);
+  if (tab === "summary") { body.innerHTML = `<div class="sec">${rep.type === "week" ? weeklySummaryHTML(rep, R, P, D) : eventSummaryHTML(rep, R, P, D)}</div><div class="sec row noprint"><a class="btn" href="#/r/${id}/full">View full report →</a></div>`; return; }
   body.innerHTML = rep.type === "week" ? weeklyHTML(rep, R, P, D) : eventHTML(rep, R, P, D);
   wireReport(body, rep, R, P, D);
 }
@@ -688,7 +821,7 @@ function eventHTML(rep, R, P, D){
     ${rundownHTML(rep, R)}
     <div class="sec"><h2>Engagement by post</h2>${tbl("t-eng", ["Date", "Account", "Format", "Content / link", N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Interactions"), N("Eng. rate"), N("Profile visits"), N("Follows"), "Boosted"], engRows)}</div>
     <div class="sec"><h2>Compare with another event</h2>
-      <div class="row noprint small" style="margin-bottom:10px"><select id="cmpPick"><option value="">Choose an event…</option>${otherEvents.map(r => `<option value="${r.id}" ${rep.compareId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+      <div class="row noprint small" style="margin-bottom:10px"><select id="cmpPick"><option value="">Event just before (automatic)</option>${otherEvents.map(r => `<option value="${r.id}" ${rep.compareId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
       ${P ? cmpTable("t-cmp", R, P, rep.name, P.rep.name) : `<p class="small muted">Pick an earlier event to see this one against it.</p>`}
     </div>
     ${notesHTML(rep, R, D)}`;
@@ -710,7 +843,7 @@ function wireReport(body, rep, R, P, D){
 
 function downloadCSV(rep){
   const tables = [...document.querySelectorAll("#body table")];
-  if (!tables.length) { location.hash = `#/r/${rep.id}/report`; setTimeout(() => downloadCSV(rep), 100); return; }
+  if (!tables.length || route().parts[2] !== "full") { location.hash = `#/r/${rep.id}/full`; setTimeout(() => downloadCSV(rep), 100); return; }
   const parts = tables.map(t => {
     const h = t.closest(".sec")?.querySelector("h2")?.innerText || "";
     return [h, ...[...t.rows].map(tr => [...tr.cells].map(c => csvCell(c.innerText.replace(/\s+/g, " ").trim())).join(","))].join("\n");
@@ -745,6 +878,444 @@ function md(src){
   }
   flushT(); if (inList) out += "</ul>";
   return out;
+}
+
+/* ───────── founder summaries: the few numbers that matter ───────── */
+
+/* Part-to-whole bar: fixed series order, 2px gaps, labels with values beside it (never colour alone). */
+const SERIES = ["var(--s1)", "var(--s2)", "var(--s3)"];
+function splitBar(parts, fmt){
+  const shown = parts.filter(p => p.value != null);
+  const total = shown.reduce((s, p) => s + (p.value || 0), 0);
+  if (!total) return `<p class="small muted">No numbers yet.</p>`;
+  return `<div class="splitbar">${parts.map((p, i) => p.value ? `<i style="flex:${p.value};background:${SERIES[i]}" data-tip="${esc(p.label)}: ${esc(fmt(p.value))} (${F.pct(p.value / total)})"></i>` : "").join("")}</div>
+    <div class="legend">${parts.map((p, i) => `<div><span class="sw" style="background:${SERIES[i]}"></span><span class="lk">${esc(p.label)}</span><b>${p.value == null ? `<span class="miss">${esc(p.missing || "missing")}</span>` : esc(fmt(p.value))}</b><span class="muted">${p.value == null ? "" : F.pct(p.value / total)}</span></div>`).join("")}</div>`;
+}
+
+/* The rundown's headline, if Claude's rundown has been pasted in. */
+function rundownHeadline(md){
+  if (!md) return "";
+  const lines = md.split("\n").map(l => l.trim());
+  const h = lines.findIndex(l => /^#+\s*headline/i.test(l));
+  const pick = (h >= 0 ? lines.slice(h + 1) : lines).find(l => l && !/^#|^\||^[-*]\s*$/.test(l));
+  return (pick || "").replace(/^[-*]\s+/, "").replace(/\*\*/g, "");
+}
+
+function miniCmp(R, P, names){
+  if (!P) return "";
+  const all = Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c]));
+  const rows = names.map(n => all[n]).filter(Boolean).map(c => {
+    const f = v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+    return `<tr><td>${esc(c.name)}</td><td class="n">${f(c.cur)}</td><td class="n">${f(c.prev)}</td><td class="n">${c.change == null ? "—" : `${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`}</td></tr>`;
+  });
+  return `<div class="tw"><table><thead><tr><th></th><th class="n">This</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+}
+
+function topPosts(R, n = 3){
+  const list = [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
+  if (!list.length) return `<p class="small muted">No posts yet.</p>`;
+  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · <b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.${r.boosted ? " · boosted" : ""}</span></li>`).join("")}</ol>`;
+}
+
+function issuesLine(rep, R){
+  const n = R.flags.filter(f => f.level !== "info").length + Object.keys(R.missing).length;
+  return n ? `<p class="small" style="margin-top:12px"><a class="down" href="#/r/${rep.id}/checks">${n} thing${n > 1 ? "s" : ""} missing or to check →</a></p>` : "";
+}
+
+function eventSummaryHTML(rep, R, P){
+  const T = R.T;
+  const head = rundownHeadline(rep.rundown)
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views, with ${F.pct(T.er)} engagement.` : "Add posts and ad exports to see how this event did.");
+  const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
+  return `
+    <p class="headline">${esc(head)}</p>
+    <div class="tiles big">
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
+      <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.pct(T.pctOrganic)} organic</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
+      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${erNote}</div></div>
+    </div>
+    <div class="mini">
+      <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
+      <div><span>Organic CPM</span><b>${T.organicCPM == null ? "—" : F.usd(T.organicCPM)}</b></div>
+      <div><span>Cost per follow</span><b>${or(T.costPerFollow, F.usd)}</b></div>
+      <div><span>Follows</span><b>${F.int((T.adFollows || 0) + T.postFollows)}</b></div>
+      <div><span>Cost per engagement</span><b>${or(T.costPerEngagement, F.usd)}</b></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Where the money went</h3>${splitBar([
+        { label: "Influencers", value: T.influencerCost, missing: "no costing yet" },
+        { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
+        { label: "Ads", value: T.adSpend },
+      ], F.usd)}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
+      <div class="card"><h3>Where the views came from</h3>${splitBar([
+        { label: "Organic", value: T.organicViews },
+        { label: "Paid (ads)", value: T.paidViews },
+      ], F.int)}
+      <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Top posts</h3>${topPosts(R)}</div>
+      <div class="card"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+    </div>
+    ${issuesLine(rep, R)}`;
+}
+
+function weeklySummaryHTML(rep, R, P){
+  const T = R.T, A = R.account || {};
+  const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
+  const ch = c => !c || c.change == null ? "" : ` · ${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`;
+  const head = rundownHeadline(rep.rundown)
+    || (R.contentRows.length ? `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${F.chg(C["Post views"].change)} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.` : "Add the week's posts to see how it went.");
+  return `
+    <p class="headline">${esc(head)}</p>
+    <div class="tiles big">
+      <div class="tile"><div class="k">Account views</div><div class="v">${A.views == null ? "—" : F.big(A.views)}</div><div class="s">${A.views == null ? "add from the IG dashboard" : `${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}`}</div></div>
+      <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
+      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
+    </div>
+    <div class="mini">
+      <div><span>Ad spend</span><b>${F.usd(T.adSpend)}</b></div>
+      <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
+      <div><span>Net followers</span><b>${A.netFollowers == null ? "—" : F.int(A.netFollowers)}</b></div>
+      <div><span>Follows from posts</span><b>${F.int(T.postFollows)}</b></div>
+      <div><span>Profile visits</span><b>${F.int(T.visits)}</b></div>
+    </div>
+    ${R.dominant ? `<div class="flag warn" style="margin-top:14px"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div>` : ""}
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Where the views came from</h3>${splitBar([
+        { label: "Organic", value: T.organicViews },
+        { label: "Paid (ads)", value: T.paidViews },
+      ], F.int)}</div>
+      <div class="card"><h3>Nancy vs collab</h3>${splitBar([
+        { label: "Nancy's posts", value: R.breakdown[0].views },
+        { label: "Collab posts", value: R.breakdown[1].views },
+      ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Top posts</h3>${topPosts(R)}</div>
+      <div class="card"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+    </div>
+    ${issuesLine(rep, R)}`;
+}
+
+/* hover tooltip for any [data-tip] mark */
+(() => {
+  const tip = document.createElement("div");
+  tip.className = "vtip"; tip.hidden = true; document.body.append(tip);
+  document.addEventListener("mouseover", e => { const t = e.target.closest("[data-tip]"); if (!t) { tip.hidden = true; return; } tip.textContent = t.dataset.tip; tip.hidden = false; });
+  document.addEventListener("mousemove", e => { if (!tip.hidden) { tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = e.clientY + 14 + "px"; } });
+})();
+
+/* ───────── costing reports ───────── */
+const QUEUE = new Map();                           // costing id -> invoices read, waiting for review
+
+function renderCosting(D, rep, tab){
+  const CR = E.buildCosting(rep, D, D.settings);
+  const [c1, c2] = evColours(rep);
+  document.documentElement.style.setProperty("--ev", c1);
+  document.documentElement.style.setProperty("--ev2", c2);
+  const waiting = (QUEUE.get(rep.id) || []).length;
+  const tabs = [["summary", "Summary"], ["costs", "Costs"], ["add", `Add invoices${waiting ? `<span class="cnt">${waiting}</span>` : ""}`]];
+  app.innerHTML = `
+    <div class="rhead" style="--ev:${c1}">
+      <div class="grow">
+        <div class="small muted"><a href="#/reports">Reports</a> / Costing</div>
+        <h1 style="margin-top:6px">${esc(rep.name || "Untitled")}</h1>
+        <div class="titleline">Costing report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${CR.T.lines} lines${CR.event ? ` · for <a href="#/r/${CR.event.id}">${esc(CR.event.name)}</a>` : ""}</div>
+      </div>
+      <div class="row noprint">
+        <button class="btn ghost sm" id="k-csv">Export CSV</button>
+        <button class="btn ghost sm" id="k-tsv">Copy for Sheets</button>
+        <button class="btn ghost sm" onclick="print()">Print / PDF</button>
+      </div>
+    </div>
+    <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${rep.id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
+    <div id="body"></div>`;
+  document.getElementById("k-csv").onclick = () => {
+    const blob = new Blob([costingRows(CR).map(r => r.map(c => csvCell(String(c ?? ""))).join(",")).join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${(rep.name || "costing").replace(/[^\w]+/g, "-")}.csv`; a.click();
+  };
+  document.getElementById("k-tsv").onclick = () => copy(costingRows(CR).map(r => r.join("\t")).join("\n"), "Costs copied — paste into Sheets");
+  const body = document.getElementById("body");
+  if (tab === "costs") return costingLines(body, rep, CR, D);
+  if (tab === "add") return costingAdd(body, rep, CR);
+  costingSummary(body, rep, CR);
+}
+
+function costingRows(CR){
+  const out = [["List", "Category", "Payee / creator", "Item / deliverables", "Date", "Qty", "Amount", "Currency", "USD", "Invoice #", "Receipt", "Source"]];
+  for (const l of CR.influencers) out.push(["Influencer", "", l.creator, l.deliverables, l.date || "", "", l.fee, l.currency, l.usd == null ? "" : l.usd.toFixed(2), l.invoiceNo || "", l.receipt || "", l.source || ""]);
+  for (const l of CR.eventCosts) out.push(["Event cost", l.category, l.vendor, l.item, l.date || "", l.qty ?? "", l.unit, l.currency, l.usd == null ? "" : l.usd.toFixed(2), l.invoiceNo || "", l.receipt || "", l.source || ""]);
+  out.push(["Total", "", "", "", "", "", "", "", CR.T.total.toFixed(2), "", "", ""]);
+  return out;
+}
+
+function costingSummary(body, rep, CR){
+  const T = CR.T, Ev = CR.E;
+  const max = Math.max(T.influencerCost, ...CR.byCategory.map(c => c.usd), 1);
+  const bars = [{ category: "Influencers & models", usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
+  body.innerHTML = `
+    ${CR.flags.length ? `<div class="sec">${flagsHTML({ flags: CR.flags, rep }, 0)}</div>` : ""}
+    <div class="sec"><div class="tiles big">
+      <div class="tile hero"><div class="k">Total cost</div><div class="v">${F.usd(T.total)}</div><div class="s">${T.lines} lines · excludes ads</div></div>
+      <div class="tile"><div class="k">Influencers &amp; models</div><div class="v">${F.usd(T.influencerCost)}</div><div class="s">${T.creators} ${T.creators === 1 ? "person" : "people"}</div></div>
+      <div class="tile"><div class="k">Event costs</div><div class="v">${F.usd(T.eventCost)}</div><div class="s">${CR.eventCosts.length} lines</div></div>
+      <div class="tile"><div class="k">${Ev ? "Blended CPM" : "Event"}</div><div class="v">${Ev ? F.usd(Ev.T.blendedCPM) : "—"}</div><div class="s">${Ev ? `with ${F.usd(Ev.T.adSpend)} ads · ${F.big(Ev.T.totalViews)} views` : "link an event report to see CPM"}</div></div>
+    </div></div>
+    <div class="sec grid g2">
+      <div class="card"><h3>Where the money went</h3>
+        ${bars.length ? `<div class="hbars">${bars.map(c => `<div class="hb" data-tip="${esc(c.category)}: ${F.usd(c.usd)} · ${c.lines} line${c.lines > 1 ? "s" : ""}"><span class="hl">${esc(c.category)}</span><span class="ht"><i style="width:${(c.usd / max) * 100}%"></i></span><b>${F.usd(c.usd)}</b></div>`).join("")}</div>` : `<p class="small muted">No costs yet — <a href="#/r/${rep.id}/add">add invoices</a>.</p>`}
+      </div>
+      <div class="card"><h3>Influencers &amp; models</h3>
+        ${CR.byCreator.length ? `<div class="tw"><table><thead><tr><th>Creator</th><th>Deliverables</th><th class="n">USD</th></tr></thead><tbody>${CR.byCreator.map(l => `<tr><td>${esc(l.creator)}</td><td class="cap">${esc(l.deliverables)}</td><td class="n">${F.usd(l.usd)}</td></tr>`).join("")}</tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+        ${Ev && Ev.T.influencerPer1kCollab != null ? `<p class="small muted" style="margin-top:8px">${F.usd(Ev.T.influencerPer1kCollab)} of influencer cost per 1,000 collab views.</p>` : ""}
+      </div>
+    </div>
+    ${Ev ? `<div class="sec"><h2>What it bought — ${esc(CR.event.name)}</h2>${tiles([
+      ["Total spend", F.usd(Ev.T.totalSpend), "costs + ads"], ["Total views", F.big(Ev.T.totalViews), `${F.pct(Ev.T.pctOrganic)} organic`],
+      ["Blended CPM", F.usd(Ev.T.blendedCPM), "per 1,000 views"], ["Organic CPM", Ev.T.organicCPM == null ? "—" : F.usd(Ev.T.organicCPM), "non-ad cost ÷ organic views"],
+      ["Ads CPM", or(Ev.T.adsCPM, F.usd), ""], ["Cost / engagement", F.usd(Ev.T.costPerEngagement), ""],
+    ])}<p style="margin-top:10px"><a class="btn ghost sm" href="#/r/${CR.event.id}">Open event report →</a></p></div>`
+    : `<div class="sec"><div class="empty">Not linked to an event report yet. Link it under <a href="#/r/${rep.id}/costs">Costs › Details</a> to see CPM.</div></div>`}`;
+}
+
+/* every line editable in place */
+function costingLines(body, rep, CR, D){
+  const events = Object.values(D.reports).filter(r => r.type === "event");
+  const linked = CR.event;
+  const curOpts = cur => [...new Set([...Object.keys(CR.fx), cur])].map(c => `<option ${c === cur ? "selected" : ""}>${esc(c)}</option>`).join("");
+  const inp = (list, i, k, v, w = 120, type = "text") => `<input class="ed" style="width:${w}px" type="${type}" data-l="${list}:${i}:${k}" value="${esc(v ?? "")}">`;
+  const infRows = CR.influencers.map((l, i) => `<tr><td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete">×</button></td></tr>`);
+  const evRows = CR.eventCosts.map((l, i) => `<tr><td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete">×</button></td></tr>`);
+  body.innerHTML = `
+    <div class="sec"><h2>Details</h2><div class="card"><div class="fields">
+      <label class="f">Name<input type="text" id="k-name" value="${esc(rep.name || "")}"></label>
+      <label class="f">Start<input type="date" id="k-start" value="${rep.start || ""}"></label>
+      <label class="f">End<input type="date" id="k-end" value="${rep.end || ""}"></label>
+      <label class="f">For event report<select id="k-event"><option value="">Not linked</option>${events.map(e => `<option value="${e.id}" ${linked?.id === e.id ? "selected" : ""} ${e.costingId && e.costingId !== rep.id ? "disabled" : ""}>${esc(e.name)}${e.costingId && e.costingId !== rep.id ? " (has its own)" : ""}</option>`).join("")}</select></label>
+      <label class="f">Colour<select id="k-colour">${Object.keys(E.EVENT_COLOURS).map(c => `<option ${rep.colour === c ? "selected" : ""}>${c}</option>`).join("")}</select></label>
+    </div>
+    <details style="margin-top:14px"><summary>FX rates (USD per 1 unit)</summary>
+      <div class="fields" style="margin-top:10px">${Object.keys(CR.fx).filter(c => c !== "USD").map(c => `<label class="f">${c}<input type="text" data-kfx="${c}" value="${CR.fx[c]}"></label>`).join("")}
+      <label class="f">Add currency<input type="text" id="k-fxnew" placeholder="e.g. JPY=0.0067"></label></div>
+    </details>
+    <div class="row" style="margin-top:14px"><button class="btn danger sm" id="k-del">Delete costing report</button></div></div></div>
+
+    <div class="sec"><h2>Influencers &amp; models</h2>
+      ${infRows.length ? `<div class="tw"><table><thead><tr><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
+        <tr class="total"><td colspan="5">Influencers total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addinf">+ Add influencer</button></div>
+    </div>
+    <div class="sec"><h2>Event costs</h2>
+      ${evRows.length ? `<div class="tw"><table><thead><tr><th>Category</th><th>Item</th><th>Vendor</th><th>Date</th><th>Qty</th><th>Unit price</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${evRows.join("")}
+        <tr class="total"><td colspan="7">Event costs total</td><td class="n">${F.usd(CR.T.eventCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addcost">+ Add cost</button></div>
+    </div>
+    <div class="sec"><div class="flag info"><b>Total</b><span>${F.usd(CR.T.total)} — influencers ${F.usd(CR.T.influencerCost)} + event costs ${F.usd(CR.T.eventCost)}. Ads are counted in the event report, from the ad exports.</span></div></div>`;
+
+  const save = patch => put("ss.report." + rep.id, { ...db().reports[rep.id], ...patch });
+  const nm = body.querySelector("#k-name");
+  nm.onchange = () => { const colour = Object.keys(E.EVENT_COLOURS).find(k => nm.value.toLowerCase().includes(k.toLowerCase())); save({ name: nm.value, fresh: false, ...(colour && rep.fresh ? { colour } : {}) }); render(); };
+  if (rep.fresh) { nm.focus(); nm.select(); }
+  body.querySelector("#k-start").onchange = e => { save({ start: e.target.value }); render(); };
+  body.querySelector("#k-end").onchange = e => { save({ end: e.target.value }); render(); };
+  body.querySelector("#k-colour").onchange = e => { save({ colour: e.target.value }); render(); };
+  body.querySelector("#k-event").onchange = e => {
+    const D2 = db();
+    if (linked && linked.id !== e.target.value) put("ss.report." + linked.id, { ...D2.reports[linked.id], costingId: null });
+    if (e.target.value) put("ss.report." + e.target.value, { ...D2.reports[e.target.value], costingId: rep.id });
+    render();
+  };
+  body.querySelectorAll("[data-kfx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...CR.fx, [el.dataset.kfx]: v } }); render(); });
+  body.querySelector("#k-fxnew").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...CR.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
+  body.querySelector("#k-del").onclick = () => {
+    if (!confirm(`Delete “${rep.name}”?`)) return;
+    if (linked) put("ss.report." + linked.id, { ...db().reports[linked.id], costingId: null });
+    del("ss.report." + rep.id); location.hash = "#/reports";
+  };
+  const NUMS = new Set(["fee", "qty", "unit"]);
+  body.querySelectorAll("[data-l]").forEach(el => el.onchange = () => {
+    const [list, i, k] = el.dataset.l.split(":");
+    const cur = db().reports[rep.id];
+    const lines = [...(cur[list] || [])];
+    lines[+i] = { ...lines[+i], [k]: NUMS.has(k) ? E.num(el.value) : el.value };
+    save({ [list]: lines }); render();
+  });
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    const [list, i] = b.dataset.del.split(":"); const cur = db().reports[rep.id];
+    save({ [list]: (cur[list] || []).filter((_, j) => j !== +i) }); render();
+  });
+  body.querySelectorAll("[data-move]").forEach(b => b.onclick = () => {          // wrong list? flip it
+    const [list, i] = b.dataset.move.split(":"); const cur = db().reports[rep.id];
+    const l = cur[list][+i];
+    const moved = list === "influencers"
+      ? E.invoiceToLine({ type: "event", category: "Other", vendor: l.creator, item: l.deliverables, amount: l.fee, currency: l.currency, date: l.date, invoiceNo: l.invoiceNo, receipt: l.receipt, fileName: l.source })
+      : E.invoiceToLine({ type: "influencer", vendor: l.vendor, item: l.item, amount: (l.qty == null ? 1 : l.qty) * (l.unit || 0), currency: l.currency, date: l.date, invoiceNo: l.invoiceNo, receipt: l.receipt, fileName: l.source });
+    save({ [list]: cur[list].filter((_, j) => j !== +i), [moved.list]: [...(cur[moved.list] || []), moved.line] }); render();
+  });
+  body.querySelector("#k-addinf").onclick = () => { const cur = db().reports[rep.id]; save({ influencers: [...(cur.influencers || []), { creator: "", deliverables: "", fee: null, currency: "USD" }] }); render(); };
+  body.querySelector("#k-addcost").onclick = () => { const cur = db().reports[rep.id]; save({ eventCosts: [...(cur.eventCosts || []), { category: "Other", item: "", qty: null, unit: null, currency: "USD", vendor: "" }] }); render(); };
+}
+
+/* ───────── adding invoices: read, sort, review, add ───────── */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/";
+let pdfLib = null, ocrLib = null;
+async function loadPdf(){
+  if (!pdfLib) { pdfLib = await import(PDFJS + "pdf.min.mjs"); pdfLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.mjs"; }
+  return pdfLib;
+}
+function loadOcr(){
+  if (!ocrLib) ocrLib = new Promise((ok, no) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+    s.onload = () => ok(window.Tesseract); s.onerror = () => no(new Error("Couldn't load the photo reader"));
+    document.head.append(s);
+  });
+  return ocrLib;
+}
+async function ocr(img){
+  const T = await loadOcr();
+  const { data } = await T.recognize(img, "eng");
+  return data.text || "";
+}
+/* PDF text, rebuilt into lines by position; scanned PDFs fall back to reading the page image */
+async function pdfText(file){
+  const lib = await loadPdf();
+  const doc = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+  let text = "";
+  for (let p = 1; p <= Math.min(doc.numPages, 4); p++) {
+    const page = await doc.getPage(p);
+    const tc = await page.getTextContent();
+    const rows = new Map();
+    for (const it of tc.items) {
+      if (!it.str?.trim()) continue;
+      const y = Math.round(it.transform[5] / 3);
+      if (!rows.has(y)) rows.set(y, []);
+      rows.get(y).push(it);
+    }
+    text += [...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, its]) => its.sort((a, b) => a.transform[4] - b.transform[4]).map(i => i.str).join("  ")).join("\n") + "\n";
+  }
+  if (text.replace(/\s/g, "").length < 40) {                     // a scan: no text layer
+    text = "";
+    for (let p = 1; p <= Math.min(doc.numPages, 2); p++) {
+      const page = await doc.getPage(p);
+      const vp = page.getViewport({ scale: 2 });
+      const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+      await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+      text += await ocr(c) + "\n";
+    }
+  }
+  return text;
+}
+async function readFileToInvoices(f){
+  const name = f.name || "file";
+  if (/\.pdf$/i.test(name) || f.type === "application/pdf") return [E.readInvoice(await pdfText(f), name)];
+  if (/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp)$/i.test(name)) return [E.readInvoice(await ocr(f), name)];
+  if (/\.(csv|tsv|txt)$/i.test(name)) {
+    const text = await f.text();
+    const rows = E.mapInvoiceRows(E.parseTable(text));
+    return rows.length ? rows.map(r => ({ ...r, fileName: name })) : [E.readInvoice(text, name)];
+  }
+  if (/\.(xlsx?|numbers|docx?|heic)$/i.test(name)) throw new Error(/heic/i.test(name) ? "HEIC photos can't be read in the browser — export as JPG" : "Save it as CSV or PDF first (or paste the rows below)");
+  throw new Error("Unsupported file type");
+}
+
+function costingAdd(body, rep, CR){
+  const q = QUEUE.get(rep.id) || [];
+  const sureChip = x => `<span class="chip ${x.sure === "high" ? "yes" : x.sure === "medium" ? "k" : "no"}" title="${esc((x.reasons || []).join(" · "))}">${x.sure === "high" ? "Sure" : x.sure === "medium" ? "Check" : "Guess"}</span>`;
+  const rows = q.map((x, i) => `<tr class="${x.error ? "adrow" : ""}">
+    <td><input type="checkbox" data-q="${i}:use" ${x.use ? "checked" : ""} ${x.error ? "disabled" : ""}></td>
+    <td class="cap small" title="${esc(x.fileName)}">${esc(x.fileName || "pasted")}${x.dup ? `<br><span class="down">possible duplicate</span>` : ""}${x.error ? `<br><span class="down">${esc(x.error)}</span>` : ""}</td>
+    ${x.error ? `<td colspan="10"></td>` : `
+    <td><select class="ed" data-q="${i}:type"><option value="influencer" ${x.type === "influencer" ? "selected" : ""}>Influencer / model</option><option value="event" ${x.type === "event" ? "selected" : ""}>Event cost</option></select></td>
+    <td><select class="ed" data-q="${i}:category" ${x.type === "influencer" ? "disabled" : ""}>${E.COST_CATEGORIES.map(c => `<option ${c === (x.category || "Other") ? "selected" : ""}>${c}</option>`).join("")}</select></td>
+    <td><input class="ed" style="width:150px" data-q="${i}:vendor" value="${esc(x.vendor)}"></td>
+    <td><input class="ed" style="width:180px" data-q="${i}:item" value="${esc(x.item)}"></td>
+    <td><input class="ed" style="width:125px" type="date" data-q="${i}:date" value="${esc(x.date || "")}"></td>
+    <td><input class="ed" style="width:90px" data-q="${i}:amount" value="${x.amount ?? ""}"></td>
+    <td><input class="ed" style="width:58px" data-q="${i}:currency" value="${esc(x.currency)}"></td>
+    <td class="n">${F.usd(E.toUSD(x.amount, x.currency, CR.fx))}</td>
+    <td><input class="ed" style="width:90px" data-q="${i}:invoiceNo" value="${esc(x.invoiceNo || "")}"></td>
+    <td>${sureChip(x)}</td>`}
+    <td><button class="x" data-qdel="${i}">×</button></td></tr>`);
+  const n = q.filter(x => x.use && !x.error).length;
+  body.innerHTML = `
+    <div class="sec"><h2>Drop invoices</h2>
+      <label class="drop" id="drop"><input type="file" id="k-files" multiple accept=".pdf,image/*,.csv,.tsv,.txt" hidden>
+        <b>Drop invoices here</b><span>or click to choose · PDFs, photos (JPG/PNG), or a CSV list · many at once</span></label>
+      <div id="k-status" class="result"></div>
+      <p class="small dim">Invoices are read in this browser — the files aren't uploaded or kept. Put the Drive link in “Receipt link” if you want the file on record.</p>
+    </div>
+    <div class="sec"><details><summary>…or paste a list of invoices from Sheets</summary>
+      <p class="sub">One row per invoice with a header row, e.g. <span class="kbd">Payee · Description · Amount · Currency · Date · Invoice # · Type</span>. Type is optional — without it each row is sorted by its words.</p>
+      <textarea id="k-paste" placeholder="Paste rows…" style="min-height:90px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="k-pastego">Read rows</button></div>
+    </details></div>
+    <div class="sec"><h2>Review before adding${q.length ? ` · ${q.length}` : ""}</h2>
+      ${q.length ? `<p class="sub" style="margin:-4px 0 12px">Check the type, amount and currency — hover the Sure/Check/Guess chip to see why it was sorted that way. Models, influencers and creators go to the influencer list; everything else goes to event costs under its category.</p>
+        <div class="tw"><table><thead><tr><th></th><th>File</th><th>Goes to</th><th>Category</th><th>Payee / creator</th><th>What for</th><th>Date</th><th>Amount</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Read</th><th></th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
+        <div class="row" style="margin-top:12px"><button class="btn pink" id="k-commit" ${n ? "" : "disabled"}>Add ${n} to this costing report</button><button class="btn ghost sm" id="k-clear">Clear list</button></div>`
+      : `<div class="empty">Nothing waiting. Drop invoices above.</div>`}
+    </div>`;
+
+  const setQ = list => { QUEUE.set(rep.id, list); render(); };
+  const enqueue = items => {
+    const cur = db().reports[rep.id];
+    const next = [...(QUEUE.get(rep.id) || [])];
+    for (const x of items) {
+      const dup = !x.error && (E.isDuplicate(x, cur) || next.some(y => !y.error && y.amount === x.amount && y.vendor === x.vendor && (y.invoiceNo || "") === (x.invoiceNo || "")));
+      next.push({ ...x, dup, use: !x.error && !dup && x.amount != null });
+    }
+    setQ(next);
+  };
+  const handle = async files => {
+    const st = () => document.getElementById("k-status");
+    const out = [];
+    let i = 0;
+    for (const f of files) {
+      i++;
+      if (st()) { st().className = "result"; st().textContent = `Reading ${i} of ${files.length}: ${f.name}…${/^image\//.test(f.type) ? " (photos take a few seconds)" : ""}`; }
+      try { out.push(...await readFileToInvoices(f)); }
+      catch (e) { out.push({ fileName: f.name, error: e.message || "Couldn't read this file" }); }
+    }
+    enqueue(out);
+    const s2 = st(); if (s2) { s2.className = "result ok"; s2.textContent = `Read ${files.length} file${files.length > 1 ? "s" : ""} — review below.`; }
+  };
+  const inp = body.querySelector("#k-files");
+  inp.onchange = () => handle([...inp.files]);
+  const drop = body.querySelector("#drop");
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); handle([...e.dataTransfer.files]); };
+  body.querySelector("#k-pastego").onclick = () => {
+    const rows = E.mapInvoiceRows(E.parseTable(body.querySelector("#k-paste").value));
+    if (!rows.length) return toast("Nothing found — include the header row");
+    enqueue(rows);
+  };
+  body.querySelectorAll("[data-q]").forEach(el => el.onchange = () => {
+    const [i, k] = el.dataset.q.split(":");
+    const list = [...(QUEUE.get(rep.id) || [])];
+    const v = k === "use" ? el.checked : k === "amount" ? E.num(el.value) : k === "currency" ? el.value.toUpperCase().trim() : el.value;
+    list[+i] = { ...list[+i], [k]: v, ...(k === "type" && v === "event" && !list[+i].category ? { category: "Other" } : {}), ...(k !== "use" ? { sure: "high", reasons: ["checked by hand"] } : {}) };
+    setQ(list);
+  });
+  body.querySelectorAll("[data-qdel]").forEach(b => b.onclick = () => setQ((QUEUE.get(rep.id) || []).filter((_, j) => j !== +b.dataset.qdel)));
+  const clr = body.querySelector("#k-clear");
+  if (clr) clr.onclick = () => setQ([]);
+  const go = body.querySelector("#k-commit");
+  if (go) go.onclick = () => {
+    const list = QUEUE.get(rep.id) || [];
+    const cur = db().reports[rep.id];
+    const add = { influencers: [...(cur.influencers || [])], eventCosts: [...(cur.eventCosts || [])] };
+    let n = 0;
+    for (const x of list.filter(x => x.use && !x.error)) { const { list: l, line } = E.invoiceToLine(x); add[l].push(line); n++; }
+    put("ss.report." + rep.id, { ...cur, ...add });
+    QUEUE.set(rep.id, list.filter(x => !(x.use && !x.error)));
+    toast(`Added ${n} line${n > 1 ? "s" : ""}`);
+    location.hash = `#/r/${rep.id}/summary`;
+  };
 }
 
 /* ───────── add data ───────── */
@@ -805,24 +1376,17 @@ function renderData(body, rep, R, D){
   </div></div>
 
   ${isEv ? `
-  <div class="sec"><h2>3 · Costs</h2><div class="grid g2">
-    <div class="card"><div class="step"><div class="num ${(rep.influencers || []).length ? "done" : ""}">3a</div><div class="grow">
-      <div class="who">Event costing person</div><h3>Influencers</h3>
-      <p class="sub">One row per creator: <span class="kbd">${TEMPLATES.influencers.split("\t").join(" · ")}</span></p>
-      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="influencers">Copy header row</button></div>
-      <textarea id="i-text" placeholder="Paste influencer rows…" style="min-height:80px"></textarea>
-      <div class="row" style="margin-top:8px"><button class="btn sm" id="i-add">Add</button><button class="btn ghost sm" id="i-rep">Replace list</button></div>
-      ${costList(rep.influencers || [], "infl", l => `${esc(l.creator)} — ${esc(l.currency)} ${F.int(l.fee)}${l.deliverables ? ` · <span class="muted">${esc(l.deliverables)}</span>` : ""}`)}
-    </div></div></div>
-    <div class="card"><div class="step"><div class="num ${(rep.eventCosts || []).length ? "done" : ""}">3b</div><div class="grow">
-      <div class="who">Event costing person</div><h3>Event costs (no ads, no influencers)</h3>
-      <p class="sub"><span class="kbd">${TEMPLATES.costs.split("\t").join(" · ")}</span>. Categories: ${E.COST_CATEGORIES.join(" · ")}.</p>
-      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="costs">Copy header row</button></div>
-      <textarea id="c-text" placeholder="Paste event cost rows…" style="min-height:80px"></textarea>
-      <div class="row" style="margin-top:8px"><button class="btn sm" id="c-add">Add</button><button class="btn ghost sm" id="c-rep">Replace list</button></div>
-      ${costList(rep.eventCosts || [], "cost", l => `<span class="chip k">${esc(l.category)}</span> ${esc(l.item)} — ${l.qty == null ? "" : l.qty + " × "}${esc(l.currency)} ${l.unit}${l.vendor ? ` · <span class="muted">${esc(l.vendor)}</span>` : ""}`)}
-    </div></div></div>
-  </div></div>` : `
+  <div class="sec"><h2>3 · Costs</h2><div class="card">
+    <div class="step"><div class="num ${R.costing ? "done" : ""}">3</div><div class="grow">
+      <div class="who">Event costing person</div>
+      <h3>Costs come from this event's costing report</h3>
+      <p class="sub">Influencer fees and event costs (production, venue, travel, food…) live in a costing report, where invoices can be dropped in and sorted automatically. Ads come from the ad exports above.</p>
+      ${R.costing ? `<div class="list"><div class="li"><span class="grow"><b>${esc(R.costing.name)}</b> · influencers ${F.usd(R.T.influencerCost)} · event costs ${F.usd(R.T.eventCost)} · non-ad total <b>${F.usd(R.T.nonAd)}</b></span><a class="btn ghost sm" href="#/r/${R.costing.id}/summary">Open</a><button class="x" id="k-unlink" title="Unlink">×</button></div></div>`
+        : `<div class="row" style="margin-top:10px"><button class="btn" id="k-new">+ Start costing report for this event</button>
+          ${Object.values(D.reports).filter(r => r.type === "costing").length ? `<select id="k-link"><option value="">…or link an existing one</option>${Object.values(D.reports).filter(r => r.type === "costing").map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>` : ""}</div>`}
+      ${!R.costing && ((rep.influencers || []).length || (rep.eventCosts || []).length) ? `<p class="small muted" style="margin-top:10px">This report still has ${(rep.influencers || []).length + (rep.eventCosts || []).length} cost lines of its own. They're used until a costing report is linked, and move into it when you start one.</p>` : ""}
+    </div></div>
+  </div></div>  </div></div>` : `
   <div class="sec"><h2>3 · Account numbers</h2><div class="card">
     <div class="step"><div class="num ${rep.account?.views != null ? "done" : ""}">3</div><div class="grow">
       <div class="who">IG Professional dashboard › Account insights</div>
@@ -844,7 +1408,7 @@ function renderData(body, rep, R, D){
     ${costList(rep.otherSpend || [], "other", l => `${esc(l.label)} — ${esc(l.currency)} ${l.amount}`)}
   </div></div>`}
 
-  <div class="sec row"><a class="btn pink" href="#/r/${rep.id}/report">See the report →</a></div>`;
+  <div class="sec row"><a class="btn pink" href="#/r/${rep.id}/summary">See the report →</a></div>`;
 
   /* details */
   const bind = (sel, key, fn = v => v) => { const el = body.querySelector(sel); el.onchange = () => { save({ [key]: fn(el.value) }); render(); }; };
@@ -909,18 +1473,18 @@ function renderData(body, rep, R, D){
   if (at) at.onchange = () => { if (!at.value) return; const cur = db().reports[rep.id]; save({ importIds: [...new Set([...(cur.importIds || []), at.value])] }); render(); };
 
   /* costs */
-  const listOp = (key, mapper, replace, ta) => () => {
-    const t = body.querySelector(ta).value;
-    const rows = mapper(E.parseTable(t));
-    if (!rows.length) return toast("Nothing found — paste rows with the header row");
-    const cur = db().reports[rep.id];
-    save({ [key]: replace ? rows : [...(cur[key] || []), ...rows] }); render(); toast(`${rows.length} line${rows.length > 1 ? "s" : ""} ${replace ? "now in the list" : "added"}`);
-  };
   if (isEv) {
-    body.querySelector("#i-add").onclick = listOp("influencers", E.mapInfluencers, false, "#i-text");
-    body.querySelector("#i-rep").onclick = listOp("influencers", E.mapInfluencers, true, "#i-text");
-    body.querySelector("#c-add").onclick = listOp("eventCosts", E.mapEventCosts, false, "#c-text");
-    body.querySelector("#c-rep").onclick = listOp("eventCosts", E.mapEventCosts, true, "#c-text");
+    const kn = body.querySelector("#k-new");
+    if (kn) kn.onclick = () => {
+      const cur = db().reports[rep.id];
+      const id = newCosting({ name: `${cur.name} costs`, start: cur.start, end: cur.end, colour: cur.colour,
+        influencers: cur.influencers || [], eventCosts: cur.eventCosts || [] });          // carries over any old lines
+      save({ costingId: id }); location.hash = `#/r/${id}/add`;
+    };
+    const kl = body.querySelector("#k-link");
+    if (kl) kl.onchange = () => { if (kl.value) { save({ costingId: kl.value }); render(); } };
+    const ku = body.querySelector("#k-unlink");
+    if (ku) ku.onclick = () => { save({ costingId: null }); render(); };
   } else {
     body.querySelectorAll("[data-acc]").forEach(el => el.onchange = () => {
       const cur = db().reports[rep.id];

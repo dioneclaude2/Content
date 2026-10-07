@@ -81,3 +81,60 @@ const C2 = E.compareReports(W, empty);
 assert.equal(C2.find(c => c.name === "Post views").prev, null);
 assert.equal(C2.find(c => c.name === "Eng. rate (per view)").rate, true);
 console.log("compare tests passed");
+
+// ── invoices ──
+const model = E.readInvoice(`INVOICE
+From: Jane Lee Modelling
+Bill to: Hello Nancy
+Invoice No: INV-0042
+Date: 3 Oct 2026
+Model day rate - US Open shoot, usage rights 6 months   HK$ 6,000.00
+Subtotal HK$ 6,000.00
+Total due HK$ 6,000.00`, "jane-invoice.pdf");
+assert.equal(model.type, "influencer");
+assert.equal(model.amount, 6000);
+assert.equal(model.currency, "HKD");
+assert.equal(model.date, "2026-10-03");
+assert.equal(model.invoiceNo, "INV-0042");
+assert.match(model.vendor, /Jane Lee/);
+
+const crew = E.readInvoice(`Northside Studios LLC
+Invoice # 2207
+Invoice date: 09/01/2026
+Videographer - 2 days  $2,400.00
+Lighting equipment rental  $600.00
+Subtotal $3,000.00
+Sales tax $266.25
+Total $3,266.25`, "northside.pdf");
+assert.equal(crew.type, "event");
+assert.equal(crew.category, "Venue & production");
+assert.equal(crew.amount, 3266.25);
+assert.equal(crew.vendor, "Northside Studios LLC");
+assert.equal(crew.item, "Videographer - 2 days");
+assert.match(model.item, /usage rights 6 months$/);
+
+const hotel = E.readInvoice(`Hyatt Ziva Cancun\nGuest folio\n3 nights room\nTotal MXN 18,750.00`, "folio.jpg");
+assert.equal(hotel.category, "Hotel / accommodation");
+assert.equal(hotel.currency, "MXN");
+assert.equal(hotel.amount, 18750);
+assert.equal(E.readInvoice("Paid US$ 120.00 total").currency, "USD");
+
+const rows = E.mapInvoiceRows(E.parseTable("Payee\tDescription\tAmount\tCurrency\tDate\n@sunnyday\t1 reel + 3 stories\t9000\tMXN\t2026-10-01\nFedEx\tShipping samples\t85.20\tUSD\t2026-09-28"));
+assert.equal(rows[0].type, "influencer");
+assert.equal(rows[1].type, "event");
+assert.equal(rows[1].category, "General logistics");
+const line = E.invoiceToLine(rows[0]);
+assert.equal(line.list, "influencers");
+assert.equal(line.line.fee, 9000);
+assert.ok(E.isDuplicate(rows[0], { influencers: [line.line] }));
+
+// costing report feeds the event report
+const costRep = { id: "c1", type: "costing", name: "US Open costs", influencers: [{ creator: "@cheri2222", fee: 780, currency: "HKD" }], eventCosts: [{ category: "Decor", item: "Balloons", qty: 2, unit: 50, currency: "USD" }] };
+const db2 = { ...db, reports: { c1: costRep } };
+const linked = E.buildReport({ ...rep, influencers: [], eventCosts: [], costingId: "c1" }, db2);
+assert.equal(E.r2(linked.T.nonAd), 200);
+const CR = E.buildCosting(costRep, { ...db2, reports: { c1: costRep, e1: { ...rep, costingId: "c1" } } });
+assert.equal(E.r2(CR.T.total), 200);
+assert.equal(CR.event.id, "e1");
+assert.ok(E.insights([R, W, prev]).length > 0);
+console.log("invoice + costing tests passed");
