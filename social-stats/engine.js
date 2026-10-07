@@ -546,8 +546,12 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   if (Math.abs(importSpend - rowSpend) > 0.01) flag("bad", `Spend in rows ($${r2(rowSpend)}) doesn't equal spend in the exports ($${r2(importSpend)}).`);
 
   /* 7 · costs */
-  const infl = (rep.influencers || []).map(l => ({ ...l, usd: toUSD(l.fee, l.currency, fx) }));
-  const costs = (rep.eventCosts || []).map(l => ({ ...l, usd: costLineUSD(l, fx) }));
+  // An event's costs live in its linked costing report (older reports may hold their own lines)
+  const costing = rep.costingId && db.reports?.[rep.costingId] && !db.reports[rep.costingId].deleted ? db.reports[rep.costingId] : null;
+  const costSrc = costing || rep;
+  const cfx = { ...fx, ...(costing?.fx || {}) };
+  const infl = (costSrc.influencers || []).map(l => ({ ...l, usd: toUSD(l.fee, l.currency, cfx) }));
+  const costs = (costSrc.eventCosts || []).map(l => ({ ...l, usd: costLineUSD(l, cfx) }));
   const other = (rep.otherSpend || []).map(l => ({ ...l, usd: toUSD(l.amount, l.currency, fx) }));
   for (const l of [...infl, ...costs, ...other]) if (l.usd == null) flag("bad", `No FX rate for ${l.currency}.`);
   const influencerCost = infl.length ? sum(infl, l => l.usd) : null;
@@ -689,8 +693,9 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   /* 14 · missing lines */
   const missing = {};
   if (!ads.length) missing.ads = M("ad exports (ad level, with Views)", "Ads person");
-  if (rep.type === "event" && !infl.length) missing.influencers = M("influencer costs", "Event costing person");
-  if (rep.type === "event" && !costs.length) missing.eventCosts = M("event costs", "Event costing person");
+  const costWho = costing ? `Event costing person (costing report “${costing.name}”)` : "Event costing person — link a costing report";
+  if (rep.type === "event" && !infl.length) missing.influencers = M("influencer costs", costWho);
+  if (rep.type === "event" && !costs.length) missing.eventCosts = M("event costs", costWho);
   if (ads.length && !anyFollowCol) missing.adFollows = M("“Instagram follows” column in the ad export", "Ads person");
   if (!contentRows.length) missing.posts = M("the post table", "Organic person");
   if (rep.type === "event" && !costs.length)
@@ -713,7 +718,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   return {
     rep, fx, dataDate, durationDays, rows, postRows, extraRows, looseRows, campRows, contentRows,
     T, campaigns, breakdown, formats, rankings, dominant, withoutCollabs, shareability, score,
-    influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench,
+    influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing,
   };
 }
 
@@ -846,4 +851,292 @@ Format: Markdown, short. Headings: ${week ? "Headline, Wins, Concerns, Actions f
 
 === NUMBERS ===
 ${factSheet(R, P)}`;
+}
+
+/* ───────── costing reports: reading invoices ─────────
+   An invoice (text pulled from a PDF or a photo, or one pasted row) is read for
+   vendor, amount, currency, date and invoice number, then sorted:
+     a person — model, influencer, creator, talent — → the influencer list
+     everything else (production, venue, travel, food, merch …) → event costs, by category
+   Every guess carries a confidence and the reasons, and nothing is added until a
+   person has looked at the review table. */
+
+const INFLUENCER_WORDS = [
+  "influencer", "creator", "content creator", "talent", "model", "modelling", "modeling", "ugc", "usage rights",
+  "whitelisting", "ambassador", "collab", "collaboration", "deliverable", "reel", "reels", "stories", "story", "tiktok",
+  "instagram post", "ig post", "appearance fee", "posting fee", "content fee", "brand partnership", "sponsored post", "paid partnership",
+];
+const CATEGORY_WORDS = {
+  "Venue & production": ["production", "crew", "photographer", "photography", "videographer", "videography", "filming", "shoot", "studio", "equipment", "rental", "lighting", "sound", "editing", "editor", "venue", "location fee", "stage", "hair", "makeup", "mua", "stylist", "styling", "retouch", "director", "producer", "dp", "camera"],
+  "Hotel / accommodation": ["hotel", "accommodation", "airbnb", "lodging", "resort", "room", "nights", "check-in", "check in"],
+  "Flights / transportation": ["flight", "airline", "airfare", "air ticket", "uber", "lyft", "taxi", "transfer", "car service", "chauffeur", "train", "baggage", "boarding", "van hire", "transport"],
+  "Team meals & event expenses": ["meal", "restaurant", "catering", "lunch", "dinner", "breakfast", "food", "coffee", "cafe", "drinks", "bar", "per diem"],
+  "Merch & giveaways": ["merch", "merchandise", "giveaway", "gift", "swag", "tote", "printing", "print", "samples", "packaging", "goodie"],
+  "Decor": ["decor", "decoration", "balloon", "flowers", "florist", "floral", "props", "backdrop", "signage", "banner"],
+  "General logistics": ["shipping", "courier", "dhl", "fedex", "ups", "storage", "logistics", "permit", "insurance", "visa", "sim card", "delivery"],
+};
+const OURS = /hello\s*nancy|hellonancy|withally|with ally|carenbloom/i;
+
+const CUR_SYMBOLS = [
+  [/HK\$|HKD/i, "HKD"], [/US\$|USD/i, "USD"], [/MX\$|MXN|pesos?/i, "MXN"], [/(?<![A-Z])S\$|SGD/i, "SGD"], [/£|GBP/i, "GBP"],
+  [/€|EUR/i, "EUR"], [/RMB|CNY|¥|元/i, "CNY"],
+];
+const MONEY = /(HK\$|US\$|MX\$|S\$|£|€|¥|\$|RMB|CNY|HKD|USD|MXN|GBP|EUR|SGD)?\s?(\d{1,3}(?:[,\s]\d{3})+(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)\s?(HKD|USD|MXN|GBP|EUR|CNY|RMB|SGD)?/gi;
+
+const wordHits = (text, words) => words.filter(w => new RegExp(`(^|[^a-z])${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^a-z]|$)`, "i").test(text));
+
+/** Sort a piece of text: influencer vs event cost, and the event category. */
+export function classifyCost(text) {
+  const t = String(text || "").toLowerCase();
+  const infl = wordHits(t, INFLUENCER_WORDS);
+  const handle = (t.match(/@[\w.]{3,30}/g) || []).filter(h => !OURS.test(h));
+  const cats = Object.entries(CATEGORY_WORDS).map(([c, w]) => [c, wordHits(t, w)]).sort((a, b) => b[1].length - a[1].length);
+  const [topCat, topHits] = cats[0];
+  const inflScore = infl.length + (handle.length ? 2 : 0);
+  const evScore = topHits.length;
+  const type = inflScore > evScore ? "influencer" : "event";
+  const margin = Math.abs(inflScore - evScore);
+  const reasons = [];
+  if (infl.length) reasons.push(`influencer words: ${infl.slice(0, 4).join(", ")}`);
+  if (handle.length) reasons.push(`handle ${handle[0]}`);
+  if (topHits.length) reasons.push(`${topCat.toLowerCase()} words: ${topHits.slice(0, 4).join(", ")}`);
+  if (!infl.length && !topHits.length) reasons.push("no telling words — check the type");
+  return {
+    type,
+    category: type === "event" ? (topHits.length ? topCat : "Other") : null,
+    handle: handle[0] || null,
+    sure: margin >= 2 ? "high" : margin === 1 ? "medium" : "low",
+    reasons,
+  };
+}
+
+function currencyOf(text) {
+  const counts = CUR_SYMBOLS.map(([re, code]) => [code, (String(text).match(new RegExp(re.source, "gi")) || []).length]).filter(x => x[1]);
+  counts.sort((a, b) => b[1] - a[1]);
+  if (counts.length) return { currency: counts[0][0], guessed: false };
+  return { currency: "USD", guessed: true };
+}
+
+function amountsIn(line) {
+  const out = [];
+  for (const m of String(line).matchAll(MONEY)) {
+    const raw = m[2].replace(/[,\s]/g, "");
+    const n = Number(raw);
+    if (!isFinite(n) || n <= 0) continue;
+    const hasMoneyShape = m[1] || m[3] || /\.\d{2}$/.test(m[2]) || /,/.test(m[2]);
+    if (!hasMoneyShape) continue;                               // plain numbers (qty, years, phone bits) aren't money
+    if (/^(19|20)\d{2}$/.test(raw) && !m[1] && !m[3]) continue;
+    out.push(n);
+  }
+  return out;
+}
+
+/** Read an invoice's text. Returns the fields plus how sure each guess is. */
+export function readInvoice(text, fileName = "") {
+  const src = String(text || "");
+  const lines = src.split(/\n+/).map(l => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+  const notes = [];
+
+  // amount: the grand total / amount due line wins; otherwise the largest money figure
+  let amount = null, amountHow = "none";
+  const ranked = [/grand total|total due|amount due|balance due|total payable|amount payable|total amount|total \(?[a-z]{3}\)?$/i, /^total\b|\btotal\b/i];
+  for (const re of ranked) {
+    for (let i = lines.length - 1; i >= 0 && amount == null; i--) {
+      const l = lines[i];
+      if (!re.test(l) || /sub\s*-?total|tax\b|vat\b|gst\b|discount|deposit paid/i.test(l)) continue;
+      const nums = amountsIn(l).length ? amountsIn(l) : amountsIn(lines[i + 1] || "");
+      if (nums.length) { amount = nums[nums.length - 1]; amountHow = "total line"; }
+    }
+    if (amount != null) break;
+  }
+  if (amount == null) {
+    const all = lines.flatMap(amountsIn);
+    if (all.length) { amount = Math.max(...all); amountHow = "largest figure"; notes.push("No “Total” line found — used the largest amount."); }
+    else notes.push("No amount found.");
+  }
+
+  const { currency, guessed } = currencyOf(src);
+  if (guessed) notes.push("Currency not printed — assumed USD.");
+
+  // date: a line that says date first, then any date
+  let date = null;
+  const dateIn = l => {
+    const cands = l.match(/\d{4}-\d{1,2}-\d{1,2}|\d{1,2}[/.]\d{1,2}[/.]\d{2,4}|[A-Za-z]{3,9}\.? \d{1,2},? \d{4}|\d{1,2} [A-Za-z]{3,9}\.?,? \d{4}/g) || [];
+    for (const c of cands) { const d = toDate(c); if (d) return d; }
+    return null;
+  };
+  for (const l of lines) if (/date/i.test(l) && !/due date/i.test(l)) { date = dateIn(l); if (date) break; }
+  if (!date) for (const l of lines) { date = dateIn(l); if (date) break; }
+
+  const invM = src.match(/(?:invoice|inv|receipt|bill)\s*(?:no\.?|number|num|#)\s*[:#.]?\s*([A-Z0-9][A-Z0-9\-/]{2,})/i)
+    || src.match(/\b(INV[-\s]?\d[\w-]*)/i);
+  const invoiceNo = invM && /\d/.test(invM[1]) ? invM[1] : "";
+
+  // vendor: a "from" line, else the first line that isn't a heading or us
+  let vendor = "";
+  for (let i = 0; i < lines.length && !vendor; i++) {
+    const m = lines[i].match(/^(?:from|bill from|billed by|issued by|payee|vendor|supplier|pay to|name)\s*[:\-]\s*(.*)$/i);
+    if (m) vendor = (m[1] || lines[i + 1] || "").trim();
+  }
+  if (!vendor) vendor = lines.find(l => l.length >= 2 && l.length <= 60 && !/invoice|receipt|tax|date|bill to|page|total|amount|^\d|^#|@/i.test(l) && !OURS.test(l)) || "";
+  vendor = vendor.replace(OURS, "").replace(/\s{2,}/g, " ").trim();
+
+  const c = classifyCost(`${src}\n${fileName.replace(/[_\-.]+/g, " ")}`);
+  if (c.type === "influencer" && c.handle && !/@/.test(vendor)) vendor = vendor ? `${vendor} (${c.handle})` : c.handle;
+
+  // item: a description line that explains what was bought
+  const words = c.type === "influencer" ? INFLUENCER_WORDS : CATEGORY_WORDS[c.category] || [];
+  // prefer a priced line item; never the payee's name or a header line
+  const isHeader = l => /^(from|bill|billed|to|invoice|inv|date|payee|vendor|name|due)\b/i.test(l) || l === vendor || /total/i.test(l) || l.length > 120;
+  const hasWord = l => words.some(w => l.toLowerCase().includes(w));
+  const itemLine = lines.find(l => !isHeader(l) && hasWord(l) && amountsIn(l).length)
+    || lines.find(l => !isHeader(l) && amountsIn(l).length && /[a-z]{3}/i.test(l.replace(MONEY, "")))
+    || lines.find(l => !isHeader(l) && hasWord(l));
+  // drop the price from the description, keep plain numbers like "2 days"
+  const PRICE = /(HK\$|US\$|MX\$|S\$|£|€|¥|\$|RMB|CNY|HKD|USD|MXN|GBP|EUR|SGD)\s?\d[\d,]*(\.\d{1,2})?|\b\d{1,3}(,\d{3})+(\.\d{1,2})?\b|\b\d+\.\d{2}\b/gi;
+  const item = (itemLine || fileName.replace(/\.[a-z0-9]+$/i, "")).replace(PRICE, " ").replace(/\s{2,}/g, " ").trim().slice(0, 90);
+
+  // one notch less sure when the amount or currency had to be guessed
+  let sure = c.sure;
+  if (amount == null) sure = "low";
+  else if (amountHow !== "total line" || guessed) sure = sure === "high" ? "medium" : "low";
+  return { type: c.type, category: c.category, vendor, item, amount, currency, date, invoiceNo, sure, reasons: [...c.reasons, ...notes], fileName };
+}
+
+/** A pasted list of invoices (one per row). Rows without a Type column are sorted by their words. */
+export function mapInvoiceRows(table) {
+  const H = table.headers;
+  const c = {
+    type: col(H, /^type/, /^kind/, /^list/),
+    category: col(H, /categor/),
+    vendor: col(H, /vendor/, /payee/, /supplier/, /creator/, /handle/, /^name/, /^from/, /influencer/, /model/),
+    item: col(H, /^item/, /descr/, /deliverable/, /^what/, /^for$/, /memo/),
+    amount: col(H, /^amount/, /^total/, /^fee/, /^cost/, /price/, /^usd$/),
+    qty: col(H, /^qty/, /quantity/),
+    currency: col(H, /currency/, /^cur/),
+    date: col(H, /date/),
+    invoiceNo: col(H, /invoice/, /inv\b/, /receipt no/, /ref/),
+    receipt: col(H, /receipt link/, /^link/, /url/, /file/),
+  };
+  return table.rows.filter(r => r[c.vendor] || r[c.item] || r[c.amount]).map(r => {
+    const text = Object.values(r).join(" ");
+    const auto = classifyCost(text);
+    let type = auto.type, sure = auto.sure;
+    if (c.type && r[c.type]) {
+      type = /influ|creator|model|talent|ugc/i.test(r[c.type]) ? "influencer" : "event";
+      sure = "high";
+    }
+    const cat = c.category && r[c.category] ? matchCategory(r[c.category]) : auto.category || "Other";
+    const cur = (r[c.currency] || currencyOf(r[c.amount] || "").currency || "USD").toUpperCase();
+    return {
+      type, category: type === "event" ? cat : null, vendor: r[c.vendor] || "", item: r[c.item] || "",
+      amount: num(r[c.amount]), qty: c.qty ? num(r[c.qty]) : null, currency: cur === "RMB" ? "CNY" : cur,
+      date: toDate(r[c.date]) || "", invoiceNo: r[c.invoiceNo] || "", receipt: r[c.receipt] || "",
+      sure, reasons: c.type && r[c.type] ? [`Type column says “${r[c.type]}”`] : auto.reasons, fileName: "",
+    };
+  });
+}
+
+/** A reviewed invoice → the line it becomes in its list. */
+export function invoiceToLine(x) {
+  if (x.type === "influencer")
+    return { list: "influencers", line: { creator: x.vendor, deliverables: x.item, fee: x.amount, currency: x.currency, notes: "", invoiceNo: x.invoiceNo || "", date: x.date || "", receipt: x.receipt || "", source: x.fileName || "pasted" } };
+  return { list: "eventCosts", line: { category: x.category || "Other", item: x.item, date: x.date || "", qty: x.qty ?? null, unit: x.amount, currency: x.currency, vendor: x.vendor, receipt: x.receipt || "", invoiceNo: x.invoiceNo || "", source: x.fileName || "pasted" } };
+}
+
+/** Is this invoice already in the costing report? (same invoice number and payee, or same payee, amount and date) */
+export function isDuplicate(x, rep) {
+  const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const lines = [
+    ...(rep.influencers || []).map(l => ({ who: l.creator, amt: l.fee, date: l.date, inv: l.invoiceNo })),
+    ...(rep.eventCosts || []).map(l => ({ who: l.vendor, amt: (l.qty == null ? 1 : l.qty) * (l.unit || 0), date: l.date, inv: l.invoiceNo })),
+  ];
+  return lines.some(l =>
+    (x.invoiceNo && l.inv && norm(l.inv) === norm(x.invoiceNo) && (!x.vendor || norm(l.who) === norm(x.vendor)))
+    || (x.vendor && norm(l.who) === norm(x.vendor) && l.amt === x.amount && (l.date || "") === (x.date || "")));
+}
+
+/* ───────── costing report ───────── */
+
+export function buildCosting(rep, db, settings = DEFAULT_SETTINGS) {
+  const fx = { ...settings.fx, ...(rep.fx || {}) };
+  const flags = [];
+  const infl = (rep.influencers || []).map((l, i) => ({ ...l, i, usd: toUSD(l.fee, l.currency, fx) }));
+  const costs = (rep.eventCosts || []).map((l, i) => ({ ...l, i, usd: costLineUSD(l, fx) }));
+  for (const c of new Set([...infl, ...costs].filter(l => l.usd == null).map(l => l.currency)))
+    flags.push({ level: "bad", text: `No FX rate for ${c} — add it under FX.` });
+  const noAmount = [...infl.filter(l => l.fee == null), ...costs.filter(l => l.unit == null)].length;
+  if (noAmount) flags.push({ level: "bad", text: `${noAmount} line${noAmount > 1 ? "s have" : " has"} no amount.` });
+  const noReceipt = [...infl, ...costs].filter(l => !l.receipt && !l.source).length;
+  if (noReceipt) flags.push({ level: "info", text: `${noReceipt} line${noReceipt > 1 ? "s have" : " has"} no receipt link or invoice file.` });
+  const seen = new Map();
+  for (const l of [...infl.map(l => ({ k: `${l.creator}|${l.fee}|${l.date}`, inv: l.invoiceNo })), ...costs.map(l => ({ k: `${l.vendor}|${l.unit}|${l.date}`, inv: l.invoiceNo }))]) {
+    const key = l.inv ? "inv:" + l.inv.toLowerCase() : l.k.toLowerCase();
+    seen.set(key, (seen.get(key) || 0) + 1);
+  }
+  const dups = [...seen.values()].filter(n => n > 1).length;
+  if (dups) flags.push({ level: "warn", text: `${dups} possible duplicate invoice${dups > 1 ? "s" : ""} (same invoice number, or same payee + amount + date).` });
+
+  const influencerCost = sum(infl, l => l.usd);
+  const eventCost = sum(costs, l => l.usd);
+  const byCategory = COST_CATEGORIES.map(k => ({ category: k, usd: sum(costs.filter(l => l.category === k), l => l.usd), lines: costs.filter(l => l.category === k).length }))
+    .filter(x => x.lines).sort((a, b) => b.usd - a.usd);
+  const byCreator = [...infl].sort((a, b) => (b.usd || 0) - (a.usd || 0));
+  const event = Object.values(db.reports || {}).find(r => !r.deleted && r.type === "event" && r.costingId === rep.id) || null;
+  const E = event ? buildReport(event, db, settings) : null;
+  return {
+    rep, fx, influencers: infl, eventCosts: costs, flags, byCategory, byCreator, event, E,
+    T: { influencerCost, eventCost, total: influencerCost + eventCost, lines: infl.length + costs.length, creators: infl.length },
+  };
+}
+
+/** The event report just before this one (for founders: "vs last event"). */
+export function previousEvent(rep, reports) {
+  return Object.values(reports).filter(r => !r.deleted && r.type === "event" && r.id !== rep.id && (r.end || "") < (rep.start || ""))
+    .sort((a, b) => ((a.end || "") < (b.end || "") ? 1 : -1))[0] || null;
+}
+
+/* ───────── home-page insights: plain sentences, numbers only ───────── */
+
+export function insights(built, settings = DEFAULT_SETTINGS) {
+  const out = [];
+  const usd2 = x => "$" + (Math.round(x * 100) / 100).toFixed(2);
+  const pc = x => (x * 100).toFixed(2) + "%";
+  const events = built.filter(R => R.rep.type === "event" && R.T.totalViews > 0);
+  const weeks = built.filter(R => R.rep.type === "week" && R.contentRows.length).sort((a, b) => (a.rep.start < b.rep.start ? 1 : -1));
+
+  if (events.length >= 2) {
+    const withCpm = events.filter(R => R.T.blendedCPM != null).sort((a, b) => a.T.blendedCPM - b.T.blendedCPM);
+    if (withCpm.length >= 2) {
+      const best = withCpm[0], worst = withCpm[withCpm.length - 1];
+      out.push({ tone: "good", text: `${best.rep.name} was the cheapest event to reach people: ${usd2(best.T.blendedCPM)} blended CPM, vs ${usd2(worst.T.blendedCPM)} for ${worst.rep.name}.` });
+    }
+    const byEr = events.filter(R => R.T.er != null).sort((a, b) => b.T.er - a.T.er);
+    if (byEr.length >= 2) out.push({ tone: "info", text: `Highest engagement: ${byEr[0].rep.name} at ${pc(byEr[0].T.er)} per view (brand benchmark ${pc(settings.benchmark)}).` });
+  }
+  const latestEv = events.sort((a, b) => ((a.rep.end || "") < (b.rep.end || "") ? 1 : -1))[0];
+  if (latestEv) {
+    const T = latestEv.T;
+    out.push({ tone: T.er != null && T.er >= settings.benchmark ? "good" : "warn",
+      text: `${latestEv.rep.name}: ${Math.round(T.totalViews).toLocaleString("en-US")} views for ${usd2(T.totalSpend)} — ${T.blendedCPM == null ? "no CPM yet" : usd2(T.blendedCPM) + " per 1,000 views"}, eng. rate ${T.er == null ? "n/a" : pc(T.er)}.` });
+    const s = latestEv.score;
+    if (s.erCollab != null && s.erNancy != null && latestEv.T.collabPosts)
+      out.push({ tone: "info", text: `At ${latestEv.rep.name}, collab posts engaged at ${pc(s.erCollab)} vs ${pc(s.erNancy)} for Nancy's own posts.` });
+  }
+  if (weeks.length >= 2) {
+    const [a, b] = weeks;
+    const ch = (x, y) => (y ? ((x - y) / y) * 100 : null);
+    const v = ch(a.T.postViews, b.T.postViews);
+    if (v != null) out.push({ tone: v >= 0 ? "good" : "warn", text: `${a.rep.name}: post views ${v >= 0 ? "up" : "down"} ${Math.abs(v).toFixed(1)}% on the week before (${Math.round(a.T.postViews).toLocaleString("en-US")} vs ${Math.round(b.T.postViews).toLocaleString("en-US")}).` });
+    if (a.T.er != null && b.T.er != null) {
+      const d = (a.T.er - b.T.er) * 100;
+      out.push({ tone: d >= 0 ? "good" : "warn", text: `Eng. rate ${d >= 0 ? "rose" : "fell"} ${Math.abs(d).toFixed(2)} pp to ${pc(a.T.er)}.` });
+    }
+  }
+  const lastWeek = weeks[0];
+  if (lastWeek?.dominant) out.push({ tone: "warn", text: `One post drove ${pc(lastWeek.dominant.views / lastWeek.T.postViews)} of ${lastWeek.rep.name}'s post views — the rest of the week is smaller than the total suggests.` });
+  if (lastWeek?.account?.pctTarget != null) out.push({ tone: lastWeek.account.pctTarget >= 1 ? "good" : "warn", text: `Account views reached ${pc(lastWeek.account.pctTarget)} of the weekly share of the ${(settings.target.views / 1e6).toFixed(0)}M target.` });
+  for (const R of built) if (R.T?.adsCPM != null && (R.T.adsCPM > settings.cpmRange[1] * 2 || R.T.adsCPM < settings.cpmRange[0] / 2))
+    out.push({ tone: "bad", text: `${R.rep.name}: ads CPM ${usd2(R.T.adsCPM)} is far outside the usual $${settings.cpmRange[0]}–$${settings.cpmRange[1]} — check the ad export.` });
+  return out;
 }
