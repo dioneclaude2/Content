@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Social Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF4F8B'/><path d='M8 22V14M14 22V9M20 22v-6M26 22V12' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
+<style>
+:root{
+  --bg:#FBF7F2; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
+  --line:#EAE1DA; --line-2:#F3ECE6; --pink:#FF4F8B; --pink-soft:#FFE3EE;
+  --good:#11734b; --good-bg:#DDF3E8; --warn:#8A5A00; --warn-bg:#FFF1CC; --bad:#b10202; --bad-bg:#ffcfc9;
+  --head:#140D11; --tint:#F7F1EC; --pad:16px;
+  --serif:'Instrument Serif',Georgia,serif;
+}
+@media (min-width:900px){:root{--pad:36px}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0;text-transform:none}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(251,247,242,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1440px;margin:0 auto;padding:12px var(--pad);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:7px;text-decoration:none}
+.brand b{font-size:19px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
+.brand span{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--pink)}
+.nav{display:flex;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px;overflow-x:auto;scrollbar-width:none}
+.nav a{padding:7px 13px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.03em;text-decoration:none;color:var(--muted);white-space:nowrap}
+.nav a:hover{color:var(--ink)}
+.nav a.on{background:var(--ink);color:#fff}
+.sync{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.sync[data-s=ok] i{background:#2BB673}.sync[data-s=saving] i{background:#F5A623}.sync[data-s=error] i{background:var(--bad)}
+@media (max-width:640px){.nav{order:3;width:100%}}
+
+main{max-width:1440px;margin:0 auto;padding:26px var(--pad) 120px}
+h1{font-size:clamp(28px,4vw,46px);font-weight:900;letter-spacing:-.035em;text-transform:uppercase;line-height:.95;margin:0}
+h1 .serif{color:var(--pink);font-size:1.1em}
+h2{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+h3{font-size:15px;font-weight:800;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;line-height:1.5;margin:6px 0 0}
+.sec{margin-top:34px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.small{font-size:12px}
+
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:.03em;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.pink{background:var(--pink)}
+.btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 11px;font-size:11px}
+.btn.danger{background:var(--paper);color:var(--bad);border:1px solid var(--bad-bg)}
+.btn:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.4;cursor:default}
+.x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;border-radius:6px}
+.x:hover{color:var(--bad);background:var(--bad-bg)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px}
+.grid{display:grid;gap:14px}
+@media (min-width:900px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+input[type=text],input[type=date],input[type=number],input[type=password],select,textarea{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;min-width:0}
+textarea{width:100%;min-height:120px;font-family:ui-monospace,Menlo,monospace;font-size:12px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pink-soft);border-color:var(--pink)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+label.f input,label.f select{text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+
+/* tiles */
+.tiles{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1200px){.tiles{grid-template-columns:repeat(6,1fr)}}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.tile .k{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-top:6px;line-height:1}
+.tile .s{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line-2);white-space:nowrap;vertical-align:top}
+th{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--tint);position:sticky;top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{font-weight:800;background:var(--tint);border-top:2px solid var(--ink)}
+tr.extra td{background:var(--ev2,#f6f1ec)}
+tr.adrow td{color:var(--muted);font-style:italic}
+tr.adrow td.n{font-style:normal}
+td.cap{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+td.wrap{white-space:normal;min-width:220px}
+.evhead th{background:var(--ev,var(--tint));color:var(--ink)}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.chip.yes{background:#11734b;color:#fff}
+.chip.no{background:#ffcfc9;color:#b10202}
+.chip.k{background:var(--tint);color:var(--muted);font-weight:700}
+.chip.collab{background:#EDE4FF;color:#5B34C9}
+.chip.nancy{background:var(--pink-soft);color:#C2185B}
+.miss{color:var(--bad);font-weight:700;font-size:12px;white-space:normal}
+.up{color:var(--good)}.down{color:var(--bad)}
+.bench-good{color:var(--good);font-weight:700}.bench-bad{color:var(--bad);font-weight:700}
+.tbl-tools{display:flex;justify-content:flex-end;gap:6px;margin:-4px 0 8px}
+
+/* flags */
+.flags{display:grid;gap:6px}
+.flag{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.45}
+.flag.bad{background:var(--bad-bg);color:#7a0000}
+.flag.warn{background:var(--warn-bg);color:var(--warn)}
+.flag.info{background:var(--tint);color:var(--muted)}
+.flag b{flex:none;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+/* report list */
+.rcards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.rcard{display:block;text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;position:relative;overflow:hidden}
+.rcard:hover{border-color:var(--ink)}
+.rcard .band{position:absolute;inset:0 0 auto 0;height:6px;background:var(--ev,var(--pink))}
+.rcard .t{font-size:17px;font-weight:900;letter-spacing:-.02em;margin-top:4px}
+.rcard .d{font-size:12px;color:var(--muted);margin-top:3px}
+.rcard .m{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:10px;margin-top:12px}
+.rcard .m div{font-size:11px;color:var(--muted)}
+.rcard .m b{display:block;font-size:16px;color:var(--ink);font-weight:800}
+
+/* report page */
+.rhead{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;padding-bottom:16px;border-bottom:4px solid var(--ev,var(--ink))}
+.titleline{font-size:12.5px;color:var(--muted);margin-top:10px;font-weight:600}
+.subtabs{display:flex;gap:4px;margin:16px 0 0;flex-wrap:wrap}
+.subtabs a{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:800;text-decoration:none;color:var(--muted);border:1px solid transparent}
+.subtabs a.on{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.subtabs a .cnt{display:inline-block;margin-left:5px;background:var(--bad);color:#fff;border-radius:999px;padding:0 6px;font-size:10px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .num{flex:none;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px}
+.step .num.done{background:#2BB673}
+.who{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.result{margin-top:10px;font-size:12.5px;line-height:1.5}
+.result.ok{color:var(--good)}
+.result.err{color:var(--bad)}
+.list{display:grid;gap:6px;margin-top:10px}
+.li{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line-2);border-radius:10px;font-size:12.5px}
+.li .grow{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.rundown{line-height:1.6;font-size:14px;max-width:900px}
+.rundown h1,.rundown h2,.rundown h3{text-transform:none;letter-spacing:-.01em;font-size:17px;margin:18px 0 6px;display:block}
+.rundown h2::after{display:none}
+.rundown table{margin:8px 0;border:1px solid var(--line)}
+.rundown td{white-space:normal}
+.rundown ul{padding-left:20px;margin:6px 0}
+
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+details summary{cursor:pointer;font-weight:700;font-size:12.5px}
+.kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--tint);padding:1px 6px;border-radius:5px}
+
+@media print{
+  .top,.subtabs,.tbl-tools,.noprint,.btn{display:none!important}
+  body{background:#fff}
+  .tw{overflow:visible;border:0}
+  th{position:static}
+  .sec{break-inside:avoid-page}
+}
+</style>
+
+<header class="top"><div class="top-in">
+  <a class="brand" href="#/"><b>Social</b><span>Stats</span></a>
+  <nav class="nav" id="nav">
+    <a href="#/" data-r="home">Reports</a>
+    <a href="#/compare" data-r="compare">Compare</a>
+    <a href="#/posts" data-r="posts">Posts</a>
+    <a href="#/ads" data-r="ads">Ad exports</a>
+    <a href="#/settings" data-r="settings">Settings</a>
+  </nav>
+  <button class="sync" id="sync" data-s="off" title="Sync status"><i></i><span>This browser only</span></button>
+</div></header>
+<main id="app"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+import * as E from "./engine.js";
+
+/* ───────── where the shared data lives ─────────
+   Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
+   Pages. Both sync through the Vercel API. */
+const ON_VERCEL = /vercel\.app$/.test(location.hostname);
+const LOCAL = /^(localhost|127\.)/.test(location.hostname);
+const API = ON_VERCEL ? "/api/stats" : LOCAL ? "/api/stats" : "https://content-nine-topaz.vercel.app/api/stats";
+
+/* ───────── store: one record per key, newest updatedAt wins ───────── */
+const LS = "ss.docs";
+let docs = {};
+try { docs = JSON.parse(localStorage.getItem(LS) || "{}"); } catch { docs = {}; }
+const saveLocal = () => { try { localStorage.setItem(LS, JSON.stringify(docs)); } catch { toast("This browser's storage is full — sync still saves to the team copy."); } };
+
+function put(key, value){
+  docs[key] = { ...value, updatedAt: Date.now() };
+  saveLocal();
+  sync.queue(key);
+}
+const del = key => put(key, { deleted: true });
+
+function db(){
+  const out = { settings: { ...E.DEFAULT_SETTINGS }, posts: {}, imports: {}, reports: {} };
+  const s = docs["ss.settings"];
+  if (s && !s.deleted) out.settings = { ...E.DEFAULT_SETTINGS, ...s, fx: { ...E.DEFAULT_SETTINGS.fx, ...(s.fx || {}) }, target: { ...E.DEFAULT_SETTINGS.target, ...(s.target || {}) } };
+  for (const [k, v] of Object.entries(docs)) {
+    if (!v || v.deleted) continue;
+    if (k.startsWith("ss.post.")) out.posts[v.id] = v;
+    else if (k.startsWith("ss.import.")) out.imports[v.id] = v;
+    else if (k.startsWith("ss.report.")) out.reports[v.id] = v;
+  }
+  return out;
+}
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+/* ───────── team sync ───────── */
+const sync = {
+  state: "off", pending: new Set(), timer: null,
+  pass(){ try { return localStorage.getItem("ss.passcode") || ""; } catch { return ""; } },
+  show(s){
+    sync.state = s;
+    const el = document.getElementById("sync");
+    el.dataset.s = s;
+    el.querySelector("span").textContent = { off: "This browser only", ok: "Synced with team", saving: "Saving…", error: "Offline — retrying" }[s];
+  },
+  queue(k){
+    sync.pending.add(k);
+    try { localStorage.setItem("ss.unsent", JSON.stringify([...sync.pending])); } catch {}
+    if (sync.state === "off") return;
+    sync.show("saving");
+    clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 600);
+  },
+  async flush(){
+    if (!sync.pending.size) return;
+    const keys = [...sync.pending].slice(0, 40);
+    const body = { docs: Object.fromEntries(keys.filter(k => docs[k]).map(k => [k, docs[k]])) };
+    try {
+      const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-passcode": sync.pass() }, body: JSON.stringify(body) });
+      if (r.status === 401) { sync.show("error"); askPass(); return; }
+      if (!r.ok) throw new Error(r.status);
+      const { stale = {} } = await r.json();
+      keys.forEach(k => sync.pending.delete(k));
+      try { localStorage.setItem("ss.unsent", JSON.stringify([...sync.pending])); } catch {}
+      if (Object.keys(stale).length) {           // someone saved newer versions: take theirs
+        Object.assign(docs, stale); saveLocal(); render();
+        toast("A teammate saved newer changes — showing theirs.");
+      }
+      if (sync.pending.size) { sync.timer = setTimeout(sync.flush, 50); } else sync.show("ok");
+    } catch {
+      sync.show("error");
+      clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 5000);
+    }
+  },
+  async pull(){
+    let remote;
+    try {
+      const r = await fetch(API, { cache: "no-store" });
+      if (r.status === 503 || r.status === 404) { sync.show("off"); return; }
+      if (!r.ok) throw new Error(r.status);
+      remote = (await r.json()).docs || {};
+    } catch { if (sync.state !== "off") sync.show("error"); return; }
+    if (sync.state === "off") {
+      try { for (const k of JSON.parse(localStorage.getItem("ss.unsent") || "[]")) sync.pending.add(k); } catch {}
+    }
+    sync.show("ok");
+    let changed = false;
+    for (const [k, v] of Object.entries(remote)) {
+      const mine = docs[k];
+      if (!mine || (v.updatedAt || 0) > (mine.updatedAt || 0)) { docs[k] = v; changed = true; sync.pending.delete(k); }
+      else if ((mine.updatedAt || 0) > (v.updatedAt || 0)) sync.pending.add(k);
+    }
+    for (const k of Object.keys(docs)) if (!(k in remote)) sync.pending.add(k);   // records only made here
+    if (changed) { saveLocal(); render(); }
+    if (sync.pending.size) { sync.show("saving"); sync.flush(); }
+  },
+};
+function askPass(){
+  const p = prompt("Social Stats needs the team passcode to save. Enter it:");
+  if (p) { try { localStorage.setItem("ss.passcode", p); } catch {} sync.flush(); }
+}
+document.getElementById("sync").onclick = () => sync.pull();
+setInterval(() => { if (!document.hidden && !editing()) sync.pull(); }, 30000);
+addEventListener("focus", () => sync.pull());
+const editing = () => { const a = document.activeElement; return a && /INPUT|TEXTAREA|SELECT/.test(a.tagName); };
+
+/* ───────── formatting ───────── */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const F = {
+  int: v => (v == null || !isFinite(v) ? "—" : Math.round(v).toLocaleString("en-US")),
+  usd: v => (v == null || !isFinite(v) ? "—" : "$" + (Math.round(v * 100) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+  pct: v => (v == null || !isFinite(v) ? "—" : (v * 100).toFixed(2) + "%"),
+  pp: v => (v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + " pp"),
+  chg: v => (v == null ? "—" : !isFinite(v) ? "new" : (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%"),
+  big: v => (v == null ? "—" : v >= 1e6 ? (v / 1e6).toFixed(2) + "M" : v >= 1e4 ? (v / 1e3).toFixed(1) + "K" : F.int(v)),
+  date: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }); },
+  dateY: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); },
+};
+const miss = m => `<span class="miss">Missing — need ${esc(m.need)}, from ${esc(m.who)}</span>`;
+const or = (v, fmt, m) => (v == null ? (m ? miss(m) : "—") : fmt(v));
+const vsBench = (er, bench) => er == null ? "—" : `<span class="${er >= bench ? "bench-good" : "bench-bad"}">${F.pct(er)}</span>`;
+const chip = b => b ? '<span class="chip yes">Yes</span>' : '<span class="chip no">No</span>';
+const who = r => r.collab ? `<span class="chip collab">${esc(r.account || "Collab")}</span>` : `<span class="chip nancy">Nancy</span>`;
+const link = (r, n = 42) => r.link ? `<a href="${esc(r.link)}" target="_blank" rel="noopener" title="${esc(r.content)}">${esc((r.content || r.id).slice(0, n))}${(r.content || "").length > n ? "…" : ""}</a>` : esc((r.content || "").slice(0, n));
+const KIND = { post: "", extra: "Extra post", separate: "Separate ad version", older: "Ads on an older post", "other-event": "Ads on another event's post", adonly: "Ad only (no post matched)", campaign: "Campaign-level spend" };
+const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+const evColours = rep => E.EVENT_COLOURS[rep.colour] || (rep.type === "week" ? ["#FFE3EE", "#FFF4F8"] : E.EVENT_COLOURS.Pink);
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600);
+}
+async function copy(text, msg = "Copied"){
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch { const ta = document.createElement("textarea"); ta.value = text; document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast(msg); }
+}
+const tableTSV = t => [...t.rows].map(tr => [...tr.cells].map(c => c.innerText.replace(/\s+/g, " ").trim()).join("\t")).join("\n");
+const csvCell = s => /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+
+const TEMPLATES = {
+  posts: "Date posted\tAccount\tFormat\tContent\tLink\tViews\tReach\tLikes\tComments\tSaves\tShares\tProfile visits\tFollows\tBoosted (Y/N)",
+  influencers: "Creator / handle\tDeliverables\tFee\tCurrency\tNotes",
+  costs: "Category\tItem\tDate\tQty\tUnit price\tCurrency\tVendor\tReceipt link",
+};
+
+/* ───────── routing ───────── */
+function route(){
+  const h = location.hash.replace(/^#\/?/, "");
+  const [path, qs] = h.split("?");
+  const parts = path.split("/").filter(Boolean);
+  return { name: parts[0] || "home", parts, q: new URLSearchParams(qs || "") };
+}
+addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
+
+const app = document.getElementById("app");
+function render(){
+  const r = route(), D = db();
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.r === (r.name === "r" ? "home" : r.name)));
+  try {
+    if (r.name === "r" && r.parts[1]) return renderReport(D, r.parts[1], r.parts[2] || "report", r.q);
+    if (r.name === "compare") return renderCompare(D, r.q);
+    if (r.name === "posts") return renderPosts(D, r.q);
+    if (r.name === "ads") return renderAds(D);
+    if (r.name === "settings") return renderSettings(D);
+    renderHome(D);
+  } catch (e) {
+    console.error(e);
+    app.innerHTML = `<div class="flag bad"><b>Error</b>${esc(e.message)}</div>`;
+  }
+}
+
+/* ───────── home: every report ───────── */
+function renderHome(D){
+  const reps = Object.values(D.reports);
+  const weeks = reps.filter(r => r.type === "week").sort((a, b) => (a.start < b.start ? 1 : -1));
+  const events = reps.filter(r => r.type === "event").sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  const card = rep => {
+    const R = E.buildReport(rep, D, D.settings);
+    const [c1, c2] = evColours(rep);
+    const bad = R.flags.filter(f => f.level === "bad").length;
+    return `<a class="rcard" href="#/r/${rep.id}" style="--ev:${c1}">
+      <div class="band"></div>
+      <div class="small muted">${rep.type === "week" ? "Weekly" : "Event"} · data ${F.date(rep.dataDate)}${bad ? ` · <span class="down">${bad} to fix</span>` : ""}</div>
+      <div class="t">${esc(rep.name || "Untitled")}</div>
+      <div class="d">${F.dateY(rep.start)} → ${F.dateY(rep.end)} · ${R.T.posts} posts${R.T.extra ? ` + ${R.T.extra} extra` : ""}</div>
+      <div class="m">
+        <div><b>${F.big(R.T.totalViews)}</b>views</div>
+        <div><b>${F.pct(R.T.er)}</b>eng. rate</div>
+        <div><b>${F.usd(R.T.blendedCPM)}</b>blended CPM</div>
+        <div><b>${F.usd(R.T.totalSpend)}</b>spend</div>
+      </div></a>`;
+  };
+  app.innerHTML = `
+    <div class="row" style="align-items:flex-end">
+      <div class="grow"><h1>Social <span class="serif">Stats</span></h1>
+      <p class="sub">Every weekly and event report in one place, from one post list and one set of ad exports. Paste the data in once and the numbers work themselves out.</p></div>
+      <button class="btn pink" id="newWeek">+ Weekly report</button>
+      <button class="btn" id="newEvent">+ Event report</button>
+    </div>
+    <div class="sec"><h2>Events &amp; launches</h2>
+      ${events.length ? `<div class="rcards">${events.map(card).join("")}</div>` : `<div class="empty">No event reports yet. Start one for any event, launch or ad push.</div>`}
+    </div>
+    <div class="sec"><h2>Weekly reports</h2>
+      ${weeks.length ? `<div class="rcards">${weeks.map(card).join("")}</div>` : `<div class="empty">No weekly reports yet. Each Monday, start one for the week before.</div>`}
+    </div>`;
+  document.getElementById("newWeek").onclick = () => newReport("week");
+  document.getElementById("newEvent").onclick = () => newReport("event");
+}
+
+function newReport(type){
+  const id = uid();
+  const t = today();
+  let rep;
+  if (type === "week") {
+    const d = new Date(t + "T12:00:00Z");
+    const back = ((d.getUTCDay() + 6) % 7) + 7;                // Monday of last week
+    const start = E.addDays(t, -back), end = E.addDays(start, 6);
+    rep = { id, type, name: `Week of ${F.date(start)}`, start, end, dataDate: t, importIds: [], account: {}, otherSpend: [], colour: "" };
+  } else {
+    rep = { id, type, name: "New event", start: t, end: t, dataDate: t, postIds: [], importIds: [], influencers: [], eventCosts: [], colour: "Pink", fresh: true };
+  }
+  rep.fx = { ...db().settings.fx };
+  put("ss.report." + id, rep);
+  location.hash = `#/r/${id}/data`;
+}
+
+/* ───────── a report ───────── */
+function prevFor(rep, D){
+  if (rep.type === "week") {
+    const p = rep.prevId ? D.reports[rep.prevId] : E.previousWeek(rep, D.reports);
+    return p || null;
+  }
+  return rep.compareId ? D.reports[rep.compareId] || null : null;
+}
+
+function renderReport(D, id, tab, q){
+  const rep = D.reports[id];
+  if (!rep) { app.innerHTML = `<div class="empty">This report doesn't exist (or was deleted). <a href="#/">Back to reports</a></div>`; return; }
+  const R = E.buildReport(rep, D, D.settings);
+  const prev = prevFor(rep, D);
+  const P = prev ? E.buildReport(prev, D, D.settings) : null;
+  if (P && rep.type === "week" && P.dataDate && R.dataDate && P.dataDate !== R.dataDate) {
+    const ageA = E.daysBetween(rep.end, R.dataDate), ageB = E.daysBetween(prev.end, P.dataDate);
+    R.flags.push({ level: "info", text: `Last week was pulled ${F.date(P.dataDate)} (${ageB} days after its week), this week ${F.date(R.dataDate)} (${ageA} days after). Posts with more days live usually have more views — compare with that in mind.` });
+  }
+  const [c1, c2] = evColours(rep);
+  document.documentElement.style.setProperty("--ev", c1);
+  document.documentElement.style.setProperty("--ev2", c2);
+  const nFix = R.flags.filter(f => f.level !== "info").length;
+  const T = R.T;
+  const title = rep.type === "week"
+    ? `Weekly Social Report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${D.settings.account} · ${T.posts} posts · Instagram data pulled ${F.dateY(R.dataDate)}`
+    : `${esc(rep.name)} · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.dateY(R.dataDate)}`;
+  const tabs = [["report", "Report"], ["data", "Add data"], ["match", "Ad matching"], ["checks", `Checks${nFix ? `<span class="cnt">${nFix}</span>` : ""}`]];
+  app.innerHTML = `
+    <div class="rhead" style="--ev:${c1}">
+      <div class="grow">
+        <div class="small muted"><a href="#/">Reports</a> / ${rep.type === "week" ? "Weekly" : "Event"}</div>
+        <h1 style="margin-top:6px">${esc(rep.name || "Untitled")}</h1>
+        <div class="titleline">${title}</div>
+      </div>
+      <div class="row noprint">
+        <button class="btn ghost sm" id="csv">Download CSV</button>
+        <button class="btn ghost sm" onclick="print()">Print / PDF</button>
+        <button class="btn ghost sm" id="share">Copy link</button>
+      </div>
+    </div>
+    <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
+    <div id="body"></div>`;
+  document.getElementById("share").onclick = () => copy(location.href.replace(/#.*/, "") + `#/r/${id}`, "Link copied");
+  document.getElementById("csv").onclick = () => downloadCSV(rep);
+  const body = document.getElementById("body");
+  if (tab === "data") return renderData(body, rep, R, D);
+  if (tab === "match") return renderMatch(body, rep, R, D);
+  if (tab === "checks") return renderChecks(body, R);
+  body.innerHTML = rep.type === "week" ? weeklyHTML(rep, R, P, D) : eventHTML(rep, R, P, D);
+  wireReport(body, rep, R, P, D);
+}
+
+function flagsHTML(R, limit){
+  const order = { bad: 0, warn: 1, info: 2 };
+  const list = [...R.flags].sort((a, b) => order[a.level] - order[b.level]);
+  const shown = limit ? list.filter(f => f.level !== "info").slice(0, limit) : list;
+  if (!shown.length) return limit ? "" : `<div class="flag info"><b>OK</b>Every check passed.</div>`;
+  const lab = { bad: "Fix", warn: "Check", info: "Note" };
+  return `<div class="flags">${shown.map(f => `<div class="flag ${f.level}"><b>${lab[f.level]}</b><span>${esc(f.text)}</span></div>`).join("")}
+    ${limit && list.length > shown.length ? `<a class="small muted" href="#/r/${R.rep.id}/checks">See all ${list.length} checks →</a>` : ""}</div>`;
+}
+function renderChecks(body, R){
+  const missing = Object.values(R.missing);
+  body.innerHTML = `<div class="sec"><h2>Checks before reporting</h2>${flagsHTML(R)}</div>
+    ${missing.length ? `<div class="sec"><h2>Missing data</h2><div class="flags">${missing.map(m => `<div class="flag warn"><b>Need</b><span>${esc(m.need)} — from ${esc(m.who)}</span></div>`).join("")}</div></div>` : ""}
+    <div class="sec"><h2>What's checked</h2><p class="sub">Total = organic + paid on every row · no negative organic views · no post twice in a report or across events · spend in the rows equals spend in the exports (after FX) · every export has a Views column and covers the date range · every post has views and one pull date · ads matched by name, separate ad versions and unmatched ads are flagged · ads CPM within $${D0().settings.cpmRange[0]}–$${D0().settings.cpmRange[1]} · Organic CPM left blank without event cost · influencer and event costs kept separate.</p></div>`;
+}
+const D0 = () => db();
+
+function tbl(id, head, rows, opts = {}){
+  return `<div class="tbl-tools noprint"><button class="btn ghost sm" data-copy="${id}">Copy for Sheets</button></div>
+  <div class="tw"><table id="${id}"${opts.ev ? ' class="ev"' : ""}><thead><tr class="${opts.ev ? "evhead" : ""}">${head.map(h => `<th class="${h.n ? "n" : ""}">${h.t ?? h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+}
+const N = t => ({ t, n: true });
+
+/* weekly per-post table (§3.4) */
+function weeklyPostTable(R){
+  const rows = R.rows.map(r => `<tr class="${r.kind === "extra" ? "extra" : r.adOnly ? "adrow" : ""}">
+    <td>${F.date(r.date)}</td><td>${r.adOnly && !r.post ? "—" : who(r)}</td><td>${esc(r.format)}</td>
+    <td class="cap">${r.adOnly ? `<i>${KIND[r.kind]}</i> · ` : ""}${link(r, 38)}</td>
+    <td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.reach)}</td><td class="n">${F.int(r.likes)}</td><td class="n">${F.int(r.comments)}</td>
+    <td class="n">${F.int(r.saves)}</td><td class="n">${F.int(r.shares)}</td><td class="n">${F.int(r.interactions)}</td>
+    <td class="n">${vsBench(r.er, R.bench)}</td><td class="n">${F.int(r.visits)}</td><td class="n">${F.int(r.follows)}</td>
+    <td>${chip(r.boosted)}</td><td class="cap">${esc(r.campaigns || "—")}</td><td class="n">${r.spend ? F.usd(r.spend) : "—"}</td>
+    <td class="n">${F.int(r.paid)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${r.cpm == null ? "—" : F.usd(r.cpm)}</td></tr>`);
+  const T = R.T;
+  rows.push(`<tr class="total"><td colspan="4">Total</td><td class="n">${F.int(T.totalViews)}</td><td class="n">${F.int(T.reach)}</td><td class="n">${F.int(T.likes)}</td><td class="n">${F.int(T.comments)}</td><td class="n">${F.int(T.saves)}</td><td class="n">${F.int(T.shares)}</td><td class="n">${F.int(T.interactions)}</td><td class="n">${vsBench(T.er, R.bench)}</td><td class="n">${F.int(T.visits)}</td><td class="n">${F.int(T.postFollows)}</td><td></td><td></td><td class="n">${F.usd(T.adSpend)}</td><td class="n">${F.int(T.paidViews)}</td><td class="n">${F.int(T.organicViews)}</td><td class="n">${F.usd(T.adsCPM)}</td></tr>`);
+  return tbl("t-posts", ["Date posted", "Account", "Format", "Content / link", N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Interactions"), N("Eng. rate"), N("Profile visits"), N("Follows"), "Boosted", "Ad campaign", N("Ad spend (USD)"), N("Paid views"), N("Organic views"), N("Ads CPM")], rows);
+}
+
+function cmpCell(c){
+  if (!c || c.prev == null) return "—";
+  const f = v => c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+  return `${f(c.prev)} · <span class="${c.status === "🟢" ? "up" : c.status === "🔴" ? "down" : ""}">${c.rate ? F.pp(c.change) : F.chg(c.change)}</span>`;
+}
+function cmpTable(id, A, B, labelA, labelB){
+  const rows = E.compareReports(A, B).map(c => {
+    const f = v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+    return `<tr><td>${esc(c.name)}</td><td class="n">${f(c.cur)}</td><td class="n">${f(c.prev)}</td><td class="n">${c.change == null ? "—" : c.rate ? F.pp(c.change) : F.chg(c.change)}</td><td>${c.status || "—"}</td></tr>`;
+  });
+  return tbl(id, ["Metric", N(esc(labelA)), N(esc(labelB)), N("Change"), "Status"], rows);
+}
+
+function tiles(list){
+  return `<div class="tiles">${list.map(([k, v, s]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`).join("")}</div>`;
+}
+
+function rankHTML(R){
+  return `<div class="grid g3">${Object.entries(R.rankings).map(([name, list]) => `<div class="card" style="padding:14px">
+    <h3>${esc(name)}</h3>
+    ${list.length ? `<ol style="margin:0;padding-left:18px;display:grid;gap:8px">${list.map(r => `<li style="font-size:12.5px;line-height:1.45">${link(r, 50)}<br><span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${F.int(r.views)} views · ${F.int(r.reach)} reach · <b>${F.pct(r.er)}</b> · ${r.boosted ? "Boosted" + (r.campaigns ? " (" + esc(r.campaigns) + ")" : "") : "Organic"}</span></li>`).join("")}</ol>` : `<p class="small muted">${/lowest/i.test(name) ? "Every post in this group is already in its top 3." : "No posts in this group."}</p>`}
+  </div>`).join("")}</div>`;
+}
+
+function breakdownTable(id, groups, bench){
+  return tbl(id, ["", N("Posts"), N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Eng. rate"), N(`vs ${F.pct(bench)}`)],
+    groups.map(g => `<tr class="${g.name === "Total" ? "total" : ""}"><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.int(g.reach)}</td><td class="n">${F.int(g.likes)}</td><td class="n">${F.int(g.comments)}</td><td class="n">${F.int(g.saves)}</td><td class="n">${F.int(g.shares)}</td><td class="n">${vsBench(g.er, bench)}</td><td class="n">${g.vsBench == null ? "—" : F.pp(g.vsBench * 100)}</td></tr>`));
+}
+
+function campaignTable(R){
+  if (!R.campaigns.length) return `<p>${miss(R.missing.ads || { need: "ad exports", who: "Ads person" })}</p>`;
+  const rows = R.campaigns.map(c => `<tr><td>${esc(c.campaign)}</td><td class="n">${c.mixedCur ? "mixed" : `${esc(c.currency)} ${c.spend.toLocaleString("en-US", { maximumFractionDigits: 2 })}`}</td><td class="n">${F.usd(c.usd)}</td><td class="n">${F.int(c.views)}</td><td class="n">${F.int(c.reach)}</td><td class="n">${F.usd(c.cpm)}</td><td class="n">${F.pct(c.pctPaid)}</td><td class="n">${c.follows == null ? miss(R.missing.adFollows) : F.int(c.follows)}</td><td class="n">${c.cpf == null ? "—" : F.usd(c.cpf)}</td></tr>`);
+  rows.push(`<tr class="total"><td>Total</td><td></td><td class="n">${F.usd(R.T.adSpend)}</td><td class="n">${F.int(R.T.paidViews)}</td><td class="n">${F.int(R.campaigns.reduce((s, c) => s + c.reach, 0))}</td><td class="n">${F.usd(R.T.adsCPM)}</td><td class="n">100%</td><td class="n">${F.int(R.T.adFollows)}</td><td class="n">${F.usd(R.T.costPerFollow)}</td></tr>`);
+  return tbl("t-camp", ["Campaign", N("Spend (original)"), N("Spend (USD)"), N("Views"), N("Reach*"), N("CPM"), N("% of paid views"), N("Follows"), N("Cost / follow")], rows)
+    + `<p class="small dim">*Reach is summed across ads, so people reached by two ads are counted twice.</p>`;
+}
+
+function rundownHTML(rep, R){
+  return `<div class="sec"><h2>Rundown</h2>
+    <div class="card">
+      <p class="sub" style="margin:0 0 12px">Claude writes this from the numbers above — it never calculates anything itself. Copy the prompt, paste it into Claude, then paste the answer back here so it's saved with the report.</p>
+      <div class="row noprint" style="margin-bottom:12px"><button class="btn pink" id="prompt">Copy prompt for Claude</button><button class="btn ghost sm" id="editRun">${rep.rundown ? "Edit rundown" : "Paste rundown"}</button></div>
+      <div id="runEdit" hidden><textarea id="runText" placeholder="Paste Claude's rundown here (Markdown is fine)">${esc(rep.rundown || "")}</textarea><div class="row" style="margin-top:8px"><button class="btn" id="runSave">Save rundown</button></div></div>
+      <div class="rundown" id="runView">${rep.rundown ? md(rep.rundown) : `<p class="muted">No rundown yet.</p>`}</div>
+    </div></div>`;
+}
+
+function notesHTML(rep, R, D){
+  const imps = (rep.importIds || []).map(i => D.imports[i]).filter(Boolean);
+  const fxUsed = [...new Set([...R.rows.flatMap(r => r.ads.map(a => a.currency)), ...R.influencers.map(l => l.currency), ...R.eventCosts.map(l => l.currency), ...(R.other || []).map(l => l.currency)])].filter(c => c && c !== "USD");
+  const missing = Object.values(R.missing);
+  return `<div class="sec"><h2>Notes</h2><div class="card small" style="line-height:1.7">
+    <div><b>Data date:</b> ${F.dateY(R.dataDate)} — Instagram numbers and ad exports should both be pulled this day.</div>
+    <div><b>Ad exports:</b> ${imps.length ? imps.map(i => `${esc(i.name)} (${F.date(i.rangeStart)}–${F.date(i.rangeEnd)}, ${i.level} level)`).join(" · ") : "none"}</div>
+    <div><b>FX:</b> ${fxUsed.length ? fxUsed.map(c => `1 ${c} = ${R.fx[c] == null ? "?" : "$" + (+R.fx[c]).toFixed(6)}`).join(" · ") : "all USD"}</div>
+    <div><b>Engagement rate</b> = (likes + comments + saves + shares) ÷ views. Instagram views include ad views; organic = views − ad views. Paid views are ad Views, never impressions.</div>
+    <div><b>Time zones:</b> post dates in New York time; Instagram account insights count days in Pacific time.</div>
+    ${rep.type === "week" ? `<div><b>Ads on older posts</b> count toward spend and paid views as their own rows; their posts' Instagram views stay with the week they were posted.</div>` : ""}
+    ${missing.length ? `<div><b>Missing:</b> ${missing.map(m => `${esc(m.need)} (${esc(m.who)})`).join(" · ")}</div>` : ""}
+  </div></div>`;
+}
+
+function weeklyHTML(rep, R, P, D){
+  const T = R.T, A = R.account || {};
+  const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
+  const accMiss = { need: "account numbers from the IG dashboard", who: "Account insights (§2.4)" };
+  const prevName = P ? `${P.rep.name}` : "Last week";
+  const tgtNote = `${F.big(D.settings.target.views)} per ${D.settings.target.period}, prorated to ${F.big(A.weekTarget)} for ${A.days} days`;
+  const nc = [R.breakdown[0], R.breakdown[1]];
+  const summary = [
+    ["Views (account)", or(A.views, F.int, accMiss), A.views != null ? `${F.pct(A.pctTarget)} of target (${tgtNote}) · ${cmpCell(C["Account views"])}` : "", C["Account views"]?.status],
+    ["Account interactions", or(A.interactions, F.int, accMiss), cmpCell(C["Account interactions"]), C["Account interactions"]?.status],
+    ["Account eng. rate", or(A.er, F.pct), cmpCell(C["Account eng. rate"]), C["Account eng. rate"]?.status],
+    ["Post eng. rate (per view)", vsBench(T.er, R.bench), `benchmark ${F.pct(R.bench)} · ${cmpCell(C["Eng. rate (per view)"])}`, C["Eng. rate (per view)"]?.status],
+    ["Male / Female", A.malePct != null || A.femalePct != null ? `${F.pct(A.malePct)} / ${F.pct(A.femalePct)}` : miss(accMiss), "", ""],
+    ["Followers increase (net)", or(A.netFollowers, F.int, accMiss), `follows from this week's posts: ${F.int(T.postFollows)}`, ""],
+    ["% views followers / non-followers", A.followersPct != null || A.nonFollowersPct != null ? `${F.pct(A.followersPct)} / ${F.pct(A.nonFollowersPct)}` : miss(accMiss), "", ""],
+    ["Organic views", F.int(T.organicViews), cmpCell(C["Organic views"]), C["Organic views"]?.status],
+    ["Paid views", F.int(T.paidViews), cmpCell(C["Paid views"]), C["Paid views"]?.status],
+    ["Ad spend", F.usd(T.adSpend), cmpCell(C["Ad spend (USD)"]), C["Ad spend (USD)"]?.status],
+    ["Ads CPM", or(T.adsCPM, F.usd, R.missing.ads), cmpCell(C["Ads CPM"]), C["Ads CPM"]?.status],
+    ["Blended CPM", or(T.blendedCPM, F.usd), (R.withoutCollabs ? `without collab posts: ${F.usd(R.withoutCollabs.blendedCPM)} · ` : "") + cmpCell(C["Blended CPM"]), C["Blended CPM"]?.status],
+    ["Cost per follow (ads)", or(T.costPerFollow, F.usd, R.missing.adFollows || (T.adFollows === 0 ? { need: "ad follows (none recorded)", who: "Ads person" } : null)), cmpCell(C["Cost per follow"]), C["Cost per follow"]?.status],
+  ].map(([m, v, vs, s]) => `<tr><td>${m}</td><td class="n">${v}</td><td class="wrap">${vs || ""}</td><td>${s || ""}</td></tr>`);
+
+  return `
+    <div class="sec noprint">${flagsHTML(R, 4)}</div>
+    <div class="sec">${tiles([
+      ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
+      ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
+      ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}`],
+      ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
+      ["Ad spend", F.usd(T.adSpend), `${F.int(T.paidViews)} paid views`],
+      ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
+    ])}</div>
+    ${R.dominant ? `<div class="sec"><div class="flag warn"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post — ${link(R.dominant, 60)} — drove ${F.pct(R.dominant.views / T.postViews)} of this week's post views.${R.withoutCollabs ? ` Without collab posts: ${F.int(R.withoutCollabs.views)} views, blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div></div>` : ""}
+    <div class="sec"><h2>Summary</h2>${tbl("t-sum", ["Metric", N("Value"), `vs target / ${esc(prevName)}`, "Status"], summary)}</div>
+    <div class="sec"><h2>This week's posts</h2>${R.rows.length ? weeklyPostTable(R) : `<div class="empty">${miss(R.missing.posts || { need: "posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}</div>
+    <div class="sec grid g2">
+      <div><h2>Nancy vs collab</h2>${tbl("t-nc", ["", N("Posts"), N("Views"), N("% of views"), N("Eng. rate")], nc.map(g => `<tr><td>${g.name}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.pct(T.postViews ? g.views / T.postViews : null)}</td><td class="n">${vsBench(g.er, R.bench)}</td></tr>`))}</div>
+      <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
+    </div>
+    <div class="sec"><h2>This week vs ${P ? esc(prevName) : "last week"}</h2>
+      ${P ? cmpTable("t-wow", R, P, "This week", prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
+      <div class="row noprint small" style="margin-top:10px"><span class="muted">Compare with</span><select id="prevPick"><option value="">Automatic (week before)</option>${Object.values(D.reports).filter(r => r.type === "week" && r.id !== rep.id).sort((a, b) => a.start < b.start ? 1 : -1).map(r => `<option value="${r.id}" ${rep.prevId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+    </div>
+    <div class="sec"><h2>Rankings</h2>${rankHTML(R)}</div>
+    <div class="sec"><h2>Ad campaigns</h2>${campaignTable(R)}</div>
+    ${rundownHTML(rep, R)}
+    ${notesHTML(rep, R, D)}`;
+}
+
+function eventHTML(rep, R, P, D){
+  const T = R.T, S = R.score;
+  const [c1] = evColours(rep);
+  const evRows = R.rows.map((r, i) => `<tr class="${r.kind === "extra" ? "extra" : r.adOnly ? "adrow" : ""}">
+    <td class="n">${i + 1}</td><td>Instagram</td><td>${esc(r.format)}</td><td class="cap">${link(r, 40)}</td><td>${chip(r.boosted)}</td>
+    <td class="n">${r.spend ? F.usd(r.spend) : "—"}</td><td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${F.int(r.paid)}</td>
+    <td class="n">${r.cpm == null ? "—" : F.usd(r.cpm)}</td><td class="small">${esc(KIND[r.kind])}${r.owner ? ` (${esc(r.owner)})` : ""}${r.kind === "post" && r.collab ? esc(r.account) : ""}</td></tr>`);
+  evRows.push(`<tr class="total"><td colspan="5">Total Spend</td><td class="n">${F.usd(T.adSpend)}</td><td class="n">${F.int(T.totalViews)}</td><td class="n">${F.int(T.organicViews)}</td><td class="n">${F.int(T.paidViews)}</td><td class="n">${F.usd(T.adsCPM)}</td><td></td></tr>`);
+
+  const spendBlock = [
+    ["Total Spend", F.usd(T.totalSpend)],
+    ["Ads", F.usd(T.adSpend)],
+    ["Event (non-ad)", T.nonAd == null ? miss({ need: "influencer and event costs", who: "Event costing person" }) : F.usd(T.nonAd)],
+    ["Total impressions (views)", F.int(T.totalViews)],
+    ["Organic impressions", `${F.int(T.organicViews)} <span class="muted">(${F.pct(T.pctOrganic)})</span>`],
+    ["Boosted impressions", `${F.int(T.paidViews)} <span class="muted">(${F.pct(T.pctPaid)})</span>`],
+    ["Organic only", T.organicOnly == null ? "<span class='muted'>blank — no event cost</span>" : "$" + T.organicOnly.toFixed(5)],
+    ["Organic CPM", T.organicCPM == null ? "<span class='muted'>blank — no event cost</span>" : F.usd(T.organicCPM)],
+    ["Ads only", T.adsOnly == null ? "N/A" : "$" + T.adsOnly.toFixed(5)],
+    ["Ads CPM", T.adsCPM == null ? "N/A" : F.usd(T.adsCPM)],
+    ["Blended CPM", `<b>${F.usd(T.blendedCPM)}</b>`],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
+
+  const costSplit = [
+    ["Influencer cost", or(T.influencerCost, F.usd, R.missing.influencers)],
+    ["Event cost (excl. influencers & ads)", or(T.eventCost, F.usd, R.missing.eventCosts)],
+    ["Non-ad total", or(T.nonAd, F.usd)],
+    ["Ad spend", F.usd(T.adSpend)],
+    ["Total Spend", `<b>${F.usd(T.totalSpend)}</b>`],
+    ["Influencer cost per 1,000 collab views", or(T.influencerPer1kCollab, F.usd, T.influencerCost == null ? R.missing.influencers : null)],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
+
+  const engRows = R.contentRows.map(r => `<tr class="${r.kind === "extra" ? "extra" : ""}"><td>${F.date(r.date)}</td><td>${who(r)}</td><td>${esc(r.format)}</td><td class="cap">${link(r, 38)}</td><td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.reach)}</td><td class="n">${F.int(r.likes)}</td><td class="n">${F.int(r.comments)}</td><td class="n">${F.int(r.saves)}</td><td class="n">${F.int(r.shares)}</td><td class="n">${F.int(r.interactions)}</td><td class="n">${vsBench(r.er, R.bench)}</td><td class="n">${F.int(r.visits)}</td><td class="n">${F.int(r.follows)}</td><td>${chip(r.boosted)}</td></tr>`);
+
+  const ss = R.shareability;
+  const score = [
+    ["Total views", `${F.int(T.totalViews)} — ${F.pct(T.pctPaid)} paid / ${F.pct(T.pctOrganic)} organic`],
+    ["Total reach", `${F.int(S.reachNancy + S.reachCollab)} — Nancy ${F.int(S.reachNancy)} / collab ${F.int(S.reachCollab)} <span class="dim">(summed across posts)</span>`],
+    ["Total engagements", `${F.int(T.interactions)} — ${F.int(T.likes)} likes · ${F.int(T.comments)} comments · ${F.int(T.saves)} saves · ${F.int(T.shares)} shares`],
+    ["Eng. rate (per view)", `organic ${vsBench(S.erOrganic, R.bench)} · boosted ${vsBench(S.erBoosted, R.bench)} · Nancy ${vsBench(S.erNancy, R.bench)} · collab ${vsBench(S.erCollab, R.bench)}`],
+    ["Content mix", `${F.pct(S.pctViewsNancy)} of views from Nancy posts · ${F.pct(S.pctEngCollab)} of engagements from collab posts`],
+    ["Ad CPM by campaign", R.campaigns.length ? R.campaigns.map(c => `${esc(c.campaign)} ${F.usd(c.cpm)}`).join(" · ") : miss(R.missing.ads)],
+    ["Blended CPM", F.usd(T.blendedCPM)],
+    ["Cost per engagement", F.usd(T.costPerEngagement)],
+    ["Follows from ads", T.adFollows == null ? miss(R.missing.adFollows || R.missing.ads) : `${F.int(T.adFollows)} · ${F.usd(T.costPerFollow)} per follow`],
+    ["Follows from posts", F.int(T.postFollows)],
+    ["Shares + saves", `${F.int(ss.total)}${ss.top ? ` — top post had ${F.pct(ss.top.pct)} (${link(ss.top.row, 30)})${ss.top.pct > 0.5 ? " <b>· one post drove most of them</b>" : ""}` : ""}`],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="wrap">${v}</td></tr>`);
+
+  const otherEvents = Object.values(D.reports).filter(r => r.type === "event" && r.id !== rep.id);
+  return `
+    <div class="sec noprint">${flagsHTML(R, 4)}</div>
+    <div class="sec">${tiles([
+      ["Total views", F.big(T.totalViews), `${F.pct(T.pctOrganic)} organic`],
+      ["Total spend", F.usd(T.totalSpend), `ads ${F.usd(T.adSpend)} · non-ad ${F.usd(T.nonAd)}`],
+      ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
+      ["Eng. rate", F.pct(T.er), `benchmark ${F.pct(R.bench)}`],
+      ["Engagements", F.big(T.interactions), `${F.usd(T.costPerEngagement)} each`],
+      ["Follows", F.int((T.adFollows || 0) + T.postFollows), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
+    ])}</div>
+    <div class="sec"><h2>Event table</h2>
+      ${R.rows.length ? tbl("t-event", ["Sr. no.", "Platform", "Format", "Link", "Boosted", N("Amount spent (USD)"), N("Total views"), N("Organic views"), N("Boosted views"), N("Boosted CPM"), "Note"], evRows, { ev: true })
+        : `<div class="empty">${miss({ need: "the event's posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}
+      <p class="small dim">Order: event posts → extra posts (shaded) → separate ad versions → ad-only rows → campaign rows.</p>
+    </div>
+    <div class="sec grid g2">
+      <div><h2>Total spend</h2>${tbl("t-spend", ["", N("")], spendBlock)}</div>
+      <div><h2>Cost split</h2>${tbl("t-cost", ["", N("USD")], costSplit)}
+        ${R.influencers.length ? `<div style="margin-top:14px">${tbl("t-infl", ["Creator", "Deliverables", N("Fee"), N("USD")], R.influencers.map(l => `<tr><td>${esc(l.creator)}</td><td class="cap">${esc(l.deliverables)}</td><td class="n">${esc(l.currency)} ${F.int(l.fee)}</td><td class="n">${F.usd(l.usd)}</td></tr>`))}</div>` : ""}
+        ${R.byCategory.length ? `<div style="margin-top:14px">${tbl("t-cat", ["Event cost category", N("Lines"), N("USD")], R.byCategory.map(c => `<tr><td>${esc(c.category)}</td><td class="n">${c.lines}</td><td class="n">${F.usd(c.usd)}</td></tr>`))}</div>` : ""}
+      </div>
+    </div>
+    <div class="sec"><h2>Ad spend by campaign</h2>${campaignTable(R)}</div>
+    <div class="sec"><h2>Content performance</h2>${breakdownTable("t-break", R.breakdown, R.bench)}${T.extra ? `<p class="small dim">Includes the ${T.extra} extra post${T.extra > 1 ? "s" : ""}. Ad-only rows have no engagement data, so they're left out.</p>` : ""}</div>
+    <div class="sec"><h2>Event scorecard</h2>${tbl("t-score", ["", ""], score)}</div>
+    <div class="sec"><h2>Rankings — by eng. rate</h2>${rankHTML(R)}</div>
+    ${rundownHTML(rep, R)}
+    <div class="sec"><h2>Engagement by post</h2>${tbl("t-eng", ["Date", "Account", "Format", "Content / link", N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Interactions"), N("Eng. rate"), N("Profile visits"), N("Follows"), "Boosted"], engRows)}</div>
+    <div class="sec"><h2>Compare with another event</h2>
+      <div class="row noprint small" style="margin-bottom:10px"><select id="cmpPick"><option value="">Choose an event…</option>${otherEvents.map(r => `<option value="${r.id}" ${rep.compareId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+      ${P ? cmpTable("t-cmp", R, P, rep.name, P.rep.name) : `<p class="small muted">Pick an earlier event to see this one against it.</p>`}
+    </div>
+    ${notesHTML(rep, R, D)}`;
+}
+
+function wireReport(body, rep, R, P, D){
+  body.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => copy(tableTSV(document.getElementById(b.dataset.copy)), "Table copied — paste into Sheets"));
+  const pr = body.querySelector("#prompt");
+  if (pr) pr.onclick = () => copy(E.rundownPrompt(R, P), "Prompt copied — paste it into Claude");
+  const er = body.querySelector("#editRun");
+  if (er) er.onclick = () => { body.querySelector("#runEdit").hidden = false; body.querySelector("#runText").focus(); };
+  const rs = body.querySelector("#runSave");
+  if (rs) rs.onclick = () => { put("ss.report." + rep.id, { ...rep, rundown: body.querySelector("#runText").value }); render(); toast("Rundown saved"); };
+  const pp = body.querySelector("#prevPick");
+  if (pp) pp.onchange = () => { put("ss.report." + rep.id, { ...rep, prevId: pp.value || null }); render(); };
+  const cp = body.querySelector("#cmpPick");
+  if (cp) cp.onchange = () => { put("ss.report." + rep.id, { ...rep, compareId: cp.value || null }); render(); };
+}
+
+function downloadCSV(rep){
+  const tables = [...document.querySelectorAll("#body table")];
+  if (!tables.length) { location.hash = `#/r/${rep.id}/report`; setTimeout(() => downloadCSV(rep), 100); return; }
+  const parts = tables.map(t => {
+    const h = t.closest(".sec")?.querySelector("h2")?.innerText || "";
+    return [h, ...[...t.rows].map(tr => [...tr.cells].map(c => csvCell(c.innerText.replace(/\s+/g, " ").trim())).join(","))].join("\n");
+  });
+  const blob = new Blob([parts.join("\n\n")], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${(rep.name || "report").replace(/[^\w]+/g, "-")}-${rep.dataDate || ""}.csv`;
+  a.click();
+}
+
+/* tiny Markdown for the rundown */
+function md(src){
+  const lines = String(src).replace(/\r/g, "").split("\n");
+  let out = "", inList = false, tbl = [];
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>");
+  const flushT = () => {
+    if (!tbl.length) return;
+    const rows = tbl.filter(l => !/^\s*\|?\s*:?-{2,}/.test(l)).map(l => l.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim()));
+    out += `<div class="tw"><table><thead><tr>${rows[0].map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    tbl = [];
+  };
+  for (const l of lines) {
+    if (/^\s*\|/.test(l)) { if (inList) { out += "</ul>"; inList = false; } tbl.push(l); continue; }
+    flushT();
+    const h = l.match(/^(#{1,3})\s+(.*)/);
+    if (h) { if (inList) { out += "</ul>"; inList = false; } out += `<h3>${inline(h[2])}</h3>`; continue; }
+    const li = l.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/);
+    if (li) { if (!inList) { out += "<ul>"; inList = true; } out += `<li>${inline(li[1])}</li>`; continue; }
+    if (inList) { out += "</ul>"; inList = false; }
+    if (l.trim()) out += `<p>${inline(l)}</p>`;
+  }
+  flushT(); if (inList) out += "</ul>";
+  return out;
+}
+
+/* ───────── add data ───────── */
+function renderData(body, rep, R, D){
+  const isEv = rep.type === "event";
+  const save = patch => { put("ss.report." + rep.id, { ...db().reports[rep.id], ...patch }); };
+  const posts = R.contentRows;
+  const imps = (rep.importIds || []).map(i => D.imports[i]).filter(Boolean);
+  const freeImports = Object.values(D.imports).filter(i => !(rep.importIds || []).includes(i.id));
+  const fxCur = Object.keys(R.fx);
+  const colours = Object.keys(E.EVENT_COLOURS);
+  const candidates = isEv ? Object.values(D.posts).filter(p => !(rep.postIds || []).includes(p.id)).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 300) : [];
+
+  body.innerHTML = `
+  <div class="sec"><h2>Report details</h2><div class="card"><div class="fields">
+    <label class="f">Name<input type="text" id="d-name" value="${esc(rep.name || "")}"></label>
+    <label class="f">${isEv ? "Start" : "Week starts"}<input type="date" id="d-start" value="${rep.start || ""}"></label>
+    <label class="f">${isEv ? "End" : "Week ends"}<input type="date" id="d-end" value="${rep.end || ""}"></label>
+    <label class="f">Data pulled on<input type="date" id="d-data" value="${rep.dataDate || ""}"></label>
+    <label class="f">Colour<select id="d-colour"><option value="">Default</option>${colours.map(c => `<option ${rep.colour === c ? "selected" : ""}>${c}</option>`).join("")}</select></label>
+  </div>
+  <details style="margin-top:14px"><summary>FX rates for this report (USD per 1 unit)</summary>
+    <div class="fields" style="margin-top:10px">${fxCur.filter(c => c !== "USD").map(c => `<label class="f">${c}<input type="text" data-fx="${c}" value="${R.fx[c]}"></label>`).join("")}
+    <label class="f">Add currency<input type="text" id="fx-new" placeholder="e.g. JPY=0.0067"></label></div>
+    <p class="small dim">Stored with the report so it can be reproduced. HKD default is the 7.8 peg (Cancun used 7.84344).</p>
+  </details>
+  <div class="row" style="margin-top:14px"><button class="btn danger sm" id="d-del">Delete report</button></div>
+  </div></div>
+
+  <div class="sec"><h2>1 · Posts</h2><div class="card">
+    <div class="step"><div class="num ${posts.length ? "done" : ""}">1</div><div class="grow">
+      <div class="who">Organic person</div>
+      <h3>Paste the post table — one row per post</h3>
+      <p class="sub">Copy the rows straight from Google Sheets (with the header row). Columns: <span class="kbd">${TEMPLATES.posts.split("\t").join(" · ")}</span>. ${isEv ? "Posts pasted here are added to this event." : "Posts dated inside the week are included automatically."} Pasting a post again adds a new pull date — nothing is overwritten.</p>
+      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="posts">Copy header row</button><label class="small muted">Pulled on <input type="date" id="p-date" value="${rep.dataDate || today()}"></label></div>
+      <textarea id="p-text" placeholder="Paste here…"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="p-go">Add posts</button></div>
+      <div id="p-res" class="result"></div>
+      ${posts.length ? `<div class="list">${posts.map(r => `<div class="li"><span class="chip k">${esc(r.format || "?")}</span>${who(r)}<span class="grow">${link(r, 70)}</span><span class="small muted">${F.int(r.views)} views · ${F.date(r.pulled)}</span>${isEv && r.kind === "post" ? `<button class="x" data-rmpost="${r.id}" title="Remove from this event">×</button>` : !isEv ? `<button class="x" data-expost="${r.id}" title="Leave out of this week">×</button>` : `<span class="chip k">extra</span>`}</div>`).join("")}</div>` : ""}
+      ${isEv && candidates.length ? `<details style="margin-top:12px"><summary>Add posts already in the library (${candidates.length})</summary>
+        <div class="list">${candidates.map(p => `<label class="li"><input type="checkbox" data-addpost="${p.id}"><span class="small muted">${F.date(p.date)}</span><span class="grow">${esc(p.content || p.id)}</span><span class="small muted">${esc(p.collab ? p.account : "Nancy")}</span></label>`).join("")}</div>
+        <button class="btn sm" id="p-add" style="margin-top:8px">Add selected</button></details>` : ""}
+      ${!isEv && (rep.exclude || []).length ? `<p class="small muted">Left out: ${(rep.exclude || []).map(i => `<a href="#" data-unex="${i}">${esc(D.posts[i]?.content?.slice(0, 30) || i)} ↺</a>`).join(" · ")}</p>` : ""}
+    </div></div>
+  </div></div>
+
+  <div class="sec"><h2>2 · Ads</h2><div class="card">
+    <div class="step"><div class="num ${imps.length ? "done" : ""}">2</div><div class="grow">
+      <div class="who">Ads person</div>
+      <h3>Upload the Meta Ads Manager export(s) — ad level</h3>
+      <p class="sub">Level: <b>Ad</b>. Date range: <b>${isEv ? "lifetime through the data date" : "the report week"}</b>. Export <b>every</b> campaign that promoted the content. Needed: Ad name, Campaign name, Ad set name, Amount spent, <b>Views</b>, Reporting starts/ends. Best: Instagram post ID or permalink, Impressions, Reach, Instagram follows.</p>
+      <div class="row" style="margin:10px 0"><input type="file" id="a-file" accept=".csv,.tsv,.txt" multiple></div>
+      <details><summary>…or paste the export</summary><textarea id="a-text" placeholder="Paste CSV or Sheets rows with header"></textarea><button class="btn sm" id="a-paste" style="margin-top:8px">Add export</button></details>
+      <div id="a-res" class="result"></div>
+      ${imps.length ? `<div class="list">${imps.map(i => `<div class="li"><span class="chip k">${i.level}</span><span class="grow"><b>${esc(i.name)}</b> · ${i.rows.length} rows · ${F.date(i.rangeStart)}–${F.date(i.rangeEnd)}${i.warnings?.length ? ` · <span class="down">${esc(i.warnings.join(" "))}</span>` : ""}</span><button class="x" data-rmimp="${i.id}" title="Detach from this report">×</button></div>`).join("")}</div>` : ""}
+      ${freeImports.length ? `<div class="row small" style="margin-top:10px"><span class="muted">Attach an export already uploaded:</span><select id="a-attach"><option value="">Choose…</option>${freeImports.map(i => `<option value="${i.id}">${esc(i.name)} (${F.date(i.rangeStart)}–${F.date(i.rangeEnd)})</option>`).join("")}</select></div>` : ""}
+    </div></div>
+  </div></div>
+
+  ${isEv ? `
+  <div class="sec"><h2>3 · Costs</h2><div class="grid g2">
+    <div class="card"><div class="step"><div class="num ${(rep.influencers || []).length ? "done" : ""}">3a</div><div class="grow">
+      <div class="who">Event costing person</div><h3>Influencers</h3>
+      <p class="sub">One row per creator: <span class="kbd">${TEMPLATES.influencers.split("\t").join(" · ")}</span></p>
+      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="influencers">Copy header row</button></div>
+      <textarea id="i-text" placeholder="Paste influencer rows…" style="min-height:80px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="i-add">Add</button><button class="btn ghost sm" id="i-rep">Replace list</button></div>
+      ${costList(rep.influencers || [], "infl", l => `${esc(l.creator)} — ${esc(l.currency)} ${F.int(l.fee)}${l.deliverables ? ` · <span class="muted">${esc(l.deliverables)}</span>` : ""}`)}
+    </div></div></div>
+    <div class="card"><div class="step"><div class="num ${(rep.eventCosts || []).length ? "done" : ""}">3b</div><div class="grow">
+      <div class="who">Event costing person</div><h3>Event costs (no ads, no influencers)</h3>
+      <p class="sub"><span class="kbd">${TEMPLATES.costs.split("\t").join(" · ")}</span>. Categories: ${E.COST_CATEGORIES.join(" · ")}.</p>
+      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="costs">Copy header row</button></div>
+      <textarea id="c-text" placeholder="Paste event cost rows…" style="min-height:80px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="c-add">Add</button><button class="btn ghost sm" id="c-rep">Replace list</button></div>
+      ${costList(rep.eventCosts || [], "cost", l => `<span class="chip k">${esc(l.category)}</span> ${esc(l.item)} — ${l.qty == null ? "" : l.qty + " × "}${esc(l.currency)} ${l.unit}${l.vendor ? ` · <span class="muted">${esc(l.vendor)}</span>` : ""}`)}
+    </div></div></div>
+  </div></div>` : `
+  <div class="sec"><h2>3 · Account numbers</h2><div class="card">
+    <div class="step"><div class="num ${rep.account?.views != null ? "done" : ""}">3</div><div class="grow">
+      <div class="who">IG Professional dashboard › Account insights</div>
+      <h3>This week and last week</h3>
+      <p class="sub">Instagram counts these days in Pacific time. Percentages can be typed as 62 or 62%.</p>
+      <div class="fields" style="margin-top:10px">
+        ${accField("views", "Account views (all content)", rep)}${accField("viewsPrev", "Account views — last week", rep)}
+        ${accField("interactions", "Account interactions", rep)}${accField("interactionsPrev", "Interactions — last week", rep)}
+        ${accField("netFollowers", "Net follower change", rep)}
+        ${accField("followersPct", "% views from followers", rep, true)}${accField("nonFollowersPct", "% views from non-followers", rep, true)}
+        ${accField("malePct", "Male %", rep, true)}${accField("femalePct", "Female %", rep, true)}
+      </div>
+    </div></div>
+  </div></div>
+  <div class="sec"><h2>4 · Other spend (optional)</h2><div class="card">
+    <p class="sub" style="margin-top:0">Non-ad costs tagged to this week (influencer fees, production). Used for Organic CPM and Blended CPM — the report says when it's included.</p>
+    <textarea id="o-text" placeholder="Label	Amount	Currency" style="min-height:70px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="o-add">Add</button></div>
+    ${costList(rep.otherSpend || [], "other", l => `${esc(l.label)} — ${esc(l.currency)} ${l.amount}`)}
+  </div></div>`}
+
+  <div class="sec row"><a class="btn pink" href="#/r/${rep.id}/report">See the report →</a></div>`;
+
+  /* details */
+  const bind = (sel, key, fn = v => v) => { const el = body.querySelector(sel); el.onchange = () => { save({ [key]: fn(el.value) }); render(); }; };
+  const nm = body.querySelector("#d-name");
+  nm.onchange = () => {                                    // pick the event's colours from its name
+    const colour = Object.keys(E.EVENT_COLOURS).find(k => nm.value.toLowerCase().includes(k.toLowerCase()));
+    save({ name: nm.value, fresh: false, ...(colour && rep.fresh ? { colour } : {}) }); render();
+  };
+  if (rep.fresh) { nm.focus(); nm.select(); } bind("#d-start", "start"); bind("#d-end", "end"); bind("#d-data", "dataDate"); bind("#d-colour", "colour");
+  body.querySelectorAll("[data-fx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...R.fx, [el.dataset.fx]: v } }); render(); });
+  body.querySelector("#fx-new").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...R.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
+  body.querySelector("#d-del").onclick = () => { if (confirm(`Delete “${rep.name}”? Posts and ad exports stay in the library.`)) { del("ss.report." + rep.id); location.hash = "#/"; } };
+  body.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => copy(TEMPLATES[b.dataset.tpl] + "\n", "Header row copied — paste it into row 1 of the sheet"));
+
+  /* posts */
+  body.querySelector("#p-go").onclick = () => {
+    const res = body.querySelector("#p-res");
+    const pulled = body.querySelector("#p-date").value || today();
+    const m = E.mapPosts(E.parseTable(body.querySelector("#p-text").value));
+    if (!m.posts.length) { res.className = "result err"; res.innerHTML = esc(m.errors.join(" ") || "Nothing to add — paste rows with the header row."); return; }
+    const existing = db().posts;
+    const merged = E.mergePosts(existing, m.posts, pulled, isEv ? rep.id : null);
+    for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+    const cur = db().reports[rep.id];
+    if (isEv) save({ postIds: [...new Set([...(cur.postIds || []), ...m.posts.map(p => p.id)])], dataDate: cur.dataDate || pulled });
+    const outside = !isEv ? m.posts.filter(p => !p.date || p.date < rep.start || p.date > rep.end).length : 0;
+    render();
+    const r2 = document.getElementById("p-res");
+    r2.className = "result ok";
+    r2.innerHTML = `Added ${m.posts.length} post${m.posts.length > 1 ? "s" : ""} (pulled ${F.date(pulled)}).`
+      + (outside ? ` <span class="down">${outside} dated outside this week — kept in the library, not in this report.</span>` : "")
+      + (m.missingCols.length ? ` <span class="down">Columns not found: ${m.missingCols.join(", ")}.</span>` : "")
+      + (m.errors.length ? ` <span class="down">${esc(m.errors.join(" "))}</span>` : "")
+      + (pulled !== rep.dataDate ? ` <span class="down">Pull date differs from the report's data date (${F.date(rep.dataDate)}).</span>` : "");
+  };
+  body.querySelectorAll("[data-rmpost]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ postIds: (cur.postIds || []).filter(i => i !== b.dataset.rmpost) }); render(); });
+  body.querySelectorAll("[data-expost]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ exclude: [...new Set([...(cur.exclude || []), b.dataset.expost])] }); render(); });
+  body.querySelectorAll("[data-unex]").forEach(b => b.onclick = e => { e.preventDefault(); const cur = db().reports[rep.id]; save({ exclude: (cur.exclude || []).filter(i => i !== b.dataset.unex) }); render(); });
+  const pa = body.querySelector("#p-add");
+  if (pa) pa.onclick = () => { const ids = [...body.querySelectorAll("[data-addpost]:checked")].map(x => x.dataset.addpost); const cur = db().reports[rep.id]; save({ postIds: [...new Set([...(cur.postIds || []), ...ids])] }); render(); };
+
+  /* ads */
+  const addImport = (text, name) => {
+    const imp = E.mapAds(E.parseTable(text), name);
+    const res = document.getElementById("a-res");
+    if (imp.errors.length) { res.className = "result err"; res.innerHTML = `<b>${esc(name)}:</b> ${esc(imp.errors.join(" "))}`; return false; }
+    if (!imp.rows.length) { res.className = "result err"; res.textContent = `${name}: no rows found.`; return false; }
+    const id = uid();
+    put("ss.import." + id, { ...imp, id, uploaded: today(), errors: undefined });
+    const cur = db().reports[rep.id];
+    save({ importIds: [...new Set([...(cur.importIds || []), id])] });
+    return imp;
+  };
+  body.querySelector("#a-file").onchange = async e => {
+    const out = [];
+    for (const f of e.target.files) { const imp = addImport(await f.text(), f.name); if (imp) out.push(`${f.name}: ${imp.rows.length} rows`); else return; }
+    render(); const res = document.getElementById("a-res"); res.className = "result ok"; res.textContent = "Added " + out.join(" · ");
+  };
+  body.querySelector("#a-paste").onclick = () => { const imp = addImport(body.querySelector("#a-text").value, `Pasted export ${today()}`); if (imp) { render(); toast(`Added ${imp.rows.length} ad rows`); } };
+  body.querySelectorAll("[data-rmimp]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ importIds: (cur.importIds || []).filter(i => i !== b.dataset.rmimp) }); render(); });
+  const at = body.querySelector("#a-attach");
+  if (at) at.onchange = () => { if (!at.value) return; const cur = db().reports[rep.id]; save({ importIds: [...new Set([...(cur.importIds || []), at.value])] }); render(); };
+
+  /* costs */
+  const listOp = (key, mapper, replace, ta) => () => {
+    const t = body.querySelector(ta).value;
+    const rows = mapper(E.parseTable(t));
+    if (!rows.length) return toast("Nothing found — paste rows with the header row");
+    const cur = db().reports[rep.id];
+    save({ [key]: replace ? rows : [...(cur[key] || []), ...rows] }); render(); toast(`${rows.length} line${rows.length > 1 ? "s" : ""} ${replace ? "now in the list" : "added"}`);
+  };
+  if (isEv) {
+    body.querySelector("#i-add").onclick = listOp("influencers", E.mapInfluencers, false, "#i-text");
+    body.querySelector("#i-rep").onclick = listOp("influencers", E.mapInfluencers, true, "#i-text");
+    body.querySelector("#c-add").onclick = listOp("eventCosts", E.mapEventCosts, false, "#c-text");
+    body.querySelector("#c-rep").onclick = listOp("eventCosts", E.mapEventCosts, true, "#c-text");
+  } else {
+    body.querySelectorAll("[data-acc]").forEach(el => el.onchange = () => {
+      const cur = db().reports[rep.id];
+      let v = E.num(el.value);
+      if (v != null && el.dataset.pct && v > 1) v = v / 100;          // "62" and "62%" both mean 0.62
+      save({ account: { ...(cur.account || {}), [el.dataset.acc]: v } }); render();
+    });
+    body.querySelector("#o-add").onclick = () => {
+      const lines = body.querySelector("#o-text").value.split("\n").map(l => l.split(/\t|,/).map(s => s.trim())).filter(x => x[0])
+        .map(([label, amount, currency]) => ({ label, amount: E.num(amount), currency: (currency || "USD").toUpperCase() })).filter(l => l.amount != null);
+      if (!lines.length) return toast("Use: label, amount, currency");
+      const cur = db().reports[rep.id]; save({ otherSpend: [...(cur.otherSpend || []), ...lines] }); render();
+    };
+  }
+  const keyOf = { infl: "influencers", cost: "eventCosts", other: "otherSpend" };
+  body.querySelectorAll("[data-rmline]").forEach(b => b.onclick = () => {
+    const [k, i] = b.dataset.rmline.split(":"); const cur = db().reports[rep.id];
+    save({ [keyOf[k]]: (cur[keyOf[k]] || []).filter((_, j) => j !== +i) }); render();
+  });
+}
+function costList(list, k, fmt){
+  return list.length ? `<div class="list">${list.map((l, i) => `<div class="li"><span class="grow">${fmt(l)}</span><button class="x" data-rmline="${k}:${i}">×</button></div>`).join("")}</div>` : "";
+}
+function accField(k, label, rep, pct){
+  const v = rep.account?.[k];
+  const shown = v == null ? "" : pct ? (v * 100).toFixed(2).replace(/\.?0+$/, "") + "%" : v;
+  return `<label class="f">${label}<input type="text" data-acc="${k}" ${pct ? 'data-pct="1"' : ""} value="${shown}"></label>`;
+}
+
+/* ───────── ad matching ───────── */
+function renderMatch(body, rep, R, D){
+  const allPosts = Object.values(D.posts).sort((a, b) => (a.date < b.date ? 1 : -1));
+  const inRep = new Set(R.contentRows.map(r => r.id));
+  const where = new Map();
+  for (const r of R.rows) for (const a of r.ads) where.set(a.key, r);
+  const HOW = { id: "Post ID / permalink", name: "Ad name ≈ caption", manual: "Set by hand", "manual-adonly": "Set by hand", none: "No match" };
+  const rows = R.matchLog.map(m => {
+    const r = where.get(m.ad.key);
+    const opt = p => `<option value="${p.id}" ${rep.adMatch?.[m.ad.key] === p.id ? "selected" : ""}>${inRep.has(p.id) ? "★ " : ""}${esc(F.date(p.date))} · ${esc((p.content || p.id).slice(0, 50))}</option>`;
+    return `<tr class="${m.how === "name" ? "extra" : m.how === "none" ? "adrow" : ""}">
+      <td class="cap">${esc(m.ad.ad)}</td><td class="cap">${esc(m.ad.campaign)}</td><td class="n">${F.int(m.ad.views)}</td><td class="n">${F.usd(m.ad.usd)}</td>
+      <td>${esc(HOW[m.how] || m.how)}</td><td class="small">${r ? `${esc(KIND[r.kind] || (rep.type === "week" ? "This week's post" : "Event post"))}${r.post ? " · " + link(r, 30) : ""}` : ""}</td>
+      <td><select data-match="${m.ad.key}"><option value="">Automatic</option><option value="__adonly" ${rep.adMatch?.[m.ad.key] === "__adonly" ? "selected" : ""}>Ad only (no post)</option>${allPosts.filter(p => inRep.has(p.id)).map(opt).join("")}<optgroup label="Other posts">${allPosts.filter(p => !inRep.has(p.id)).slice(0, 200).map(opt).join("")}</optgroup></select></td></tr>`;
+  });
+  body.innerHTML = `<div class="sec"><h2>How each ad was matched</h2>
+    <p class="sub" style="margin:-4px 0 14px">Order: post ID or permalink in the export → ad name vs caption (“… - Copy” counts as the same ad) → the fit rule: an ad is credited only if the post's paid views stay at or under its Instagram views, smallest ads first. Ads that don't fit ran on a dark-post copy and get their own row. Rows matched by name are shaded — check them. Pick a post by hand to override.</p>
+    ${R.matchLog.length ? tbl("t-match", ["Ad name", "Campaign", N("Views"), N("Spend (USD)"), "Matched by", "Ended up as", "Override"], rows) : `<div class="empty">No ad exports attached yet. <a href="#/r/${rep.id}/data">Add data</a></div>`}
+  </div>`;
+  body.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => copy(tableTSV(document.getElementById(b.dataset.copy)), "Table copied"));
+  body.querySelectorAll("[data-match]").forEach(s => s.onchange = () => {
+    const cur = db().reports[rep.id];
+    const adMatch = { ...(cur.adMatch || {}) };
+    if (s.value) adMatch[s.dataset.match] = s.value; else delete adMatch[s.dataset.match];
+    put("ss.report." + rep.id, { ...cur, adMatch }); render();
+  });
+}
+
+/* ───────── compare any two reports ───────── */
+function renderCompare(D, q){
+  const reps = Object.values(D.reports).sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  const a = D.reports[q.get("a")], b = D.reports[q.get("b")];
+  const opts = sel => reps.map(r => `<option value="${r.id}" ${sel?.id === r.id ? "selected" : ""}>${r.type === "week" ? "Week" : "Event"} · ${esc(r.name)}</option>`).join("");
+  let out = "";
+  if (a && b) {
+    const A = E.buildReport(a, D, D.settings), B = E.buildReport(b, D, D.settings);
+    const side = (X, Y) => X.breakdown.map((g, i) => `<tr><td>${g.name}</td><td class="n">${g.posts} / ${Y.breakdown[i].posts}</td><td class="n">${F.int(g.views)} / ${F.int(Y.breakdown[i].views)}</td><td class="n">${vsBench(g.er, X.bench)} / ${vsBench(Y.breakdown[i].er, X.bench)}</td></tr>`);
+    out = `<div class="sec"><h2>${esc(a.name)} vs ${esc(b.name)}</h2>${cmpTable("t-c", A, B, a.name, b.name)}
+      <p class="small dim">Data dates: ${F.dateY(A.dataDate)} vs ${F.dateY(B.dataDate)}${A.dataDate !== B.dataDate ? " — different pull dates, so older content has had more time to collect views." : ""}</p></div>
+      <div class="sec"><h2>Content breakdown</h2>${tbl("t-cb", ["", N("Posts"), N("Views"), N("Eng. rate")], side(A, B))}</div>`;
+  }
+  app.innerHTML = `<h1>Compare</h1><p class="sub">Any two reports side by side — week vs week, event vs event, or an event against the week it happened in.</p>
+    <div class="card sec row"><select id="ca"><option value="">First report…</option>${opts(a)}</select><span class="muted">vs</span><select id="cb"><option value="">Second report…</option>${opts(b)}</select></div>${out}`;
+  const go = () => { location.hash = `#/compare?a=${document.getElementById("ca").value}&b=${document.getElementById("cb").value}`; };
+  document.getElementById("ca").onchange = go; document.getElementById("cb").onchange = go;
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── library: posts ───────── */
+function renderPosts(D, q){
+  const term = (q.get("q") || "").toLowerCase();
+  const evOf = id => Object.values(D.reports).filter(r => r.type === "event" && (r.postIds || []).includes(id)).map(r => r.name);
+  const list = Object.values(D.posts).filter(p => !term || `${p.content} ${p.account} ${p.id}`.toLowerCase().includes(term)).sort((a, b) => ((a.date || "") < (b.date || "") ? 1 : -1));
+  const rows = list.map(p => {
+    const { snap, date } = E.snapAt(p, null);
+    const pulls = Object.keys(p.snaps || {}).length;
+    return `<tr><td>${F.date(p.date)}</td><td>${who(p)}</td><td>${esc(p.format)}</td><td class="cap">${link(p, 50)}</td><td class="n">${F.int(snap?.views)}</td><td class="small">${F.date(date)}${pulls > 1 ? ` (+${pulls - 1} earlier)` : ""}</td><td>${chip(!!p.boosted)}</td><td class="small">${esc(evOf(p.id).join(", ") || "—")}</td><td><button class="x" data-delp="${p.id}" title="Delete post">×</button></td></tr>`;
+  });
+  app.innerHTML = `<h1>Posts</h1><p class="sub">Every post ever pasted in, stored once by its link. Each paste adds a dated snapshot — older numbers are kept.</p>
+    <div class="sec row"><input type="text" id="ps" placeholder="Search caption, account, link…" value="${esc(q.get("q") || "")}" style="flex:1;max-width:420px"><span class="muted small">${list.length} posts</span></div>
+    <div class="sec">${list.length ? tbl("t-lib", ["Posted", "Account", "Format", "Content", N("Latest views"), "Pulled", "Boosted", "Events", ""], rows) : `<div class="empty">No posts yet — add them inside a report.</div>`}</div>`;
+  const ps = document.getElementById("ps");
+  ps.onchange = () => { location.hash = `#/posts?q=${encodeURIComponent(ps.value)}`; };
+  app.querySelectorAll("[data-delp]").forEach(b => b.onclick = () => { if (confirm("Delete this post from every report?")) { del("ss.post." + b.dataset.delp); render(); } });
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── library: ad exports ───────── */
+function renderAds(D){
+  const used = id => Object.values(D.reports).filter(r => (r.importIds || []).includes(id)).map(r => r.name);
+  const fx = D.settings.fx;
+  const list = Object.values(D.imports).sort((a, b) => ((a.uploaded || "") < (b.uploaded || "") ? 1 : -1));
+  const rows = list.map(i => {
+    const spend = i.rows.reduce((s, r) => s + (E.toUSD(r.spend, r.currency, fx) || 0), 0);
+    const views = i.rows.reduce((s, r) => s + (r.views || 0), 0);
+    return `<tr><td>${esc(i.name)}</td><td>${i.level}</td><td>${F.date(i.rangeStart)} → ${F.date(i.rangeEnd)}</td><td class="n">${i.rows.length}</td><td class="n">${F.usd(spend)}</td><td class="n">${F.int(views)}</td><td class="n">${F.usd(views ? spend / views * 1000 : null)}</td><td class="small">${esc(used(i.id).join(", ") || "—")}</td><td class="small">${esc((i.warnings || []).join(" "))}</td><td><button class="x" data-deli="${i.id}">×</button></td></tr>`;
+  });
+  app.innerHTML = `<h1>Ad exports</h1><p class="sub">Every Meta Ads Manager export uploaded. One export can feed several reports (a weekly report and an event report). Spend shown at default FX.</p>
+    <div class="sec">${list.length ? tbl("t-imp", ["File", "Level", "Range", N("Rows"), N("Spend (USD)"), N("Views"), N("CPM"), "Used in", "Warnings", ""], rows) : `<div class="empty">No exports yet — upload them inside a report.</div>`}</div>`;
+  app.querySelectorAll("[data-deli]").forEach(b => b.onclick = () => { if (confirm("Delete this export? Reports using it will lose its ads.")) { del("ss.import." + b.dataset.deli); render(); } });
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── settings ───────── */
+function renderSettings(D){
+  const s = D.settings;
+  app.innerHTML = `<h1>Settings</h1><p class="sub">Defaults for new reports. Each report keeps its own copy of the FX rates, so changing them here doesn't change old reports.</p>
+  <div class="sec grid g2">
+    <div class="card"><h3>Targets &amp; benchmarks</h3><div class="fields" style="margin-top:10px">
+      <label class="f">Account views target<input type="text" id="s-tv" value="${s.target.views}"></label>
+      <label class="f">Per<select id="s-tp">${["week", "month", "quarter"].map(p => `<option ${s.target.period === p ? "selected" : ""}>${p}</option>`).join("")}</select></label>
+      <label class="f">Eng. rate benchmark %<input type="text" id="s-b" value="${(s.benchmark * 100).toFixed(2)}"></label>
+      <label class="f">Normal ads CPM from $<input type="text" id="s-c0" value="${s.cpmRange[0]}"></label>
+      <label class="f">to $<input type="text" id="s-c1" value="${s.cpmRange[1]}"></label>
+    </div><p class="small dim">Weekly reports prorate the target to the report's days. Benchmark: brand accounts ~1.9% per view (beauty ~2.1%), Dash Social 2026.</p></div>
+    <div class="card"><h3>Default FX (USD per 1 unit)</h3><div class="fields" style="margin-top:10px">
+      ${Object.entries(s.fx).filter(([c]) => c !== "USD").map(([c, v]) => `<label class="f">${c}<input type="text" data-sfx="${c}" value="${v}"></label>`).join("")}
+    </div></div>
+    <div class="card"><h3>Sync &amp; backup</h3>
+      <p class="sub">Status: <b>${document.getElementById("sync").innerText}</b>. Data is shared through the Vercel API (Upstash). If it says “This browser only”, the API isn't live yet and everything is saved in this browser.</p>
+      <div class="row" style="margin-top:12px"><button class="btn sm" id="bk">Download backup</button><label class="btn ghost sm">Restore backup<input type="file" id="rs" accept=".json" hidden></label><button class="btn ghost sm" id="pc">Team passcode</button></div>
+    </div>
+  </div>`;
+  const saveS = patch => { put("ss.settings", { ...(docs["ss.settings"] || {}), ...patch }); render(); };
+  document.getElementById("s-tv").onchange = e => saveS({ target: { ...s.target, views: E.num(e.target.value) || s.target.views } });
+  document.getElementById("s-tp").onchange = e => saveS({ target: { ...s.target, period: e.target.value } });
+  document.getElementById("s-b").onchange = e => saveS({ benchmark: (E.num(e.target.value) || 1.9) / 100 });
+  document.getElementById("s-c0").onchange = e => saveS({ cpmRange: [E.num(e.target.value) || 4, s.cpmRange[1]] });
+  document.getElementById("s-c1").onchange = e => saveS({ cpmRange: [s.cpmRange[0], E.num(e.target.value) || 17] });
+  app.querySelectorAll("[data-sfx]").forEach(el => el.onchange = () => saveS({ fx: { ...s.fx, [el.dataset.sfx]: E.num(el.value) } }));
+  document.getElementById("bk").onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(docs, null, 1)], { type: "application/json" }));
+    a.download = `social-stats-backup-${today()}.json`; a.click();
+  };
+  document.getElementById("rs").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const data = JSON.parse(await f.text()); let n = 0;
+      for (const [k, v] of Object.entries(data)) if (/^ss\./.test(k) && v && (!docs[k] || (v.updatedAt || 0) > (docs[k].updatedAt || 0))) { docs[k] = v; sync.queue(k); n++; }
+      saveLocal(); render(); toast(`Restored ${n} newer records`);
+    } catch { toast("That file isn't a Social Stats backup"); }
+  };
+  document.getElementById("pc").onclick = askPass;
+}
+
+render();
+sync.pull();
+</script>
+</html>
