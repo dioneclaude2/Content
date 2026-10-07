@@ -141,7 +141,7 @@ console.log("invoice + costing tests passed");
 
 // ── importing the team's weekly report sheet (27 Sep – 3 Oct 2026) ──
 import { readFileSync } from "node:fs";
-const S = E.parseReportSheet(readFileSync(new URL("./fixture-weekly-sheet.csv", import.meta.url), "utf8"));
+const S = E.parseReportSheet(readFileSync(new URL("./fixtures/weekly-sheet.csv", import.meta.url), "utf8"));
 assert.deepEqual(S.range, { start: "2026-09-27", end: "2026-10-03" });
 assert.equal(S.pulled, "2026-10-06");
 assert.equal(S.type, "week");
@@ -164,3 +164,34 @@ assert.equal(SR.T.interactions, 7065);
 assert.equal(E.r2(SR.T.er * 100), 2.58);
 assert.equal(E.r2(SR.T.adsCPM), 53.37);
 console.log("sheet import tests passed");
+
+// ── the team's event sheets: every event's totals must equal the sheet's own Total Spend rows ──
+const costsBy = E.parseEventTotals(readFileSync(new URL("./fixtures/event-totals.csv", import.meta.url), "utf8"));
+assert.equal(costsBy["ASAP HK"].influencerCost, 5097.2);
+const sheetTotals = {   // from the Total Spend tab
+  "ASAP HK": { spend: 13887.21, blended: 9.07, organicCPM: 16.77, adsCPM: 4.97 },
+  "US Open": { spend: 123433.30, blended: 11.70, organicCPM: 16.37, adsCPM: 8.24 },
+  "Nancy OOO (Cancun)": { spend: 353041.57, blended: 42.51, organicCPM: 154.75, adsCPM: 8.29 },
+  "London Fashion Week": { spend: 14594.61, blended: 107.59, organicCPM: 107.59, adsCPM: null },
+};
+for (const g of ["0", "1433892578", "868315963", "392856255"]) {
+  const ev = E.parseEventSheet(readFileSync(new URL(`./fixtures/event-${g}.csv`, import.meta.url), "utf8"));
+  const posts = E.mergePosts({}, ev.posts, ev.dataDate || "2026-10-05");
+  const imp = { id: "i" + g, name: "sheet", level: "ad", hasViews: true, hasFollows: false, rows: ev.ads.map((a, i) => ({ ...a, i })) };
+  const c = costsBy[ev.name] || {};
+  const R = E.buildReport({ id: "e" + g, type: "event", name: ev.name, ...ev.range, dataDate: ev.dataDate, postIds: ev.postIds, importIds: [imp.id],
+    influencers: [{ creator: "Influencer invoices", fee: c.influencerCost, currency: "USD" }], eventCosts: [{ category: "Other", item: "Event costs", unit: c.eventCost, currency: "USD" }] },
+    { posts, imports: { [imp.id]: imp }, reports: {} });
+  const x = ev.expect, t = sheetTotals[ev.name];
+  assert.equal(E.r2(R.T.adSpend), x.spend, `${ev.name} ad spend`);
+  assert.equal(R.T.totalViews, x.totalViews, `${ev.name} total views`);
+  assert.equal(R.T.paidViews, x.paid, `${ev.name} paid views`);
+  assert.equal(R.T.organicViews, x.organic, `${ev.name} organic views`);
+  assert.equal(E.r2(R.T.totalSpend), t.spend, `${ev.name} total spend`);
+  assert.equal(E.r2(R.T.blendedCPM), t.blended, `${ev.name} blended CPM`);
+  assert.equal(E.r2(R.T.organicCPM), t.organicCPM, `${ev.name} organic CPM`);
+  assert.equal(R.T.adsCPM == null ? null : E.r2(R.T.adsCPM), t.adsCPM, `${ev.name} ads CPM`);
+  for (const r of R.rows) if (r.organic != null) assert.ok(r.organic >= 0, `${ev.name} negative organic on ${r.id}`);
+  console.log(`  ${ev.name}: ${ev.posts.length} posts, ${ev.ads.length} ad rows, data ${ev.dataDate} — totals match`);
+}
+console.log("event sheet tests passed");
