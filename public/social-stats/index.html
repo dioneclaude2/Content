@@ -195,6 +195,8 @@ ol.top li span{display:block;font-size:12px;margin-top:2px}
 .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--line);border-radius:20px;padding:36px 16px;background:var(--paper);cursor:pointer;text-align:center}
 .drop b{font-size:17px}.drop span{color:var(--muted);font-size:12.5px}
 .drop.over,.drop:hover{border-color:var(--pink);background:var(--pink-soft)}
+.or{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .prog{height:6px;background:var(--line-2);border-radius:4px;overflow:hidden;margin-top:12px}
 .prog i{display:block;height:100%;width:0;background:var(--pink);transition:width .2s}
 tr.seg td{background:var(--tint);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
@@ -561,11 +563,19 @@ function renderNew(D){
       </button>
     </div>
     <div class="card sec">
-      <h3>…or import from Google Sheets</h3>
-      <p class="sub" style="margin-top:0">Paste a Google Sheets link. Every tab it recognises becomes a report: weekly report tabs → weekly reports, event tables → event reports (with costs from a “Total Spend” tab), lists of invoices or costs → costing reports for review. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
+      <h3>…or import what you already have</h3>
+      <p class="sub" style="margin-top:0">Paste a Google Sheets link, or upload files below. Every tab it recognises becomes a report: weekly report tabs → weekly reports, event tables → event reports (with costs from a “Total Spend” tab), lists of invoices or costs → costing reports for review. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
       <div class="row" style="margin-top:10px">
         <input type="text" id="wb-url" class="grow" placeholder="https://docs.google.com/spreadsheets/d/…">
         <button class="btn pink" id="wb-go">Import</button>
+      </div>
+      <div class="or">or upload files</div>
+      <label class="drop" id="nf-drop"><input type="file" id="nf-files" multiple hidden>
+        <b>Drop files or a whole folder</b><span>any format: Excel / Numbers / CSV exports of reports, Meta ad exports, invoices as PDF, photos (incl. iPhone HEIC), Word, email…</span></label>
+      <div class="row" style="margin-top:10px">
+        <label class="btn ghost sm">Choose a folder…<input type="file" id="nf-folder" webkitdirectory multiple hidden></label>
+        <input type="text" id="nf-event" class="grow" list="ev-names3" placeholder="Event name for invoices (optional — otherwise the folder name is used)">
+        <datalist id="ev-names3">${events.map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
       </div>
       <div id="wb-res" class="result ok">${lastImport}</div>
     </div>`;
@@ -584,14 +594,28 @@ function renderNew(D){
   evIn.onkeydown = e => { if (e.key === "Enter" && evIn.value.trim()) go.click(); };
   go.onclick = () => { const id = startCosting(evIn.value.trim()); location.hash = `#/r/${id}/add`; };
   const wbGo = document.getElementById("wb-go"), wbRes = document.getElementById("wb-res");
+  const showResults = out => {
+    const made = out.filter(x => x.id || x.kind === "Ad export");
+    wbRes.className = made.length ? "result ok" : "result err";
+    wbRes.innerHTML = lastImport = (made.length ? `Imported ${made.length}:` : "Nothing there looked like a report, ad export or cost.")
+      + `<div class="list">${out.map(x => `<div class="li"><span class="chip k">${esc(x.kind)}</span><span class="grow">${esc(x.tab)}${x.note ? ` <span class="muted small">· ${esc(x.note)}</span>` : ""}</span>${x.id ? `<a class="btn ghost sm" href="#/r/${x.id}/${x.kind === "Costing" ? "add" : "summary"}">Open</a>` : x.kind === "Ad export" ? `<a class="btn ghost sm" href="#/ads">Open</a>` : ""}</div>`).join("")}</div>`;
+  };
+  const uploadFiles = async files => {
+    wbRes.className = "result"; wbRes.textContent = "Reading files…";
+    try { showResults(await importFiles(files, document.getElementById("nf-event").value.trim(), t => (wbRes.textContent = t))); }
+    catch (e) { wbRes.className = "result err"; wbRes.textContent = e.message; }
+  };
+  const nfDrop = document.getElementById("nf-drop"), nfFiles = document.getElementById("nf-files"), nfFolder = document.getElementById("nf-folder");
+  nfFiles.onchange = () => uploadFiles([...nfFiles.files]);
+  nfFolder.onchange = () => uploadFiles([...nfFolder.files]);
+  nfDrop.ondragover = e => { e.preventDefault(); nfDrop.classList.add("over"); };
+  nfDrop.ondragleave = () => nfDrop.classList.remove("over");
+  nfDrop.ondrop = async e => { e.preventDefault(); nfDrop.classList.remove("over"); uploadFiles(await filesFromDrop(e.dataTransfer)); };
   wbGo.onclick = async () => {
     wbGo.disabled = true; wbRes.className = "result"; wbRes.textContent = "Reading the sheet…";
     try {
       const out = await importWorkbook(document.getElementById("wb-url").value, t => (wbRes.textContent = t));
-      const made = out.filter(x => x.id);
-      wbRes.className = made.length ? "result ok" : "result err";
-      wbRes.innerHTML = lastImport = (made.length ? `Imported ${made.length} report${made.length > 1 ? "s" : ""}:` : "Nothing in that sheet looked like a report.")
-        + `<div class="list">${out.map(x => `<div class="li"><span class="chip k">${esc(x.kind)}</span><span class="grow">${esc(x.tab)}${x.note ? ` <span class="muted small">· ${esc(x.note)}</span>` : ""}</span>${x.id ? `<a class="btn ghost sm" href="#/r/${x.id}/${x.kind === "Costing" ? "add" : "summary"}">Open</a>` : ""}</div>`).join("")}</div>`;
+      showResults(out);
     } catch (e) { wbRes.className = "result err"; wbRes.textContent = e.message; }
     wbGo.disabled = false;
   };
@@ -1328,7 +1352,16 @@ function loadOcr(){
 }
 async function ocr(img){
   const T = await loadOcr();
-  const { data } = await T.recognize(img, "eng");
+  // flatten onto white (transparent PNGs/HEICs read as black otherwise) and enlarge small images
+  let src = img;
+  try {
+    const bmp = img instanceof HTMLCanvasElement ? img : await createImageBitmap(img);
+    const k = Math.min(3, Math.max(1, 1600 / bmp.width));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, 0, 0, c.width, c.height);
+    src = c;
+  } catch { /* formats the browser can't decode go to the reader as they are */ }
+  const { data } = await T.recognize(src, "eng");
   return data.text || "";
 }
 /* PDF text, rebuilt into lines by position; scanned PDFs fall back to reading the page image */
@@ -1358,15 +1391,51 @@ async function pdfPages(file){
   }
   return pages;
 }
-const READABLE = /\.(pdf|png|jpe?g|webp|gif|bmp|csv|tsv|txt)$/i;
+const SKIP_FILE = /^(\.|~\$|thumbs\.db$|desktop\.ini$)/i;             // hidden/system files in folders
+const SHEET_EXT = /\.(xlsx|xlsm|xlsb|xls|ods|numbers|csv|tsv)$/i;
+const loadScript = (src, global) => window[global] ? Promise.resolve(window[global]) : new Promise((ok, no) => {
+  const s = document.createElement("script"); s.src = src;
+  s.onload = () => ok(window[global]); s.onerror = () => no(new Error("Couldn't load a file reader — check the connection"));
+  document.head.append(s);
+});
+const loadXlsx = () => loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", "XLSX");
+const loadMammoth = () => loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js", "mammoth");
+const loadHeic = () => loadScript("https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js", "heic2any");
+const htmlText = h => { const d = new DOMParser().parseFromString(h, "text/html"); d.querySelectorAll("script,style").forEach(x => x.remove()); return d.body?.innerText || d.body?.textContent || ""; };
+
+/* Spreadsheet file (Excel, Numbers, ODS, CSV) → its tabs as CSV text */
+async function sheetTabs(f){
+  if (/\.(csv|tsv)$/i.test(f.name)) return [{ name: f.name.replace(/\.[^.]+$/, ""), text: await f.text() }];
+  const X = await loadXlsx();
+  const wb = X.read(await f.arrayBuffer(), { type: "array", cellDates: true });
+  return wb.SheetNames.map(n => ({ name: wb.SheetNames.length > 1 ? n : f.name.replace(/\.[^.]+$/, ""), sheet: n, text: X.utils.sheet_to_csv(wb.Sheets[n], { blankrows: false }) }))
+    .filter(t => t.text.replace(/[,\s]/g, "").length);
+}
+
+/* Any document → plain text (PDF pages, photos via OCR, Word, email, web page, RTF, plain text) */
+async function docText(f){
+  const n = f.name.toLowerCase();
+  if (/\.pdf$/.test(n) || f.type === "application/pdf") return await pdfPages(f);
+  if (/\.(heic|heif)$/.test(n)) { const conv = await loadHeic(); const png = await conv({ blob: f, toType: "image/png" }); return [await ocr(Array.isArray(png) ? png[0] : png)]; }
+  if (/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp|tiff?)$/.test(n)) return [await ocr(f)];
+  if (/\.docx$/.test(n)) { const m = await loadMammoth(); return [(await m.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value]; }
+  if (/\.(html?|htm)$/.test(n)) return [htmlText(await f.text())];
+  if (/\.eml$/.test(n)) { const t = await f.text(); const body = t.split(/\r?\n\r?\n/).slice(1).join("\n\n"); return [/<html|<body|<div/i.test(body) ? htmlText(body) : body]; }
+  if (/\.rtf$/.test(n)) return [(await f.text()).replace(/\\par[d]?/g, "\n").replace(/\{\*?\\[^{}]+}|[{}]|\\[a-z]+-?\d* ?/gi, "")];
+  if (/\.(doc|pages|key|ppt|pptx|zip|rar|7z)$/.test(n)) throw new Error(/zip|rar|7z/.test(n) ? "Unzip it first, then drop the folder" : "Export it as PDF first");
+  // anything else: use it if it's readable text
+  const t = await f.text();
+  if ((t.match(/[\x00-\x08\x0E-\x1F]/g) || []).length > t.length * 0.01) throw new Error("Can't read this file type — export it as PDF");
+  return [t];
+}
 /* everything inside dropped folders (skips hidden and unreadable files) */
 async function filesFromDrop(dt){
   const entries = [...dt.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
   if (!entries.length) return [...dt.files];
   const out = [];
   const walk = async entry => {
-    if (entry.name.startsWith(".")) return;
-    if (entry.isFile) { const f = await new Promise((ok, no) => entry.file(ok, no)); out.push(f); return; }
+    if (SKIP_FILE.test(entry.name)) return;
+    if (entry.isFile) { const f = await new Promise((ok, no) => entry.file(ok, no)); f.relPath = entry.fullPath.replace(/^\//, ""); out.push(f); return; }
     const reader = entry.createReader();
     let batch;
     do { batch = await new Promise((ok, no) => reader.readEntries(ok, no)); for (const e of batch) await walk(e); } while (batch.length);
@@ -1374,20 +1443,18 @@ async function filesFromDrop(dt){
   for (const e of entries) await walk(e);
   return out;
 }
+/* Any file → invoices: a spreadsheet gives one per row, a document one per invoice inside it */
 async function readFileToInvoices(f){
   const name = f.name || "file";
-  if (/\.pdf$/i.test(name) || f.type === "application/pdf") {
-    const parts = E.splitInvoicePages(await pdfPages(f));
-    return parts.map((t, i) => E.readInvoice(t, parts.length > 1 ? `${name} · invoice ${i + 1} of ${parts.length}` : name));
+  if (SHEET_EXT.test(name) || /\.txt$/i.test(name) && /[\t,].*\n/.test((await f.text()).slice(0, 500))) {
+    const tabs = SHEET_EXT.test(name) ? await sheetTabs(f) : [{ name, text: await f.text() }];
+    const rows = tabs.flatMap(t => E.mapInvoiceRows(E.parseTable(t.text)).filter(r => r.amount != null).map(r => ({ ...r, fileName: tabs.length > 1 ? `${name} · ${t.name}` : name })));
+    if (rows.length) return rows;
+    if (/\.(csv|tsv|txt)$/i.test(name)) return [E.readInvoice(tabs[0].text, name)];
+    throw new Error("No costs found — it needs a header row with an Amount column");
   }
-  if (/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp)$/i.test(name)) return [E.readInvoice(await ocr(f), name)];
-  if (/\.(csv|tsv|txt)$/i.test(name)) {
-    const text = await f.text();
-    const rows = E.mapInvoiceRows(E.parseTable(text));
-    return rows.length ? rows.map(r => ({ ...r, fileName: name })) : [E.readInvoice(text, name)];
-  }
-  if (/\.(xlsx?|numbers|docx?|heic)$/i.test(name)) throw new Error(/heic/i.test(name) ? "HEIC photos can't be read in the browser — export as JPG" : "Save it as CSV or PDF first (or paste the rows below)");
-  throw new Error("Unsupported file type");
+  const parts = E.splitInvoicePages(await docText(f));
+  return parts.map((t, i) => E.readInvoice(t, parts.length > 1 ? `${name} · invoice ${i + 1} of ${parts.length}` : name));
 }
 
 /* put read invoices in a costing report's review list (duplicates flagged and unticked) */
@@ -1432,8 +1499,8 @@ function costingAdd(body, rep, CR){
   const segTotals = order.slice(0, -1).map(name => [name, q.filter(x => !x.error && x.use && seg(x) === name).reduce((a, x) => a + (E.toUSD(x.amount, x.currency, CR.fx) || 0), 0)]).filter(([, v]) => v);
   body.innerHTML = `
     <div class="sec"><h2>Drop invoices</h2>
-      <label class="drop" id="drop"><input type="file" id="k-files" multiple accept=".pdf,image/*,.csv,.tsv,.txt" hidden>
-        <b>Drop invoices or a whole folder here</b><span>or click to choose files · PDFs (one or many invoices each), photos (JPG/PNG), or a CSV list</span></label>
+      <label class="drop" id="drop"><input type="file" id="k-files" multiple hidden>
+        <b>Drop invoices or a whole folder here</b><span>or click to choose files · any format: PDF, photos (incl. iPhone HEIC), Excel / Numbers / CSV, Word, email, text</span></label>
       <div class="row" style="margin-top:10px"><label class="btn ghost sm">Choose a folder…<input type="file" id="k-folder" webkitdirectory multiple hidden></label></div>
       <div id="k-prog" class="prog" hidden><i></i></div>
       <div id="k-status" class="result"></div>
@@ -1456,9 +1523,9 @@ function costingAdd(body, rep, CR){
   const setQ = list => { QUEUE.set(rep.id, list); render(); };
   const enqueue = items => { queueInvoices(rep.id, items); render(); };
   const handle = async all => {
-    const files = all.filter(f => READABLE.test(f.name) || /^image\//.test(f.type) || f.type === "application/pdf");
+    const files = all.filter(f => !SKIP_FILE.test(f.name));
     const skipped = all.length - files.length;
-    if (!files.length) return toast("No invoices found — PDFs, photos or CSVs");
+    if (!files.length) return toast("No files found");
     const st = () => document.getElementById("k-status"), pg = () => document.getElementById("k-prog");
     const out = [];
     let i = 0;
@@ -1479,7 +1546,7 @@ function costingAdd(body, rep, CR){
   drop.ondragleave = () => drop.classList.remove("over");
   drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); handle(await filesFromDrop(e.dataTransfer)); };
   const fold = body.querySelector("#k-folder");
-  fold.onchange = () => handle([...fold.files].filter(f => !f.name.startsWith(".")));
+  fold.onchange = () => handle([...fold.files]);
   body.querySelector("#k-gsgo").onclick = async () => {
     const url = body.querySelector("#k-gs").value;
     const m = url.match(/spreadsheets\/d\/([\w-]{20,})/);
@@ -1536,8 +1603,8 @@ async function sheetCsv(sheetId, gid){
 
 const sheetLink = (id, gid) => `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${gid}`;
 const sameSheet = (a, b) => {
-  const k = u => { const m = String(u || "").match(/spreadsheets\/d\/([\w-]{20,})/); return m ? m[1] + ":" + ((String(u).match(/[#&?]gid=(\d+)/) || [])[1] || "0") : ""; };
-  return !!k(a) && k(a) === k(b);
+  const k = u => { const m = String(u || "").match(/spreadsheets\/d\/([\w-]{20,})/); return m ? m[1] + ":" + ((String(u).match(/[#&?]gid=(\d+)/) || [])[1] || "0") : String(u || ""); };
+  return !!k(a) && k(a) === k(b);                                   // uploaded files compare by "file:<name>#<tab>"
 };
 /* a report made from this sheet tab that someone deleted — don't bring it back */
 const deletedFromSheet = url => Object.values(docs).some(v => v?.deleted && v.sheetUrl && sameSheet(v.sheetUrl, url));
@@ -1549,6 +1616,11 @@ async function importSheet(url, repId, costs){
   url = sheetLink(m[1], gid);
   const text = await sheetCsv(m[1], gid);
   if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
+  return importWeeklyText(text, url, repId);
+}
+
+/* A weekly report tab's text (from a link or an uploaded file) → weekly report */
+function importWeeklyText(text, url, repId){
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
@@ -1647,30 +1719,73 @@ async function importWorkbook(url, progress = () => {}){
   const sid = m[1], gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
   const tabs = await listTabs(sid, gid);
   progress(`Reading ${tabs.length} tab${tabs.length > 1 ? "s" : ""}…`);
-  const texts = Object.fromEntries(await Promise.all(tabs.map(async t => [t.gid, await sheetCsv(sid, t.gid).catch(() => "")])));
-  // a cross-event summary tab supplies each event's influencer / non-influencer costs
+  const texts = await Promise.all(tabs.map(t => sheetCsv(sid, t.gid).catch(() => "")));
+  return importTabs(tabs.map((t, i) => ({ name: t.name || "Sheet", text: texts[i], link: sheetLink(sid, t.gid), from: "Google Sheet" })));
+}
+
+/* Sheet tabs (from a link or uploaded files) → reports:
+   weekly report → weekly · event table → event (+ costs from a summary tab) · Meta ad export → Ad exports library
+   · list of invoices/costs → costing report for review */
+function importTabs(tabs, eventName){
   let costsBy = {};
-  for (const t of tabs) { const c = E.parseEventTotals(texts[t.gid]); if (Object.keys(c).length) { costsBy = { ...costsBy, ...c }; t.totals = true; } }
+  for (const t of tabs) { const c = t.text ? E.parseEventTotals(t.text) : {}; if (Object.keys(c).length) { costsBy = { ...costsBy, ...c }; t.totals = true; } }
   const out = [];
   for (const t of tabs) {
-    const text = texts[t.gid], link = sheetLink(sid, t.gid), tab = t.name || "Sheet";
-    if (!text) { out.push({ tab, kind: "Skipped", note: "couldn't open this tab" }); continue; }
+    const { text, link, name: tab } = t;
+    if (!text) { out.push({ tab, kind: "Skipped", note: "couldn't open it" }); continue; }
     if (t.totals) { out.push({ tab, kind: "Costs summary", note: "used for each event's costs" }); continue; }
     try {
+      const T = E.parseTable(text);
       if (E.isEventSheet(text)) {
         const name = E.parseEventSheet(text).name;
         const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
         out.push({ tab, kind: "Event", id: importEventTab(text, link, null, costsBy[key]).id, note: key ? "with costs" : "" });
       } else if (E.parseReportSheet(text).posts.length) {
-        out.push({ tab, kind: "Weekly", id: (await importSheet(link)).id });
+        out.push({ tab, kind: "Weekly", id: importWeeklyText(text, link).id });
+      } else if (T.headers.some(h => /^amount spent/i.test(h)) && T.headers.some(h => /^(ad|campaign) name$/i.test(h))) {
+        const imp = E.mapAds(T, tab);
+        if (imp.errors.length) { out.push({ tab, kind: "Skipped", note: "Meta ad export — " + imp.errors[0] }); continue; }
+        const id = uid();
+        put("ss.import." + id, { ...imp, id, uploaded: today(), errors: undefined });
+        out.push({ tab, kind: "Ad export", note: `${imp.rows.length} ads saved under Ad exports — attach it to its report in Add data` });
       } else {
-        const rows = E.mapInvoiceRows(E.parseTable(text)).filter(r => r.amount != null);
-        if (!rows.length) { out.push({ tab, kind: "Skipped", note: "not a report, event table or cost list" }); continue; }
-        const id = startCosting(tab === "Sheet" ? "Imported costs" : tab);
-        queueInvoices(id, rows.map(r => ({ ...r, fileName: `${tab} (Google Sheet)` })));
+        const rows = E.mapInvoiceRows(T).filter(r => r.amount != null);
+        if (!rows.length) { out.push({ tab, kind: "Skipped", note: "not a report, event table, ad export or cost list" }); continue; }
+        const id = startCosting(eventName || (/^(sheet\d*|costs?|invoices?)$/i.test(tab) ? "Imported costs" : tab));
+        queueInvoices(id, rows.map(r => ({ ...r, fileName: `${tab} (${t.from || "file"})` })));
         out.push({ tab, kind: "Costing", id, note: `${rows.length} costs waiting for review` });
       }
     } catch (e) { out.push({ tab, kind: "Skipped", note: e.message }); }
+  }
+  return out;
+}
+
+/* Files and folders → reports. Spreadsheets go through the same detector as sheet links;
+   everything else is read as invoices, grouped into a costing report per folder (or the event name typed). */
+async function importFiles(files, eventName, progress = () => {}){
+  files = files.filter(f => !SKIP_FILE.test(f.name));
+  if (!files.length) throw new Error("No files found.");
+  const folderOf = f => { const p = (f.relPath || f.webkitRelativePath || "").split("/"); return p.length > 1 ? p[p.length - 2] : ""; };
+  const tabs = [], invoices = new Map(), out = [];
+  let i = 0;
+  for (const f of files) {
+    progress(`Reading ${++i} of ${files.length}: ${f.name}…`);
+    try {
+      if (SHEET_EXT.test(f.name)) {
+        for (const t of await sheetTabs(f)) tabs.push({ ...t, link: `file:${f.name}#${t.sheet || t.name}`, from: f.name, folder: folderOf(f) });
+      } else {
+        const ev = eventName || folderOf(f);
+        if (!invoices.has(ev)) invoices.set(ev, []);
+        invoices.get(ev).push(...await readFileToInvoices(f));
+      }
+    } catch (e) { out.push({ tab: f.name, kind: "Skipped", note: e.message }); }
+  }
+  out.push(...importTabs(tabs, eventName));
+  for (const [ev, items] of invoices) {
+    if (!ev) { out.push({ tab: `${items.length} invoice${items.length > 1 ? "s" : ""}`, kind: "Skipped", note: "type the event name above (or drop them inside a folder named after the event)" }); continue; }
+    const id = startCosting(ev);
+    queueInvoices(id, items);
+    out.push({ tab: ev, kind: "Costing", id, note: `${items.length} invoice${items.length > 1 ? "s" : ""} waiting for review` });
   }
   return out;
 }
