@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nancy Social Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=dev">
+<style>
+:root{
+  --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
+  --line:#EAE1DA; --line-2:#F3ECE6; --pink:#FF00D1; --pink-soft:#FFE0F8;
+  --good:#11734b; --good-bg:#DDF3E8; --warn:#8A5A00; --warn-bg:#FFF1CC; --bad:#b10202; --bad-bg:#ffcfc9;
+  --head:#140D11; --tint:#F7F1EC; --pad:16px;
+  --serif:'Instrument Serif',Georgia,serif;
+}
+@media (min-width:900px){:root{--pad:36px}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font-family:'Archivo',system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0;text-transform:none}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:rgba(251,247,242,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1440px;margin:0 auto;padding:12px var(--pad);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.brand img{width:34px;height:34px;display:block}
+.brand b{font-size:18px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
+.brand span{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--pink);margin-left:-2px}
+/* home banner with the cream wordmark */
+.banner{display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:var(--ink);border-radius:26px;padding:26px 28px;color:#FCF6EB;position:relative;overflow:hidden}
+.banner::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--pink);opacity:.9}
+.banner > *{position:relative;z-index:1}
+.banner .wm{height:58px;width:auto;display:block}
+.banner .ttl{font-family:var(--serif);font-style:italic;font-size:34px;color:#FCF6EB;line-height:1}
+.banner p{margin:6px 0 0;color:rgba(252,246,235,.72);font-size:13.5px}
+.banner .btn.pink{background:#FCF6EB;color:var(--ink)}
+.acct{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px}
+.acct-tiles{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:760px){.acct-tiles{grid-template-columns:repeat(5,1fr)}}
+.acct-tiles .v{font-size:28px}
+.acct-tiles .rng{text-transform:none;letter-spacing:0;font-weight:600}
+@media (max-width:640px){.banner .wm{height:42px}.banner .ttl{font-size:28px}}
+.nav{display:flex;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px;overflow-x:auto;scrollbar-width:none}
+.nav a{padding:7px 13px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.03em;text-decoration:none;color:var(--muted);white-space:nowrap}
+.nav a:hover{color:var(--ink)}
+.nav a.on{background:var(--ink);color:#fff}
+.sync{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.sync[data-s=ok] i,.sync[data-s=sheets] i{background:#2BB673}.sync[data-s=saving] i{background:#F5A623}.sync[data-s=error] i{background:var(--bad)}
+@media (max-width:640px){.nav{order:3;width:100%}}
+
+main{max-width:1440px;margin:0 auto;padding:26px var(--pad) 120px}
+h1{font-size:clamp(28px,4vw,46px);font-weight:900;letter-spacing:-.035em;text-transform:uppercase;line-height:.95;margin:0}
+h1 .serif{color:var(--pink);font-size:1.1em}
+h2{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+h3{font-size:15px;font-weight:800;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;line-height:1.5;margin:6px 0 0}
+.sec{margin-top:34px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.small{font-size:12px}
+
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:.03em;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.pink{background:var(--pink)}
+.btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 11px;font-size:11px}
+.btn.danger{background:var(--paper);color:var(--bad);border:1px solid var(--bad-bg)}
+.btn:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.4;cursor:default}
+.x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;border-radius:6px}
+.x:hover{color:var(--bad);background:var(--bad-bg)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px}
+.grid{display:grid;gap:14px}
+@media (min-width:900px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+
+input[type=text],input[type=date],input[type=number],input[type=password],select,textarea{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;min-width:0}
+textarea{width:100%;min-height:120px;font-family:ui-monospace,Menlo,monospace;font-size:12px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pink-soft);border-color:var(--pink)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+label.f input,label.f select{text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+
+/* tiles */
+.tiles{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:760px){.tiles{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1200px){.tiles{grid-template-columns:repeat(6,1fr)}}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.tile .k{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-top:6px;line-height:1}
+.tile .s{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line-2);white-space:nowrap;vertical-align:top}
+th{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--tint);position:sticky;top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{font-weight:800;background:var(--tint);border-top:2px solid var(--ink)}
+tr.extra td{background:var(--ev2,#f6f1ec)}
+tr.adrow td{color:var(--muted);font-style:italic}
+tr.adrow td.n{font-style:normal}
+td.cap{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+td.wrap{white-space:normal;min-width:220px}
+.evhead th{background:var(--ev,var(--tint));color:var(--ink)}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800}
+.chip.yes{background:#11734b;color:#fff}
+.chip.no{background:#ffcfc9;color:#b10202}
+.chip.k{background:var(--tint);color:var(--muted);font-weight:700}
+.chip.collab{background:#EDE4FF;color:#5B34C9}
+.chip.nancy{background:var(--pink-soft);color:#B0008F}
+.miss{color:var(--bad);font-weight:700;font-size:12px;white-space:normal}
+.up{color:var(--good)}.down{color:var(--bad)}
+.bench-good{color:var(--good);font-weight:700}.bench-bad{color:var(--bad);font-weight:700}
+.tbl-tools{display:flex;justify-content:flex-end;gap:6px;margin:-4px 0 8px}
+
+/* flags */
+.flags{display:grid;gap:6px}
+.flag{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.45}
+.flag.bad{background:var(--bad-bg);color:#7a0000}
+.flag.warn{background:var(--warn-bg);color:var(--warn)}
+.flag.info{background:var(--tint);color:var(--muted)}
+.flag b{flex:none;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+/* report list */
+.rcards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.rcard{display:block;text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;position:relative;overflow:hidden}
+.rcard:hover{border-color:var(--ink)}
+.rcard .band{position:absolute;inset:0 0 auto 0;height:6px;background:var(--ev,var(--pink))}
+.rcard .t{font-size:17px;font-weight:900;letter-spacing:-.02em;margin-top:4px}
+.rcard .d{font-size:12px;color:var(--muted);margin-top:3px}
+.rcard .m{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:10px;margin-top:12px}
+.rcard .m div{font-size:11px;color:var(--muted)}
+.rcard .m b{display:block;font-size:16px;color:var(--ink);font-weight:800}
+
+/* report page */
+.rhead{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;padding-bottom:16px;border-bottom:4px solid var(--ev,var(--ink))}
+.titleline{font-size:12.5px;color:var(--muted);margin-top:10px;font-weight:600}
+.subtabs{display:flex;gap:4px;margin:16px 0 0;flex-wrap:wrap}
+.subtabs a{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:800;text-decoration:none;color:var(--muted);border:1px solid transparent}
+.subtabs a.on{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.subtabs a .cnt{display:inline-block;margin-left:5px;background:var(--bad);color:#fff;border-radius:999px;padding:0 6px;font-size:10px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .num{flex:none;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px}
+.step .num.done{background:#2BB673}
+.who{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.result{margin-top:10px;font-size:12.5px;line-height:1.5}
+.result.ok{color:var(--good)}
+.result.err{color:var(--bad)}
+.list{display:grid;gap:6px;margin-top:10px}
+.li{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line-2);border-radius:10px;font-size:12.5px}
+.li .grow{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.rundown{line-height:1.6;font-size:14px;max-width:900px}
+.rundown h1,.rundown h2,.rundown h3{text-transform:none;letter-spacing:-.01em;font-size:17px;margin:18px 0 6px;display:block}
+.rundown h2::after{display:none}
+.rundown table{margin:8px 0;border:1px solid var(--line)}
+.rundown td{white-space:normal}
+.rundown ul{padding-left:20px;margin:6px 0}
+
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+.toast-btn{margin-left:12px;background:var(--pink);color:#fff;border:0;border-radius:999px;padding:4px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.selbar{position:sticky;top:64px;z-index:15;display:flex;gap:10px;align-items:center;background:var(--ink);color:#fff;border-radius:14px;padding:10px 14px;margin-top:16px;font-weight:700;font-size:13px}
+.selbar #selcount{margin-right:auto}
+.selbar .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+details summary{cursor:pointer;font-weight:700;font-size:12.5px}
+.kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--tint);padding:1px 6px;border-radius:5px}
+
+/* home + summaries */
+:root{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a}
+.btn.big{padding:13px 22px;font-size:13.5px}
+.home-block{background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--ev,var(--pink));border-radius:22px;padding:20px}
+.hb-head{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:6px}
+.hb-kind{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.hb-name{font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 0}
+.headline{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.35;margin:12px 0 16px;max-width:60ch}
+.tiles.big{grid-template-columns:repeat(2,1fr)}
+@media (min-width:900px){.tiles.big{grid-template-columns:repeat(4,1fr)}}
+.tiles.big .v{font-size:32px}
+.tile.hero{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tile.hero .k,.tile.hero .s{color:rgba(255,255,255,.7)}
+.mini{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:12px;padding:12px 16px;background:var(--tint);border-radius:14px;font-size:12.5px}
+.mini span{color:var(--muted);margin-right:6px}
+.splitbar{display:flex;gap:2px;height:16px;margin:10px 0 12px}
+.splitbar i{border-radius:4px;min-width:4px}
+.legend{display:grid;gap:6px;font-size:12.5px}
+.legend div{display:grid;grid-template-columns:12px 1fr auto 58px;gap:8px;align-items:center}
+.legend .sw{width:10px;height:10px;border-radius:3px}
+.legend .muted{text-align:right}
+ol.top{margin:0;padding-left:18px;display:grid;gap:9px;font-size:13px}
+ol.top li span{display:block;font-size:12px;margin-top:2px}
+.vtip{position:fixed;z-index:60;background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;pointer-events:none;max-width:280px}
+/* chooser */
+.choose{display:grid;gap:14px}
+@media (min-width:900px){.choose{grid-template-columns:repeat(3,1fr)}}
+.pick{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px;cursor:pointer;min-height:220px}
+.pick:hover{border-color:var(--ink);box-shadow:0 10px 30px rgba(20,13,17,.08)}
+.pick .pk{font-size:24px;font-weight:900;letter-spacing:-.02em}
+.pick .pd{color:var(--muted);line-height:1.5;font-size:13.5px}
+.pick .pw{margin-top:auto;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--pink)}
+/* costing */
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--line);border-radius:20px;padding:36px 16px;background:var(--paper);cursor:pointer;text-align:center}
+.drop b{font-size:17px}.drop span{color:var(--muted);font-size:12.5px}
+.drop.over,.drop:hover{border-color:var(--pink);background:var(--pink-soft)}
+.or{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.prog{height:6px;background:var(--line-2);border-radius:4px;overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;width:0;background:var(--pink);transition:width .2s}
+tr.seg td{background:var(--tint);font-weight:800;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
+.hbars{display:grid;gap:8px}
+.hb{display:grid;grid-template-columns:minmax(110px,170px) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.hb .ht{height:12px;background:var(--line-2);border-radius:4px;overflow:hidden}
+.hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.warnc{color:var(--warn)}
+.chip.rt-organic{background:var(--good-bg);color:var(--good)}
+.chip.rt-boosted{background:var(--pink-soft);color:#B0008F}
+.chip.rt-unknown{background:var(--warn-bg);color:var(--warn)}
+ol.top li .chip{margin-top:4px}
+
+
+@media print{
+  .top,.subtabs,.tbl-tools,.noprint,.btn{display:none!important}
+  body{background:#fff}
+  .tw{overflow:visible;border:0}
+  th{position:static}
+  .sec{break-inside:avoid-page}
+}
+</style>
+
+<header class="top"><div class="top-in">
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=dev" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <nav class="nav" id="nav">
+    <a href="#/" data-r="home">Home</a>
+    <a href="#/reports" data-r="reports">Reports</a>
+    <a href="#/compare" data-r="compare">Compare</a>
+    <a href="#/posts" data-r="posts">Posts</a>
+    <a href="#/ads" data-r="ads">Ad exports</a>
+    <a href="#/settings" data-r="settings">Settings</a>
+  </nav>
+  <button class="sync" id="sync" data-s="off" title="Sync status" hidden><i></i><span></span></button>
+</div></header>
+<main id="app"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+import * as E from "./engine.js?v=dev";
+
+/* ───────── where the shared data lives ─────────
+   Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
+   Pages. Both sync through the Vercel API. */
+const ON_VERCEL = /vercel\.app$/.test(location.hostname);
+const LOCAL = /^(localhost|127\.)/.test(location.hostname);
+const API = ON_VERCEL ? "/api/stats" : LOCAL ? "/api/stats" : "https://content-nine-topaz.vercel.app/api/stats";
+
+/* ───────── store: one record per key, newest updatedAt wins ───────── */
+const LS = "ss.docs";
+let docs = {};
+try { docs = JSON.parse(localStorage.getItem(LS) || "{}"); } catch { docs = {}; }
+const saveLocal = () => { try { localStorage.setItem(LS, JSON.stringify(docs)); } catch { toast("This browser's storage is full — sync still saves to the team copy."); } };
+
+function put(key, value){
+  const { updatedAt: _a, ...next } = value || {};
+  const { updatedAt: _b, ...prev } = docs[key] || {};
+  if (docs[key] && JSON.stringify(next) === JSON.stringify(prev)) return;     // nothing changed: don't save or sync
+  docs[key] = { ...next, updatedAt: Date.now() };
+  saveLocal();
+  sync.queue(key);
+}
+/* Deleting keeps the record, marked deleted, so it can be restored from Settings › Recently deleted. */
+const del = (key, extra = {}) => put(key, { ...(docs[key] || {}), ...extra, deleted: true, deletedAt: Date.now() });
+const restore = key => {
+  const { deleted, deletedAt, wasFor, ...rest } = docs[key] || {};
+  put(key, rest);
+  const ev = wasFor && docs["ss.report." + wasFor];                 // a costing report goes back to its event
+  if (ev && !ev.deleted && !ev.costingId) put("ss.report." + wasFor, { ...ev, costingId: rest.id });
+};
+
+function db(){
+  const out = { settings: { ...E.DEFAULT_SETTINGS }, posts: {}, imports: {}, reports: {} };
+  const s = docs["ss.settings"];
+  if (s && !s.deleted) out.settings = { ...E.DEFAULT_SETTINGS, ...s, fx: { ...E.DEFAULT_SETTINGS.fx, ...(s.fx || {}) }, target: { ...E.DEFAULT_SETTINGS.target, ...(s.target || {}) } };
+  for (const [k, v] of Object.entries(docs)) {
+    if (!v || v.deleted) continue;
+    if (k.startsWith("ss.post.")) out.posts[v.id] = v;
+    else if (k.startsWith("ss.import.")) out.imports[v.id] = v;
+    else if (k.startsWith("ss.report.")) out.reports[v.id] = v;
+  }
+  return out;
+}
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+/* ───────── team sync ───────── */
+const sync = {
+  state: "off", pending: new Set(), timer: null,
+  pass(){ try { return localStorage.getItem("ss.passcode") || ""; } catch { return ""; } },
+  show(s){
+    sync.state = s;
+    const el = document.getElementById("sync");
+    el.dataset.s = s;
+    // no team store yet, but the reports come from Google Sheets — every browser sees those
+    const at = +(localStorage.getItem("ss.sourcesAt") || 0);
+    const live = s === "off" && at;
+    el.dataset.s = live ? "sheets" : s;
+    el.hidden = s === "off";                                     // only shown once team sync exists
+    el.querySelector("span").textContent = live
+      ? `Live from Google Sheets · ${new Date(at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`
+      : { off: "Saved in this browser", ok: "Synced with team", saving: "Saving…", error: "Offline — retrying" }[s];
+    el.title = live
+      ? "Reports are read from the team's Google Sheets every time the page opens, so every browser and device sees them. Click to refresh now. (Invoices and edits made inside the app are saved in this browser until team sync is switched on.)"
+      : s === "ok" ? "Everything is shared with the team." : "Click to retry.";
+  },
+  queue(k){
+    sync.pending.add(k);
+    try { localStorage.setItem("ss.unsent", JSON.stringify([...sync.pending])); } catch {}
+    if (sync.state === "off") return;
+    sync.show("saving");
+    clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 600);
+  },
+  async flush(){
+    if (!sync.pending.size) return;
+    const keys = [...sync.pending].slice(0, 40);
+    const body = { docs: Object.fromEntries(keys.filter(k => docs[k]).map(k => [k, docs[k]])) };
+    try {
+      const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", "x-passcode": sync.pass() }, body: JSON.stringify(body) });
+      if (r.status === 401) { sync.show("error"); askPass(); return; }
+      if (!r.ok) throw new Error(r.status);
+      const { stale = {} } = await r.json();
+      keys.forEach(k => sync.pending.delete(k));
+      try { localStorage.setItem("ss.unsent", JSON.stringify([...sync.pending])); } catch {}
+      if (Object.keys(stale).length) {           // someone saved newer versions: take theirs
+        Object.assign(docs, stale); saveLocal(); render();
+        toast("A teammate saved newer changes — showing theirs.");
+      }
+      if (sync.pending.size) { sync.timer = setTimeout(sync.flush, 50); } else sync.show("ok");
+    } catch {
+      sync.show("error");
+      clearTimeout(sync.timer); sync.timer = setTimeout(sync.flush, 5000);
+    }
+  },
+  async pull(){
+    let remote;
+    try {
+      const r = await fetch(API, { cache: "no-store" });
+      if (r.status === 503 || r.status === 404) { sync.show("off"); return; }
+      if (!r.ok) throw new Error(r.status);
+      remote = (await r.json()).docs || {};
+    } catch { if (sync.state !== "off") sync.show("error"); return; }
+    if (sync.state === "off") {
+      try { for (const k of JSON.parse(localStorage.getItem("ss.unsent") || "[]")) sync.pending.add(k); } catch {}
+    }
+    sync.show("ok");
+    let changed = false;
+    for (const [k, v] of Object.entries(remote)) {
+      const mine = docs[k];
+      if (!mine || (v.updatedAt || 0) > (mine.updatedAt || 0)) { docs[k] = v; changed = true; sync.pending.delete(k); }
+      else if ((mine.updatedAt || 0) > (v.updatedAt || 0)) sync.pending.add(k);
+    }
+    for (const k of Object.keys(docs)) if (!(k in remote)) sync.pending.add(k);   // records only made here
+    if (changed) { saveLocal(); render(); }
+    if (sync.pending.size) { sync.show("saving"); sync.flush(); }
+  },
+};
+function askPass(){
+  const p = prompt("Nancy Social Stats needs the team passcode to save. Enter it:");
+  if (p) { try { localStorage.setItem("ss.passcode", p); } catch {} sync.flush(); }
+}
+document.getElementById("sync").onclick = () => { sync.pull(); refreshFromSources(); };
+setInterval(() => { if (!document.hidden && !editing()) sync.pull(); }, 30000);
+addEventListener("focus", () => sync.pull());
+const editing = () => { const a = document.activeElement; return a && /INPUT|TEXTAREA|SELECT/.test(a.tagName); };
+
+/* ───────── formatting ───────── */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const F = {
+  int: v => (v == null || !isFinite(v) ? "—" : Math.round(v).toLocaleString("en-US")),
+  usd: v => (v == null || !isFinite(v) ? "—" : "$" + (Math.round(v * 100) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+  pct: v => (v == null || !isFinite(v) ? "—" : (v * 100).toFixed(2) + "%"),
+  pp: v => (v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(2) + " pp"),
+  chg: v => (v == null ? "—" : !isFinite(v) ? "new" : (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%"),
+  big: v => (v == null ? "—" : v >= 1e6 ? (v / 1e6).toFixed(2) + "M" : v >= 1e4 ? (v / 1e3).toFixed(1) + "K" : F.int(v)),
+  date: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }); },
+  dateY: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); },
+};
+const miss = m => `<span class="miss">Missing — need ${esc(m.need)}, from ${esc(m.who)}</span>`;
+const or = (v, fmt, m) => (v == null ? (m ? miss(m) : "—") : fmt(v));
+const vsBench = (er, bench) => er == null ? "—" : `<span class="${er >= bench ? "bench-good" : "bench-bad"}">${F.pct(er)}</span>`;
+const chip = b => b ? '<span class="chip yes">Yes</span>' : '<span class="chip no">No</span>';
+const who = r => r.collab ? `<span class="chip collab">${esc(r.account || "Collab")}</span>` : `<span class="chip nancy">Nancy</span>`;
+const link = (r, n = 42) => r.link ? `<a href="${esc(r.link)}" target="_blank" rel="noopener" title="${esc(r.content)}">${esc((r.content || r.id).slice(0, n))}${(r.content || "").length > n ? "…" : ""}</a>` : esc((r.content || "").slice(0, n));
+const KIND = { post: "", extra: "Extra post", separate: "Separate ad version", older: "Ads on an older post", "other-event": "Ads on another event's post", adonly: "Ad only (no post matched)", campaign: "Campaign-level spend" };
+const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+const evColours = rep => E.EVENT_COLOURS[rep.colour] || (rep.type === "week" ? ["#FFE3EE", "#FFF4F8"] : E.EVENT_COLOURS.Pink);
+
+function toast(msg, action){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  if (action) {
+    const b = document.createElement("button");
+    b.className = "toast-btn"; b.textContent = action.label;
+    b.onclick = () => { t.hidden = true; action.fn(); };
+    t.append(b);
+  }
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), action ? 7000 : 2600);
+}
+
+/* ───────── PDF to send ─────────
+   A real document (selectable text, proper tables, page numbers) built by pdf.js with jsPDF.
+   summary = founder version (portrait) · full = every table (landscape) · costing = costing report.
+   Desktop: downloads the file. Phones: opens the share sheet (WhatsApp, Mail, Slack…). */
+let pdfBusy = false;
+/* jsPDF can't draw SVG: turn the logo into a PNG once */
+const svgToPng = (src, size) => new Promise((ok, no) => {
+  const img = new Image();
+  img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = size; c.getContext("2d").drawImage(img, 0, 0, size, size); ok(c.toDataURL("image/png")); };
+  img.onerror = no; img.src = src;
+});
+async function exportPDF(id, mode){
+  if (pdfBusy) return;
+  const D = db(), rep = D.reports[id];
+  if (!rep) return;
+  pdfBusy = true;
+  toast("Making the PDF…");
+  try {
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js", "jspdf");
+    if (!window.jspdf.jsPDF.API.autoTable) await new Promise((ok, no) => {
+      const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
+      sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
+    });
+    const { buildPdf } = await import("./pdf.js?v=dev");
+    const logo = await svgToPng("logo-circle.svg?v=dev", 192).catch(() => null);
+    let args;
+    if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
+    else {
+      const R = E.buildReport(rep, D, D.settings);
+      const pr = prevFor(rep, D);
+      args = { rep, R, P: pr ? E.buildReport(pr, D, D.settings) : null, mode, settings: D.settings };
+    }
+    const doc = buildPdf({ ...args, logo });
+    const kind = rep.type === "week" ? "Weekly social report" : rep.type === "costing" ? "Costing report" : "Event report";
+    const name = rep.type === "costing" ? (rep.eventName || rep.name) : rep.name;
+    const file = `${kind} - ${(name || "report").replace(/[\\/:*?"<>|]+/g, "-")}${mode === "full" ? " (full)" : ""}.pdf`;
+    const pdf = new File([doc.output("blob")], file, { type: "application/pdf" });
+    if (matchMedia("(pointer: coarse)").matches && navigator.canShare?.({ files: [pdf] })) {
+      await navigator.share({ files: [pdf], title: `${kind}: ${name}` }).catch(() => {});
+    } else {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(pdf); a.download = file; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      toast("PDF downloaded");
+    }
+  } catch (e) {
+    console.error(e); toast("Couldn't make the PDF — try again");
+  } finally { pdfBusy = false; }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-pdf]");
+  if (b) { e.preventDefault(); exportPDF(b.dataset.pdfId, b.dataset.pdf); }
+});
+
+/* Delete a whole report (any type). Its posts and ad exports stay in the library. */
+function deleteReport(rep){
+  const D = db();
+  const label = rep.type === "costing" ? `the costing report for “${rep.eventName || rep.name}”` : `“${rep.name}”`;
+  if (!confirm(`Delete ${label}?\n\nYou can restore it later from Settings › Recently deleted.`)) return;
+  let wasFor = null;
+  if (rep.type === "costing") {                                   // unlink it from its event (relinked on restore)
+    const ev = Object.values(D.reports).find(r => r.costingId === rep.id);
+    if (ev) { put("ss.report." + ev.id, { ...ev, costingId: null }); wasFor = ev.id; }
+  }
+  del("ss.report." + rep.id, wasFor ? { wasFor } : {});
+  location.hash = "#/reports";
+  toast("Report deleted", { label: "Undo", fn: () => { restore("ss.report." + rep.id); location.hash = `#/r/${rep.id}`; render(); } });
+}
+async function copy(text, msg = "Copied"){
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch { const ta = document.createElement("textarea"); ta.value = text; document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast(msg); }
+}
+const tableTSV = t => [...t.rows].map(tr => [...tr.cells].map(c => c.innerText.replace(/\s+/g, " ").trim()).join("\t")).join("\n");
+const csvCell = s => /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+
+const TEMPLATES = {
+  posts: "Date posted\tAccount\tFormat\tContent\tLink\tViews\tReach\tLikes\tComments\tSaves\tShares\tProfile visits\tFollows\tBoosted (Y/N)",
+  influencers: "Creator / handle\tDeliverables\tFee\tCurrency\tNotes",
+  costs: "Category\tItem\tDate\tQty\tUnit price\tCurrency\tVendor\tReceipt link",
+};
+
+/* ───────── routing ───────── */
+function route(){
+  const h = location.hash.replace(/^#\/?/, "");
+  const [path, qs] = h.split("?");
+  const parts = path.split("/").filter(Boolean);
+  return { name: parts[0] || "home", parts, q: new URLSearchParams(qs || "") };
+}
+addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
+
+const app = document.getElementById("app");
+function render(){
+  const r = route(), D = db();
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.r === (r.name === "r" || r.name === "new" ? "reports" : r.name)));
+  try {
+    if (r.name === "r" && r.parts[1]) {
+      const rp = D.reports[r.parts[1]];
+      if (rp?.type === "costing") return renderCosting(D, rp, r.parts[2] || "summary");
+      return renderReport(D, r.parts[1], r.parts[2] || "summary", r.q);
+    }
+    if (r.name === "new") return renderNew(D);
+    if (r.name === "import") return renderImport(r.q);
+    if (r.name === "reports") return renderReports(D);
+    if (r.name === "compare") return renderCompare(D, r.q);
+    if (r.name === "posts") return renderPosts(D, r.q);
+    if (r.name === "ads") return renderAds(D);
+    if (r.name === "settings") return renderSettings(D);
+    renderDashboard(D);
+  } catch (e) {
+    console.error(e);
+    app.innerHTML = `<div class="flag bad"><b>Error</b>${esc(e.message)}</div>`;
+  }
+}
+
+/* ───────── home: the two summaries founders read ─────────
+   Top: the weekly report. Below: the event report. Only the summary — "View report"
+   opens the full one. A picker swaps which week / event is shown (latest by default). */
+function renderDashboard(D){
+  const reps = Object.values(D.reports);
+  const weeks = reps.filter(r => r.type === "week").sort((a, b) => (a.start < b.start ? 1 : -1));
+  const events = reps.filter(r => r.type === "event").sort((a, b) => ((a.end || "") < (b.end || "") ? 1 : -1));
+  const q = route().q;
+  // latest week that has posts, unless one was picked
+  const wk = D.reports[q.get("w")] || weeks.find(r => E.buildReport(r, D, D.settings).contentRows.length) || weeks[0];
+  // latest event that has posts (an empty draft doesn't take over the home page)
+  const ev = D.reports[q.get("e")] || events.find(r => (r.postIds || []).length) || events[0];
+
+  const block = (title, rep, list, key, empty) => {
+    const picker = list.length > 1 ? `<select class="pickrep" data-key="${key}">${list.map(r => `<option value="${r.id}" ${r.id === rep?.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select>` : "";
+    if (!rep) return `<section class="sec"><h2>${title}</h2><div class="empty">${empty}</div></section>`;
+    const R = E.buildReport(rep, D, D.settings);
+    const pr = prevFor(rep, D);
+    const P = pr ? E.buildReport(pr, D, D.settings) : null;
+    const [c1] = evColours(rep);
+    return `<section class="sec home-block" style="--ev:${c1}">
+      <div class="hb-head">
+        <div class="grow"><div class="hb-kind">${title}</div>
+          <div class="hb-name">${esc(rep.name)}</div>
+          <div class="small muted">${F.date(rep.start)}–${F.dateY(rep.end)} · data pulled ${F.dateY(rep.dataDate)}</div></div>
+        ${picker}
+        <button class="btn ghost" data-pdf="summary" data-pdf-id="${rep.id}" title="Download this summary as a PDF to send">⬇ PDF</button>
+        <a class="btn" href="#/r/${rep.id}/full">View report →</a>
+      </div>
+      ${rep.type === "week" ? weeklySummaryHTML(rep, R, P, D) : eventSummaryHTML(rep, R, P, D)}
+    </section>`;
+  };
+
+  app.innerHTML = `
+    <div class="banner">
+      <img class="wm" src="logo-wordmark-cream.svg?v=dev" alt="Nancy">
+      <div class="grow"><div class="ttl">Social Stats</div>
+      <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
+      <a class="btn pink big" href="#/new">+ Create a report</a>
+    </div>
+    ${accountPanel(D)}
+    ${block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
+    ${block("Event report", ev, events, "e", `No event report yet. <a href="#/new">Create one</a> for any event, launch or ad push.`)}`;
+  app.querySelectorAll(".pickrep").forEach(sel => sel.onchange = () => {
+    const p = new URLSearchParams(route().q); p.set(sel.dataset.key, sel.value);
+    location.hash = `#/?${p}`;
+  });
+}
+
+/* Account views over time (IG dashboard). Published numbers come from sources.json;
+   numbers typed in Settings win when they're newer. */
+function accountViews(D){
+  let pub = null;
+  try { pub = JSON.parse(localStorage.getItem("ss.accountPublished") || "null"); } catch {}
+  const mine = D.settings.accountViews;
+  return mine && (!pub || mine.asOf >= pub.asOf) ? mine : pub;
+}
+function accountPanel(D){
+  const A = accountViews(D);
+  if (!A?.periods?.length) return "";
+  const perDay = p => p.views / p.days;
+  const last = A.periods[A.periods.length - 1];
+  return `<section class="sec acct">
+    <div class="hb-head" style="margin-bottom:12px">
+      <div class="grow"><div class="hb-kind">Account views</div>
+        <div class="small muted">All content on @hellonancy_official · as of ${F.dateY(A.asOf)} · ${esc(A.source || "Instagram account insights")}</div></div>
+      <a class="btn ghost sm" href="#/settings">Update</a>
+    </div>
+    <div class="acct-tiles">${A.periods.map(p => `<div class="tile${p === last ? " hero" : ""}">
+      <div class="k">${esc(p.label)}${p.range ? ` <span class="rng">(${esc(p.range)})</span>` : ""}</div>
+      <div class="v">${F.big(p.views)}</div>
+      <div class="s">${p.approx ? "≈ " : ""}${F.big(perDay(p))} a day</div></div>`).join("")}</div>
+    ${(() => {                                                     // is the recent pace above or below the longer run?
+      const a = A.periods[0], b = A.periods[1];
+      if (!a || !b) return "";
+      const d = perDay(a) / perDay(b) - 1;
+      return `<p class="small muted" style="margin:10px 2px 0">${esc(a.label)} averaged ${F.big(perDay(a))} views a day — ${Math.abs(d * 100).toFixed(0)}% ${d >= 0 ? "above" : "below"} the ${esc(b.label.toLowerCase())} pace (${F.big(perDay(b))} a day).</p>`;
+    })()}
+  </section>`;
+}
+
+/* ───────── all reports ───────── */
+function renderReports(D){
+  const reps = Object.values(D.reports);
+  const sortStart = (a, b) => ((a.start || "") < (b.start || "") ? 1 : -1);
+  const card = rep => {
+    const [c1] = evColours(rep);
+    if (rep.type === "costing") {
+      const CR = E.buildCosting(rep, D, D.settings);
+      return `<a class="rcard" href="#/r/${rep.id}" style="--ev:${c1}"><div class="band"></div>
+        <div class="small muted">Costing${CR.event ? ` · for ${esc(CR.event.name)}` : ""}</div>
+        <div class="t">${esc(rep.name || "Untitled")}</div>
+        <div class="d">${F.dateY(rep.start)} → ${F.dateY(rep.end)} · ${CR.T.lines} lines</div>
+        <div class="m"><div><b>${F.usd(CR.T.total)}</b>total</div><div><b>${F.usd(CR.T.influencerCost)}</b>influencers</div><div><b>${F.usd(CR.T.eventCost)}</b>event</div><div><b>${CR.T.creators}</b>creators</div></div></a>`;
+    }
+    const R = E.buildReport(rep, D, D.settings);
+    const bad = R.flags.filter(f => f.level === "bad").length;
+    return `<a class="rcard" href="#/r/${rep.id}" style="--ev:${c1}">
+      <div class="band"></div>
+      <div class="small muted">${rep.type === "week" ? "Weekly" : "Event"} · data ${F.date(rep.dataDate)}${bad ? ` · <span class="down">${bad} to fix</span>` : ""}</div>
+      <div class="t">${esc(rep.name || "Untitled")}</div>
+      <div class="d">${F.dateY(rep.start)} → ${F.dateY(rep.end)} · ${R.T.posts} posts${R.T.extra ? ` + ${R.T.extra} extra` : ""}</div>
+      <div class="m">
+        <div><b>${F.big(R.T.totalViews)}</b>views</div>
+        <div><b>${F.pct(R.T.er)}</b>eng. rate</div>
+        <div><b>${F.usd(R.T.blendedCPM)}</b>blended CPM</div>
+        <div><b>${F.usd(R.T.totalSpend)}</b>spend</div>
+      </div></a>`;
+  };
+  const group = (title, type, empty) => {
+    const list = reps.filter(r => r.type === type).sort(sortStart);
+    return `<div class="sec"><h2>${title}</h2>${list.length ? `<div class="rcards">${list.map(card).join("")}</div>` : `<div class="empty">${empty}</div>`}</div>`;
+  };
+  app.innerHTML = `
+    <div class="row" style="align-items:flex-end">
+      <div class="grow"><h1>Reports</h1><p class="sub">Every costing, event and weekly report.</p></div>
+      <a class="btn pink" href="#/new">+ Create a report</a>
+    </div>
+    ${group("Events &amp; launches", "event", "No event reports yet.")}
+    ${group("Costing", "costing", "No costing reports yet.")}
+    ${group("Weekly", "week", "No weekly reports yet.")}`;
+}
+
+/* ───────── create: which report? ───────── */
+let lastImport = "";                                            // the last workbook import's results, kept across redraws
+function renderNew(D){
+  const events = Object.values(D.reports).filter(r => r.type === "event").sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  app.innerHTML = `<h1>What do you want to <span class="serif">make?</span></h1>
+    <div class="sec choose">
+      <button class="pick" data-new="costing">
+        <span class="pk">Costing report</span>
+        <span class="pd">What an event cost. Drop in invoices — PDFs or photos — and it reads them: models and influencers go to the influencer list, production, venue, travel and the rest go to event costs.</span>
+        <span class="pw">For: event costing person</span>
+      </button>
+      <button class="pick" data-new="event">
+        <span class="pk">Event report</span>
+        <span class="pd">What an event, launch or ad push reached: views, engagement, ad spend and CPM, with costs pulled from its costing report.</span>
+        <span class="pw">For: founders · organic + ads people</span>
+      </button>
+      <button class="pick" data-new="week">
+        <span class="pk">Weekly report</span>
+        <span class="pd">Last week's posts against the week before: account views vs target, engagement, ad spend, blended CPM.</span>
+        <span class="pw">Every Monday</span>
+      </button>
+    </div>
+    <div class="card sec">
+      <h3>…or import what you already have</h3>
+      <p class="sub" style="margin-top:0">Paste a Google Sheets link, or upload files below. Every tab it recognises becomes a report: weekly report tabs → weekly reports, event tables → event reports (with costs from a “Total Spend” tab), lists of invoices or costs → costing reports for review. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="wb-url" class="grow" placeholder="https://docs.google.com/spreadsheets/d/…">
+        <button class="btn pink" id="wb-go">Import</button>
+      </div>
+      <div class="or">or upload files</div>
+      <label class="drop" id="nf-drop"><input type="file" id="nf-files" multiple hidden>
+        <b>Drop files or a whole folder</b><span>any format: Excel / Numbers / CSV exports of reports, Meta ad exports, invoices as PDF, photos (incl. iPhone HEIC), Word, email…</span></label>
+      <div class="row" style="margin-top:10px">
+        <label class="btn ghost sm">Choose a folder…<input type="file" id="nf-folder" webkitdirectory multiple hidden></label>
+        <input type="text" id="nf-event" class="grow" list="ev-names3" placeholder="Event name for invoices (optional — otherwise the folder name is used)">
+        <datalist id="ev-names3">${events.map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
+      </div>
+      <div id="wb-res" class="result ok">${lastImport}</div>
+    </div>`;
+  app.querySelector(".choose").insertAdjacentHTML("afterend", `
+    <div class="card sec" id="cost-form" hidden>
+      <h3>Which event is this costing for?</h3>
+      <p class="sub" style="margin-top:0">Every costing report belongs to one event. Pick an existing event or type a new name.</p>
+      <div class="row" style="margin-top:10px">
+        <input type="text" id="cost-ev" class="grow" list="ev-names" placeholder="Event name, e.g. US Open" autocomplete="off">
+        <datalist id="ev-names">${events.map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
+        <button class="btn pink" id="cost-go" disabled>Start costing →</button>
+      </div>
+    </div>`);
+  const form = document.getElementById("cost-form"), evIn = document.getElementById("cost-ev"), go = document.getElementById("cost-go");
+  evIn.oninput = () => (go.disabled = !evIn.value.trim());
+  evIn.onkeydown = e => { if (e.key === "Enter" && evIn.value.trim()) go.click(); };
+  go.onclick = () => { const id = startCosting(evIn.value.trim()); location.hash = `#/r/${id}/add`; };
+  const wbGo = document.getElementById("wb-go"), wbRes = document.getElementById("wb-res");
+  const showResults = out => {
+    const made = out.filter(x => x.id || x.kind === "Ad export");
+    wbRes.className = made.length ? "result ok" : "result err";
+    wbRes.innerHTML = lastImport = (made.length ? `Imported ${made.length}:` : "Nothing there looked like a report, ad export or cost.")
+      + `<div class="list">${out.map(x => `<div class="li"><span class="chip k">${esc(x.kind)}</span><span class="grow">${esc(x.tab)}${x.note ? ` <span class="muted small">· ${esc(x.note)}</span>` : ""}</span>${x.id ? `<a class="btn ghost sm" href="#/r/${x.id}/${x.kind === "Costing" ? "add" : "summary"}">Open</a>` : x.kind === "Ad export" ? `<a class="btn ghost sm" href="#/ads">Open</a>` : ""}</div>`).join("")}</div>`;
+  };
+  const uploadFiles = async files => {
+    wbRes.className = "result"; wbRes.textContent = "Reading files…";
+    try { showResults(await importFiles(files, document.getElementById("nf-event").value.trim(), t => (wbRes.textContent = t))); }
+    catch (e) { wbRes.className = "result err"; wbRes.textContent = e.message; }
+  };
+  const nfDrop = document.getElementById("nf-drop"), nfFiles = document.getElementById("nf-files"), nfFolder = document.getElementById("nf-folder");
+  nfFiles.onchange = () => uploadFiles([...nfFiles.files]);
+  nfFolder.onchange = () => uploadFiles([...nfFolder.files]);
+  nfDrop.ondragover = e => { e.preventDefault(); nfDrop.classList.add("over"); };
+  nfDrop.ondragleave = () => nfDrop.classList.remove("over");
+  nfDrop.ondrop = async e => { e.preventDefault(); nfDrop.classList.remove("over"); uploadFiles(await filesFromDrop(e.dataTransfer)); };
+  wbGo.onclick = async () => {
+    wbGo.disabled = true; wbRes.className = "result"; wbRes.textContent = "Reading the sheet…";
+    try {
+      const out = await importWorkbook(document.getElementById("wb-url").value, t => (wbRes.textContent = t));
+      showResults(out);
+    } catch (e) { wbRes.className = "result err"; wbRes.textContent = e.message; }
+    wbGo.disabled = false;
+  };
+  app.querySelectorAll("[data-new]").forEach(b => b.onclick = () => {
+    if (b.dataset.new !== "costing") return newReport(b.dataset.new);
+    form.hidden = false; evIn.focus(); form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
+
+function newReport(type){
+  if (type === "costing") { location.hash = "#/new"; return; }
+  const id = uid();
+  const t = today();
+  let rep;
+  if (type === "week") {
+    const d = new Date(t + "T12:00:00Z");
+    const back = d.getUTCDay() + 7;                             // weeks run Sunday–Saturday: Sunday of last week
+    const start = E.addDays(t, -back), end = E.addDays(start, 6);
+    rep = { id, type, name: `Week of ${F.date(start)}`, start, end, dataDate: t, importIds: [], account: {}, otherSpend: [], colour: "" };
+  } else {
+    rep = { id, type, name: "New event", start: t, end: t, dataDate: t, postIds: [], importIds: [], influencers: [], eventCosts: [], colour: "Pink", fresh: true };
+  }
+  rep.fx = { ...db().settings.fx };
+  put("ss.report." + id, rep);
+  location.hash = `#/r/${id}/data`;
+}
+
+/* A costing report for an event name: links to the event report of the same name when there is one. */
+function startCosting(eventName){
+  const D = db();
+  const ev = Object.values(D.reports).find(r => r.type === "event" && r.name.trim().toLowerCase() === eventName.toLowerCase());
+  if (ev?.costingId && D.reports[ev.costingId]) return ev.costingId;               // that event already has one: open it
+  const id = newCosting({ name: eventName, eventName, start: ev?.start || today(), end: ev?.end || today(), colour: ev?.colour
+    || Object.keys(E.EVENT_COLOURS).find(k => eventName.toLowerCase().includes(k.toLowerCase())) || "Pink" });
+  if (ev) put("ss.report." + ev.id, { ...ev, costingId: id });
+  return id;
+}
+
+function newCosting(fields){
+  const id = uid(), t = today();
+  put("ss.report." + id, { id, type: "costing", name: "New costing", start: t, end: t, colour: "Pink", influencers: [], eventCosts: [],
+    fx: { ...db().settings.fx }, fresh: !fields.name, ...fields });
+  return id;
+}
+
+/* ───────── a report ───────── */
+function prevFor(rep, D){
+  if (rep.type === "week") {
+    const p = rep.prevId ? D.reports[rep.prevId] : E.previousWeek(rep, D.reports);
+    return p || null;
+  }
+  return rep.compareId ? D.reports[rep.compareId] || null : E.previousEvent(rep, D.reports);
+}
+
+function renderReport(D, id, tab, q){
+  const rep = D.reports[id];
+  if (!rep) { app.innerHTML = `<div class="empty">This report doesn't exist (or was deleted). <a href="#/">Back to reports</a></div>`; return; }
+  const R = E.buildReport(rep, D, D.settings);
+  const prev = prevFor(rep, D);
+  const P = prev ? E.buildReport(prev, D, D.settings) : null;
+  if (P && rep.type === "week" && P.dataDate && R.dataDate && P.dataDate !== R.dataDate) {
+    const ageA = E.daysBetween(rep.end, R.dataDate), ageB = E.daysBetween(prev.end, P.dataDate);
+    R.flags.push({ level: "info", text: `Last week was pulled ${F.date(P.dataDate)} (${ageB} days after its week), this week ${F.date(R.dataDate)} (${ageA} days after). Posts with more days live usually have more views — compare with that in mind.` });
+  }
+  const [c1, c2] = evColours(rep);
+  document.documentElement.style.setProperty("--ev", c1);
+  document.documentElement.style.setProperty("--ev2", c2);
+  const nFix = R.flags.filter(f => f.level !== "info").length;
+  const T = R.T;
+  const title = rep.type === "week"
+    ? `Weekly Social Report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${D.settings.account} · ${T.posts} posts · Instagram data pulled ${F.dateY(R.dataDate)}`
+    : `${esc(rep.name)} · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.dateY(R.dataDate)}`;
+  const tabs = [["summary", "Summary"], ["full", "Full report"], ["data", "Add data"], ["match", "Ad matching"], ["checks", `Checks${nFix ? `<span class="cnt">${nFix}</span>` : ""}`]];
+  app.innerHTML = `
+    <div class="rhead" style="--ev:${c1}">
+      <div class="grow">
+        <div class="small muted"><a href="#/reports">Reports</a> / ${rep.type === "week" ? "Weekly" : "Event"}</div>
+        <h1 style="margin-top:6px">${esc(rep.name || "Untitled")}</h1>
+        <div class="titleline">${title}</div>
+      </div>
+      <div class="row noprint">
+        <button class="btn ghost sm" id="csv">Download CSV</button>
+        <button class="btn ghost sm" data-pdf="summary" data-pdf-id="${id}">⬇ PDF · Summary</button>
+        <button class="btn ghost sm" data-pdf="full" data-pdf-id="${id}">⬇ PDF · Full report</button>
+        <button class="btn ghost sm" id="share">Copy link</button>
+        <button class="btn danger sm" id="hdr-del">Delete report</button>
+      </div>
+    </div>
+    <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
+    <div id="body"></div>`;
+  document.getElementById("hdr-del").onclick = () => deleteReport(rep);
+  document.getElementById("share").onclick = () => copy(location.href.replace(/#.*/, "") + `#/r/${id}`, "Link copied");
+  document.getElementById("csv").onclick = () => downloadCSV(rep);
+  const body = document.getElementById("body");
+  if (tab === "data") return renderData(body, rep, R, D);
+  if (tab === "match") return renderMatch(body, rep, R, D);
+  if (tab === "checks") return renderChecks(body, R);
+  if (tab === "summary") { body.innerHTML = `<div class="sec">${rep.type === "week" ? weeklySummaryHTML(rep, R, P, D) : eventSummaryHTML(rep, R, P, D)}</div><div class="sec row noprint"><a class="btn" href="#/r/${id}/full">View full report →</a></div>`; return; }
+  body.innerHTML = rep.type === "week" ? weeklyHTML(rep, R, P, D) : eventHTML(rep, R, P, D);
+  wireReport(body, rep, R, P, D);
+}
+
+function flagsHTML(R, limit){
+  const order = { bad: 0, warn: 1, info: 2 };
+  const list = [...R.flags].sort((a, b) => order[a.level] - order[b.level]);
+  const shown = limit ? list.filter(f => f.level !== "info").slice(0, limit) : list;
+  if (!shown.length) return limit ? "" : `<div class="flag info"><b>OK</b>Every check passed.</div>`;
+  const lab = { bad: "Fix", warn: "Check", info: "Note" };
+  return `<div class="flags">${shown.map(f => `<div class="flag ${f.level}"><b>${lab[f.level]}</b><span>${esc(f.text)}</span></div>`).join("")}
+    ${limit && list.length > shown.length ? `<a class="small muted" href="#/r/${R.rep.id}/checks">See all ${list.length} checks →</a>` : ""}</div>`;
+}
+function renderChecks(body, R){
+  const missing = Object.values(R.missing);
+  body.innerHTML = `<div class="sec"><h2>Checks before reporting</h2>${flagsHTML(R)}</div>
+    ${missing.length ? `<div class="sec"><h2>Missing data</h2><div class="flags">${missing.map(m => `<div class="flag warn"><b>Need</b><span>${esc(m.need)} — from ${esc(m.who)}</span></div>`).join("")}</div></div>` : ""}
+    <div class="sec"><h2>What's checked</h2><p class="sub">Total = organic + paid on every row · no negative organic views · no post twice in a report or across events · spend in the rows equals spend in the exports (after FX) · every export has a Views column and covers the date range · every post has views and one pull date · ads matched by name, separate ad versions and unmatched ads are flagged · ads CPM within $${D0().settings.cpmRange[0]}–$${D0().settings.cpmRange[1]} · Organic CPM left blank without event cost · influencer and event costs kept separate.</p></div>`;
+}
+const D0 = () => db();
+
+function tbl(id, head, rows, opts = {}){
+  return `<div class="tbl-tools noprint"><button class="btn ghost sm" data-copy="${id}">Copy for Sheets</button></div>
+  <div class="tw"><table id="${id}"${opts.ev ? ' class="ev"' : ""}><thead><tr class="${opts.ev ? "evhead" : ""}">${head.map(h => `<th class="${h.n ? "n" : ""}">${h.t ?? h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+}
+const N = t => ({ t, n: true });
+
+/* weekly per-post table (§3.4) */
+function weeklyPostTable(R){
+  const rows = R.rows.map(r => `<tr class="${r.kind === "extra" ? "extra" : r.adOnly ? "adrow" : ""}">
+    <td>${F.date(r.date)}</td><td>${r.adOnly && !r.post ? "—" : who(r)}</td><td>${esc(r.format)}</td>
+    <td class="cap">${r.adOnly ? `<i>${KIND[r.kind]}</i> · ` : ""}${link(r, 38)}</td>
+    <td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.reach)}</td><td class="n">${F.int(r.likes)}</td><td class="n">${F.int(r.comments)}</td>
+    <td class="n">${F.int(r.saves)}</td><td class="n">${F.int(r.shares)}</td><td class="n">${F.int(r.interactions)}</td>
+    <td class="n">${vsBench(r.er, R.bench)}</td><td class="n">${F.int(r.visits)}</td><td class="n">${F.int(r.follows)}</td>
+    <td>${chip(r.boosted)}</td><td class="cap">${esc(r.campaigns || "—")}</td><td class="n">${r.spend ? F.usd(r.spend) : "—"}</td>
+    <td class="n">${F.int(r.paid)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${r.cpm == null ? "—" : F.usd(r.cpm)}</td></tr>`);
+  const T = R.T;
+  rows.push(`<tr class="total"><td colspan="4">Total</td><td class="n">${F.int(T.totalViews)}</td><td class="n">${F.int(T.reach)}</td><td class="n">${F.int(T.likes)}</td><td class="n">${F.int(T.comments)}</td><td class="n">${F.int(T.saves)}</td><td class="n">${F.int(T.shares)}</td><td class="n">${F.int(T.interactions)}</td><td class="n">${vsBench(T.er, R.bench)}</td><td class="n">${F.int(T.visits)}</td><td class="n">${F.int(T.postFollows)}</td><td></td><td></td><td class="n">${F.usd(T.adSpend)}</td><td class="n">${F.int(T.paidViews)}</td><td class="n">${F.int(T.organicViews)}</td><td class="n">${F.usd(T.adsCPM)}</td></tr>`);
+  return tbl("t-posts", ["Date posted", "Account", "Format", "Content / link", N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Interactions"), N("Eng. rate"), N("Profile visits"), N("Follows"), "Boosted", "Ad campaign", N("Ad spend (USD)"), N("Paid views"), N("Organic views"), N("Ads CPM")], rows);
+}
+
+function cmpCell(c){
+  if (!c || c.prev == null) return "—";
+  const f = v => c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+  return `${f(c.prev)} · <span class="${c.status === "🟢" ? "up" : c.status === "🔴" ? "down" : ""}">${c.rate ? F.pp(c.change) : F.chg(c.change)}</span>`;
+}
+function cmpTable(id, A, B, labelA, labelB){
+  const rows = E.compareReports(A, B).map(c => {
+    const f = v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+    return `<tr><td>${esc(c.name)}</td><td class="n">${f(c.cur)}</td><td class="n">${f(c.prev)}</td><td class="n">${c.change == null ? "—" : c.rate ? F.pp(c.change) : F.chg(c.change)}</td><td>${c.status || "—"}</td></tr>`;
+  });
+  return tbl(id, ["Metric", N(esc(labelA)), N(esc(labelB)), N("Change"), "Status"], rows);
+}
+
+function tiles(list){
+  return `<div class="tiles">${list.map(([k, v, s]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`).join("")}</div>`;
+}
+
+function rankHTML(R){
+  return `<div class="grid g3">${Object.entries(R.rankings).map(([name, list]) => `<div class="card" style="padding:14px">
+    <h3>${esc(name)}</h3>
+    ${list.length ? `<ol style="margin:0;padding-left:18px;display:grid;gap:8px">${list.map(r => `<li style="font-size:12.5px;line-height:1.45">${link(r, 50)}<br><span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${F.int(r.views)} views · ${F.int(r.reach)} reach · <b>${F.pct(r.er)}</b>${r.campaigns ? ` · ${esc(r.campaigns)}` : ""}</span><br>${reachChip(r)}</li>`).join("")}</ol>` : `<p class="small muted">${/lowest/i.test(name) ? "Every post in this group is already in its top 3." : "No posts in this group."}</p>`}
+  </div>`).join("")}</div>`;
+}
+
+function breakdownTable(id, groups, bench){
+  return tbl(id, ["", N("Posts"), N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Eng. rate"), N(`vs ${F.pct(bench)}`)],
+    groups.map(g => `<tr class="${g.name === "Total" ? "total" : ""}"><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.int(g.reach)}</td><td class="n">${F.int(g.likes)}</td><td class="n">${F.int(g.comments)}</td><td class="n">${F.int(g.saves)}</td><td class="n">${F.int(g.shares)}</td><td class="n">${vsBench(g.er, bench)}</td><td class="n">${g.vsBench == null ? "—" : F.pp(g.vsBench * 100)}</td></tr>`));
+}
+
+function campaignTable(R){
+  if (!R.campaigns.length) return `<p>${miss(R.missing.ads || { need: "ad exports", who: "Ads person" })}</p>`;
+  const rows = R.campaigns.map(c => `<tr><td>${esc(c.campaign)}</td><td class="n">${c.mixedCur ? "mixed" : `${esc(c.currency)} ${c.spend.toLocaleString("en-US", { maximumFractionDigits: 2 })}`}</td><td class="n">${F.usd(c.usd)}</td><td class="n">${F.int(c.views)}</td><td class="n">${F.int(c.reach)}</td><td class="n">${F.usd(c.cpm)}</td><td class="n">${F.pct(c.pctPaid)}</td><td class="n">${c.follows == null ? miss(R.missing.adFollows) : F.int(c.follows)}</td><td class="n">${c.cpf == null ? "—" : F.usd(c.cpf)}</td></tr>`);
+  rows.push(`<tr class="total"><td>Total</td><td></td><td class="n">${F.usd(R.T.adSpend)}</td><td class="n">${F.int(R.T.paidViews)}</td><td class="n">${F.int(R.campaigns.reduce((s, c) => s + c.reach, 0))}</td><td class="n">${F.usd(R.T.adsCPM)}</td><td class="n">100%</td><td class="n">${F.int(R.T.adFollows)}</td><td class="n">${F.usd(R.T.costPerFollow)}</td></tr>`);
+  return tbl("t-camp", ["Campaign", N("Spend (original)"), N("Spend (USD)"), N("Views"), N("Reach*"), N("CPM"), N("% of paid views"), N("Follows"), N("Cost / follow")], rows)
+    + `<p class="small dim">*Reach is summed across ads, so people reached by two ads are counted twice.</p>`;
+}
+
+function rundownHTML(rep, R){
+  return `<div class="sec"><h2>Rundown</h2>
+    <div class="card">
+      <p class="sub" style="margin:0 0 12px">Claude writes this from the numbers above — it never calculates anything itself. Copy the prompt, paste it into Claude, then paste the answer back here so it's saved with the report.</p>
+      <div class="row noprint" style="margin-bottom:12px"><button class="btn pink" id="prompt">Copy prompt for Claude</button><button class="btn ghost sm" id="editRun">${rep.rundown ? "Edit rundown" : "Paste rundown"}</button></div>
+      <div id="runEdit" hidden><textarea id="runText" placeholder="Paste Claude's rundown here (Markdown is fine)">${esc(rep.rundown || "")}</textarea><div class="row" style="margin-top:8px"><button class="btn" id="runSave">Save rundown</button></div></div>
+      <div class="rundown" id="runView">${rep.rundown ? md(rep.rundown) : `<p class="muted">No rundown yet.</p>`}</div>
+    </div></div>`;
+}
+
+function notesHTML(rep, R, D){
+  const imps = (rep.importIds || []).map(i => D.imports[i]).filter(Boolean);
+  const fxUsed = [...new Set([...R.rows.flatMap(r => r.ads.map(a => a.currency)), ...R.influencers.map(l => l.currency), ...R.eventCosts.map(l => l.currency), ...(R.other || []).map(l => l.currency)])].filter(c => c && c !== "USD");
+  const missing = Object.values(R.missing);
+  return `<div class="sec"><h2>Notes</h2><div class="card small" style="line-height:1.7">
+    <div><b>Data date:</b> ${F.dateY(R.dataDate)} — Instagram numbers and ad exports should both be pulled this day.</div>
+    <div><b>Ad exports:</b> ${imps.length ? imps.map(i => `${esc(i.name)} (${F.date(i.rangeStart)}–${F.date(i.rangeEnd)}, ${i.level} level)`).join(" · ") : "none"}</div>
+    <div><b>FX:</b> ${fxUsed.length ? fxUsed.map(c => `1 ${c} = ${R.fx[c] == null ? "?" : "$" + (+R.fx[c]).toFixed(6)}`).join(" · ") : "all USD"}</div>
+    <div><b>Engagement rate</b> = (likes + comments + saves + shares) ÷ views. Instagram views include ad views; organic = views − ad views. Paid views are ad Views, never impressions.</div>
+    <div><b>Time zones:</b> post dates in New York time; Instagram account insights count days in Pacific time.</div>
+    ${rep.type === "week" ? `<div><b>Ads on older posts</b> count toward spend and paid views as their own rows; their posts' Instagram views stay with the week they were posted.</div>` : ""}
+    ${missing.length ? `<div><b>Missing:</b> ${missing.map(m => `${esc(m.need)} (${esc(m.who)})`).join(" · ")}</div>` : ""}
+  </div></div>`;
+}
+
+function weeklyHTML(rep, R, P, D){
+  const T = R.T, A = R.account || {};
+  const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
+  const accMiss = { need: "account numbers from the IG dashboard", who: "Account insights (§2.4)" };
+  const prevName = P ? `${P.rep.name}` : "Last week";
+  const tgtNote = `${F.big(D.settings.target.views)} per ${D.settings.target.period}, prorated to ${F.big(A.weekTarget)} for ${A.days} days`;
+  const nc = [R.breakdown[0], R.breakdown[1]];
+  const summary = [
+    ["Views (account)", or(A.views, F.int, accMiss), A.views != null ? `${F.pct(A.pctTarget)} of target (${tgtNote}) · ${cmpCell(C["Account views"])}` : "", C["Account views"]?.status],
+    ["Account interactions", or(A.interactions, F.int, accMiss), cmpCell(C["Account interactions"]), C["Account interactions"]?.status],
+    ["Account eng. rate", or(A.er, F.pct), cmpCell(C["Account eng. rate"]), C["Account eng. rate"]?.status],
+    ["Post eng. rate (per view)", vsBench(T.er, R.bench), `benchmark ${F.pct(R.bench)} · ${cmpCell(C["Eng. rate (per view)"])}`, C["Eng. rate (per view)"]?.status],
+    ["Male / Female", A.malePct != null || A.femalePct != null ? `${F.pct(A.malePct)} / ${F.pct(A.femalePct)}` : miss(accMiss), "", ""],
+    ["Followers increase (net)", or(A.netFollowers, F.int, accMiss), `follows from this week's posts: ${F.int(T.postFollows)}`, ""],
+    ["% views followers / non-followers", A.followersPct != null || A.nonFollowersPct != null ? `${F.pct(A.followersPct)} / ${F.pct(A.nonFollowersPct)}` : miss(accMiss), "", ""],
+    ["Organic views", F.int(T.organicViews), cmpCell(C["Organic views"]), C["Organic views"]?.status],
+    ["Paid views", F.int(T.paidViews), cmpCell(C["Paid views"]), C["Paid views"]?.status],
+    ["Ad spend", F.usd(T.adSpend), cmpCell(C["Ad spend (USD)"]), C["Ad spend (USD)"]?.status],
+    ["Ads CPM", or(T.adsCPM, F.usd, R.missing.ads), cmpCell(C["Ads CPM"]), C["Ads CPM"]?.status],
+    ["Blended CPM", or(T.blendedCPM, F.usd), (R.withoutCollabs ? `without collab posts: ${F.usd(R.withoutCollabs.blendedCPM)} · ` : "") + cmpCell(C["Blended CPM"]), C["Blended CPM"]?.status],
+    ["Cost per follow (ads)", or(T.costPerFollow, F.usd, R.missing.adFollows || (T.adFollows === 0 ? { need: "ad follows (none recorded)", who: "Ads person" } : null)), cmpCell(C["Cost per follow"]), C["Cost per follow"]?.status],
+  ].map(([m, v, vs, s]) => `<tr><td>${m}</td><td class="n">${v}</td><td class="wrap">${vs || ""}</td><td>${s || ""}</td></tr>`);
+
+  return `
+    <div class="sec noprint">${flagsHTML(R, 4)}</div>
+    <div class="sec">${tiles([
+      ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
+      ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
+      ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}`],
+      ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
+      ["Ad spend", F.usd(T.adSpend), `${F.int(T.paidViews)} paid views`],
+      ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
+    ])}</div>
+    ${R.dominant ? `<div class="sec"><div class="flag warn"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post — ${link(R.dominant, 60)} — drove ${F.pct(R.dominant.views / T.postViews)} of this week's post views.${R.withoutCollabs ? ` Without collab posts: ${F.int(R.withoutCollabs.views)} views, blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div></div>` : ""}
+    <div class="sec"><h2>Summary</h2>${tbl("t-sum", ["Metric", N("Value"), `vs target / ${esc(prevName)}`, "Status"], summary)}</div>
+    <div class="sec"><h2>This week's posts</h2>${R.rows.length ? weeklyPostTable(R) : `<div class="empty">${miss(R.missing.posts || { need: "posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}</div>
+    <div class="sec grid g2">
+      <div><h2>Nancy vs collab</h2>${tbl("t-nc", ["", N("Posts"), N("Views"), N("% of views"), N("Eng. rate")], nc.map(g => `<tr><td>${g.name}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.pct(T.postViews ? g.views / T.postViews : null)}</td><td class="n">${vsBench(g.er, R.bench)}</td></tr>`))}</div>
+      <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
+    </div>
+    <div class="sec"><h2>This week vs ${P ? esc(prevName) : "last week"}</h2>
+      ${P ? cmpTable("t-wow", R, P, "This week", prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
+      <div class="row noprint small" style="margin-top:10px"><span class="muted">Compare with</span><select id="prevPick"><option value="">Automatic (week before)</option>${Object.values(D.reports).filter(r => r.type === "week" && r.id !== rep.id).sort((a, b) => a.start < b.start ? 1 : -1).map(r => `<option value="${r.id}" ${rep.prevId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+    </div>
+    <div class="sec"><h2>Rankings</h2>${rankHTML(R)}</div>
+    <div class="sec"><h2>Ad campaigns</h2>${campaignTable(R)}</div>
+    ${rundownHTML(rep, R)}
+    ${notesHTML(rep, R, D)}`;
+}
+
+function eventHTML(rep, R, P, D){
+  const T = R.T, S = R.score;
+  const [c1] = evColours(rep);
+  const evRows = R.rows.map((r, i) => `<tr class="${r.kind === "extra" ? "extra" : r.adOnly ? "adrow" : ""}">
+    <td class="n">${i + 1}</td><td>Instagram</td><td>${esc(r.format)}</td><td class="cap">${link(r, 40)}</td><td>${chip(r.boosted)}</td>
+    <td class="n">${r.spend ? F.usd(r.spend) : "—"}</td><td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${F.int(r.paid)}</td>
+    <td class="n">${r.cpm == null ? "—" : F.usd(r.cpm)}</td><td class="small">${esc(KIND[r.kind])}${r.owner ? ` (${esc(r.owner)})` : ""}${r.kind === "post" && r.collab ? esc(r.account) : ""}</td></tr>`);
+  evRows.push(`<tr class="total"><td colspan="5">Total Spend</td><td class="n">${F.usd(T.adSpend)}</td><td class="n">${F.int(T.totalViews)}</td><td class="n">${F.int(T.organicViews)}</td><td class="n">${F.int(T.paidViews)}</td><td class="n">${F.usd(T.adsCPM)}</td><td></td></tr>`);
+
+  const spendBlock = [
+    ["Total Spend", F.usd(T.totalSpend)],
+    ["Ads", F.usd(T.adSpend)],
+    ["Event (non-ad)", T.nonAd == null ? miss({ need: "influencer and event costs", who: "Event costing person" }) : F.usd(T.nonAd)],
+    ["Total impressions (views)", F.int(T.totalViews)],
+    ["Organic impressions", `${F.int(T.organicViews)} <span class="muted">(${F.pct(T.pctOrganic)})</span>`],
+    ["Boosted impressions", `${F.int(T.paidViews)} <span class="muted">(${F.pct(T.pctPaid)})</span>`],
+    ["Organic only", T.organicOnly == null ? "<span class='muted'>blank — no event cost</span>" : "$" + T.organicOnly.toFixed(5)],
+    ["Organic CPM", T.organicCPM == null ? "<span class='muted'>blank — no event cost</span>" : F.usd(T.organicCPM)],
+    ["Ads only", T.adsOnly == null ? "N/A" : "$" + T.adsOnly.toFixed(5)],
+    ["Ads CPM", T.adsCPM == null ? "N/A" : F.usd(T.adsCPM)],
+    ["Blended CPM", `<b>${F.usd(T.blendedCPM)}</b>`],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
+
+  const costSplit = [
+    [`${esc(R.infLabel)} cost`, or(T.influencerCost, F.usd, R.missing.influencers)],
+    [`Event cost (excl. ${esc(R.infLabel.toLowerCase())} & ads)`, or(T.eventCost, F.usd, R.missing.eventCosts)],
+    ["Non-ad total", or(T.nonAd, F.usd)],
+    ["Ad spend", F.usd(T.adSpend)],
+    ["Total Spend", `<b>${F.usd(T.totalSpend)}</b>`],
+    [`${esc(R.infLabel)} cost per 1,000 collab views`, or(T.influencerPer1kCollab, F.usd, T.influencerCost == null ? R.missing.influencers : null)],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
+
+  const engRows = R.contentRows.map(r => `<tr class="${r.kind === "extra" ? "extra" : ""}"><td>${F.date(r.date)}</td><td>${who(r)}</td><td>${esc(r.format)}</td><td class="cap">${link(r, 38)}</td><td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.reach)}</td><td class="n">${F.int(r.likes)}</td><td class="n">${F.int(r.comments)}</td><td class="n">${F.int(r.saves)}</td><td class="n">${F.int(r.shares)}</td><td class="n">${F.int(r.interactions)}</td><td class="n">${vsBench(r.er, R.bench)}</td><td class="n">${F.int(r.visits)}</td><td class="n">${F.int(r.follows)}</td><td>${chip(r.boosted)}</td></tr>`);
+
+  const ss = R.shareability;
+  const score = [
+    ["Total views", `${F.int(T.totalViews)} — ${F.pct(T.pctPaid)} paid / ${F.pct(T.pctOrganic)} organic`],
+    ["Total reach", `${F.int(S.reachNancy + S.reachCollab)} — Nancy ${F.int(S.reachNancy)} / collab ${F.int(S.reachCollab)} <span class="dim">(summed across posts)</span>`],
+    ["Total engagements", `${F.int(T.interactions)} — ${F.int(T.likes)} likes · ${F.int(T.comments)} comments · ${F.int(T.saves)} saves · ${F.int(T.shares)} shares`],
+    ["Eng. rate (per view)", `organic ${vsBench(S.erOrganic, R.bench)} · boosted ${vsBench(S.erBoosted, R.bench)} · Nancy ${vsBench(S.erNancy, R.bench)} · collab ${vsBench(S.erCollab, R.bench)}`],
+    ["Content mix", `${F.pct(S.pctViewsNancy)} of views from Nancy posts · ${F.pct(S.pctEngCollab)} of engagements from collab posts`],
+    ["Ad CPM by campaign", R.campaigns.length ? R.campaigns.map(c => `${esc(c.campaign)} ${F.usd(c.cpm)}`).join(" · ") : miss(R.missing.ads)],
+    ["Blended CPM", F.usd(T.blendedCPM)],
+    ["Cost per engagement", F.usd(T.costPerEngagement)],
+    ["Follows from ads", T.adFollows == null ? miss(R.missing.adFollows || R.missing.ads) : `${F.int(T.adFollows)} · ${F.usd(T.costPerFollow)} per follow`],
+    ["Follows from posts", F.int(T.postFollows)],
+    ["Shares + saves", `${F.int(ss.total)}${ss.top ? ` — top post had ${F.pct(ss.top.pct)} (${link(ss.top.row, 30)})${ss.top.pct > 0.5 ? " <b>· one post drove most of them</b>" : ""}` : ""}`],
+  ].map(([k, v]) => `<tr><td>${k}</td><td class="wrap">${v}</td></tr>`);
+
+  const otherEvents = Object.values(D.reports).filter(r => r.type === "event" && r.id !== rep.id);
+  return `
+    <div class="sec noprint">${flagsHTML(R, 4)}</div>
+    <div class="sec">${tiles([
+      ["Total views", F.big(T.totalViews), `${F.pct(T.pctOrganic)} organic`],
+      ["Total spend", F.usd(T.totalSpend), `ads ${F.usd(T.adSpend)} · non-ad ${F.usd(T.nonAd)}`],
+      ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
+      ["Eng. rate", F.pct(T.er), `benchmark ${F.pct(R.bench)}`],
+      ["Engagements", F.big(T.interactions), `${F.usd(T.costPerEngagement)} each`],
+      ["Follows", T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0)), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
+    ])}</div>
+    <div class="sec"><h2>Event table</h2>
+      ${R.rows.length ? tbl("t-event", ["Sr. no.", "Platform", "Format", "Link", "Boosted", N("Amount spent (USD)"), N("Total views"), N("Organic views"), N("Boosted views"), N("Boosted CPM"), "Note"], evRows, { ev: true })
+        : `<div class="empty">${miss({ need: "the event's posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}
+      <p class="small dim">Order: event posts → extra posts (shaded) → separate ad versions → ad-only rows → campaign rows.</p>
+    </div>
+    <div class="sec grid g2">
+      <div><h2>Total spend</h2>${tbl("t-spend", ["", N("")], spendBlock)}</div>
+      <div><h2>Cost split</h2>${tbl("t-cost", ["", N("USD")], costSplit)}
+        ${R.influencers.length ? `<div style="margin-top:14px">${tbl("t-infl", ["Creator", "Deliverables", N("Fee"), N("USD")], R.influencers.map(l => `<tr><td>${esc(l.creator)}</td><td class="cap">${esc(l.deliverables)}</td><td class="n">${esc(l.currency)} ${F.int(l.fee)}</td><td class="n">${F.usd(l.usd)}</td></tr>`))}</div>` : ""}
+        ${R.byCategory.length ? `<div style="margin-top:14px">${tbl("t-cat", ["Event cost category", N("Lines"), N("USD")], R.byCategory.map(c => `<tr><td>${esc(c.category)}</td><td class="n">${c.lines}</td><td class="n">${F.usd(c.usd)}</td></tr>`))}</div>` : ""}
+      </div>
+    </div>
+    ${(() => { const b = costBreakdownHTML(R); return b ? `<div class="sec"><h2>Cost breakdown — where the money went</h2>${b.replace('<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>', '<div class="card">')}</div>` : ""; })()}
+    <div class="sec"><h2>Ad spend by campaign</h2>${campaignTable(R)}</div>
+    <div class="sec"><h2>Content performance</h2>${breakdownTable("t-break", R.breakdown, R.bench)}${T.extra ? `<p class="small dim">Includes the ${T.extra} extra post${T.extra > 1 ? "s" : ""}. Ad-only rows have no engagement data, so they're left out.</p>` : ""}</div>
+    <div class="sec"><h2>Event scorecard</h2>${tbl("t-score", ["", ""], score)}</div>
+    <div class="sec"><h2>Rankings — by eng. rate</h2>${rankHTML(R)}</div>
+    ${rundownHTML(rep, R)}
+    <div class="sec"><h2>Engagement by post</h2>${tbl("t-eng", ["Date", "Account", "Format", "Content / link", N("Views"), N("Reach"), N("Likes"), N("Comments"), N("Saves"), N("Shares"), N("Interactions"), N("Eng. rate"), N("Profile visits"), N("Follows"), "Boosted"], engRows)}</div>
+    <div class="sec"><h2>Compare with another event</h2>
+      <div class="row noprint small" style="margin-bottom:10px"><select id="cmpPick"><option value="">Event just before (automatic)</option>${otherEvents.map(r => `<option value="${r.id}" ${rep.compareId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
+      ${P ? cmpTable("t-cmp", R, P, rep.name, P.rep.name) : `<p class="small muted">Pick an earlier event to see this one against it.</p>`}
+    </div>
+    ${notesHTML(rep, R, D)}`;
+}
+
+function wireReport(body, rep, R, P, D){
+  body.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => copy(tableTSV(document.getElementById(b.dataset.copy)), "Table copied — paste into Sheets"));
+  const pr = body.querySelector("#prompt");
+  if (pr) pr.onclick = () => copy(E.rundownPrompt(R, P), "Prompt copied — paste it into Claude");
+  const er = body.querySelector("#editRun");
+  if (er) er.onclick = () => { body.querySelector("#runEdit").hidden = false; body.querySelector("#runText").focus(); };
+  const rs = body.querySelector("#runSave");
+  if (rs) rs.onclick = () => { put("ss.report." + rep.id, { ...rep, rundown: body.querySelector("#runText").value }); render(); toast("Rundown saved"); };
+  const pp = body.querySelector("#prevPick");
+  if (pp) pp.onchange = () => { put("ss.report." + rep.id, { ...rep, prevId: pp.value || null }); render(); };
+  const cp = body.querySelector("#cmpPick");
+  if (cp) cp.onchange = () => { put("ss.report." + rep.id, { ...rep, compareId: cp.value || null }); render(); };
+}
+
+function downloadCSV(rep){
+  const tables = [...document.querySelectorAll("#body table")];
+  if (!tables.length || route().parts[2] !== "full") { location.hash = `#/r/${rep.id}/full`; setTimeout(() => downloadCSV(rep), 100); return; }
+  const parts = tables.map(t => {
+    const h = t.closest(".sec")?.querySelector("h2")?.innerText || "";
+    return [h, ...[...t.rows].map(tr => [...tr.cells].map(c => csvCell(c.innerText.replace(/\s+/g, " ").trim())).join(","))].join("\n");
+  });
+  const blob = new Blob([parts.join("\n\n")], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${(rep.name || "report").replace(/[^\w]+/g, "-")}-${rep.dataDate || ""}.csv`;
+  a.click();
+}
+
+/* tiny Markdown for the rundown */
+function md(src){
+  const lines = String(src).replace(/\r/g, "").split("\n");
+  let out = "", inList = false, tbl = [];
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\*(.+?)\*/g, "<i>$1</i>");
+  const flushT = () => {
+    if (!tbl.length) return;
+    const rows = tbl.filter(l => !/^\s*\|?\s*:?-{2,}/.test(l)).map(l => l.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim()));
+    out += `<div class="tw"><table><thead><tr>${rows[0].map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    tbl = [];
+  };
+  for (const l of lines) {
+    if (/^\s*\|/.test(l)) { if (inList) { out += "</ul>"; inList = false; } tbl.push(l); continue; }
+    flushT();
+    const h = l.match(/^(#{1,3})\s+(.*)/);
+    if (h) { if (inList) { out += "</ul>"; inList = false; } out += `<h3>${inline(h[2])}</h3>`; continue; }
+    const li = l.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/);
+    if (li) { if (!inList) { out += "<ul>"; inList = true; } out += `<li>${inline(li[1])}</li>`; continue; }
+    if (inList) { out += "</ul>"; inList = false; }
+    if (l.trim()) out += `<p>${inline(l)}</p>`;
+  }
+  flushT(); if (inList) out += "</ul>";
+  return out;
+}
+
+/* ───────── founder summaries: the few numbers that matter ───────── */
+
+/* Part-to-whole bar: fixed series order, 2px gaps, labels with values beside it (never colour alone). */
+const SERIES = ["var(--s1)", "var(--s2)", "var(--s3)"];
+function splitBar(parts, fmt){
+  const shown = parts.filter(p => p.value != null);
+  const total = shown.reduce((s, p) => s + (p.value || 0), 0);
+  if (!total) return `<p class="small muted">No numbers yet.</p>`;
+  return `<div class="splitbar">${parts.map((p, i) => p.value ? `<i style="flex:${p.value};background:${SERIES[i]}" data-tip="${esc(p.label)}: ${esc(fmt(p.value))} (${F.pct(p.value / total)})"></i>` : "").join("")}</div>
+    <div class="legend">${parts.map((p, i) => `<div><span class="sw" style="background:${SERIES[i]}"></span><span class="lk">${esc(p.label)}</span><b>${p.value == null ? `<span class="miss">${esc(p.missing || "missing")}</span>` : esc(fmt(p.value))}</b><span class="muted">${p.value == null ? "" : F.pct(p.value / total)}</span></div>`).join("")}</div>`;
+}
+
+/* The rundown's headline, if Claude's rundown has been pasted in. */
+function rundownHeadline(md){
+  if (!md) return "";
+  const lines = md.split("\n").map(l => l.trim());
+  const h = lines.findIndex(l => /^#+\s*headline/i.test(l));
+  const pick = (h >= 0 ? lines.slice(h + 1) : lines).find(l => l && !/^#|^\||^[-*]\s*$/.test(l));
+  return (pick || "").replace(/^[-*]\s+/, "").replace(/\*\*/g, "");
+}
+
+function miniCmp(R, P, names){
+  if (!P) return "";
+  const all = Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c]));
+  const rows = names.map(n => all[n]).filter(Boolean).map(c => {
+    const f = v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
+    return `<tr><td>${esc(c.name)}</td><td class="n">${f(c.cur)}</td><td class="n">${f(c.prev)}</td><td class="n">${c.change == null ? "—" : `${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`}</td></tr>`;
+  });
+  return `<div class="tw"><table><thead><tr><th></th><th class="n">This</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+}
+
+const reachChip = r => { const t = E.reachType(r); return `<span class="chip rt-${t.kind}" title="${esc(t.label)}">${esc(t.label)}</span>`; };
+function topPosts(R, by = "views", n = 3){
+  const list = by === "er"
+    ? [...R.contentRows].filter(r => r.er != null).sort((a, b) => b.er - a.er).slice(0, n)
+    : [...R.contentRows].filter(r => r.views != null).sort((a, b) => b.views - a.views).slice(0, n);
+  if (!list.length) return `<p class="small muted">${by === "er" && R.contentRows.length ? "Needs likes, comments, saves and shares per post — not in this data yet." : "No posts yet."}</p>`;
+  return `<ol class="top">${list.map(r => `<li>${link(r, 60)}<span class="muted">${esc(r.collab ? r.account : "Nancy")} · ${esc(r.format)} · ${by === "er" ? `<b>${F.pct(r.er)}</b> eng. · ${F.int(r.views)} views` : `<b>${F.int(r.views)}</b> views · ${F.pct(r.er)} eng.`}</span>${reachChip(r)}</li>`).join("")}</ol>`;
+}
+
+function issuesLine(rep, R){
+  const n = R.flags.filter(f => f.level !== "info").length + Object.keys(R.missing).length;
+  return n ? `<p class="small" style="margin-top:12px"><a class="down" href="#/r/${rep.id}/checks">${n} thing${n > 1 ? "s" : ""} missing or to check →</a></p>` : "";
+}
+
+/* Every cost line by group, so it's clear where the money came from (skipped while only sheet totals exist) */
+function costBreakdownHTML(R){
+  const lines = [...R.influencers, ...R.eventCosts];
+  if (!lines.length || lines.every(l => l.source === "Total Spend tab")) return "";
+  const groups = [
+    { name: R.infLabel, list: R.influencers.map(l => ({ what: [l.creator, l.deliverables].filter(Boolean).join(" — "), amt: l.fee, cur: l.currency, usd: l.usd })) },
+    ...E.categoriesIn(R.eventCosts).map(c => ({ name: c, list: R.eventCosts.filter(l => (l.category || "Other") === c).map(l => ({ what: [l.item, l.vendor].filter(Boolean).join(" — "), amt: (l.qty == null ? 1 : l.qty) * (l.unit || 0), cur: l.currency, usd: l.usd })) })),
+  ].filter(g => g.list.length);
+  const money = (v, c) => c === "USD" ? F.usd(v) : `${{ GBP: "£", EUR: "€", HKD: "HK$", MXN: "MX$" }[c] || c + " "}${(+v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const cur = [...new Set(lines.map(l => l.currency))];
+  const one = cur.length === 1 && cur[0] !== "USD" ? cur[0] : null;              // show the original currency too when it's all one
+  const total = lines.reduce((a, l) => a + (l.usd || 0), 0);
+  const rows = groups.flatMap(g => {
+    const usd = g.list.reduce((a, x) => a + (x.usd || 0), 0), orig = g.list.reduce((a, x) => a + (x.amt || 0), 0);
+    const label = g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? g.list[0].what : g.list.length === 1 && !g.list[0].what ? g.name : `${g.name} · ${g.list.length}`;
+    return [`<tr class="seg"><td>${esc(label)}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
+      ...(g.list.length === 1 && !g.list[0].what || g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? [] : g.list).map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
+  });
+  rows.push(`<tr class="total"><td>Total (excl. ads)</td>${one ? `<td class="n">${money(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0), one)}</td>` : ""}<td class="n">${F.usd(total)}</td><td class="n">100%</td></tr>`);
+  return `<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>
+    <div class="tw"><table><thead><tr><th></th>${one ? `<th class="n">${one}</th>` : ""}<th class="n">USD</th><th class="n">Share</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
+    ${one ? `<p class="small dim" style="margin-top:6px">1 ${one} = $${(+R.fx[one]).toFixed(4)}</p>` : ""}</div>`;
+}
+
+function eventSummaryHTML(rep, R, P){
+  const T = R.T;
+  const head = rundownHeadline(rep.rundown)
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this event did.");
+  const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
+  return `
+    <p class="headline">${esc(head)}</p>
+    <div class="tiles big">
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
+      <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.pct(T.pctOrganic)} organic</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
+      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
+    </div>
+    <div class="mini">
+      <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
+      <div><span>Organic CPM</span><b>${T.organicCPM == null ? "—" : F.usd(T.organicCPM)}</b></div>
+      <div><span>Cost per follow</span><b>${or(T.costPerFollow, F.usd)}</b></div>
+      <div><span>Follows</span><b>${T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0))}</b></div>
+      <div><span>Cost per engagement</span><b>${or(T.costPerEngagement, F.usd)}</b></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Where the money went</h3>${splitBar([
+        { label: R.infLabel, value: T.influencerCost, missing: "no costing yet" },
+        { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
+        { label: "Ads", value: T.adSpend },
+      ], F.usd)}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
+      <div class="card"><h3>Where the views came from</h3>${splitBar([
+        { label: "Organic", value: T.organicViews },
+        { label: "Paid (ads)", value: T.paidViews },
+      ], F.int)}
+      <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
+      <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+    ${issuesLine(rep, R)}`;
+}
+
+function weeklySummaryHTML(rep, R, P){
+  const T = R.T, A = R.account || {};
+  const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
+  const ch = c => !c || c.change == null ? "" : ` · ${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`;
+  const head = rundownHeadline(rep.rundown)
+    || (R.contentRows.length ? `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${F.chg(C["Post views"].change)} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.` : "Add the week's posts to see how it went.");
+  return `
+    <p class="headline">${esc(head)}</p>
+    <div class="tiles big">
+      <div class="tile"><div class="k">Account views</div><div class="v">${A.views == null ? "—" : F.big(A.views)}</div><div class="s">${A.views == null ? "add from the IG dashboard" : `${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}`}</div></div>
+      <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
+      <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
+    </div>
+    <div class="mini">
+      <div><span>Ad spend</span><b>${F.usd(T.adSpend)}</b></div>
+      <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
+      <div><span>Net followers</span><b>${A.netFollowers == null ? "—" : F.int(A.netFollowers)}</b></div>
+      <div><span>Follows from posts</span><b>${F.int(T.postFollows)}</b></div>
+      <div><span>Profile visits</span><b>${F.int(T.visits)}</b></div>
+    </div>
+    ${R.dominant ? `<div class="flag warn" style="margin-top:14px"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div>` : ""}
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Where the views came from</h3>${splitBar([
+        { label: "Organic", value: T.organicViews },
+        { label: "Paid (ads)", value: T.paidViews },
+      ], F.int)}</div>
+      <div class="card"><h3>Nancy vs collab</h3>${splitBar([
+        { label: "Nancy's posts", value: R.breakdown[0].views },
+        { label: "Collab posts", value: R.breakdown[1].views },
+      ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
+      <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+    ${issuesLine(rep, R)}`;
+}
+
+/* hover tooltip for any [data-tip] mark */
+(() => {
+  const tip = document.createElement("div");
+  tip.className = "vtip"; tip.hidden = true; document.body.append(tip);
+  document.addEventListener("mouseover", e => { const t = e.target.closest("[data-tip]"); if (!t) { tip.hidden = true; return; } tip.textContent = t.dataset.tip; tip.hidden = false; });
+  document.addEventListener("mousemove", e => { if (!tip.hidden) { tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = e.clientY + 14 + "px"; } });
+})();
+
+/* ───────── costing reports ───────── */
+const QUEUE = new Map();                           // costing id -> invoices read, waiting for review
+
+function renderCosting(D, rep, tab){
+  const CR = E.buildCosting(rep, D, D.settings);
+  const eventName = rep.eventName || CR.event?.name || (rep.name && rep.name !== "New costing" ? rep.name.replace(/\s+costs$/i, "") : "");
+  const [c1, c2] = evColours(rep);
+  document.documentElement.style.setProperty("--ev", c1);
+  document.documentElement.style.setProperty("--ev2", c2);
+  const waiting = (QUEUE.get(rep.id) || []).length;
+  const tabs = [["summary", "Summary"], ["costs", "Costs"], ["add", `Add invoices${waiting ? `<span class="cnt">${waiting}</span>` : ""}`]];
+  app.innerHTML = `
+    <div class="rhead" style="--ev:${c1}">
+      <div class="grow">
+        <div class="small muted"><a href="#/reports">Reports</a> / Costing</div>
+        <h1 style="margin-top:6px">${esc(eventName || "Untitled event")}</h1>
+        <div class="titleline">Costing report · ${F.date(rep.start)}–${F.dateY(rep.end)} · ${CR.T.lines} lines${CR.event ? ` · for <a href="#/r/${CR.event.id}">${esc(CR.event.name)}</a>` : ""}</div>
+      </div>
+      <div class="row noprint">
+        <button class="btn ghost sm" id="k-csv">Export CSV</button>
+        <button class="btn ghost sm" id="k-tsv">Copy for Sheets</button>
+        <button class="btn ghost sm" data-pdf="costing" data-pdf-id="${rep.id}">⬇ PDF</button>
+        <button class="btn danger sm" id="hdr-del">Delete report</button>
+      </div>
+    </div>
+    <nav class="subtabs">${tabs.map(([k, l]) => `<a href="#/r/${rep.id}/${k}" class="${tab === k ? "on" : ""}">${l}</a>`).join("")}</nav>
+    <div id="body"></div>`;
+  document.getElementById("k-csv").onclick = () => {
+    const blob = new Blob([costingRows(CR).map(r => r.map(c => csvCell(String(c ?? ""))).join(",")).join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${(rep.name || "costing").replace(/[^\w]+/g, "-")}.csv`; a.click();
+  };
+  document.getElementById("hdr-del").onclick = () => deleteReport(rep);
+  document.getElementById("k-tsv").onclick = () => copy(costingRows(CR).map(r => r.join("\t")).join("\n"), "Costs copied — paste into Sheets");
+  const body = document.getElementById("body");
+  if (!eventName) {                                            // nothing else until it has an event
+    body.innerHTML = `<div class="sec card"><h3>Which event is this costing for?</h3>
+      <div class="row" style="margin-top:10px"><input type="text" id="k-evname" class="grow" list="ev-names2" placeholder="Event name">
+      <datalist id="ev-names2">${Object.values(D.reports).filter(r => r.type === "event").map(e => `<option value="${esc(e.name)}">`).join("")}</datalist>
+      <button class="btn pink" id="k-evgo">Save</button></div></div>`;
+    document.getElementById("k-evgo").onclick = () => {
+      const v = document.getElementById("k-evname").value.trim();
+      if (!v) return toast("Type the event name");
+      const ev = Object.values(db().reports).find(r => r.type === "event" && r.name.trim().toLowerCase() === v.toLowerCase() && !r.costingId);
+      put("ss.report." + rep.id, { ...db().reports[rep.id], name: v, eventName: v, fresh: false });
+      if (ev) put("ss.report." + ev.id, { ...ev, costingId: rep.id });
+      render();
+    };
+    return;
+  }
+  if (tab === "costs") return costingLines(body, rep, CR, D);
+  if (tab === "add") return costingAdd(body, rep, CR);
+  costingSummary(body, rep, CR);
+}
+
+function costingRows(CR){
+  const out = [["List", "Category", "Payee / creator", "Item / deliverables", "Date", "Qty", "Amount", "Currency", "USD", "Invoice #", "Receipt", "Source"]];
+  for (const l of CR.influencers) out.push(["Influencer", "", l.creator, l.deliverables, l.date || "", "", l.fee, l.currency, l.usd == null ? "" : l.usd.toFixed(2), l.invoiceNo || "", l.receipt || "", l.source || ""]);
+  for (const l of CR.eventCosts) out.push(["Event cost", l.category, l.vendor, l.item, l.date || "", l.qty ?? "", l.unit, l.currency, l.usd == null ? "" : l.usd.toFixed(2), l.invoiceNo || "", l.receipt || "", l.source || ""]);
+  out.push(["Total", "", "", "", "", "", "", "", CR.T.total.toFixed(2), "", "", ""]);
+  return out;
+}
+
+function costingSummary(body, rep, CR){
+  const T = CR.T, Ev = CR.E;
+  const max = Math.max(T.influencerCost, ...CR.byCategory.map(c => c.usd), 1);
+  const bars = [{ category: CR.infLabel, usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
+  body.innerHTML = `
+    ${CR.flags.length ? `<div class="sec">${flagsHTML({ flags: CR.flags, rep }, 0)}</div>` : ""}
+    <div class="sec"><div class="tiles big">
+      <div class="tile hero"><div class="k">Total cost</div><div class="v">${F.usd(T.total)}</div><div class="s">${T.lines} lines · excludes ads</div></div>
+      <div class="tile"><div class="k">${esc(CR.infLabel)}</div><div class="v">${F.usd(T.influencerCost)}</div><div class="s">${T.creators} ${T.creators === 1 ? "person" : "people"}</div></div>
+      <div class="tile"><div class="k">Event costs</div><div class="v">${F.usd(T.eventCost)}</div><div class="s">${CR.eventCosts.length} lines</div></div>
+      <div class="tile"><div class="k">${Ev ? "Blended CPM" : "Event"}</div><div class="v">${Ev ? F.usd(Ev.T.blendedCPM) : "—"}</div><div class="s">${Ev ? `with ${F.usd(Ev.T.adSpend)} ads · ${F.big(Ev.T.totalViews)} views` : "link an event report to see CPM"}</div></div>
+    </div></div>
+    <div class="sec grid g2">
+      <div class="card"><h3>Where the money went</h3>
+        ${bars.length ? `<div class="hbars">${bars.map(c => `<div class="hb" data-tip="${esc(c.category)}: ${F.usd(c.usd)} · ${c.lines} line${c.lines > 1 ? "s" : ""}"><span class="hl">${esc(c.category)}</span><span class="ht"><i style="width:${(c.usd / max) * 100}%"></i></span><b>${F.usd(c.usd)}</b></div>`).join("")}</div>` : `<p class="small muted">No costs yet — <a href="#/r/${rep.id}/add">add invoices</a>.</p>`}
+      </div>
+      <div class="card"><h3>${esc(CR.infLabel)}</h3>
+        ${CR.byCreator.length ? `<div class="tw"><table><thead><tr><th>Creator</th><th>Deliverables</th><th class="n">USD</th></tr></thead><tbody>${CR.byCreator.map(l => `<tr><td>${esc(l.creator)}</td><td class="cap">${esc(l.deliverables)}</td><td class="n">${F.usd(l.usd)}</td></tr>`).join("")}</tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+        ${Ev && Ev.T.influencerPer1kCollab != null ? `<p class="small muted" style="margin-top:8px">${F.usd(Ev.T.influencerPer1kCollab)} of influencer cost per 1,000 collab views.</p>` : ""}
+      </div>
+    </div>
+    ${Ev ? `<div class="sec"><h2>What it bought — ${esc(CR.event.name)}</h2>${tiles([
+      ["Total spend", F.usd(Ev.T.totalSpend), "costs + ads"], ["Total views", F.big(Ev.T.totalViews), `${F.pct(Ev.T.pctOrganic)} organic`],
+      ["Blended CPM", F.usd(Ev.T.blendedCPM), "per 1,000 views"], ["Organic CPM", Ev.T.organicCPM == null ? "—" : F.usd(Ev.T.organicCPM), "non-ad cost ÷ organic views"],
+      ["Ads CPM", or(Ev.T.adsCPM, F.usd), ""], ["Cost / engagement", F.usd(Ev.T.costPerEngagement), ""],
+    ])}<p style="margin-top:10px"><a class="btn ghost sm" href="#/r/${CR.event.id}">Open event report →</a></p></div>`
+    : `<div class="sec"><div class="empty">Not linked to an event report yet. Link it under <a href="#/r/${rep.id}/costs">Costs › Details</a> to see CPM.</div></div>`}`;
+}
+
+/* every line editable in place */
+function costingLines(body, rep, CR, D){
+  const events = Object.values(D.reports).filter(r => r.type === "event");
+  const linked = CR.event;
+  const curOpts = cur => [...new Set([...Object.keys(CR.fx), cur])].map(c => `<option ${c === cur ? "selected" : ""}>${esc(c)}</option>`).join("");
+  const inp = (list, i, k, v, w = 120, type = "text") => `<input class="ed" style="width:${w}px" type="${type}" data-l="${list}:${i}:${k}" value="${esc(v ?? "")}">`;
+  const pick = (list, i) => `<td><input type="checkbox" data-pick="${list}:${i}" aria-label="Select line"></td>`;
+  const infRows = CR.influencers.map((l, i) => `<tr>${pick("influencers", i)}<td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete this expense">🗑</button></td></tr>`);
+  const catList = [...new Set([...E.COST_CATEGORIES, ...E.categoriesIn(CR.eventCosts)])];
+  const evRow = (l, i) => `<tr>${pick("eventCosts", i)}<td><select class="ed" data-l="eventCosts:${i}:category">${catList.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete this expense">🗑</button></td></tr>`;
+  const evRows = E.categoriesIn(CR.eventCosts).flatMap(cat => {
+    const ls = CR.eventCosts.filter(l => (l.category || "Other") === cat);
+    if (!ls.length) return [];
+    return [`<tr class="seg"><td colspan="8">${esc(cat)} · ${ls.length}</td><td class="n">${F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0))}</td><td colspan="3"></td></tr>`, ...ls.map(l => evRow(l, l.i))];
+  });
+  body.innerHTML = `
+    <div class="sec"><h2>Details</h2><div class="card"><div class="fields">
+      <label class="f">Event name *<input type="text" id="k-name" value="${esc(rep.eventName || CR.event?.name || rep.name || "")}"></label>
+      <label class="f">Start<input type="date" id="k-start" value="${rep.start || ""}"></label>
+      <label class="f">End<input type="date" id="k-end" value="${rep.end || ""}"></label>
+      <label class="f">For event report<select id="k-event"><option value="">Not linked</option>${events.map(e => `<option value="${e.id}" ${linked?.id === e.id ? "selected" : ""} ${e.costingId && e.costingId !== rep.id ? "disabled" : ""}>${esc(e.name)}${e.costingId && e.costingId !== rep.id ? " (has its own)" : ""}</option>`).join("")}</select></label>
+      <label class="f">Name for influencer costs<input type="text" id="k-inflabel" value="${esc(rep.influencerLabel || "")}" placeholder="Influencers & models"></label>
+      <label class="f">Colour<select id="k-colour">${Object.keys(E.EVENT_COLOURS).map(c => `<option ${rep.colour === c ? "selected" : ""}>${c}</option>`).join("")}</select></label>
+    </div>
+    <details style="margin-top:14px"><summary>FX rates (USD per 1 unit)</summary>
+      <div class="fields" style="margin-top:10px">${Object.keys(CR.fx).filter(c => c !== "USD").map(c => `<label class="f">${c}<input type="text" data-kfx="${c}" value="${CR.fx[c]}"></label>`).join("")}
+      <label class="f">Add currency<input type="text" id="k-fxnew" placeholder="e.g. JPY=0.0067"></label></div>
+    </details>
+    <div class="row" style="margin-top:14px"><button class="btn danger sm" id="k-del">Delete costing report</button></div></div></div>
+
+    ${CR.flags.filter(f => f.level === "bad").length ? `<div class="sec">${flagsHTML({ flags: CR.flags.filter(f => f.level === "bad"), rep }, 0)}</div>` : ""}
+    <div class="selbar" id="selbar" hidden><span id="selcount"></span><button class="btn danger sm" id="seldel">Delete selected</button><button class="btn ghost sm" id="selnone">Clear selection</button></div>
+    <div class="sec"><h2>${esc(CR.infLabel)}</h2>
+      ${infRows.length ? `<div class="tw"><table><thead><tr><th><input type="checkbox" data-pickall="influencers" aria-label="Select all"></th><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
+        <tr class="total"><td colspan="6">${esc(CR.infLabel)} total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addinf">+ Add influencer</button></div>
+    </div>
+    <div class="sec"><h2>Event costs</h2>
+      ${evRows.length ? `<div class="tw"><table><thead><tr><th><input type="checkbox" data-pickall="eventCosts" aria-label="Select all"></th><th>Category</th><th>Item</th><th>Vendor</th><th>Date</th><th>Qty</th><th>Unit price</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${evRows.join("")}
+        <tr class="total"><td colspan="8">Event costs total</td><td class="n">${F.usd(CR.T.eventCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+      <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addcost">+ Add cost</button></div>
+    </div>
+    <div class="sec"><div class="flag info"><b>Total</b><span>${F.usd(CR.T.total)} — influencers ${F.usd(CR.T.influencerCost)} + event costs ${F.usd(CR.T.eventCost)}. Ads are counted in the event report, from the ad exports.</span></div></div>`;
+
+  const save = patch => put("ss.report." + rep.id, { ...db().reports[rep.id], ...patch });
+  const nm = body.querySelector("#k-name");
+  nm.onchange = () => {
+    const v = nm.value.trim();
+    if (!v) { toast("A costing report needs its event name"); nm.value = rep.eventName || rep.name || ""; return; }
+    save({ name: v, eventName: v, fresh: false }); render();
+  };
+  if (rep.fresh) { nm.focus(); nm.select(); }
+  body.querySelector("#k-start").onchange = e => { save({ start: e.target.value }); render(); };
+  body.querySelector("#k-end").onchange = e => { save({ end: e.target.value }); render(); };
+  body.querySelector("#k-colour").onchange = e => { save({ colour: e.target.value }); render(); };
+  body.querySelector("#k-inflabel").onchange = e => { save({ influencerLabel: e.target.value.trim() || null }); render(); };
+  body.querySelector("#k-event").onchange = e => {
+    const D2 = db();
+    if (linked && linked.id !== e.target.value) put("ss.report." + linked.id, { ...D2.reports[linked.id], costingId: null });
+    if (e.target.value) put("ss.report." + e.target.value, { ...D2.reports[e.target.value], costingId: rep.id });
+    render();
+  };
+  body.querySelectorAll("[data-kfx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...CR.fx, [el.dataset.kfx]: v } }); render(); });
+  body.querySelector("#k-fxnew").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...CR.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
+  body.querySelector("#k-del").onclick = () => deleteReport(db().reports[rep.id]);
+  const NUMS = new Set(["fee", "qty", "unit"]);
+  body.querySelectorAll("[data-l]").forEach(el => el.onchange = () => {
+    const [list, i, k] = el.dataset.l.split(":");
+    const cur = db().reports[rep.id];
+    const lines = [...(cur[list] || [])];
+    lines[+i] = { ...lines[+i], [k]: NUMS.has(k) ? E.num(el.value) : el.value };
+    save({ [list]: lines }); render();
+  });
+  /* delete one or many expenses — always undoable */
+  const deleteLines = picks => {
+    const cur = db().reports[rep.id];
+    const before = { influencers: cur.influencers || [], eventCosts: cur.eventCosts || [] };
+    const drop = { influencers: new Set(), eventCosts: new Set() };
+    for (const p of picks) { const [list, i] = p.split(":"); drop[list].add(+i); }
+    save({ influencers: before.influencers.filter((_, j) => !drop.influencers.has(j)), eventCosts: before.eventCosts.filter((_, j) => !drop.eventCosts.has(j)) });
+    render();
+    const n = picks.length;
+    toast(`Deleted ${n} expense${n > 1 ? "s" : ""}`, { label: "Undo", fn: () => { save(before); render(); } });
+  };
+  body.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteLines([b.dataset.del]));
+  const picked = () => [...body.querySelectorAll("[data-pick]:checked")].map(x => x.dataset.pick);
+  const syncBar = () => {
+    const n = picked().length;
+    body.querySelector("#selbar").hidden = !n;
+    body.querySelector("#selcount").textContent = `${n} selected`;
+  };
+  body.querySelectorAll("[data-pick]").forEach(x => x.onchange = syncBar);
+  body.querySelectorAll("[data-pickall]").forEach(x => x.onchange = () => {
+    body.querySelectorAll(`[data-pick^="${x.dataset.pickall}:"]`).forEach(c => (c.checked = x.checked)); syncBar();
+  });
+  body.querySelector("#seldel").onclick = () => { const p = picked(); if (p.length) deleteLines(p); };
+  body.querySelector("#selnone").onclick = () => { body.querySelectorAll("[data-pick],[data-pickall]").forEach(c => (c.checked = false)); syncBar(); };
+  body.querySelectorAll("[data-move]").forEach(b => b.onclick = () => {          // wrong list? flip it
+    const [list, i] = b.dataset.move.split(":"); const cur = db().reports[rep.id];
+    const l = cur[list][+i];
+    const moved = list === "influencers"
+      ? E.invoiceToLine({ type: "event", category: "Other", vendor: l.creator, item: l.deliverables, amount: l.fee, currency: l.currency, date: l.date, invoiceNo: l.invoiceNo, receipt: l.receipt, fileName: l.source })
+      : E.invoiceToLine({ type: "influencer", vendor: l.vendor, item: l.item, amount: (l.qty == null ? 1 : l.qty) * (l.unit || 0), currency: l.currency, date: l.date, invoiceNo: l.invoiceNo, receipt: l.receipt, fileName: l.source });
+    save({ [list]: cur[list].filter((_, j) => j !== +i), [moved.list]: [...(cur[moved.list] || []), moved.line] }); render();
+  });
+  body.querySelector("#k-addinf").onclick = () => { const cur = db().reports[rep.id]; save({ influencers: [...(cur.influencers || []), { creator: "", deliverables: "", fee: null, currency: "USD" }] }); render(); };
+  body.querySelector("#k-addcost").onclick = () => { const cur = db().reports[rep.id]; save({ eventCosts: [...(cur.eventCosts || []), { category: "Other", item: "", qty: null, unit: null, currency: "USD", vendor: "" }] }); render(); };
+}
+
+/* ───────── adding invoices: read, sort, review, add ───────── */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/";
+let pdfLib = null, ocrLib = null;
+async function loadPdf(){
+  if (!pdfLib) { pdfLib = await import(PDFJS + "pdf.min.mjs"); pdfLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.mjs"; }
+  return pdfLib;
+}
+function loadOcr(){
+  if (!ocrLib) ocrLib = new Promise((ok, no) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+    s.onload = () => ok(window.Tesseract); s.onerror = () => no(new Error("Couldn't load the photo reader"));
+    document.head.append(s);
+  });
+  return ocrLib;
+}
+async function ocr(img){
+  const T = await loadOcr();
+  // flatten onto white (transparent PNGs/HEICs read as black otherwise) and enlarge small images
+  let src = img;
+  try {
+    const bmp = img instanceof HTMLCanvasElement ? img : await createImageBitmap(img);
+    const k = Math.min(3, Math.max(1, 1600 / bmp.width));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, 0, 0, c.width, c.height);
+    src = c;
+  } catch { /* formats the browser can't decode go to the reader as they are */ }
+  const { data } = await T.recognize(src, "eng");
+  return data.text || "";
+}
+/* PDF text, rebuilt into lines by position; scanned PDFs fall back to reading the page image */
+async function pdfPages(file){
+  const lib = await loadPdf();
+  const doc = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+  const pages = [];
+  for (let p = 1; p <= Math.min(doc.numPages, 40); p++) {
+    let text = "";
+    const page = await doc.getPage(p);
+    const tc = await page.getTextContent();
+    const rows = new Map();
+    for (const it of tc.items) {
+      if (!it.str?.trim()) continue;
+      const y = Math.round(it.transform[5] / 3);
+      if (!rows.has(y)) rows.set(y, []);
+      rows.get(y).push(it);
+    }
+    text = [...rows.entries()].sort((a, b) => b[0] - a[0]).map(([, its]) => its.sort((a, b) => a.transform[4] - b.transform[4]).map(i => i.str).join("  ")).join("\n");
+    if (text.replace(/\s/g, "").length < 40 && p <= 15) {        // a scanned page: no text layer, read the image
+      const vp = page.getViewport({ scale: 2 });
+      const c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+      await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+      text = await ocr(c);
+    }
+    pages.push(text);
+  }
+  return pages;
+}
+const SKIP_FILE = /^(\.|~\$|thumbs\.db$|desktop\.ini$)/i;             // hidden/system files in folders
+const SHEET_EXT = /\.(xlsx|xlsm|xlsb|xls|ods|numbers|csv|tsv)$/i;
+const loadScript = (src, global) => window[global] ? Promise.resolve(window[global]) : new Promise((ok, no) => {
+  const s = document.createElement("script"); s.src = src;
+  s.onload = () => ok(window[global]); s.onerror = () => no(new Error("Couldn't load a file reader — check the connection"));
+  document.head.append(s);
+});
+const loadXlsx = () => loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", "XLSX");
+const loadMammoth = () => loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js", "mammoth");
+const loadHeic = () => loadScript("https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js", "heic2any");
+const htmlText = h => { const d = new DOMParser().parseFromString(h, "text/html"); d.querySelectorAll("script,style").forEach(x => x.remove()); return d.body?.innerText || d.body?.textContent || ""; };
+
+/* Spreadsheet file (Excel, Numbers, ODS, CSV) → its tabs as CSV text */
+async function sheetTabs(f){
+  if (/\.(csv|tsv)$/i.test(f.name)) return [{ name: f.name.replace(/\.[^.]+$/, ""), text: await f.text() }];
+  const X = await loadXlsx();
+  const wb = X.read(await f.arrayBuffer(), { type: "array", cellDates: true });
+  return wb.SheetNames.map(n => ({ name: wb.SheetNames.length > 1 ? n : f.name.replace(/\.[^.]+$/, ""), sheet: n, text: X.utils.sheet_to_csv(wb.Sheets[n], { blankrows: false }) }))
+    .filter(t => t.text.replace(/[,\s]/g, "").length);
+}
+
+/* Any document → plain text (PDF pages, photos via OCR, Word, email, web page, RTF, plain text) */
+async function docText(f){
+  const n = f.name.toLowerCase();
+  if (/\.pdf$/.test(n) || f.type === "application/pdf") return await pdfPages(f);
+  if (/\.(heic|heif)$/.test(n)) { const conv = await loadHeic(); const png = await conv({ blob: f, toType: "image/png" }); return [await ocr(Array.isArray(png) ? png[0] : png)]; }
+  if (/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp|tiff?)$/.test(n)) return [await ocr(f)];
+  if (/\.docx$/.test(n)) { const m = await loadMammoth(); return [(await m.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value]; }
+  if (/\.(html?|htm)$/.test(n)) return [htmlText(await f.text())];
+  if (/\.eml$/.test(n)) { const t = await f.text(); const body = t.split(/\r?\n\r?\n/).slice(1).join("\n\n"); return [/<html|<body|<div/i.test(body) ? htmlText(body) : body]; }
+  if (/\.rtf$/.test(n)) return [(await f.text()).replace(/\\par[d]?/g, "\n").replace(/\{\*?\\[^{}]+}|[{}]|\\[a-z]+-?\d* ?/gi, "")];
+  if (/\.(doc|pages|key|ppt|pptx|zip|rar|7z)$/.test(n)) throw new Error(/zip|rar|7z/.test(n) ? "Unzip it first, then drop the folder" : "Export it as PDF first");
+  // anything else: use it if it's readable text
+  const t = await f.text();
+  if ((t.match(/[\x00-\x08\x0E-\x1F]/g) || []).length > t.length * 0.01) throw new Error("Can't read this file type — export it as PDF");
+  return [t];
+}
+/* everything inside dropped folders (skips hidden and unreadable files) */
+async function filesFromDrop(dt){
+  const entries = [...dt.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
+  if (!entries.length) return [...dt.files];
+  const out = [];
+  const walk = async entry => {
+    if (SKIP_FILE.test(entry.name)) return;
+    if (entry.isFile) { const f = await new Promise((ok, no) => entry.file(ok, no)); f.relPath = entry.fullPath.replace(/^\//, ""); out.push(f); return; }
+    const reader = entry.createReader();
+    let batch;
+    do { batch = await new Promise((ok, no) => reader.readEntries(ok, no)); for (const e of batch) await walk(e); } while (batch.length);
+  };
+  for (const e of entries) await walk(e);
+  return out;
+}
+/* Any file → invoices: a spreadsheet gives one per row, a document one per invoice inside it */
+async function readFileToInvoices(f){
+  const name = f.name || "file";
+  if (SHEET_EXT.test(name) || /\.txt$/i.test(name) && /[\t,].*\n/.test((await f.text()).slice(0, 500))) {
+    const tabs = SHEET_EXT.test(name) ? await sheetTabs(f) : [{ name, text: await f.text() }];
+    const rows = tabs.flatMap(t => E.mapInvoiceRows(E.parseTable(t.text)).filter(r => r.amount != null).map(r => ({ ...r, fileName: tabs.length > 1 ? `${name} · ${t.name}` : name })));
+    if (rows.length) return rows;
+    if (/\.(csv|tsv|txt)$/i.test(name)) return [E.readInvoice(tabs[0].text, name)];
+    throw new Error("No costs found — it needs a header row with an Amount column");
+  }
+  const parts = E.splitInvoicePages(await docText(f));
+  return parts.map((t, i) => E.readInvoice(t, parts.length > 1 ? `${name} · invoice ${i + 1} of ${parts.length}` : name));
+}
+
+/* put read invoices in a costing report's review list (duplicates flagged and unticked) */
+function queueInvoices(costingId, items){
+  const cur = db().reports[costingId] || {};
+  const next = [...(QUEUE.get(costingId) || [])];
+  for (const x of items) {
+    const dup = !x.error && (E.isDuplicate(x, cur) || next.some(y => !y.error && y.amount === x.amount && y.vendor === x.vendor && (y.invoiceNo || "") === (x.invoiceNo || "")));
+    next.push({ ...x, dup, use: !x.error && !dup && x.amount != null });
+  }
+  QUEUE.set(costingId, next);
+}
+
+function costingAdd(body, rep, CR){
+  const q = QUEUE.get(rep.id) || [];
+  const sureChip = x => `<span class="chip ${x.sure === "high" ? "yes" : x.sure === "medium" ? "k" : "no"}" title="${esc((x.reasons || []).join(" · "))}">${x.sure === "high" ? "Sure" : x.sure === "medium" ? "Check" : "Guess"}</span>`;
+  const qRow = (x, i) => `<tr class="${x.error ? "adrow" : ""}">
+    <td><input type="checkbox" data-q="${i}:use" ${x.use ? "checked" : ""} ${x.error ? "disabled" : ""}></td>
+    <td class="cap small" title="${esc(x.fileName)}">${esc(x.fileName || "pasted")}${x.dup ? `<br><span class="down">possible duplicate</span>` : ""}${x.error ? `<br><span class="down">${esc(x.error)}</span>` : ""}</td>
+    ${x.error ? `<td colspan="10"></td>` : `
+    <td><select class="ed" data-q="${i}:type"><option value="influencer" ${x.type === "influencer" ? "selected" : ""}>${esc(CR.infLabel)}</option><option value="event" ${x.type === "event" ? "selected" : ""}>Event cost</option></select></td>
+    <td><select class="ed" data-q="${i}:category" ${x.type === "influencer" ? "disabled" : ""}>${E.COST_CATEGORIES.map(c => `<option ${c === (x.category || "Other") ? "selected" : ""}>${c}</option>`).join("")}</select></td>
+    <td><input class="ed" style="width:150px" data-q="${i}:vendor" value="${esc(x.vendor)}"></td>
+    <td><input class="ed" style="width:180px" data-q="${i}:item" value="${esc(x.item)}"></td>
+    <td><input class="ed" style="width:125px" type="date" data-q="${i}:date" value="${esc(x.date || "")}"></td>
+    <td><input class="ed" style="width:90px" data-q="${i}:amount" value="${x.amount ?? ""}"></td>
+    <td><input class="ed" style="width:58px" data-q="${i}:currency" value="${esc(x.currency)}"></td>
+    <td class="n">${F.usd(E.toUSD(x.amount, x.currency, CR.fx))}</td>
+    <td><input class="ed" style="width:90px" data-q="${i}:invoiceNo" value="${esc(x.invoiceNo || "")}"></td>
+    <td>${sureChip(x)}</td>`}
+    <td><button class="x" data-qdel="${i}">×</button></td></tr>`;
+  // grouped by segment: influencers & models first, then each event-cost category, then anything unreadable
+  const seg = x => x.error ? "Couldn't read" : x.type === "influencer" ? CR.infLabel : (x.category || "Other");
+  const order = [CR.infLabel, ...E.COST_CATEGORIES, "Couldn't read"];
+  const rows = order.flatMap(name => {
+    const idx = q.map((x, i) => i).filter(i => seg(q[i]) === name);
+    if (!idx.length) return [];
+    const usd = idx.filter(i => q[i].use).reduce((a, i) => a + (E.toUSD(q[i].amount, q[i].currency, CR.fx) || 0), 0);
+    return [`<tr class="seg"><td colspan="9">${esc(name)} · ${idx.length}</td><td class="n">${name === "Couldn't read" ? "" : F.usd(usd)}</td><td colspan="3"></td></tr>`, ...idx.map(i => qRow(q[i], i))];
+  });
+  const n = q.filter(x => x.use && !x.error).length;
+  const segTotals = order.slice(0, -1).map(name => [name, q.filter(x => !x.error && x.use && seg(x) === name).reduce((a, x) => a + (E.toUSD(x.amount, x.currency, CR.fx) || 0), 0)]).filter(([, v]) => v);
+  body.innerHTML = `
+    <div class="sec"><h2>Drop invoices</h2>
+      <label class="drop" id="drop"><input type="file" id="k-files" multiple hidden>
+        <b>Drop invoices or a whole folder here</b><span>or click to choose files · any format: PDF, photos (incl. iPhone HEIC), Excel / Numbers / CSV, Word, email, text</span></label>
+      <div class="row" style="margin-top:10px"><label class="btn ghost sm">Choose a folder…<input type="file" id="k-folder" webkitdirectory multiple hidden></label></div>
+      <div id="k-prog" class="prog" hidden><i></i></div>
+      <div id="k-status" class="result"></div>
+      <p class="small dim">Invoices are read in this browser — the files aren't uploaded or kept. Put the Drive link in “Receipt link” if you want the file on record.</p>
+    </div>
+    <div class="sec"><div class="row"><input type="text" id="k-gs" class="grow" placeholder="…or a Google Sheets link to a list of invoices / costs"><button class="btn sm" id="k-gsgo">Import sheet</button></div></div>
+    <div class="sec"><details><summary>…or paste a list of invoices from Sheets</summary>
+      <p class="sub">One row per invoice with a header row, e.g. <span class="kbd">Payee · Description · Amount · Currency · Date · Invoice # · Type</span>. Type is optional — without it each row is sorted by its words.</p>
+      <textarea id="k-paste" placeholder="Paste rows…" style="min-height:90px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="k-pastego">Read rows</button></div>
+    </details></div>
+    <div class="sec"><h2>Review before adding${q.length ? ` · ${q.length}` : ""}</h2>
+      ${q.length ? `<p class="sub" style="margin:-4px 0 12px">Check the type, amount and currency — hover the Sure/Check/Guess chip to see why it was sorted that way. Models, influencers and creators go to the influencer list; everything else goes to event costs under its category.</p>
+        <div class="tw"><table><thead><tr><th></th><th>File</th><th>Goes to</th><th>Category</th><th>Payee / creator</th><th>What for</th><th>Date</th><th>Amount</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Read</th><th></th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
+        ${segTotals.length ? `<div class="mini" style="margin-top:12px">${segTotals.map(([k, v]) => `<div><span>${esc(k)}</span><b>${F.usd(v)}</b></div>`).join("")}<div><span>Ticked total</span><b>${F.usd(segTotals.reduce((a, [, v]) => a + v, 0))}</b></div></div>` : ""}
+        <div class="row" style="margin-top:12px"><button class="btn pink" id="k-commit" ${n ? "" : "disabled"}>Add ${n} to this costing report</button><button class="btn ghost sm" id="k-clear">Clear list</button></div>`
+      : `<div class="empty">Nothing waiting. Drop invoices above.</div>`}
+    </div>`;
+
+  const setQ = list => { QUEUE.set(rep.id, list); render(); };
+  const enqueue = items => { queueInvoices(rep.id, items); render(); };
+  const handle = async all => {
+    const files = all.filter(f => !SKIP_FILE.test(f.name));
+    const skipped = all.length - files.length;
+    if (!files.length) return toast("No files found");
+    const st = () => document.getElementById("k-status"), pg = () => document.getElementById("k-prog");
+    const out = [];
+    let i = 0;
+    for (const f of files) {
+      i++;
+      if (st()) { st().className = "result"; st().textContent = `Reading ${i} of ${files.length}: ${f.name}…${/^image\//.test(f.type) ? " (photos take a few seconds)" : ""}`; }
+      if (pg()) { pg().hidden = false; pg().firstChild.style.width = `${((i - 1) / files.length) * 100}%`; }
+      try { out.push(...await readFileToInvoices(f)); }
+      catch (e) { out.push({ fileName: f.name, error: e.message || "Couldn't read this file" }); }
+    }
+    enqueue(out);
+    const s2 = st(); if (s2) { s2.className = "result ok"; s2.textContent = `Read ${files.length} file${files.length > 1 ? "s" : ""} → ${out.filter(x => !x.error).length} invoice${out.length === 1 ? "" : "s"}${skipped ? ` (skipped ${skipped} other file${skipped > 1 ? "s" : ""})` : ""} — review below.`; }
+  };
+  const inp = body.querySelector("#k-files");
+  inp.onchange = () => handle([...inp.files]);
+  const drop = body.querySelector("#drop");
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); handle(await filesFromDrop(e.dataTransfer)); };
+  const fold = body.querySelector("#k-folder");
+  fold.onchange = () => handle([...fold.files]);
+  body.querySelector("#k-gsgo").onclick = async () => {
+    const url = body.querySelector("#k-gs").value;
+    const m = url.match(/spreadsheets\/d\/([\w-]{20,})/);
+    if (!m) return toast("That isn't a Google Sheets link");
+    const gid = (url.match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+    try {
+      const rows = E.mapInvoiceRows(E.parseTable(await sheetCsv(m[1], gid))).filter(r => r.amount != null);
+      if (!rows.length) return toast("No costs found in that tab — it needs a header row with an Amount column");
+      enqueue(rows.map(r => ({ ...r, fileName: "Google Sheet" })));
+      toast(`${rows.length} costs read — review below`);
+    } catch (e) { toast(e.message); }
+  };
+  body.querySelector("#k-pastego").onclick = () => {
+    const rows = E.mapInvoiceRows(E.parseTable(body.querySelector("#k-paste").value));
+    if (!rows.length) return toast("Nothing found — include the header row");
+    enqueue(rows);
+  };
+  body.querySelectorAll("[data-q]").forEach(el => el.onchange = () => {
+    const [i, k] = el.dataset.q.split(":");
+    const list = [...(QUEUE.get(rep.id) || [])];
+    const v = k === "use" ? el.checked : k === "amount" ? E.num(el.value) : k === "currency" ? el.value.toUpperCase().trim() : el.value;
+    list[+i] = { ...list[+i], [k]: v, ...(k === "type" && v === "event" && !list[+i].category ? { category: "Other" } : {}), ...(k !== "use" ? { sure: "high", reasons: ["checked by hand"] } : {}) };
+    setQ(list);
+  });
+  body.querySelectorAll("[data-qdel]").forEach(b => b.onclick = () => setQ((QUEUE.get(rep.id) || []).filter((_, j) => j !== +b.dataset.qdel)));
+  const clr = body.querySelector("#k-clear");
+  if (clr) clr.onclick = () => setQ([]);
+  const go = body.querySelector("#k-commit");
+  if (go) go.onclick = () => {
+    const list = QUEUE.get(rep.id) || [];
+    const cur = db().reports[rep.id];
+    const add = { influencers: [...(cur.influencers || [])], eventCosts: [...(cur.eventCosts || [])] };
+    let n = 0;
+    for (const x of list.filter(x => x.use && !x.error)) { const { list: l, line } = E.invoiceToLine(x); add[l].push(line); n++; }
+    put("ss.report." + rep.id, { ...cur, ...add });
+    QUEUE.set(rep.id, list.filter(x => !(x.use && !x.error)));
+    toast(`Added ${n} line${n > 1 ? "s" : ""}`);
+    location.hash = `#/r/${rep.id}/summary`;
+  };
+}
+
+/* ───────── Google Sheet import ─────────
+   Reads a link-shared sheet as CSV (Google allows this from the browser) and loads its
+   posts, per-post ad numbers and account summary into a report. */
+async function sheetCsv(sheetId, gid){
+  let text;
+  try {
+    const r = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`);
+    text = r.ok ? await r.text() : "";
+  } catch { text = ""; }
+  if (!text || /^\s*<!doctype|<html/i.test(text)) throw new Error("Couldn't open the sheet. Share it as “Anyone with the link can view” and try again.");
+  return text;
+}
+
+const sheetLink = (id, gid) => `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${gid}`;
+const sameSheet = (a, b) => {
+  const k = u => { const m = String(u || "").match(/spreadsheets\/d\/([\w-]{20,})/); return m ? m[1] + ":" + ((String(u).match(/[#&?]gid=(\d+)/) || [])[1] || "0") : String(u || ""); };
+  return !!k(a) && k(a) === k(b);                                   // uploaded files compare by "file:<name>#<tab>"
+};
+/* a report made from this sheet tab that someone deleted — don't bring it back */
+const deletedFromSheet = url => Object.values(docs).some(v => v?.deleted && v.sheetUrl && sameSheet(v.sheetUrl, url));
+
+async function importSheet(url, repId, costs){
+  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
+  if (!m) throw new Error("That isn't a Google Sheets link.");
+  const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  url = sheetLink(m[1], gid);
+  const text = await sheetCsv(m[1], gid);
+  if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
+  return importWeeklyText(text, url, repId);
+}
+
+/* A weekly report tab's text (from a link or an uploaded file) → weekly report */
+function importWeeklyText(text, url, repId){
+  const S = E.parseReportSheet(text);
+  if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
+
+  let rep = repId ? db().reports[repId] : Object.values(db().reports).find(r => r.type !== "costing" && sameSheet(r.sheetUrl, url)) || null;
+  if (!rep) {                                                  // one-click import: make the report
+    const type = S.type || "week", id = uid();
+    rep = { id, type, name: type === "week" ? `Week of ${F.date(S.range?.start || today())}` : (S.title.split("·")[0].trim() || "Imported event"),
+      start: S.range?.start || today(), end: S.range?.end || today(), dataDate: S.pulled || today(), importIds: [], postIds: [], account: {},
+      otherSpend: [], influencers: [], eventCosts: [], colour: type === "week" ? "" : "Pink", fx: { ...db().settings.fx } };
+  }
+  const pulled = S.pulled || rep.dataDate || today();
+  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.type === "event" ? rep.id : null);
+  for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+
+  const patch = { sheetUrl: url, dataDate: rep.dataDate || pulled };
+  if (rep.type === "event") patch.postIds = [...new Set([...(rep.postIds || []), ...S.posts.map(p => p.id)])];
+  if (S.range && (rep.fresh || !repId)) Object.assign(patch, { start: S.range.start, end: S.range.end });
+  if (rep.type === "week") {
+    const acc = { ...(rep.account || {}) };
+    for (const [k, v] of Object.entries(S.account)) if (v != null) acc[k] = v;     // the sheet's numbers win on refresh
+    patch.account = acc;
+  }
+  // per-post ad numbers from the sheet stand in for a Meta export, unless a real export is attached
+  const D = db();
+  const realExports = (rep.importIds || []).filter(i => D.imports[i] && !D.imports[i].fromSheet);
+  let sheetImp = (rep.importIds || []).find(i => D.imports[i]?.fromSheet);
+  if (S.ads.length && !realExports.length) {
+    const id = sheetImp || uid();
+    put("ss.import." + id, { id, name: "Ad numbers from the report sheet", fromSheet: true, level: "ad", hasViews: true, hasFollows: false, hasPostIds: true,
+      rows: S.ads.map((a, i) => ({ ...a, i })), rangeStart: S.range?.start || null, rangeEnd: pulled, uploaded: today(),
+      warnings: ["Taken from the sheet's ad columns — upload the Meta export for campaigns and follows."] });
+    patch.importIds = [...new Set([...(rep.importIds || []), id])];
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch, fresh: false });
+  const acc = Object.keys(S.account).length;
+  return { id: rep.id, msg: `Read ${S.posts.length} posts (pulled ${F.date(pulled)})${S.ads.length ? `, ${S.ads.length} boosted post${S.ads.length > 1 ? "s" : ""} with ad numbers` : ""}${acc ? `, ${acc} account numbers` : ""}.${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
+}
+
+/* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
+function importEventTab(text, url, repId, costs, infLabel, breakdown){
+  const S = E.parseEventSheet(text);
+  if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
+  const D = db();
+  let rep = repId ? D.reports[repId] : Object.values(D.reports).find(r => r.type === "event" && sameSheet(r.sheetUrl, url));
+  if (!rep) {
+    const colour = Object.keys(E.EVENT_COLOURS).find(k => S.name.toLowerCase().includes(k.toLowerCase()))
+      || (/london fashion/i.test(S.name) ? "LFW" : "Pink");
+    rep = { id: uid(), type: "event", name: S.name, colour, postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
+  }
+  const pulled = S.dataDate || rep.dataDate || today();
+  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.id);
+  for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+  const patch = { sheetUrl: url, start: S.range?.start || rep.start || today(), end: S.range?.end || rep.end || today(), dataDate: pulled,
+    postIds: [...new Set([...(rep.postIds || []), ...S.postIds])], sheetNotes: S.sheetNotes, fresh: false };
+  const realExports = (rep.importIds || []).filter(i => D.imports[i] && !D.imports[i].fromSheet);
+  if (S.ads.length && !realExports.length) {
+    const id = (rep.importIds || []).find(i => D.imports[i]?.fromSheet) || uid();
+    put("ss.import." + id, { id, name: `${S.name} — ad numbers from the event sheet`, fromSheet: true, level: "ad", hasViews: true, hasFollows: false, hasPostIds: true,
+      rows: S.ads.map((a, i) => ({ ...a, i })), rangeStart: S.range?.start || null, rangeEnd: pulled, uploaded: today(),
+      warnings: ["Taken from the event sheet's rows — upload the Meta exports for ad-level detail and follows."] });
+    patch.importIds = [...new Set([...(rep.importIds || []), id])];
+  }
+  // costs from the Total Spend tab become this event's costing report (two summary lines until invoices are added)
+  if (breakdown || costs && (costs.influencerCost != null || costs.eventCost != null)) {
+    const lines = breakdown ? { influencers: breakdown.influencers || [], eventCosts: breakdown.eventCosts || [] } : {
+      influencers: costs.influencerCost != null ? [{ creator: `${infLabel || "Influencer invoices"} (total from sheet)`, deliverables: "", fee: costs.influencerCost, currency: "USD", source: "Total Spend tab" }] : [],
+      eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
+    };
+    const existing = rep.costingId && D.reports[rep.costingId];
+    const deletedOne = Object.values(docs).some(v => v?.deleted && v.type === "costing" && v.wasFor === rep.id);
+    if (deletedOne && !existing) { /* someone deleted this event's costing: leave it deleted */ }
+    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, influencerLabel: infLabel || null, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    else if ([...(existing.influencers || []), ...(existing.eventCosts || [])].every(l => l.source === "Total Spend tab" || (breakdown && l.source === breakdown.source)))
+      put("ss.report." + existing.id, { ...existing, ...lines, ...(infLabel ? { influencerLabel: infLabel } : {}) });      // refresh only if nobody has added real invoices
+  }
+  if (infLabel) {
+    patch.influencerLabel = infLabel;
+    const k = rep.costingId && db().reports[rep.costingId];               // keep its costing report in step
+    if (k && k.influencerLabel !== infLabel) put("ss.report." + k.id, { ...k, influencerLabel: infLabel });
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch });
+  return { id: rep.id, msg: `Read ${S.posts.length} posts and ${S.ads.length} ad rows for ${esc(S.name)} (data ${F.date(pulled)}).${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
+}
+
+/* #/import?sheet=ID&gid=G                    → one report
+   #/import?sheet=ID&events=G1,G2&totals=GT    → every event tab, with costs from the Total Spend tab */
+/* All tabs of a workbook (Google's sheet viewer lists them), else just the tab in the link. */
+async function listTabs(sheetId, fallbackGid){
+  try {
+    const html = await (await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/htmlview`)).text();
+    const tabs = [...html.matchAll(/\{name: "((?:[^"\\]|\\.)*)", pageUrl: "[^"]*?gid=(\d+)/g)].map(m => ({ name: m[1].replace(/\\(.)/g, "$1"), gid: m[2] }));
+    if (tabs.length) return tabs;
+  } catch {}
+  return [{ name: "", gid: fallbackGid || "0" }];
+}
+
+/* Import every recognisable tab: weekly report → weekly, event table → event (+ costs), cost list → costing (for review). */
+async function importWorkbook(url, progress = () => {}){
+  const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
+  if (!m) throw new Error("That isn't a Google Sheets link.");
+  const sid = m[1], gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
+  const tabs = await listTabs(sid, gid);
+  progress(`Reading ${tabs.length} tab${tabs.length > 1 ? "s" : ""}…`);
+  const texts = await Promise.all(tabs.map(t => sheetCsv(sid, t.gid).catch(() => "")));
+  return importTabs(tabs.map((t, i) => ({ name: t.name || "Sheet", text: texts[i], link: sheetLink(sid, t.gid), from: "Google Sheet" })));
+}
+
+/* Sheet tabs (from a link or uploaded files) → reports:
+   weekly report → weekly · event table → event (+ costs from a summary tab) · Meta ad export → Ad exports library
+   · list of invoices/costs → costing report for review */
+function importTabs(tabs, eventName){
+  let costsBy = {};
+  for (const t of tabs) { const c = t.text ? E.parseEventTotals(t.text) : {}; if (Object.keys(c).length) { costsBy = { ...costsBy, ...c }; t.totals = true; } }
+  const out = [];
+  for (const t of tabs) {
+    const { text, link, name: tab } = t;
+    if (!text) { out.push({ tab, kind: "Skipped", note: "couldn't open it" }); continue; }
+    if (t.totals) { out.push({ tab, kind: "Costs summary", note: "used for each event's costs" }); continue; }
+    try {
+      const T = E.parseTable(text);
+      if (E.isEventSheet(text)) {
+        const name = E.parseEventSheet(text).name;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        out.push({ tab, kind: "Event", id: importEventTab(text, link, null, costsBy[key]).id, note: key ? "with costs" : "" });
+      } else if (E.parseReportSheet(text).posts.length) {
+        out.push({ tab, kind: "Weekly", id: importWeeklyText(text, link).id });
+      } else if (T.headers.some(h => /^amount spent/i.test(h)) && T.headers.some(h => /^(ad|campaign) name$/i.test(h))) {
+        const imp = E.mapAds(T, tab);
+        if (imp.errors.length) { out.push({ tab, kind: "Skipped", note: "Meta ad export — " + imp.errors[0] }); continue; }
+        const id = uid();
+        put("ss.import." + id, { ...imp, id, uploaded: today(), errors: undefined });
+        out.push({ tab, kind: "Ad export", note: `${imp.rows.length} ads saved under Ad exports — attach it to its report in Add data` });
+      } else {
+        const rows = E.mapInvoiceRows(T).filter(r => r.amount != null);
+        if (!rows.length) { out.push({ tab, kind: "Skipped", note: "not a report, event table, ad export or cost list" }); continue; }
+        const id = startCosting(eventName || (/^(sheet\d*|costs?|invoices?)$/i.test(tab) ? "Imported costs" : tab));
+        queueInvoices(id, rows.map(r => ({ ...r, fileName: `${tab} (${t.from || "file"})` })));
+        out.push({ tab, kind: "Costing", id, note: `${rows.length} costs waiting for review` });
+      }
+    } catch (e) { out.push({ tab, kind: "Skipped", note: e.message }); }
+  }
+  return out;
+}
+
+/* Files and folders → reports. Spreadsheets go through the same detector as sheet links;
+   everything else is read as invoices, grouped into a costing report per folder (or the event name typed). */
+async function importFiles(files, eventName, progress = () => {}){
+  files = files.filter(f => !SKIP_FILE.test(f.name));
+  if (!files.length) throw new Error("No files found.");
+  const folderOf = f => { const p = (f.relPath || f.webkitRelativePath || "").split("/"); return p.length > 1 ? p[p.length - 2] : ""; };
+  const tabs = [], invoices = new Map(), out = [];
+  let i = 0;
+  for (const f of files) {
+    progress(`Reading ${++i} of ${files.length}: ${f.name}…`);
+    try {
+      if (SHEET_EXT.test(f.name)) {
+        for (const t of await sheetTabs(f)) tabs.push({ ...t, link: `file:${f.name}#${t.sheet || t.name}`, from: f.name, folder: folderOf(f) });
+      } else {
+        const ev = eventName || folderOf(f);
+        if (!invoices.has(ev)) invoices.set(ev, []);
+        invoices.get(ev).push(...await readFileToInvoices(f));
+      }
+    } catch (e) { out.push({ tab: f.name, kind: "Skipped", note: e.message }); }
+  }
+  out.push(...importTabs(tabs, eventName));
+  for (const [ev, items] of invoices) {
+    if (!ev) { out.push({ tab: `${items.length} invoice${items.length > 1 ? "s" : ""}`, kind: "Skipped", note: "type the event name above (or drop them inside a folder named after the event)" }); continue; }
+    const id = startCosting(ev);
+    queueInvoices(id, items);
+    out.push({ tab: ev, kind: "Costing", id, note: `${items.length} invoice${items.length > 1 ? "s" : ""} waiting for review` });
+  }
+  return out;
+}
+
+async function renderImport(q){
+  if (q.get("events")) {
+    app.innerHTML = `<h1>Importing events…</h1><p class="sub" id="imp-st">Reading the Google Sheet.</p>`;
+    try {
+      const sid = q.get("sheet");
+      const costsBy = q.get("totals") ? E.parseEventTotals(await sheetCsv(sid, q.get("totals"))) : {};
+      const done = [];
+      for (const gid of q.get("events").split(",")) {
+        const url = sheetLink(sid, gid);
+        const text = await sheetCsv(sid, gid);
+        const name = E.parseEventSheet(text).name;
+        document.getElementById("imp-st").textContent = `Importing ${name}…`;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        done.push(importEventTab(text, url, null, costsBy[key]).id);
+      }
+      toast(`Imported ${done.length} events`);
+      location.replace("#/");
+    } catch (e) {
+      app.innerHTML = `<h1>Couldn't import</h1><div class="flag bad" style="margin-top:14px"><b>Error</b><span>${esc(e.message)}</span></div><p><a class="btn" href="#/">Home</a></p>`;
+    }
+    return;
+  }
+  const url = q.get("sheet") ? `https://docs.google.com/spreadsheets/d/${q.get("sheet")}/edit#gid=${q.get("gid") || 0}` : "";
+  app.innerHTML = `<h1>Importing…</h1><p class="sub">Reading the Google Sheet.</p>`;
+  try {
+    const { id } = await importSheet(url);
+    toast("Imported from Google Sheet");
+    location.replace(`#/r/${id}/summary`);
+  } catch (e) {
+    app.innerHTML = `<h1>Couldn't import</h1><div class="flag bad" style="margin-top:14px"><b>Error</b><span>${esc(e.message)}</span></div><p><a class="btn" href="#/">Home</a></p>`;
+  }
+}
+
+/* ───────── add data ───────── */
+function renderData(body, rep, R, D){
+  const isEv = rep.type === "event";
+  const save = patch => { put("ss.report." + rep.id, { ...db().reports[rep.id], ...patch }); };
+  const posts = R.contentRows;
+  const imps = (rep.importIds || []).map(i => D.imports[i]).filter(Boolean);
+  const freeImports = Object.values(D.imports).filter(i => !(rep.importIds || []).includes(i.id));
+  const fxCur = Object.keys(R.fx);
+  const colours = Object.keys(E.EVENT_COLOURS);
+  const candidates = isEv ? Object.values(D.posts).filter(p => !(rep.postIds || []).includes(p.id)).sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 300) : [];
+
+  body.innerHTML = `
+  <div class="sec"><h2>Import from Google Sheet</h2><div class="card">
+    <p class="sub" style="margin-top:0">Paste the link to the team's report sheet — posts, ad spend and account numbers are read straight from it. The sheet must be shared as <b>Anyone with the link can view</b>.</p>
+    <div class="row" style="margin-top:10px"><input type="text" id="g-url" class="grow" placeholder="https://docs.google.com/spreadsheets/d/…" value="${esc(rep.sheetUrl || "")}"><button class="btn" id="g-go">${rep.sheetUrl ? "Refresh from sheet" : "Import"}</button></div>
+    <div id="g-res" class="result"></div>
+  </div></div>
+
+  <div class="sec"><h2>Report details</h2><div class="card"><div class="fields">
+    <label class="f">Name<input type="text" id="d-name" value="${esc(rep.name || "")}"></label>
+    <label class="f">${isEv ? "Start" : "Week starts"}<input type="date" id="d-start" value="${rep.start || ""}"></label>
+    <label class="f">${isEv ? "End" : "Week ends"}<input type="date" id="d-end" value="${rep.end || ""}"></label>
+    <label class="f">Data pulled on<input type="date" id="d-data" value="${rep.dataDate || ""}"></label>
+    <label class="f">Colour<select id="d-colour"><option value="">Default</option>${colours.map(c => `<option ${rep.colour === c ? "selected" : ""}>${c}</option>`).join("")}</select></label>
+  </div>
+  <details style="margin-top:14px"><summary>FX rates for this report (USD per 1 unit)</summary>
+    <div class="fields" style="margin-top:10px">${fxCur.filter(c => c !== "USD").map(c => `<label class="f">${c}<input type="text" data-fx="${c}" value="${R.fx[c]}"></label>`).join("")}
+    <label class="f">Add currency<input type="text" id="fx-new" placeholder="e.g. JPY=0.0067"></label></div>
+    <p class="small dim">Stored with the report so it can be reproduced. HKD default is the 7.8 peg (Cancun used 7.84344).</p>
+  </details>
+  <div class="row" style="margin-top:14px"><button class="btn danger sm" id="d-del">Delete report</button></div>
+  </div></div>
+
+  <div class="sec"><h2>1 · Posts</h2><div class="card">
+    <div class="step"><div class="num ${posts.length ? "done" : ""}">1</div><div class="grow">
+      <div class="who">Organic person</div>
+      <h3>Paste the post table — one row per post</h3>
+      <p class="sub">Copy the rows straight from Google Sheets (with the header row). Columns: <span class="kbd">${TEMPLATES.posts.split("\t").join(" · ")}</span>. ${isEv ? "Posts pasted here are added to this event." : "Posts dated inside the week are included automatically."} Pasting a post again adds a new pull date — nothing is overwritten.</p>
+      <div class="row" style="margin:10px 0"><button class="btn ghost sm" data-tpl="posts">Copy header row</button><label class="small muted">Pulled on <input type="date" id="p-date" value="${rep.dataDate || today()}"></label></div>
+      <textarea id="p-text" placeholder="Paste here…"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="p-go">Add posts</button></div>
+      <div id="p-res" class="result"></div>
+      ${posts.length ? `<div class="list">${posts.map(r => `<div class="li"><span class="chip k">${esc(r.format || "?")}</span>${who(r)}<span class="grow">${link(r, 70)}</span><span class="small muted">${F.int(r.views)} views · ${F.date(r.pulled)}</span>${isEv && r.kind === "post" ? `<button class="x" data-rmpost="${r.id}" title="Remove from this event">×</button>` : !isEv ? `<button class="x" data-expost="${r.id}" title="Leave out of this week">×</button>` : `<span class="chip k">extra</span>`}</div>`).join("")}</div>` : ""}
+      ${isEv && candidates.length ? `<details style="margin-top:12px"><summary>Add posts already in the library (${candidates.length})</summary>
+        <div class="list">${candidates.map(p => `<label class="li"><input type="checkbox" data-addpost="${p.id}"><span class="small muted">${F.date(p.date)}</span><span class="grow">${esc(p.content || p.id)}</span><span class="small muted">${esc(p.collab ? p.account : "Nancy")}</span></label>`).join("")}</div>
+        <button class="btn sm" id="p-add" style="margin-top:8px">Add selected</button></details>` : ""}
+      ${!isEv && (rep.exclude || []).length ? `<p class="small muted">Left out: ${(rep.exclude || []).map(i => `<a href="#" data-unex="${i}">${esc(D.posts[i]?.content?.slice(0, 30) || i)} ↺</a>`).join(" · ")}</p>` : ""}
+    </div></div>
+  </div></div>
+
+  <div class="sec"><h2>2 · Ads</h2><div class="card">
+    <div class="step"><div class="num ${imps.length ? "done" : ""}">2</div><div class="grow">
+      <div class="who">Ads person</div>
+      <h3>Upload the Meta Ads Manager export(s) — ad level</h3>
+      <p class="sub">Level: <b>Ad</b>. Date range: <b>${isEv ? "lifetime through the data date" : "the report week"}</b>. Export <b>every</b> campaign that promoted the content. Needed: Ad name, Campaign name, Ad set name, Amount spent, <b>Views</b>, Reporting starts/ends. Best: Instagram post ID or permalink, Impressions, Reach, Instagram follows.</p>
+      <div class="row" style="margin:10px 0"><input type="file" id="a-file" accept=".csv,.tsv,.txt" multiple></div>
+      <details><summary>…or paste the export</summary><textarea id="a-text" placeholder="Paste CSV or Sheets rows with header"></textarea><button class="btn sm" id="a-paste" style="margin-top:8px">Add export</button></details>
+      <div id="a-res" class="result"></div>
+      ${imps.length ? `<div class="list">${imps.map(i => `<div class="li"><span class="chip k">${i.level}</span><span class="grow"><b>${esc(i.name)}</b> · ${i.rows.length} rows · ${F.date(i.rangeStart)}–${F.date(i.rangeEnd)}${i.warnings?.length ? ` · <span class="down">${esc(i.warnings.join(" "))}</span>` : ""}</span><button class="x" data-rmimp="${i.id}" title="Detach from this report">×</button></div>`).join("")}</div>` : ""}
+      ${freeImports.length ? `<div class="row small" style="margin-top:10px"><span class="muted">Attach an export already uploaded:</span><select id="a-attach"><option value="">Choose…</option>${freeImports.map(i => `<option value="${i.id}">${esc(i.name)} (${F.date(i.rangeStart)}–${F.date(i.rangeEnd)})</option>`).join("")}</select></div>` : ""}
+    </div></div>
+  </div></div>
+
+  ${isEv ? `
+  <div class="sec"><h2>3 · Costs</h2><div class="card">
+    <div class="step"><div class="num ${R.costing ? "done" : ""}">3</div><div class="grow">
+      <div class="who">Event costing person</div>
+      <h3>Costs come from this event's costing report</h3>
+      <p class="sub">Influencer fees and event costs (production, venue, travel, food…) live in a costing report, where invoices can be dropped in and sorted automatically. Ads come from the ad exports above.</p>
+      ${R.costing ? `<div class="list"><div class="li"><span class="grow"><b>${esc(R.costing.name)}</b> · influencers ${F.usd(R.T.influencerCost)} · event costs ${F.usd(R.T.eventCost)} · non-ad total <b>${F.usd(R.T.nonAd)}</b></span><a class="btn ghost sm" href="#/r/${R.costing.id}/summary">Open</a><button class="x" id="k-unlink" title="Unlink">×</button></div></div>`
+        : `<div class="row" style="margin-top:10px"><button class="btn" id="k-new">+ Start costing report for this event</button>
+          ${Object.values(D.reports).filter(r => r.type === "costing").length ? `<select id="k-link"><option value="">…or link an existing one</option>${Object.values(D.reports).filter(r => r.type === "costing").map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>` : ""}</div>`}
+      ${!R.costing && ((rep.influencers || []).length || (rep.eventCosts || []).length) ? `<p class="small muted" style="margin-top:10px">This report still has ${(rep.influencers || []).length + (rep.eventCosts || []).length} cost lines of its own. They're used until a costing report is linked, and move into it when you start one.</p>` : ""}
+    </div></div>
+  </div></div>  </div></div>` : `
+  <div class="sec"><h2>3 · Account numbers</h2><div class="card">
+    <div class="step"><div class="num ${rep.account?.views != null ? "done" : ""}">3</div><div class="grow">
+      <div class="who">IG Professional dashboard › Account insights</div>
+      <h3>This week and last week</h3>
+      <p class="sub">Instagram counts these days in Pacific time. Percentages can be typed as 62 or 62%.</p>
+      <div class="fields" style="margin-top:10px">
+        ${accField("views", "Account views (all content)", rep)}${accField("viewsPrev", "Account views — last week", rep)}
+        ${accField("interactions", "Account interactions", rep)}${accField("interactionsPrev", "Interactions — last week", rep)}
+        ${accField("netFollowers", "Net follower change", rep)}
+        ${accField("followersPct", "% views from followers", rep, true)}${accField("nonFollowersPct", "% views from non-followers", rep, true)}
+        ${accField("malePct", "Male %", rep, true)}${accField("femalePct", "Female %", rep, true)}
+      </div>
+    </div></div>
+  </div></div>
+  <div class="sec"><h2>4 · Other spend (optional)</h2><div class="card">
+    <p class="sub" style="margin-top:0">Non-ad costs tagged to this week (influencer fees, production). Used for Organic CPM and Blended CPM — the report says when it's included.</p>
+    <textarea id="o-text" placeholder="Label	Amount	Currency" style="min-height:70px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="o-add">Add</button></div>
+    ${costList(rep.otherSpend || [], "other", l => `${esc(l.label)} — ${esc(l.currency)} ${l.amount}`)}
+  </div></div>`}
+
+  <div class="sec row"><a class="btn pink" href="#/r/${rep.id}/summary">See the report →</a></div>`;
+
+  /* details */
+  const bind = (sel, key, fn = v => v) => { const el = body.querySelector(sel); el.onchange = () => { save({ [key]: fn(el.value) }); render(); }; };
+  const nm = body.querySelector("#d-name");
+  nm.onchange = () => {                                    // pick the event's colours from its name
+    const colour = Object.keys(E.EVENT_COLOURS).find(k => nm.value.toLowerCase().includes(k.toLowerCase()));
+    save({ name: nm.value, fresh: false, ...(colour && rep.fresh ? { colour } : {}) }); render();
+  };
+  if (rep.fresh) { nm.focus(); nm.select(); } bind("#d-start", "start"); bind("#d-end", "end"); bind("#d-data", "dataDate"); bind("#d-colour", "colour");
+  body.querySelectorAll("[data-fx]").forEach(el => el.onchange = () => { const v = E.num(el.value); if (v == null) return toast("Not a number"); save({ fx: { ...R.fx, [el.dataset.fx]: v } }); render(); });
+  body.querySelector("#fx-new").onchange = e => { const m = e.target.value.match(/^\s*([A-Za-z]{3})\s*[=:]\s*([\d.]+)/); if (!m) return toast("Use the form JPY=0.0067"); save({ fx: { ...R.fx, [m[1].toUpperCase()]: +m[2] } }); render(); };
+  body.querySelector("#d-del").onclick = () => deleteReport(db().reports[rep.id]);
+  body.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => copy(TEMPLATES[b.dataset.tpl] + "\n", "Header row copied — paste it into row 1 of the sheet"));
+
+  body.querySelector("#g-go").onclick = async () => {
+    const res = body.querySelector("#g-res");
+    res.className = "result"; res.textContent = "Reading the sheet…";
+    try {
+      const { msg } = await importSheet(body.querySelector("#g-url").value, rep.id);
+      render(); const r2 = document.getElementById("g-res"); r2.className = "result ok"; r2.innerHTML = msg;
+    } catch (e) { res.className = "result err"; res.textContent = e.message; }
+  };
+
+  /* posts */
+  body.querySelector("#p-go").onclick = () => {
+    const res = body.querySelector("#p-res");
+    const pulled = body.querySelector("#p-date").value || today();
+    const m = E.mapPosts(E.parseTable(body.querySelector("#p-text").value));
+    if (!m.posts.length) { res.className = "result err"; res.innerHTML = esc(m.errors.join(" ") || "Nothing to add — paste rows with the header row."); return; }
+    const existing = db().posts;
+    const merged = E.mergePosts(existing, m.posts, pulled, isEv ? rep.id : null);
+    for (const p of Object.values(merged)) put("ss.post." + p.id, p);
+    const cur = db().reports[rep.id];
+    if (isEv) save({ postIds: [...new Set([...(cur.postIds || []), ...m.posts.map(p => p.id)])], dataDate: cur.dataDate || pulled });
+    const outside = !isEv ? m.posts.filter(p => !p.date || p.date < rep.start || p.date > rep.end).length : 0;
+    render();
+    const r2 = document.getElementById("p-res");
+    r2.className = "result ok";
+    r2.innerHTML = `Added ${m.posts.length} post${m.posts.length > 1 ? "s" : ""} (pulled ${F.date(pulled)}).`
+      + (outside ? ` <span class="down">${outside} dated outside this week — kept in the library, not in this report.</span>` : "")
+      + (m.missingCols.length ? ` <span class="down">Columns not found: ${m.missingCols.join(", ")}.</span>` : "")
+      + (m.errors.length ? ` <span class="down">${esc(m.errors.join(" "))}</span>` : "")
+      + (pulled !== rep.dataDate ? ` <span class="down">Pull date differs from the report's data date (${F.date(rep.dataDate)}).</span>` : "");
+  };
+  body.querySelectorAll("[data-rmpost]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ postIds: (cur.postIds || []).filter(i => i !== b.dataset.rmpost) }); render(); });
+  body.querySelectorAll("[data-expost]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ exclude: [...new Set([...(cur.exclude || []), b.dataset.expost])] }); render(); });
+  body.querySelectorAll("[data-unex]").forEach(b => b.onclick = e => { e.preventDefault(); const cur = db().reports[rep.id]; save({ exclude: (cur.exclude || []).filter(i => i !== b.dataset.unex) }); render(); });
+  const pa = body.querySelector("#p-add");
+  if (pa) pa.onclick = () => { const ids = [...body.querySelectorAll("[data-addpost]:checked")].map(x => x.dataset.addpost); const cur = db().reports[rep.id]; save({ postIds: [...new Set([...(cur.postIds || []), ...ids])] }); render(); };
+
+  /* ads */
+  const addImport = (text, name) => {
+    const imp = E.mapAds(E.parseTable(text), name);
+    const res = document.getElementById("a-res");
+    if (imp.errors.length) { res.className = "result err"; res.innerHTML = `<b>${esc(name)}:</b> ${esc(imp.errors.join(" "))}`; return false; }
+    if (!imp.rows.length) { res.className = "result err"; res.textContent = `${name}: no rows found.`; return false; }
+    const id = uid();
+    put("ss.import." + id, { ...imp, id, uploaded: today(), errors: undefined });
+    const cur = db().reports[rep.id];
+    save({ importIds: [...new Set([...(cur.importIds || []), id])] });
+    return imp;
+  };
+  body.querySelector("#a-file").onchange = async e => {
+    const out = [];
+    for (const f of e.target.files) { const imp = addImport(await f.text(), f.name); if (imp) out.push(`${f.name}: ${imp.rows.length} rows`); else return; }
+    render(); const res = document.getElementById("a-res"); res.className = "result ok"; res.textContent = "Added " + out.join(" · ");
+  };
+  body.querySelector("#a-paste").onclick = () => { const imp = addImport(body.querySelector("#a-text").value, `Pasted export ${today()}`); if (imp) { render(); toast(`Added ${imp.rows.length} ad rows`); } };
+  body.querySelectorAll("[data-rmimp]").forEach(b => b.onclick = () => { const cur = db().reports[rep.id]; save({ importIds: (cur.importIds || []).filter(i => i !== b.dataset.rmimp) }); render(); });
+  const at = body.querySelector("#a-attach");
+  if (at) at.onchange = () => { if (!at.value) return; const cur = db().reports[rep.id]; save({ importIds: [...new Set([...(cur.importIds || []), at.value])] }); render(); };
+
+  /* costs */
+  if (isEv) {
+    const kn = body.querySelector("#k-new");
+    if (kn) kn.onclick = () => {
+      const cur = db().reports[rep.id];
+      const id = newCosting({ name: cur.name, eventName: cur.name, start: cur.start, end: cur.end, colour: cur.colour,
+        influencers: cur.influencers || [], eventCosts: cur.eventCosts || [] });          // carries over any old lines
+      save({ costingId: id }); location.hash = `#/r/${id}/add`;
+    };
+    const kl = body.querySelector("#k-link");
+    if (kl) kl.onchange = () => { if (kl.value) { save({ costingId: kl.value }); render(); } };
+    const ku = body.querySelector("#k-unlink");
+    if (ku) ku.onclick = () => { save({ costingId: null }); render(); };
+  } else {
+    body.querySelectorAll("[data-acc]").forEach(el => el.onchange = () => {
+      const cur = db().reports[rep.id];
+      let v = E.num(el.value);
+      if (v != null && el.dataset.pct && v > 1) v = v / 100;          // "62" and "62%" both mean 0.62
+      save({ account: { ...(cur.account || {}), [el.dataset.acc]: v } }); render();
+    });
+    body.querySelector("#o-add").onclick = () => {
+      const lines = body.querySelector("#o-text").value.split("\n").map(l => l.split(/\t|,/).map(s => s.trim())).filter(x => x[0])
+        .map(([label, amount, currency]) => ({ label, amount: E.num(amount), currency: (currency || "USD").toUpperCase() })).filter(l => l.amount != null);
+      if (!lines.length) return toast("Use: label, amount, currency");
+      const cur = db().reports[rep.id]; save({ otherSpend: [...(cur.otherSpend || []), ...lines] }); render();
+    };
+  }
+  const keyOf = { infl: "influencers", cost: "eventCosts", other: "otherSpend" };
+  body.querySelectorAll("[data-rmline]").forEach(b => b.onclick = () => {
+    const [k, i] = b.dataset.rmline.split(":"); const cur = db().reports[rep.id];
+    save({ [keyOf[k]]: (cur[keyOf[k]] || []).filter((_, j) => j !== +i) }); render();
+  });
+}
+function costList(list, k, fmt){
+  return list.length ? `<div class="list">${list.map((l, i) => `<div class="li"><span class="grow">${fmt(l)}</span><button class="x" data-rmline="${k}:${i}">×</button></div>`).join("")}</div>` : "";
+}
+function accField(k, label, rep, pct){
+  const v = rep.account?.[k];
+  const shown = v == null ? "" : pct ? (v * 100).toFixed(2).replace(/\.?0+$/, "") + "%" : v;
+  return `<label class="f">${label}<input type="text" data-acc="${k}" ${pct ? 'data-pct="1"' : ""} value="${shown}"></label>`;
+}
+
+/* ───────── ad matching ───────── */
+function renderMatch(body, rep, R, D){
+  const allPosts = Object.values(D.posts).sort((a, b) => (a.date < b.date ? 1 : -1));
+  const inRep = new Set(R.contentRows.map(r => r.id));
+  const where = new Map();
+  for (const r of R.rows) for (const a of r.ads) where.set(a.key, r);
+  const HOW = { id: "Post ID / permalink", name: "Ad name ≈ caption", manual: "Set by hand", "manual-adonly": "Set by hand", none: "No match" };
+  const rows = R.matchLog.map(m => {
+    const r = where.get(m.ad.key);
+    const opt = p => `<option value="${p.id}" ${rep.adMatch?.[m.ad.key] === p.id ? "selected" : ""}>${inRep.has(p.id) ? "★ " : ""}${esc(F.date(p.date))} · ${esc((p.content || p.id).slice(0, 50))}</option>`;
+    return `<tr class="${m.how === "name" ? "extra" : m.how === "none" ? "adrow" : ""}">
+      <td class="cap">${esc(m.ad.ad)}</td><td class="cap">${esc(m.ad.campaign)}</td><td class="n">${F.int(m.ad.views)}</td><td class="n">${F.usd(m.ad.usd)}</td>
+      <td>${esc(HOW[m.how] || m.how)}</td><td class="small">${r ? `${esc(KIND[r.kind] || (rep.type === "week" ? "This week's post" : "Event post"))}${r.post ? " · " + link(r, 30) : ""}` : ""}</td>
+      <td><select data-match="${m.ad.key}"><option value="">Automatic</option><option value="__adonly" ${rep.adMatch?.[m.ad.key] === "__adonly" ? "selected" : ""}>Ad only (no post)</option>${allPosts.filter(p => inRep.has(p.id)).map(opt).join("")}<optgroup label="Other posts">${allPosts.filter(p => !inRep.has(p.id)).slice(0, 200).map(opt).join("")}</optgroup></select></td></tr>`;
+  });
+  body.innerHTML = `<div class="sec"><h2>How each ad was matched</h2>
+    <p class="sub" style="margin:-4px 0 14px">Order: post ID or permalink in the export → ad name vs caption (“… - Copy” counts as the same ad) → the fit rule: an ad is credited only if the post's paid views stay at or under its Instagram views, smallest ads first. Ads that don't fit ran on a dark-post copy and get their own row. Rows matched by name are shaded — check them. Pick a post by hand to override.</p>
+    ${R.matchLog.length ? tbl("t-match", ["Ad name", "Campaign", N("Views"), N("Spend (USD)"), "Matched by", "Ended up as", "Override"], rows) : `<div class="empty">No ad exports attached yet. <a href="#/r/${rep.id}/data">Add data</a></div>`}
+  </div>`;
+  body.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => copy(tableTSV(document.getElementById(b.dataset.copy)), "Table copied"));
+  body.querySelectorAll("[data-match]").forEach(s => s.onchange = () => {
+    const cur = db().reports[rep.id];
+    const adMatch = { ...(cur.adMatch || {}) };
+    if (s.value) adMatch[s.dataset.match] = s.value; else delete adMatch[s.dataset.match];
+    put("ss.report." + rep.id, { ...cur, adMatch }); render();
+  });
+}
+
+/* ───────── compare any two reports ───────── */
+function renderCompare(D, q){
+  const reps = Object.values(D.reports).sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  const a = D.reports[q.get("a")], b = D.reports[q.get("b")];
+  const opts = sel => reps.map(r => `<option value="${r.id}" ${sel?.id === r.id ? "selected" : ""}>${r.type === "week" ? "Week" : "Event"} · ${esc(r.name)}</option>`).join("");
+  let out = "";
+  if (a && b) {
+    const A = E.buildReport(a, D, D.settings), B = E.buildReport(b, D, D.settings);
+    const side = (X, Y) => X.breakdown.map((g, i) => `<tr><td>${g.name}</td><td class="n">${g.posts} / ${Y.breakdown[i].posts}</td><td class="n">${F.int(g.views)} / ${F.int(Y.breakdown[i].views)}</td><td class="n">${vsBench(g.er, X.bench)} / ${vsBench(Y.breakdown[i].er, X.bench)}</td></tr>`);
+    out = `<div class="sec"><h2>${esc(a.name)} vs ${esc(b.name)}</h2>${cmpTable("t-c", A, B, a.name, b.name)}
+      <p class="small dim">Data dates: ${F.dateY(A.dataDate)} vs ${F.dateY(B.dataDate)}${A.dataDate !== B.dataDate ? " — different pull dates, so older content has had more time to collect views." : ""}</p></div>
+      <div class="sec"><h2>Content breakdown</h2>${tbl("t-cb", ["", N("Posts"), N("Views"), N("Eng. rate")], side(A, B))}</div>`;
+  }
+  app.innerHTML = `<h1>Compare</h1><p class="sub">Any two reports side by side — week vs week, event vs event, or an event against the week it happened in.</p>
+    <div class="card sec row"><select id="ca"><option value="">First report…</option>${opts(a)}</select><span class="muted">vs</span><select id="cb"><option value="">Second report…</option>${opts(b)}</select></div>${out}`;
+  const go = () => { location.hash = `#/compare?a=${document.getElementById("ca").value}&b=${document.getElementById("cb").value}`; };
+  document.getElementById("ca").onchange = go; document.getElementById("cb").onchange = go;
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── library: posts ───────── */
+function renderPosts(D, q){
+  const term = (q.get("q") || "").toLowerCase();
+  const evOf = id => Object.values(D.reports).filter(r => r.type === "event" && (r.postIds || []).includes(id)).map(r => r.name);
+  const list = Object.values(D.posts).filter(p => !term || `${p.content} ${p.account} ${p.id}`.toLowerCase().includes(term)).sort((a, b) => ((a.date || "") < (b.date || "") ? 1 : -1));
+  const rows = list.map(p => {
+    const { snap, date } = E.snapAt(p, null);
+    const pulls = Object.keys(p.snaps || {}).length;
+    return `<tr><td>${F.date(p.date)}</td><td>${who(p)}</td><td>${esc(p.format)}</td><td class="cap">${link(p, 50)}</td><td class="n">${F.int(snap?.views)}</td><td class="small">${F.date(date)}${pulls > 1 ? ` (+${pulls - 1} earlier)` : ""}</td><td>${chip(!!p.boosted)}</td><td class="small">${esc(evOf(p.id).join(", ") || "—")}</td><td><button class="x" data-delp="${p.id}" title="Delete post">×</button></td></tr>`;
+  });
+  app.innerHTML = `<h1>Posts</h1><p class="sub">Every post ever pasted in, stored once by its link. Each paste adds a dated snapshot — older numbers are kept.</p>
+    <div class="sec row"><input type="text" id="ps" placeholder="Search caption, account, link…" value="${esc(q.get("q") || "")}" style="flex:1;max-width:420px"><span class="muted small">${list.length} posts</span></div>
+    <div class="sec">${list.length ? tbl("t-lib", ["Posted", "Account", "Format", "Content", N("Latest views"), "Pulled", "Boosted", "Events", ""], rows) : `<div class="empty">No posts yet — add them inside a report.</div>`}</div>`;
+  const ps = document.getElementById("ps");
+  ps.onchange = () => { location.hash = `#/posts?q=${encodeURIComponent(ps.value)}`; };
+  app.querySelectorAll("[data-delp]").forEach(b => b.onclick = () => { if (confirm("Delete this post from every report?")) { del("ss.post." + b.dataset.delp); render(); } });
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── library: ad exports ───────── */
+function renderAds(D){
+  const used = id => Object.values(D.reports).filter(r => (r.importIds || []).includes(id)).map(r => r.name);
+  const fx = D.settings.fx;
+  const list = Object.values(D.imports).sort((a, b) => ((a.uploaded || "") < (b.uploaded || "") ? 1 : -1));
+  const rows = list.map(i => {
+    const spend = i.rows.reduce((s, r) => s + (E.toUSD(r.spend, r.currency, fx) || 0), 0);
+    const views = i.rows.reduce((s, r) => s + (r.views || 0), 0);
+    return `<tr><td>${esc(i.name)}</td><td>${i.level}</td><td>${F.date(i.rangeStart)} → ${F.date(i.rangeEnd)}</td><td class="n">${i.rows.length}</td><td class="n">${F.usd(spend)}</td><td class="n">${F.int(views)}</td><td class="n">${F.usd(views ? spend / views * 1000 : null)}</td><td class="small">${esc(used(i.id).join(", ") || "—")}</td><td class="small">${esc((i.warnings || []).join(" "))}</td><td><button class="x" data-deli="${i.id}">×</button></td></tr>`;
+  });
+  app.innerHTML = `<h1>Ad exports</h1><p class="sub">Every Meta Ads Manager export uploaded. One export can feed several reports (a weekly report and an event report). Spend shown at default FX.</p>
+    <div class="sec">${list.length ? tbl("t-imp", ["File", "Level", "Range", N("Rows"), N("Spend (USD)"), N("Views"), N("CPM"), "Used in", "Warnings", ""], rows) : `<div class="empty">No exports yet — upload them inside a report.</div>`}</div>`;
+  app.querySelectorAll("[data-deli]").forEach(b => b.onclick = () => { if (confirm("Delete this export? Reports using it will lose its ads.")) { del("ss.import." + b.dataset.deli); render(); } });
+  app.querySelectorAll("[data-copy]").forEach(btn => btn.onclick = () => copy(tableTSV(document.getElementById(btn.dataset.copy)), "Table copied"));
+}
+
+/* ───────── settings ───────── */
+function renderSettings(D){
+  const s = D.settings;
+  app.innerHTML = `<h1>Settings</h1><p class="sub">Defaults for new reports. Each report keeps its own copy of the FX rates, so changing them here doesn't change old reports.</p>
+  <div class="sec grid g2">
+    <div class="card"><h3>Targets &amp; benchmarks</h3><div class="fields" style="margin-top:10px">
+      <label class="f">Account views target<input type="text" id="s-tv" value="${s.target.views}"></label>
+      <label class="f">Per<select id="s-tp">${["week", "month", "quarter"].map(p => `<option ${s.target.period === p ? "selected" : ""}>${p}</option>`).join("")}</select></label>
+      <label class="f">Eng. rate benchmark %<input type="text" id="s-b" value="${(s.benchmark * 100).toFixed(2)}"></label>
+      <label class="f">Normal ads CPM from $<input type="text" id="s-c0" value="${s.cpmRange[0]}"></label>
+      <label class="f">to $<input type="text" id="s-c1" value="${s.cpmRange[1]}"></label>
+    </div><p class="small dim">Weekly reports prorate the target to the report's days. Benchmark: brand accounts ~1.9% per view (beauty ~2.1%), Dash Social 2026.</p></div>
+    <div class="card"><h3>Default FX (USD per 1 unit)</h3><div class="fields" style="margin-top:10px">
+      ${Object.entries(s.fx).filter(([c]) => c !== "USD").map(([c, v]) => `<label class="f">${c}<input type="text" data-sfx="${c}" value="${v}"></label>`).join("")}
+    </div></div>
+    <div class="card"><h3>Account views (IG dashboard)</h3>
+      <p class="sub" style="margin-top:0">From Instagram › Professional dashboard › Account insights. Shown at the top of the home page.</p>
+      <div class="fields" style="margin-top:10px">
+        <label class="f">As of<input type="date" id="av-asof" value="${(accountViews(D) || {}).asOf || today()}"></label>
+        ${[["Last 30 days", 30], ["Last 90 days", 91], ["Last 6 months", 183], ["Last 12 months", 365], ["All available", 730]].map(([l, d], i) => {
+          const p = (accountViews(D)?.periods || [])[i];
+          return `<label class="f">${l}<input type="text" data-av="${i}" data-days="${d}" data-label="${l}" value="${p ? F.big(p.views) : ""}" placeholder="e.g. 13.55M"></label>`;
+        }).join("")}
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn sm" id="av-save">Save</button><span class="small muted">Saved here; send the numbers to be published for everyone.</span></div>
+    </div>
+    <div class="card"><h3>Recently deleted</h3>
+      ${(() => {
+        const gone = Object.entries(docs).filter(([k, v]) => k.startsWith("ss.report.") && v?.deleted && v.deletedAt && Date.now() - v.deletedAt < 90 * 864e5)
+          .sort((a, b) => b[1].deletedAt - a[1].deletedAt);
+        return gone.length ? `<div class="list">${gone.map(([k, v]) => `<div class="li"><span class="chip k">${v.type === "week" ? "Weekly" : v.type === "costing" ? "Costing" : "Event"}</span><span class="grow">${esc(v.eventName || v.name || "Untitled")} <span class="muted small">· deleted ${new Date(v.deletedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span></span><button class="btn ghost sm" data-restore="${k}">Restore</button></div>`).join("")}</div>`
+          : `<p class="small muted">Nothing deleted in the last 90 days.</p>`;
+      })()}
+    </div>
+    <div class="card"><h3>Sync &amp; backup</h3>
+      <p class="sub">Status: <b>${document.getElementById("sync").innerText}</b>. Data is shared through the Vercel API (Upstash). If it says “This browser only”, the API isn't live yet and everything is saved in this browser.</p>
+      <div class="row" style="margin-top:12px"><button class="btn sm" id="bk">Download backup</button><label class="btn ghost sm">Restore backup<input type="file" id="rs" accept=".json" hidden></label><button class="btn ghost sm" id="pc">Team passcode</button></div>
+    </div>
+  </div>`;
+  const saveS = patch => { put("ss.settings", { ...(docs["ss.settings"] || {}), ...patch }); render(); };
+  document.getElementById("s-tv").onchange = e => saveS({ target: { ...s.target, views: E.num(e.target.value) || s.target.views } });
+  document.getElementById("s-tp").onchange = e => saveS({ target: { ...s.target, period: e.target.value } });
+  document.getElementById("s-b").onchange = e => saveS({ benchmark: (E.num(e.target.value) || 1.9) / 100 });
+  document.getElementById("s-c0").onchange = e => saveS({ cpmRange: [E.num(e.target.value) || 4, s.cpmRange[1]] });
+  document.getElementById("s-c1").onchange = e => saveS({ cpmRange: [s.cpmRange[0], E.num(e.target.value) || 17] });
+  app.querySelectorAll("[data-sfx]").forEach(el => el.onchange = () => saveS({ fx: { ...s.fx, [el.dataset.sfx]: E.num(el.value) } }));
+  document.getElementById("bk").onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(docs, null, 1)], { type: "application/json" }));
+    a.download = `nancy-social-stats-backup-${today()}.json`; a.click();
+  };
+  document.getElementById("rs").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const data = JSON.parse(await f.text()); let n = 0;
+      for (const [k, v] of Object.entries(data)) if (/^ss\./.test(k) && v && (!docs[k] || (v.updatedAt || 0) > (docs[k].updatedAt || 0))) { docs[k] = v; sync.queue(k); n++; }
+      saveLocal(); render(); toast(`Restored ${n} newer records`);
+    } catch { toast("That file isn't a Nancy Social Stats backup"); }
+  };
+  document.getElementById("pc").onclick = askPass;
+  document.getElementById("av-save").onclick = () => {
+    const periods = [...app.querySelectorAll("[data-av]")].map(el => ({ label: el.dataset.label, views: E.num(el.value), days: +el.dataset.days, approx: el.dataset.label === "All available" || undefined }))
+      .filter(p => p.views != null);
+    if (!periods.length) return toast("Enter at least one number");
+    saveS({ accountViews: { asOf: document.getElementById("av-asof").value || today(), source: "Instagram account insights", periods } });
+    toast("Account views saved");
+  };
+  app.querySelectorAll("[data-restore]").forEach(b => b.onclick = () => { restore(b.dataset.restore); toast("Restored"); render(); });
+}
+
+/* ───────── live from Google Sheets ─────────
+   sources.json lists the team's sheets; every visit re-reads them, so any device
+   (and anyone with the link) sees the same, current reports. Invoices and edits
+   made in the app stay on top: a refresh never replaces a costing report that
+   has real invoices, and a report someone deleted isn't re-created. */
+async function refreshFromSources(){
+  let src;
+  try { src = await (await fetch("sources.json?v=dev", { cache: "no-cache" })).json(); } catch { return; }
+  if (src.account) {
+    const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
+    if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
+  }
+  const chip = document.getElementById("sync");
+  const label = chip.querySelector("span"), before = label.textContent;
+  label.textContent = "Updating from Google Sheets…";
+  let n = 0, failed = 0;
+  for (const w of src.weekly || []) {
+    const url = sheetLink(w.sheet, w.gid || "0");
+    if (deletedFromSheet(url)) continue;
+    try { await importSheet(url); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+  }
+  for (const e of src.events || []) {
+    let costsBy = {};
+    try { if (e.totals) costsBy = E.parseEventTotals(await sheetCsv(e.sheet, e.totals)); } catch { failed++; }
+    for (const gid of e.tabs || []) {
+      const url = sheetLink(e.sheet, gid);
+      if (deletedFromSheet(url)) continue;
+      try {
+        const text = await sheetCsv(e.sheet, gid);
+        const name = E.parseEventSheet(text).name;
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name], (e.costs || {})[name]); n++;
+      } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
+    }
+  }
+  label.textContent = before;
+  if (n) {
+    localStorage.setItem("ss.sourcesAt", String(Date.now()));
+    if (route().name !== "new" && !editing()) render();          // never redraw a page someone is working on
+  }
+  sync.show(sync.state);                                       // badge: "Live from Google Sheets · <time>"
+  if (failed) toast(`Couldn't read ${failed} sheet tab${failed > 1 ? "s" : ""} — check they're shared “Anyone with the link”.`);
+}
+
+render();
+sync.pull();
+refreshFromSources();
+</script>
+</html>
