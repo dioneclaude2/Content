@@ -598,7 +598,7 @@ const GIVE_REF_IMG = "assets/giveaway-ref.jpg";
 $("#ptl").innerHTML = PLAN.map((r, i) => {
   const isGive = /Giveaway opens/.test(r.ph);
   const pin = isGive ? `<a class="pcard__pin" href="${PIN}" target="_blank" rel="noopener" style="background-image:url(${GIVE_REF_IMG})">
-      <span class="pcard__pinlab"><span class="k">Look reference · Pinterest</span><b>Each monster as a 3D character card: chunky pink frame, name plate, breaking out of the frame, on a starry night sky.</b><span class="lnk">Open the pin ↗</span></span></a>` : "";
+      <span class="pcard__pinlab"><span class="k">Look reference · Pinterest</span><b>Each monster as a 3D character card with its name, breaking out of the frame. Any frame style; shot on our light gray studio background.</b><span class="lnk">Open the pin ↗</span></span></a>` : "";
   const body = pin + (r.moment ? captionsBlock(r.moment) : `<p class="tcard__same">Internal step, no post.</p>`);
   const foot = `<span class="gridref">${esc(r.grid)}</span>${r.acct.split(/\s*\+\s*/).map(a => `<span class="acct-chip${/MONSTER/.test(a) ? " m" : ""}">${esc(a)}</span>`).join("")}${r.from.length ? `<span class="from">Copied from ${r.from.map(id => `<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</span>` : ""}`;
   return tcard({gap: r.gap, first: !i, label: r.ph, date: r.date, what: r.what, body, foot, big: r.big});
