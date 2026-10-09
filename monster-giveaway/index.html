@@ -276,6 +276,12 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .wst::before{counter-increment:w;content:counter(w);font-family:Fraunces,serif;font-style:italic;font-size:40px;line-height:1;color:var(--pink);display:block}
 .wst b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:4px 0}
 .wst p{font-size:13.5px;color:var(--ink-soft)}
+.tools3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tool{background:var(--night);color:#faf3e6;border-radius:18px;padding:16px 18px}
+.tool b{font-family:Fraunces,serif;font-weight:400;font-size:22px;color:var(--yellow);display:block}
+.tool p{font-size:13.5px;margin-top:6px;opacity:.92}
+.tool .lnk{color:#faf3e6}
+@media (max-width:900px){.tools3{grid-template-columns:1fr}}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .role{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink-soft)}
 .role b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:18px;color:var(--ink)}
@@ -516,6 +522,14 @@ footer .sp{margin-left:auto;opacity:.75}
   <div class="mc" id="mc"></div>
   <div class="ptitle"><span class="k">How we pick the winners (team only)</span></div>
   <div class="wsteps" id="wsteps"></div>
+  <div class="ptitle"><span class="k">How we monitor tags + hashtags</span></div>
+  <div class="mc" id="monitor"></div>
+  <div class="ptitle"><span class="k">Tools: collect → sheet → spin</span></div>
+  <div class="tools3">
+    <div class="tool"><b>ManyChat</b><p>Collects entrants from KNOCK KNOCK comments + Story tags. Auto-DMs.</p></div>
+    <div class="tool"><b>Google Sheets</b><p>The list: clean duplicates and bots. A name twice for 2 keys.</p></div>
+    <div class="tool"><b>Wheel of Names</b><p><a class="lnk" href="https://wheelofnames.com" target="_blank" rel="noopener">wheelofnames.com</a> · spin for each winner + 2 back-ups. Screen-record. Big list? Shortlist on <a class="lnk" href="https://www.random.org/lists/" target="_blank" rel="noopener">Random.org</a> first.</p></div>
+  </div>
   <div class="ptitle"><span class="k">Who does what</span></div>
   <div class="roles" id="roles"></div>
 
@@ -659,6 +673,7 @@ document.addEventListener("change", e => { const r = e.target; if (r.type === "r
 $("#tags3").innerHTML = HASHTAGS.map(([t,d,r])=>`<div class="tagc"><b>${esc(t)}</b><p>${esc(d)}</p><small>${esc(r)}</small></div>`).join("");
 $("#mc").innerHTML = MANYCHAT.map(([w,t,d])=>`<div class="mcc"><span class="k">${esc(w)}</span><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("");
 $("#wsteps").innerHTML = WIN_STEPS.map(([t,d])=>`<div class="wst"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("");
+$("#monitor").innerHTML = MONITOR.map(([t,d])=>`<div class="mcc"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("");
 $("#roles").innerHTML = ROLES.map(([n,d])=>`<div class="role"><b>${esc(n)}</b>${esc(d)}</div>`).join("");
 const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Grid: giveaway + Pick your monster → 22 Oct; winners → 28 Oct; add the drop posts.","Use the research sheet for every reference."];
 const done = store.get("mmg.steps") || {};

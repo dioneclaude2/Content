@@ -361,11 +361,16 @@ const MANYCHAT = [
 ];
 const WIN_STEPS = [
   ["Collect", "ManyChat saves every entrant (tag “gw_entered”), their monster, and their keys (1 + bonus). Back-up: export the post's comments too, in case ManyChat misses some."],
-  ["Close", "27 Oct, 11:59pm ET: turn the giveaway automation off. Export the list to a Google Sheet."],
+  ["Close", "27 Oct, 11:59pm ET: turn the giveaway automation off. Send the ManyChat list to Google Sheets (handle, monster, keys)."],
   ["Clean", "Remove duplicates, team and brand accounts, and obvious bots (empty or brand-new accounts)."],
   ["Draw", "Spin on Wheel of Names (wheelofnames.com): paste the list, a name twice for 2 keys, spin for each winner, plus 2 back-ups. Very big list? Shortlist on Random.org first, then spin. Screen-record it (it also works as a Story)."],
   ["Check", "Each winner follows both accounts, is 18+ and in the US, and the account looks real. If not, go to the back-up."],
   ["Contact", "DM from @nancymonstermansion only. Never ask for payment. Shipping details by form. 48 hours to reply, or the back-up wins."],
   ["Announce", "28 Oct in Stories, with the winners' OK to show their handle. Log everything in the sheet."],
+];
+const MONITOR = [
+  ["Tag = counted", "Story tags of @nancymonstermansion: ManyChat catches them, replies “+1 key”, logs the person. This is the only bonus entry we promise."],
+  ["Hashtag = discovered", "Daphne, once a day: search the hashtags + check the Tagged tab and notifications. Log date, handle, link, reposted ✓ in the sheet. Repost the good ones."],
+  ["Never", "Never promise an entry for a hashtag alone. We can't count it, and the rules have to match what we do."],
 ];
 const ROLES = [["Dione","ManyChat set-up, the export, the draw, the winners sheet"],["Crystal","Approves the winners and the captions"],["Momo / e-com","Ships the pumpkins; sets the drop stock + early-access link"],["Daphne","Reposts #NancyMonsterMansion Stories and unboxings"]];
