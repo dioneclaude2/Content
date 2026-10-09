@@ -27,6 +27,12 @@ export const EVENT_COLOURS = {
   Grey: ["#d9d9d9", "#f3f3f3"],
 };
 
+/** Categories used by these lines: the standard ones first, then any of the team's own groups (in order seen). */
+export function categoriesIn(lines) {
+  const seen = [...new Set((lines || []).map(l => l.category || "Other"))];
+  return [...COST_CATEGORIES.filter(c => seen.includes(c)), ...seen.filter(c => !COST_CATEGORIES.includes(c))];
+}
+
 export const COST_CATEGORIES = [
   "Merch & giveaways", "Team meals & event expenses", "Hotel / accommodation", "General logistics",
   "Flights / transportation", "Venue & production", "Decor", "Other",
@@ -562,7 +568,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   for (const l of [...infl, ...costs, ...other]) if (l.usd == null) flag("bad", `No FX rate for ${l.currency}.`);
   const influencerCost = infl.length ? sum(infl, l => l.usd) : null;
   const eventCost = costs.length ? sum(costs, l => l.usd) : null;
-  const byCategory = COST_CATEGORIES.map(k => ({ category: k, usd: sum(costs.filter(l => l.category === k), l => l.usd), lines: costs.filter(l => l.category === k).length }))
+  const byCategory = categoriesIn(costs).map(k => ({ category: k, usd: sum(costs.filter(l => (l.category || "Other") === k), l => l.usd), lines: costs.filter(l => (l.category || "Other") === k).length }))
     .filter(x => x.lines);
   const otherSpend = other.length ? sum(other, l => l.usd) : null;
   const nonAd = rep.type === "event"
@@ -1101,7 +1107,7 @@ export function buildCosting(rep, db, settings = DEFAULT_SETTINGS) {
     flags.push({ level: "bad", text: "This costing still has the summary totals imported from the sheet, plus individual invoices — the same costs are probably counted twice. Delete the “total from sheet” lines once all invoices are in (or delete the invoices)." });
   const influencerCost = sum(infl, l => l.usd);
   const eventCost = sum(costs, l => l.usd);
-  const byCategory = COST_CATEGORIES.map(k => ({ category: k, usd: sum(costs.filter(l => l.category === k), l => l.usd), lines: costs.filter(l => l.category === k).length }))
+  const byCategory = categoriesIn(costs).map(k => ({ category: k, usd: sum(costs.filter(l => (l.category || "Other") === k), l => l.usd), lines: costs.filter(l => (l.category || "Other") === k).length }))
     .filter(x => x.lines).sort((a, b) => b.usd - a.usd);
   const byCreator = [...infl].sort((a, b) => (b.usd || 0) - (a.usd || 0));
   const event = Object.values(db.reports || {}).find(r => !r.deleted && r.type === "event" && r.costingId === rep.id) || null;

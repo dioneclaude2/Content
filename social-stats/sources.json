@@ -18,6 +18,119 @@
       "totals": "1197350775",
       "labels": {
         "London Fashion Week": "Collab / production"
+      },
+      "costs": {
+        "London Fashion Week": {
+          "source": "Ray Chu Show Collab - Activation Expenses",
+          "influencers": [
+            {
+              "creator": "Ray Chu Show",
+              "deliverables": "Collaboration fee",
+              "fee": 5000.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "creator": "Activation space production",
+              "deliverables": "Activation space build",
+              "fee": 1200.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Creative team",
+              "item": "Corrine",
+              "vendor": "",
+              "qty": null,
+              "unit": 1752.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Creative team",
+              "item": "Mel (including travel)",
+              "vendor": "",
+              "qty": null,
+              "unit": 1250.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Lauren (no fee)",
+              "vendor": "",
+              "qty": null,
+              "unit": 0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Bobbi",
+              "vendor": "",
+              "qty": null,
+              "unit": 350.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Mansi (no fee)",
+              "vendor": "",
+              "qty": null,
+              "unit": 0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Kelsey (three half days plus the main event)",
+              "vendor": "",
+              "qty": null,
+              "unit": 1200.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Uber",
+              "vendor": "",
+              "qty": null,
+              "unit": 24.99,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Uber",
+              "vendor": "",
+              "qty": null,
+              "unit": 15.97,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Fabric and materials",
+              "vendor": "",
+              "qty": null,
+              "unit": 17.35,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Fabric and materials",
+              "vendor": "",
+              "qty": null,
+              "unit": 10.5,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            }
+          ]
+        }
       }
     }
   ],

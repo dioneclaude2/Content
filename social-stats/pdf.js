@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=2e418bf";
+import * as E from "./engine.js?v=97791fe";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -301,6 +301,7 @@ function event(rep, R, Pv, mode, logo) {
   const tot = T.totalViews || 1;
   P.table(["", "Views", "Share"], [["Organic", F.int(T.organicViews), F.pct(T.organicViews / tot)], ["Paid (ads)", F.int(T.paidViews), F.pct(T.paidViews / tot)], { total: true, cells: ["Total", F.int(T.totalViews), "100%"] }],
     { title: "Where the views came from", num: [1, 2] });
+  breakdown(P, R);
   topTables(P, R);
   compareTable(P, R, Pv, full ? null : ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"], Pv ? `Against ${Pv.rep.name}` : "");
 
@@ -335,6 +336,29 @@ function event(rep, R, Pv, mode, logo) {
   return P.finish(`Nancy Social Stats · Event report · ${rep.name} · ${F.date(rep.start)} – ${F.date(rep.end)}`);
 }
 
+/* every cost line by group (only once real lines exist, not just the sheet's two totals) */
+function breakdown(P, R) {
+  const lines = [...R.influencers, ...R.eventCosts];
+  if (!lines.length || lines.every(l => l.source === "Total Spend tab")) return;
+  const cur = [...new Set(lines.map(l => l.currency))];
+  const one = cur.length === 1 && cur[0] !== "USD" ? cur[0] : null;
+  const sym = { GBP: "£", EUR: "€", HKD: "HK$", MXN: "MX$" }[one] || (one ? one + " " : "");
+  const m = v => sym + (+v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const total = lines.reduce((a, l) => a + (l.usd || 0), 0);
+  const groups = [
+    { name: R.infLabel, list: R.influencers.map(l => [[l.creator, l.deliverables].filter(Boolean).join(" — "), l.fee, l.usd]) },
+    ...E.categoriesIn(R.eventCosts).map(c => ({ name: c, list: R.eventCosts.filter(l => (l.category || "Other") === c).map(l => [[l.item, l.vendor].filter(Boolean).join(" — "), (l.qty == null ? 1 : l.qty) * (l.unit || 0), l.usd]) })),
+  ].filter(g => g.list.length);
+  const rows = [];
+  for (const g of groups) {
+    const usd = g.list.reduce((a, x) => a + (x[2] || 0), 0), orig = g.list.reduce((a, x) => a + (x[1] || 0), 0);
+    rows.push({ shade: true, cells: [`${g.name.toUpperCase()} · ${g.list.length}`, ...(one ? [m(orig)] : []), F.usd(usd), F.pct(total ? usd / total : null)] });
+    for (const [what, amt, usdv] of g.list) rows.push(["    " + what, ...(one ? [amt ? m(amt) : "no fee"] : []), amt ? F.usd(usdv) : "—", ""]);
+  }
+  rows.push({ total: true, cells: ["Total (excl. ads)", ...(one ? [m(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0))] : []), F.usd(total), "100%"] });
+  P.table(["", ...(one ? [one] : []), "USD", "Share"], rows, { title: "Cost breakdown", num: one ? [1, 2, 3] : [1, 2], widths: { 0: P.inner * 0.5 } });
+}
+
 /* ───────── costing ───────── */
 function costing(rep, CR, logo) {
   const P = sheet("portrait", logo);
@@ -357,8 +381,8 @@ function costing(rep, CR, logo) {
   }
   if (CR.eventCosts.length) {
     const rows = [];
-    for (const cat of E.COST_CATEGORIES) {
-      const ls = CR.eventCosts.filter(l => l.category === cat);
+    for (const cat of E.categoriesIn(CR.eventCosts)) {
+      const ls = CR.eventCosts.filter(l => (l.category || "Other") === cat);
       if (!ls.length) continue;
       rows.push({ shade: true, cells: [cat.toUpperCase(), "", "", "", "", F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0)), ""] });
       for (const l of ls) rows.push(["", l.item || "", l.vendor || "", F.dm(l.date), `${l.currency} ${((l.qty == null ? 1 : l.qty) * (l.unit || 0)).toLocaleString("en-US", { maximumFractionDigits: 2 })}`, F.usd(l.usd), l.invoiceNo || ""]);
