@@ -286,6 +286,14 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .role{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink-soft)}
 .role b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:18px;color:var(--ink)}
 @media (max-width:900px){.prop,.tags3{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}}
+
+/* keep timeline rows even: cards stretch to one height, long captions scroll inside */
+.htl-wrap.uni .htl{align-items:stretch}
+.tcard{display:flex;flex-direction:column}
+.tcard .tcard__in{flex:1;display:flex;flex-direction:column}
+.tcard .tcard__foot{margin-top:auto}
+.caps{max-height:190px;overflow-y:auto;padding-right:4px}
+.pcard__pin{min-height:190px !important}
 .story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
 .story img{border-radius:20px;box-shadow:var(--shadow)}
 .story h3{font-size:clamp(30px,4vw,46px);line-height:1.05;font-weight:300}
