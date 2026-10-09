@@ -205,6 +205,24 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .env__b p{color:var(--ink-soft);font-size:14.5px;margin-bottom:10px}
 .env__b .k{color:var(--pink)}
 @media (max-width:640px){.env{grid-template-columns:1fr}}
+.plan-htl{margin:24px 0 10px}
+.plan-htl .htl,.plan-htl .htl-hint{padding-left:0;padding-right:0}
+.pcard{flex:0 0 300px}
+.pcard.is-give{flex-basis:380px}
+.pcard__in{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--lilac);border-radius:18px;padding:16px 18px;margin-top:8px;transition:transform .18s,box-shadow .18s}
+.pcard__in:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.pcard.is-big .pcard__in{border-top-color:var(--pink)}
+.pcard.is-big .hstep__dot{width:22px;height:22px;top:7px}
+.pcard__date{display:block;font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:26px;line-height:1.1;margin:4px 0 8px}
+.pcard__what{font-size:14.5px;margin-bottom:10px}
+.pcard .ptl__phase{color:var(--pink)}
+.pcard .from{margin-top:8px}
+.pcard__pin{display:flex;align-items:flex-end;min-height:260px;border-radius:14px;margin:0 0 10px;background-size:cover;background-position:center;text-decoration:none;overflow:hidden;position:relative}
+.pcard__pin::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(29,31,99,.85))}
+.pcard__pinlab{position:relative;padding:14px;color:#faf3e6;display:grid;gap:4px}
+.pcard__pinlab .k{font-size:9.5px;color:var(--yellow)}
+.pcard__pinlab b{font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:17px;line-height:1.25}
+.pcard__pinlab .lnk{color:#faf3e6;justify-self:start}
 .story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
 .story img{border-radius:20px;box-shadow:var(--shadow)}
 .story h3{font-size:clamp(30px,4vw,46px);line-height:1.05;font-weight:300}
@@ -420,7 +438,7 @@ footer .sp{margin-left:auto;opacity:.75}
   <p class="lead" style="margin-top:0">Giveaway + drop only, on the PM board's dates. Grid: <a class="lnk" id="gridLink1" target="_blank" rel="noopener">content grid</a>.</p>
   <p class="mini" style="color:var(--muted);font-size:13px">Account key: MAIN = @hellonancy_official · MONSTERS = @nancymonstermansion · BOTH / COLLAB = both accounts (Instagram Collab post).</p>
   
-  <ol class="ptl" id="ptl"></ol>
+  <div class="htl-wrap plan-htl"><div class="htl-hint">Scroll sideways →</div><div class="htl" id="ptl"></div></div>
   <div class="notes2">
     <div class="callout"><b>Giveaway → drop:</b> 8 days (21 → 29 Oct), close to Dr. Squatch's 8.</div>
     <div class="callout"><b>Grid check:</b> the grid opens the giveaway 18 Oct; the PM board says 21 Oct. Move the grid post to 21 Oct.</div>
@@ -439,17 +457,6 @@ footer .sp{margin-left:auto;opacity:.75}
     <div class="ad no"><b>No ads for the drop itself</b>Have someone check the creative against Meta's adult-products rules before spending. The rules change.</div>
   </div>
   <div class="callout"><b>Free reach matters more than ads:</b> co-host the giveaway with a bigger partner brand (the Crocs × Juicy trick), have creators unbox the PR Mansions and tag both accounts, and use Instagram's Collab post so one post shows on every account.</div>
-
-  <h3 class="subh"><span class="k">5.6b</span>Environment references. <em>Something like this, in our world.</em></h3>
-  <p class="lead" style="margin-top:0">Ideas for the Mansion world: the set, the space, the “world you can walk into” from the brief formula.</p>
-  <div class="envs">
-    <div class="env">
-      <div class="env__pin"><a data-pin-do="embedPin" data-pin-width="medium" href="https://ph.pinterest.com/pin/853643304419609786/"></a></div>
-      <div class="env__b"><span class="k">Pinterest · added by Dione</span><b>“We can do something like this in our environment.”</b>
-      <p>Reference for how the Mansion world could look and feel on set and in the posts.</p>
-      <a class="lnk" href="https://ph.pinterest.com/pin/853643304419609786/" target="_blank" rel="noopener">Open the pin on Pinterest ↗</a></div>
-    </div>
-  </div>
 
   <h3 class="subh"><span class="k">5.7</span>Rules + next steps.</h3>
   <div class="callout">Giveaway rules must include: <b>18+</b>, US only (or the eligible countries), start/end date and time, how the winner is picked and contacted, <b>no purchase necessary</b>, and “not sponsored, endorsed or administered by Instagram”. Get them checked before launch (not legal advice).</div>
@@ -552,13 +559,23 @@ document.addEventListener("click", e => {
 $("#monsters").innerHTML = MONSTERS.map(m=>`<div class="mon" style="--c:${m.c}"><img src="assets/${m.img}" alt="${m.name} in its world" loading="lazy"><div class="mon__b"><h4>${m.name}</h4><p><b>Look:</b> ${esc(m.look)}</p><p><b>Personality:</b> ${esc(m.who)}</p><p class="line">${esc(m.line)}</p></div></div>`).join("");
 const KIND = {grid:["On the grid","#6a62d6"], tweak:["Grid + small tweak","#F08A1C"], new:["New (add to the grid)","#E5398A"], confirm:["To confirm","#e2445c"]};
 const nameOf = id => { const b = BRANDS.find(x=>x.id===id); return b ? b.title + (b.id === "glossier-mystery" ? " mystery" : b.id === "glossier-7days" ? " 7 Days" : "") : id; };
-$("#ptl").innerHTML = PLAN.map(r=>{
-  const [kl, c] = KIND[r.kind];
-  return `<li class="${r.big?"big":""}" style="--pc:${c}"><div class="ptl__date"><b>${esc(r.date)}</b><span>${esc(r.gap)}</span></div><span class="ptl__dot"></span>
-    <div class="ptl__card"><span class="ptl__phase">${esc(r.ph)}</span><p>${esc(r.what)}</p>
-    <p class="gridref">${esc(r.grid)}</p>
-    <div class="ptl__meta">${r.acct.split(/\s*\+\s*/).map(a=>`<span class="acct-chip${/MONSTER/.test(a)?" m":""}">${esc(a)}</span>`).join("")}
-    ${r.from.length?`<span class="from">Copied from ${r.from.map(id=>`<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</span>`:""}</div></div></li>`;
+const PIN = "https://ph.pinterest.com/pin/853643304419609786/";
+/* Pinterest won't embed this pin (it's only visible when logged in). Until we have the image, show the pumpkin key visual behind the link. */
+const GIVE_REF_IMG = "assets/kv-jack-fur-real.jpg";
+$("#ptl").innerHTML = PLAN.map((r, i) => {
+  const isGive = /Giveaway opens/.test(r.ph);
+  return `<div class="hstep pcard${r.big ? " is-big" : ""}${isGive ? " is-give" : ""}">
+    <div class="hstep__gap${i ? "" : " is-start"}"><span>${esc(r.gap)}</span></div><div class="hstep__dot"></div>
+    <div class="pcard__in">
+      <span class="ptl__phase">${esc(r.ph)}</span>
+      <b class="pcard__date">${esc(r.date)}</b>
+      <p class="pcard__what">${esc(r.what)}</p>
+      ${isGive ? `<a class="pcard__pin" href="${PIN}" target="_blank" rel="noopener" style="background-image:url(${GIVE_REF_IMG})">
+        <span class="pcard__pinlab"><span class="k">Look reference · Pinterest</span><b>“We can do something like this in our environment.”</b><span class="lnk">Open the reference ↗</span></span></a>` : ""}
+      <p class="gridref">${esc(r.grid)}</p>
+      <div class="ptl__meta">${r.acct.split(/\s*\+\s*/).map(a => `<span class="acct-chip${/MONSTER/.test(a) ? " m" : ""}">${esc(a)}</span>`).join("")}</div>
+      ${r.from.length ? `<p class="from">Copied from ${r.from.map(id => `<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</p>` : ""}
+    </div></div>`;
 }).join("");
 document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (!g) return; e.preventDefault(); catF = ""; selectBrand(g.dataset.goto, true); });
 
@@ -613,6 +630,5 @@ secs.forEach(s=>navIo.observe(s));
 
 renderTabs(); renderBrand(); renderMoments(); renderCheck();
 </script>
-<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
