@@ -1048,6 +1048,7 @@ function eventHTML(rep, R, P, D){
         ${R.byCategory.length ? `<div style="margin-top:14px">${tbl("t-cat", ["Event cost category", N("Lines"), N("USD")], R.byCategory.map(c => `<tr><td>${esc(c.category)}</td><td class="n">${c.lines}</td><td class="n">${F.usd(c.usd)}</td></tr>`))}</div>` : ""}
       </div>
     </div>
+    ${(() => { const b = costBreakdownHTML(R); return b ? `<div class="sec"><h2>Cost breakdown — where the money went</h2>${b.replace('<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>', '<div class="card">')}</div>` : ""; })()}
     <div class="sec"><h2>Ad spend by campaign</h2>${campaignTable(R)}</div>
     <div class="sec"><h2>Content performance</h2>${breakdownTable("t-break", R.breakdown, R.bench)}${T.extra ? `<p class="small dim">Includes the ${T.extra} extra post${T.extra > 1 ? "s" : ""}. Ad-only rows have no engagement data, so they're left out.</p>` : ""}</div>
     <div class="sec"><h2>Event scorecard</h2>${tbl("t-score", ["", ""], score)}</div>
@@ -1173,8 +1174,9 @@ function costBreakdownHTML(R){
   const total = lines.reduce((a, l) => a + (l.usd || 0), 0);
   const rows = groups.flatMap(g => {
     const usd = g.list.reduce((a, x) => a + (x.usd || 0), 0), orig = g.list.reduce((a, x) => a + (x.amt || 0), 0);
-    return [`<tr class="seg"><td>${esc(g.name)} · ${g.list.length}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
-      ...g.list.map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
+    const label = g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? g.list[0].what : g.list.length === 1 && !g.list[0].what ? g.name : `${g.name} · ${g.list.length}`;
+    return [`<tr class="seg"><td>${esc(label)}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
+      ...(g.list.length === 1 && !g.list[0].what || g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? [] : g.list).map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
   });
   rows.push(`<tr class="total"><td>Total (excl. ads)</td>${one ? `<td class="n">${money(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0), one)}</td>` : ""}<td class="n">${F.usd(total)}</td><td class="n">100%</td></tr>`);
   return `<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>
@@ -1214,7 +1216,6 @@ function eventSummaryHTML(rep, R, P){
       ], F.int)}
       <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
     </div>
-    ${costBreakdownHTML(R)}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
