@@ -1159,6 +1159,29 @@ function issuesLine(rep, R){
   return n ? `<p class="small" style="margin-top:12px"><a class="down" href="#/r/${rep.id}/checks">${n} thing${n > 1 ? "s" : ""} missing or to check →</a></p>` : "";
 }
 
+/* Every cost line by group, so it's clear where the money came from (skipped while only sheet totals exist) */
+function costBreakdownHTML(R){
+  const lines = [...R.influencers, ...R.eventCosts];
+  if (!lines.length || lines.every(l => l.source === "Total Spend tab")) return "";
+  const groups = [
+    { name: R.infLabel, list: R.influencers.map(l => ({ what: [l.creator, l.deliverables].filter(Boolean).join(" — "), amt: l.fee, cur: l.currency, usd: l.usd })) },
+    ...E.categoriesIn(R.eventCosts).map(c => ({ name: c, list: R.eventCosts.filter(l => (l.category || "Other") === c).map(l => ({ what: [l.item, l.vendor].filter(Boolean).join(" — "), amt: (l.qty == null ? 1 : l.qty) * (l.unit || 0), cur: l.currency, usd: l.usd })) })),
+  ].filter(g => g.list.length);
+  const money = (v, c) => c === "USD" ? F.usd(v) : `${{ GBP: "£", EUR: "€", HKD: "HK$", MXN: "MX$" }[c] || c + " "}${(+v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const cur = [...new Set(lines.map(l => l.currency))];
+  const one = cur.length === 1 && cur[0] !== "USD" ? cur[0] : null;              // show the original currency too when it's all one
+  const total = lines.reduce((a, l) => a + (l.usd || 0), 0);
+  const rows = groups.flatMap(g => {
+    const usd = g.list.reduce((a, x) => a + (x.usd || 0), 0), orig = g.list.reduce((a, x) => a + (x.amt || 0), 0);
+    return [`<tr class="seg"><td>${esc(g.name)} · ${g.list.length}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
+      ...g.list.map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
+  });
+  rows.push(`<tr class="total"><td>Total (excl. ads)</td>${one ? `<td class="n">${money(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0), one)}</td>` : ""}<td class="n">${F.usd(total)}</td><td class="n">100%</td></tr>`);
+  return `<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>
+    <div class="tw"><table><thead><tr><th></th>${one ? `<th class="n">${one}</th>` : ""}<th class="n">USD</th><th class="n">Share</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
+    ${one ? `<p class="small dim" style="margin-top:6px">1 ${one} = $${(+R.fx[one]).toFixed(4)}</p>` : ""}</div>`;
+}
+
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
@@ -1191,6 +1214,7 @@ function eventSummaryHTML(rep, R, P){
       ], F.int)}
       <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
     </div>
+    ${costBreakdownHTML(R)}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
@@ -1346,9 +1370,10 @@ function costingLines(body, rep, CR, D){
   const inp = (list, i, k, v, w = 120, type = "text") => `<input class="ed" style="width:${w}px" type="${type}" data-l="${list}:${i}:${k}" value="${esc(v ?? "")}">`;
   const pick = (list, i) => `<td><input type="checkbox" data-pick="${list}:${i}" aria-label="Select line"></td>`;
   const infRows = CR.influencers.map((l, i) => `<tr>${pick("influencers", i)}<td>${inp("influencers", i, "creator", l.creator, 150)}</td><td>${inp("influencers", i, "deliverables", l.deliverables, 200)}</td><td>${inp("influencers", i, "date", l.date, 120, "date")}</td><td>${inp("influencers", i, "fee", l.fee, 90)}</td><td><select class="ed" data-l="influencers:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("influencers", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("influencers", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="influencers:${i}" title="Move to event costs">⇄</button><button class="x" data-del="influencers:${i}" title="Delete this expense">🗑</button></td></tr>`);
-  const evRow = (l, i) => `<tr>${pick("eventCosts", i)}<td><select class="ed" data-l="eventCosts:${i}:category">${E.COST_CATEGORIES.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete this expense">🗑</button></td></tr>`;
-  const evRows = E.COST_CATEGORIES.flatMap(cat => {
-    const ls = CR.eventCosts.filter(l => l.category === cat);
+  const catList = [...new Set([...E.COST_CATEGORIES, ...E.categoriesIn(CR.eventCosts)])];
+  const evRow = (l, i) => `<tr>${pick("eventCosts", i)}<td><select class="ed" data-l="eventCosts:${i}:category">${catList.map(c => `<option ${c === l.category ? "selected" : ""}>${c}</option>`).join("")}</select></td><td>${inp("eventCosts", i, "item", l.item, 180)}</td><td>${inp("eventCosts", i, "vendor", l.vendor, 140)}</td><td>${inp("eventCosts", i, "date", l.date, 120, "date")}</td><td>${inp("eventCosts", i, "qty", l.qty, 50)}</td><td>${inp("eventCosts", i, "unit", l.unit, 90)}</td><td><select class="ed" data-l="eventCosts:${i}:currency">${curOpts(l.currency)}</select></td><td class="n">${F.usd(l.usd)}</td><td>${inp("eventCosts", i, "invoiceNo", l.invoiceNo, 90)}</td><td>${inp("eventCosts", i, "receipt", l.receipt, 140)}</td><td><button class="x" data-move="eventCosts:${i}" title="Move to influencers">⇄</button><button class="x" data-del="eventCosts:${i}" title="Delete this expense">🗑</button></td></tr>`;
+  const evRows = E.categoriesIn(CR.eventCosts).flatMap(cat => {
+    const ls = CR.eventCosts.filter(l => (l.category || "Other") === cat);
     if (!ls.length) return [];
     return [`<tr class="seg"><td colspan="8">${esc(cat)} · ${ls.length}</td><td class="n">${F.usd(ls.reduce((a, l) => a + (l.usd || 0), 0))}</td><td colspan="3"></td></tr>`, ...ls.map(l => evRow(l, l.i))];
   });
@@ -1772,7 +1797,7 @@ function importWeeklyText(text, url, repId){
 }
 
 /* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
-function importEventTab(text, url, repId, costs, infLabel){
+function importEventTab(text, url, repId, costs, infLabel, breakdown){
   const S = E.parseEventSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
   const D = db();
@@ -1796,8 +1821,8 @@ function importEventTab(text, url, repId, costs, infLabel){
     patch.importIds = [...new Set([...(rep.importIds || []), id])];
   }
   // costs from the Total Spend tab become this event's costing report (two summary lines until invoices are added)
-  if (costs && (costs.influencerCost != null || costs.eventCost != null)) {
-    const lines = {
+  if (breakdown || costs && (costs.influencerCost != null || costs.eventCost != null)) {
+    const lines = breakdown ? { influencers: breakdown.influencers || [], eventCosts: breakdown.eventCosts || [] } : {
       influencers: costs.influencerCost != null ? [{ creator: `${infLabel || "Influencer invoices"} (total from sheet)`, deliverables: "", fee: costs.influencerCost, currency: "USD", source: "Total Spend tab" }] : [],
       eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
     };
@@ -1805,7 +1830,7 @@ function importEventTab(text, url, repId, costs, infLabel){
     const deletedOne = Object.values(docs).some(v => v?.deleted && v.type === "costing" && v.wasFor === rep.id);
     if (deletedOne && !existing) { /* someone deleted this event's costing: leave it deleted */ }
     else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, influencerLabel: infLabel || null, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
-    else if ((existing.influencers || []).every(l => l.source === "Total Spend tab") && (existing.eventCosts || []).every(l => l.source === "Total Spend tab"))
+    else if ([...(existing.influencers || []), ...(existing.eventCosts || [])].every(l => l.source === "Total Spend tab" || (breakdown && l.source === breakdown.source)))
       put("ss.report." + existing.id, { ...existing, ...lines, ...(infLabel ? { influencerLabel: infLabel } : {}) });      // refresh only if nobody has added real invoices
   }
   if (infLabel) {
@@ -2335,7 +2360,7 @@ async function refreshFromSources(){
         const text = await sheetCsv(e.sheet, gid);
         const name = E.parseEventSheet(text).name;
         const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
-        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name]); n++;
+        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name], (e.costs || {})[name]); n++;
       } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
     }
   }
