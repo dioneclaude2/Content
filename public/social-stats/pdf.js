@@ -293,7 +293,7 @@ function event(rep, R, Pv, mode, logo) {
 
   const spend = T.totalSpend || 1;
   P.table(["", "USD", "Share"], [
-    ["Influencers", T.influencerCost == null ? "Missing" : F.usd(T.influencerCost), T.influencerCost == null ? "—" : F.pct(T.influencerCost / spend)],
+    [R.infLabel, T.influencerCost == null ? "Missing" : F.usd(T.influencerCost), T.influencerCost == null ? "—" : F.pct(T.influencerCost / spend)],
     ["Event costs", T.eventCost == null ? "Missing" : F.usd(T.eventCost), T.eventCost == null ? "—" : F.pct(T.eventCost / spend)],
     ["Ads", F.usd(T.adSpend), F.pct(T.adSpend / spend)],
     { total: true, cells: ["Total spend", F.usd(T.totalSpend), "100%"] },
@@ -313,9 +313,9 @@ function event(rep, R, Pv, mode, logo) {
       ["Total spend", F.usd(T.totalSpend)], ["Ads", F.usd(T.adSpend)], ["Event (non-ad)", T.nonAd == null ? "Missing" : F.usd(T.nonAd)],
       ["Total impressions (views)", F.int(T.totalViews)], ["Organic impressions", F.int(T.organicViews)], ["Boosted impressions", F.int(T.paidViews)],
       ["Organic CPM", T.organicCPM == null ? "blank — no event cost" : F.usd(T.organicCPM)], ["Ads CPM", T.adsCPM == null ? "N/A" : F.usd(T.adsCPM)], { total: true, cells: ["Blended CPM", F.usd(T.blendedCPM)] },
-      ["Influencer cost per 1,000 collab views", F.usd(T.influencerPer1kCollab)],
+      [`${R.infLabel} cost per 1,000 collab views`, F.usd(T.influencerPer1kCollab)],
     ], { title: "Total spend block", num: [1] });
-    if (R.influencers.length) P.table(["Creator", "Deliverables", "Fee", "USD"], R.influencers.map(l => [l.creator, l.deliverables || "", `${l.currency} ${F.int(l.fee)}`, F.usd(l.usd)]), { title: "Influencer costs", num: [2, 3] });
+    if (R.influencers.length) P.table([R.infLabel === "Influencers" ? "Creator" : "Payee", "Deliverables", "Fee", "USD"], R.influencers.map(l => [l.creator, l.deliverables || "", `${l.currency} ${F.int(l.fee)}`, F.usd(l.usd)]), { title: `${R.infLabel} costs`, num: [2, 3] });
     if (R.byCategory.length) P.table(["Event cost category", "Lines", "USD"], R.byCategory.map(c => [c.category, c.lines, F.usd(c.usd)]), { title: "Event costs by category", num: [1, 2] });
     campaigns(P, R);
     P.table(["", "Posts", "Views", "Reach", "Likes", "Comments", "Saves", "Shares", "Eng. rate"], R.breakdown.map(g => ({ total: g.name === "Total", cells: [g.name, g.posts, F.int(g.views), F.int(g.reach), F.int(g.likes), F.int(g.comments), F.int(g.saves), F.int(g.shares), F.pct(g.er)] })),
@@ -342,18 +342,18 @@ function costing(rep, CR, logo) {
   P.header("Costing report", name, `${F.date(rep.start)} – ${F.date(rep.end)} · ${T.lines} lines${CR.event ? ` · for the ${CR.event.name} event report` : ""} · money in USD`);
   P.kpis([
     ["Total cost", F.usd(T.total), "excludes ads", true],
-    ["Influencers & models", F.usd(T.influencerCost), `${T.creators} ${T.creators === 1 ? "person" : "people"}`],
+    [CR.infLabel, F.usd(T.influencerCost), `${T.creators} ${T.creators === 1 ? "person" : "people"}`],
     ["Event costs", F.usd(T.eventCost), `${CR.eventCosts.length} lines`],
     ["Blended CPM", Ev ? F.usd(Ev.T.blendedCPM) : "—", Ev ? `with ${F.usd(Ev.T.adSpend)} ads · ${F.big(Ev.T.totalViews)} views` : "link an event report"],
   ]);
   for (const f of CR.flags.filter(f => f.level !== "info")) P.note(f.level === "bad" ? "Fix" : "Check", f.text, f.level === "bad" ? BAD : WARN);
   const total = T.total || 1;
-  const cats = [{ category: "Influencers & models", usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
+  const cats = [{ category: CR.infLabel, usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
   P.table(["Category", "Lines", "USD", "Share"], [...cats.map(c => [c.category, c.lines, F.usd(c.usd), F.pct(c.usd / total)]), { total: true, cells: ["Total", T.lines, F.usd(T.total), "100%"] }], { title: "Where the money went", num: [1, 2, 3] });
   if (CR.influencers.length) {
     const rows = CR.influencers.map(l => [l.creator, l.deliverables || "", F.dm(l.date), `${l.currency} ${l.fee == null ? "—" : l.fee.toLocaleString("en-US")}`, F.usd(l.usd), l.invoiceNo || ""]);
     rows.push({ total: true, cells: ["Total", "", "", "", F.usd(T.influencerCost), ""] });
-    P.table(["Creator / model", "Deliverables", "Date", "Fee", "USD", "Invoice #"], rows, { title: "Influencers & models", num: [3, 4], widths: { 1: 150 } });
+    P.table(["Creator / model", "Deliverables", "Date", "Fee", "USD", "Invoice #"], rows, { title: CR.infLabel, num: [3, 4], widths: { 1: 150 } });
   }
   if (CR.eventCosts.length) {
     const rows = [];
@@ -369,7 +369,7 @@ function costing(rep, CR, logo) {
   if (Ev) P.table(["What it bought", ""], [
     ["Total spend (costs + ads)", F.usd(Ev.T.totalSpend)], ["Total views", F.int(Ev.T.totalViews)], ["Blended CPM", F.usd(Ev.T.blendedCPM)],
     ["Organic CPM", Ev.T.organicCPM == null ? "—" : F.usd(Ev.T.organicCPM)], ["Ads CPM", F.usd(Ev.T.adsCPM)],
-    ["Influencer cost per 1,000 collab views", F.usd(Ev.T.influencerPer1kCollab)],
+    [`${CR.infLabel} cost per 1,000 collab views`, F.usd(Ev.T.influencerPer1kCollab)],
   ], { title: `${CR.event.name} — results`, num: [1] });
   return P.finish(`Nancy Social Stats · Costing report · ${name}`);
 }

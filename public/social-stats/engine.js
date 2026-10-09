@@ -729,6 +729,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     rep, fx, dataDate, durationDays, rows, postRows, extraRows, looseRows, campRows, contentRows,
     T, campaigns, breakdown, formats, rankings, dominant, withoutCollabs, shareability, score,
     influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing,
+    infLabel: costing?.influencerLabel || rep.influencerLabel || "Influencers",   // e.g. "Collab / production" for LFW
   };
 }
 
@@ -1107,6 +1108,7 @@ export function buildCosting(rep, db, settings = DEFAULT_SETTINGS) {
   const E = event ? buildReport(event, db, settings) : null;
   return {
     rep, fx, influencers: infl, eventCosts: costs, flags, byCategory, byCreator, event, E,
+    infLabel: rep.influencerLabel || event?.influencerLabel || "Influencers & models",
     T: { influencerCost, eventCost, total: influencerCost + eventCost, lines: infl.length + costs.length, creators: infl.length },
   };
 }

@@ -1000,12 +1000,12 @@ function eventHTML(rep, R, P, D){
   ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
 
   const costSplit = [
-    ["Influencer cost", or(T.influencerCost, F.usd, R.missing.influencers)],
-    ["Event cost (excl. influencers & ads)", or(T.eventCost, F.usd, R.missing.eventCosts)],
+    [`${esc(R.infLabel)} cost`, or(T.influencerCost, F.usd, R.missing.influencers)],
+    [`Event cost (excl. ${esc(R.infLabel.toLowerCase())} & ads)`, or(T.eventCost, F.usd, R.missing.eventCosts)],
     ["Non-ad total", or(T.nonAd, F.usd)],
     ["Ad spend", F.usd(T.adSpend)],
     ["Total Spend", `<b>${F.usd(T.totalSpend)}</b>`],
-    ["Influencer cost per 1,000 collab views", or(T.influencerPer1kCollab, F.usd, T.influencerCost == null ? R.missing.influencers : null)],
+    [`${esc(R.infLabel)} cost per 1,000 collab views`, or(T.influencerPer1kCollab, F.usd, T.influencerCost == null ? R.missing.influencers : null)],
   ].map(([k, v]) => `<tr><td>${k}</td><td class="n">${v}</td></tr>`);
 
   const engRows = R.contentRows.map(r => `<tr class="${r.kind === "extra" ? "extra" : ""}"><td>${F.date(r.date)}</td><td>${who(r)}</td><td>${esc(r.format)}</td><td class="cap">${link(r, 38)}</td><td class="n">${F.int(r.views)}</td><td class="n">${F.int(r.reach)}</td><td class="n">${F.int(r.likes)}</td><td class="n">${F.int(r.comments)}</td><td class="n">${F.int(r.saves)}</td><td class="n">${F.int(r.shares)}</td><td class="n">${F.int(r.interactions)}</td><td class="n">${vsBench(r.er, R.bench)}</td><td class="n">${F.int(r.visits)}</td><td class="n">${F.int(r.follows)}</td><td>${chip(r.boosted)}</td></tr>`);
@@ -1181,7 +1181,7 @@ function eventSummaryHTML(rep, R, P){
     </div>
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Where the money went</h3>${splitBar([
-        { label: "Influencers", value: T.influencerCost, missing: "no costing yet" },
+        { label: R.infLabel, value: T.influencerCost, missing: "no costing yet" },
         { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
         { label: "Ads", value: T.adSpend },
       ], F.usd)}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
@@ -1312,12 +1312,12 @@ function costingRows(CR){
 function costingSummary(body, rep, CR){
   const T = CR.T, Ev = CR.E;
   const max = Math.max(T.influencerCost, ...CR.byCategory.map(c => c.usd), 1);
-  const bars = [{ category: "Influencers & models", usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
+  const bars = [{ category: CR.infLabel, usd: T.influencerCost, lines: CR.influencers.length }, ...CR.byCategory].filter(c => c.lines).sort((a, b) => b.usd - a.usd);
   body.innerHTML = `
     ${CR.flags.length ? `<div class="sec">${flagsHTML({ flags: CR.flags, rep }, 0)}</div>` : ""}
     <div class="sec"><div class="tiles big">
       <div class="tile hero"><div class="k">Total cost</div><div class="v">${F.usd(T.total)}</div><div class="s">${T.lines} lines · excludes ads</div></div>
-      <div class="tile"><div class="k">Influencers &amp; models</div><div class="v">${F.usd(T.influencerCost)}</div><div class="s">${T.creators} ${T.creators === 1 ? "person" : "people"}</div></div>
+      <div class="tile"><div class="k">${esc(CR.infLabel)}</div><div class="v">${F.usd(T.influencerCost)}</div><div class="s">${T.creators} ${T.creators === 1 ? "person" : "people"}</div></div>
       <div class="tile"><div class="k">Event costs</div><div class="v">${F.usd(T.eventCost)}</div><div class="s">${CR.eventCosts.length} lines</div></div>
       <div class="tile"><div class="k">${Ev ? "Blended CPM" : "Event"}</div><div class="v">${Ev ? F.usd(Ev.T.blendedCPM) : "—"}</div><div class="s">${Ev ? `with ${F.usd(Ev.T.adSpend)} ads · ${F.big(Ev.T.totalViews)} views` : "link an event report to see CPM"}</div></div>
     </div></div>
@@ -1325,7 +1325,7 @@ function costingSummary(body, rep, CR){
       <div class="card"><h3>Where the money went</h3>
         ${bars.length ? `<div class="hbars">${bars.map(c => `<div class="hb" data-tip="${esc(c.category)}: ${F.usd(c.usd)} · ${c.lines} line${c.lines > 1 ? "s" : ""}"><span class="hl">${esc(c.category)}</span><span class="ht"><i style="width:${(c.usd / max) * 100}%"></i></span><b>${F.usd(c.usd)}</b></div>`).join("")}</div>` : `<p class="small muted">No costs yet — <a href="#/r/${rep.id}/add">add invoices</a>.</p>`}
       </div>
-      <div class="card"><h3>Influencers &amp; models</h3>
+      <div class="card"><h3>${esc(CR.infLabel)}</h3>
         ${CR.byCreator.length ? `<div class="tw"><table><thead><tr><th>Creator</th><th>Deliverables</th><th class="n">USD</th></tr></thead><tbody>${CR.byCreator.map(l => `<tr><td>${esc(l.creator)}</td><td class="cap">${esc(l.deliverables)}</td><td class="n">${F.usd(l.usd)}</td></tr>`).join("")}</tbody></table></div>` : `<p class="small muted">None yet.</p>`}
         ${Ev && Ev.T.influencerPer1kCollab != null ? `<p class="small muted" style="margin-top:8px">${F.usd(Ev.T.influencerPer1kCollab)} of influencer cost per 1,000 collab views.</p>` : ""}
       </div>
@@ -1358,6 +1358,7 @@ function costingLines(body, rep, CR, D){
       <label class="f">Start<input type="date" id="k-start" value="${rep.start || ""}"></label>
       <label class="f">End<input type="date" id="k-end" value="${rep.end || ""}"></label>
       <label class="f">For event report<select id="k-event"><option value="">Not linked</option>${events.map(e => `<option value="${e.id}" ${linked?.id === e.id ? "selected" : ""} ${e.costingId && e.costingId !== rep.id ? "disabled" : ""}>${esc(e.name)}${e.costingId && e.costingId !== rep.id ? " (has its own)" : ""}</option>`).join("")}</select></label>
+      <label class="f">Name for influencer costs<input type="text" id="k-inflabel" value="${esc(rep.influencerLabel || "")}" placeholder="Influencers & models"></label>
       <label class="f">Colour<select id="k-colour">${Object.keys(E.EVENT_COLOURS).map(c => `<option ${rep.colour === c ? "selected" : ""}>${c}</option>`).join("")}</select></label>
     </div>
     <details style="margin-top:14px"><summary>FX rates (USD per 1 unit)</summary>
@@ -1368,9 +1369,9 @@ function costingLines(body, rep, CR, D){
 
     ${CR.flags.filter(f => f.level === "bad").length ? `<div class="sec">${flagsHTML({ flags: CR.flags.filter(f => f.level === "bad"), rep }, 0)}</div>` : ""}
     <div class="selbar" id="selbar" hidden><span id="selcount"></span><button class="btn danger sm" id="seldel">Delete selected</button><button class="btn ghost sm" id="selnone">Clear selection</button></div>
-    <div class="sec"><h2>Influencers &amp; models</h2>
+    <div class="sec"><h2>${esc(CR.infLabel)}</h2>
       ${infRows.length ? `<div class="tw"><table><thead><tr><th><input type="checkbox" data-pickall="influencers" aria-label="Select all"></th><th>Creator / model</th><th>Deliverables</th><th>Date</th><th>Fee</th><th>Cur.</th><th class="n">USD</th><th>Invoice #</th><th>Receipt link</th><th></th></tr></thead><tbody>${infRows.join("")}
-        <tr class="total"><td colspan="6">Influencers total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
+        <tr class="total"><td colspan="6">${esc(CR.infLabel)} total</td><td class="n">${F.usd(CR.T.influencerCost)}</td><td colspan="3"></td></tr></tbody></table></div>` : `<p class="small muted">None yet.</p>`}
       <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="k-addinf">+ Add influencer</button></div>
     </div>
     <div class="sec"><h2>Event costs</h2>
@@ -1391,6 +1392,7 @@ function costingLines(body, rep, CR, D){
   body.querySelector("#k-start").onchange = e => { save({ start: e.target.value }); render(); };
   body.querySelector("#k-end").onchange = e => { save({ end: e.target.value }); render(); };
   body.querySelector("#k-colour").onchange = e => { save({ colour: e.target.value }); render(); };
+  body.querySelector("#k-inflabel").onchange = e => { save({ influencerLabel: e.target.value.trim() || null }); render(); };
   body.querySelector("#k-event").onchange = e => {
     const D2 = db();
     if (linked && linked.id !== e.target.value) put("ss.report." + linked.id, { ...D2.reports[linked.id], costingId: null });
@@ -1585,7 +1587,7 @@ function costingAdd(body, rep, CR){
     <td><input type="checkbox" data-q="${i}:use" ${x.use ? "checked" : ""} ${x.error ? "disabled" : ""}></td>
     <td class="cap small" title="${esc(x.fileName)}">${esc(x.fileName || "pasted")}${x.dup ? `<br><span class="down">possible duplicate</span>` : ""}${x.error ? `<br><span class="down">${esc(x.error)}</span>` : ""}</td>
     ${x.error ? `<td colspan="10"></td>` : `
-    <td><select class="ed" data-q="${i}:type"><option value="influencer" ${x.type === "influencer" ? "selected" : ""}>Influencer / model</option><option value="event" ${x.type === "event" ? "selected" : ""}>Event cost</option></select></td>
+    <td><select class="ed" data-q="${i}:type"><option value="influencer" ${x.type === "influencer" ? "selected" : ""}>${esc(CR.infLabel)}</option><option value="event" ${x.type === "event" ? "selected" : ""}>Event cost</option></select></td>
     <td><select class="ed" data-q="${i}:category" ${x.type === "influencer" ? "disabled" : ""}>${E.COST_CATEGORIES.map(c => `<option ${c === (x.category || "Other") ? "selected" : ""}>${c}</option>`).join("")}</select></td>
     <td><input class="ed" style="width:150px" data-q="${i}:vendor" value="${esc(x.vendor)}"></td>
     <td><input class="ed" style="width:180px" data-q="${i}:item" value="${esc(x.item)}"></td>
@@ -1597,8 +1599,8 @@ function costingAdd(body, rep, CR){
     <td>${sureChip(x)}</td>`}
     <td><button class="x" data-qdel="${i}">×</button></td></tr>`;
   // grouped by segment: influencers & models first, then each event-cost category, then anything unreadable
-  const seg = x => x.error ? "Couldn't read" : x.type === "influencer" ? "Influencers & models" : (x.category || "Other");
-  const order = ["Influencers & models", ...E.COST_CATEGORIES, "Couldn't read"];
+  const seg = x => x.error ? "Couldn't read" : x.type === "influencer" ? CR.infLabel : (x.category || "Other");
+  const order = [CR.infLabel, ...E.COST_CATEGORIES, "Couldn't read"];
   const rows = order.flatMap(name => {
     const idx = q.map((x, i) => i).filter(i => seg(q[i]) === name);
     if (!idx.length) return [];
@@ -1770,7 +1772,7 @@ function importWeeklyText(text, url, repId){
 }
 
 /* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
-function importEventTab(text, url, repId, costs){
+function importEventTab(text, url, repId, costs, infLabel){
   const S = E.parseEventSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
   const D = db();
@@ -1796,15 +1798,20 @@ function importEventTab(text, url, repId, costs){
   // costs from the Total Spend tab become this event's costing report (two summary lines until invoices are added)
   if (costs && (costs.influencerCost != null || costs.eventCost != null)) {
     const lines = {
-      influencers: costs.influencerCost != null ? [{ creator: "Influencer invoices (total from sheet)", deliverables: "", fee: costs.influencerCost, currency: "USD", source: "Total Spend tab" }] : [],
+      influencers: costs.influencerCost != null ? [{ creator: `${infLabel || "Influencer invoices"} (total from sheet)`, deliverables: "", fee: costs.influencerCost, currency: "USD", source: "Total Spend tab" }] : [],
       eventCosts: costs.eventCost != null ? [{ category: "Other", item: "Event costs (total from sheet)", qty: null, unit: costs.eventCost, currency: "USD", vendor: "", source: "Total Spend tab" }] : [],
     };
     const existing = rep.costingId && D.reports[rep.costingId];
     const deletedOne = Object.values(docs).some(v => v?.deleted && v.type === "costing" && v.wasFor === rep.id);
     if (deletedOne && !existing) { /* someone deleted this event's costing: leave it deleted */ }
-    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, influencerLabel: infLabel || null, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
     else if ((existing.influencers || []).every(l => l.source === "Total Spend tab") && (existing.eventCosts || []).every(l => l.source === "Total Spend tab"))
-      put("ss.report." + existing.id, { ...existing, ...lines });      // refresh only if nobody has added real invoices
+      put("ss.report." + existing.id, { ...existing, ...lines, ...(infLabel ? { influencerLabel: infLabel } : {}) });      // refresh only if nobody has added real invoices
+  }
+  if (infLabel) {
+    patch.influencerLabel = infLabel;
+    const k = rep.costingId && db().reports[rep.costingId];               // keep its costing report in step
+    if (k && k.influencerLabel !== infLabel) put("ss.report." + k.id, { ...k, influencerLabel: infLabel });
   }
   put("ss.report." + rep.id, { ...rep, ...patch });
   return { id: rep.id, msg: `Read ${S.posts.length} posts and ${S.ads.length} ad rows for ${esc(S.name)} (data ${F.date(pulled)}).${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
@@ -2328,7 +2335,7 @@ async function refreshFromSources(){
         const text = await sheetCsv(e.sheet, gid);
         const name = E.parseEventSheet(text).name;
         const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
-        importEventTab(text, url, null, costsBy[key]); n++;
+        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name]); n++;
       } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
     }
   }
