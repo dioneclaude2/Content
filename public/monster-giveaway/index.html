@@ -465,14 +465,14 @@ footer .sp{margin-left:auto;opacity:.75}
   </div>
   <p class="belong"><b>Belonging:</b> followers are called <i>the Residents</i>. Story poll: “Monster lover 🖤 or a little scared 😳?” Every entry is a choice (Lemmy / Jack / Medusa).</p>
 
-  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Six steps.</em></h3>
+  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Seven steps.</em></h3>
   <p class="lead" style="margin-top:0">Giveaway + drop only, on the PM board's dates. Grid: <a class="lnk" id="gridLink1" target="_blank" rel="noopener">content grid</a>.</p>
   <p class="mini" style="color:var(--muted);font-size:13px">Account key: MAIN = @hellonancy_official · MONSTERS = @nancymonstermansion · BOTH / COLLAB = both accounts (Instagram Collab post).</p>
   
   <div class="htl-wrap uni plan-htl"><div class="htl-hint">Scroll sideways →</div><div class="htl" id="ptl"></div></div>
   <div class="notes2">
     <div class="callout"><b>Giveaway → drop:</b> 8 days (21 → 29 Oct), close to Dr. Squatch's 8.</div>
-    <div class="callout"><b>Grid check:</b> the grid opens the giveaway 18 Oct; the PM board says 21 Oct. Move the grid post to 21 Oct.</div>
+    <div class="callout"><b>Grid check:</b> the grid opens the giveaway 18 Oct and runs Pick your monster 19 Oct; the PM board opens the giveaway 21 Oct. Move them to 21 and 22 Oct.</div>
   </div>
 
   <p class="rule">Every post asks for one small action: follow, comment your monster, or tap the link.</p>
@@ -614,7 +614,7 @@ function renderMoments(){
 }
 document.addEventListener("change", e => { const r = e.target; if (r.type === "radio" && r.name.includes(":")) { picks[r.name] = +r.value; store.set("mmg.picks", picks); renderMoments(); } });
 
-const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Move the grid giveaway post from 18 to 21 Oct; add the 28 Oct drop notice.","Use the research sheet for every reference."];
+const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Move the grid giveaway post from 18 to 21 Oct and Pick your monster from 19 to 22 Oct; add the 28 Oct drop notice.","Use the research sheet for every reference."];
 const done = store.get("mmg.steps") || {};
 function renderCheck(){ $("#check").innerHTML = STEPS.map((s,i)=>`<li class="${done[i]?"done":""}"><input type="checkbox" data-step="${i}" ${done[i]?"checked":""} aria-label="${esc(s)}"><span><b>${i+1}.</b> ${/research sheet/.test(s)?`Use the <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">research sheet</a> for every reference.`:esc(s)}</span></li>`).join(""); }
 document.addEventListener("change", e => { if (e.target.dataset.step !== undefined) { done[e.target.dataset.step] = e.target.checked; store.set("mmg.steps", done); renderCheck(); } });
