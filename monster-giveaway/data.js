@@ -335,7 +335,7 @@ const PLAN = [
 
 const MOMENTS = [
   {id:"giveaway", when:"22 Oct", title:"Giveaway = Pick your monster", acct:"Both",
-    content:[], captions:[["Giveaway post","Pick your monster 🗝\n\nGIVEAWAY 🎃 Win a giant Nancy pumpkin (Lemmy, Medusa & Jack inside).\n1. Follow @nancymonstermansion + @hellonancy_official\n2. Comment KNOCK KNOCK + your monster: Lemmy, Medusa or Jack\n🗝 Bonus key: post a Story with #NancyMonsterMansion and tag @nancymonstermansion\nCloses 27.10, 11:59pm ET. 3 winners (one per monster) in our Stories 28.10.\n18+, US only, no purchase necessary. This promotion is not sponsored, endorsed or administered by, or associated with Instagram."]]},
+    content:[], captions:[["Giveaway post","Pick your monster 🗝\n\nGIVEAWAY 🎃 Win a giant Nancy pumpkin (Lemmy, Medusa & Jack inside).\n1. Follow @nancymonstermansion + @hellonancy_official\n2. Comment KNOCK KNOCK + your monster: Lemmy, Medusa or Jack\n🗝 Bonus key: post a Story with #NancyMonsterMansion and tag @nancymonstermansion\nCloses 27.10, 11:59pm ET. [X] winners announced in our Stories 28.10.\n18+, US only, no purchase necessary. This promotion is not sponsored, endorsed or administered by, or associated with Instagram."]]},
   {id:"tomorrow", when:"28 Oct", title:"Winners + drop notice", acct:"Both",
     content:[], captions:[["Story","The Mansion has new Residents 🗝 Winners, check your DMs. We will never ask for payment."],["Post","Didn't win? Doors open tomorrow, 9pm ET. Only [X] Monster Mansion Vol 1 made. When they're gone, they're gone."]]},
   {id:"drop", when:"29 Oct", title:"Limited drop", acct:"Both",
@@ -355,7 +355,7 @@ const HASHTAGS = [
 const MANYCHAT = [
   ["22–27 Oct", "Giveaway comments", "KNOCK KNOCK on the giveaway post → DM “You're in 🗝” + rules link + Resident pass number. Tags the person and saves their monster (Lemmy / Medusa / Jack) from the comment."],
   ["22–27 Oct", "Bonus key", "Story mention of @nancymonstermansion → DM “+1 key 🗝”, adds 1 to their keys (max 1 bonus)."],
-  ["28 Oct", "Winners + drop notice", "DM the 3 winners. DM everyone else: “Doors open tomorrow, 9pm ET.”"],
+  ["28 Oct", "Winners + drop notice", "DM the winners. DM everyone else: “Doors open tomorrow, 9pm ET.”"],
   ["29 Oct", "Early access", "8:30pm ET: DM every entrant their early-access link to the drop."],
   ["29 Oct →", "Unboxings", "Story mention after the drop → DM a thank-you and flag for repost."],
 ];
@@ -363,7 +363,7 @@ const WIN_STEPS = [
   ["Collect", "ManyChat saves every entrant (tag “gw_entered”), their monster, and their keys (1 + bonus). Back-up: export the post's comments too, in case ManyChat misses some."],
   ["Close", "27 Oct, 11:59pm ET: turn the giveaway automation off. Export the list to a Google Sheet."],
   ["Clean", "Remove duplicates, team and brand accounts, and obvious bots (empty or brand-new accounts)."],
-  ["Draw", "Split the list by monster. Draw 1 winner per monster at random, weighted by keys (2 keys = 2 chances), plus 2 back-ups each. Screen-record the draw."],
+  ["Draw", "Spin on Wheel of Names (wheelofnames.com): paste the list, a name twice for 2 keys, spin for each winner, plus 2 back-ups. Very big list? Shortlist on Random.org first, then spin. Screen-record it (it also works as a Story)."],
   ["Check", "Each winner follows both accounts, is 18+ and in the US, and the account looks real. If not, go to the back-up."],
   ["Contact", "DM from @nancymonstermansion only. Never ask for payment. Shipping details by form. 48 hours to reply, or the back-up wins."],
   ["Announce", "28 Oct in Stories, with the winners' OK to show their handle. Log everything in the sheet."],
