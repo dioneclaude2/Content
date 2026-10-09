@@ -156,6 +156,47 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .gm-imgs img{border-radius:12px;aspect-ratio:4/3;object-fit:cover;width:100%}
 .idea{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
 
+
+/* brand tabs + horizontal timeline */
+.btabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity;scrollbar-width:thin}
+.btab{flex:0 0 auto;scroll-snap-align:start;text-align:left;font-family:inherit;color:inherit;background:var(--paper);border:1px solid var(--line-2);border-radius:14px;padding:10px 14px;cursor:pointer;display:grid;gap:2px;min-width:170px;transition:transform .15s,border-color .15s,background .15s}
+.btab:hover{transform:translateY(-2px);border-color:var(--pink)}
+.btab b{font-family:Fraunces,serif;font-weight:400;font-size:16px;line-height:1.15}
+.btab__k{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btab.is-main{border-color:var(--pink)}
+.btab.is-on{background:var(--night);color:#faf3e6;border-color:transparent}
+.btab.is-on .btab__k{color:var(--yellow)}
+.bview{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:24px;margin-top:6px}
+.bview.is-main{border:2px solid var(--pink)}
+.bview__top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.bview h3{font-size:clamp(24px,3vw,36px);line-height:1.1}
+.bview h3 em{font-style:italic;color:var(--ink-soft);font-weight:300}
+.glance2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 22px;margin:18px 0 6px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:14px}
+.glance2 small{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:2px}
+.htl-wrap{margin:18px -24px 18px;position:relative}
+.htl-hint{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:0 24px 8px}
+.htl{display:flex;gap:0;overflow-x:auto;padding:0 24px 16px;scroll-snap-type:x mandatory;align-items:flex-start;scrollbar-width:thin}
+.hstep{flex:0 0 360px;scroll-snap-align:start;position:relative;padding:0 14px 0 0}
+.hstep.is-mini{flex:0 0 220px}
+.hstep__gap{height:34px;position:relative;margin-right:-14px}
+.hstep__gap::before{content:"";position:absolute;left:0;right:0;top:16px;height:2px;background:linear-gradient(90deg,var(--lilac),var(--pink))}
+.hstep__gap.is-start::before{left:10px}
+.hstep__gap span{position:absolute;left:28px;top:0;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper);padding:0 6px}
+.hstep__dot{position:absolute;left:0;top:9px;width:18px;height:18px;border-radius:50%;background:var(--pink);border:4px solid var(--paper);box-shadow:0 0 0 1px var(--pink)}
+.hstep.is-mini .hstep__dot{background:var(--paper)}
+.hstep__head{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin-top:6px}
+.hstep__head b{font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:21px}
+.hstep__head span{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hstep__head em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:700;color:var(--pink);margin-left:auto}
+.hstep__what{font-size:14px;margin:6px 0 10px;min-height:42px}
+.hstep__same{font-size:12.5px;color:var(--muted);font-style:italic;border:1px dashed var(--line-2);border-radius:10px;padding:8px 10px}
+.hstep__same a{color:var(--pink);font-weight:600}
+.hstep__embed{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff;height:620px}
+.hstep__embed iframe{width:100%;height:100%;border:0;display:block}
+.hstep__open{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:600;color:var(--pink);text-decoration:none}
+.hstep__open:hover{text-decoration:underline}
+@media (max-width:640px){.hstep{flex-basis:84vw}.hstep.is-mini{flex-basis:60vw}.bview{padding:18px}.htl-wrap{margin:14px -18px}.htl,.htl-hint{padding-left:18px;padding-right:18px}.hstep__embed{height:560px}}
+
 /* plan */
 .story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
 .story img{border-radius:20px;box-shadow:var(--shadow)}
@@ -336,9 +377,10 @@ footer .sp{margin-left:auto;opacity:.75}
 
 <section id="brands"><div class="wrap">
   <div class="sec-head"><span class="k">02 — Brand references</span><h2>Every step. <em>Every post.</em></h2>
-  <p class="lead">16 brands, day by day (17 sheet tabs: Dr. Squatch × Sweeney covers two). Fit for Nancy: ★★★ strong · ★★ good · ★ one idea worth taking. Likes / comments were read from the posts in Oct 2026 and may have changed since. The “for Nancy” notes are research ideas; <a href="#plan">The Plan</a> is the final plan.</p></div>
+  <p class="lead">16 brands, day by day (17 sheet tabs: Dr. Squatch × Sweeney covers two). Fit for Nancy: ★★★ strong · ★★ good · ★ one idea worth taking. Likes / comments were read from the posts in Oct 2026 and may have changed since. The “for Nancy” notes are research ideas; <a href="#plan">The Plan</a> is the final plan. Pick a brand tab, then scroll its timeline sideways: every post plays right there.</p></div>
   <div class="filters" id="filters"></div>
-  <div class="brands" id="brandList"></div>
+  <div class="btabs" id="btabs" role="tablist" aria-label="Brands"></div>
+  <div id="brandView"></div>
 </div></section>
 
 <section id="plan"><div class="wrap">
@@ -426,68 +468,59 @@ const io = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.ta
 io.observe($("#chart"));
 $("#tricks").innerHTML = TRICKS.map(([b,p,n],i)=>`<div class="trick"><span class="num">${i+1}</span><b>${esc(b)}</b><p>${esc(p)}</p>${n?`<div class="nancy">${esc(n)}</div>`:""}</div>`).join("");
 
-/* brands */
-const filt = {cat:"", fit:0, sq:false};
+/* brands: one tab per brand (like the sheet), each a left-to-right timeline with the posts embedded */
 const CATS = ["CELEB","NO CELEB","DROP","BIG"];
-function renderFilters(){
-  $("#filters").innerHTML = `<span class="k" style="color:var(--muted)">Filter</span>`+
-    [["","All"],...CATS.map(c=>[c,c])].map(([v,l])=>`<button class="chip" data-cat="${v}" aria-pressed="${filt.cat===v}">${l}</button>`).join("")+
-    [[0,"Any fit"],[3,"★★★"],[2,"★★ +"]].map(([v,l])=>`<button class="chip" data-fit="${v}" aria-pressed="${filt.fit===v}">${l}</button>`).join("")+
-    `<button class="chip chip--sq" data-sq="1" aria-pressed="${filt.sq}">⭐ Dr. Squatch highlight</button>`;
+let catF = "", cur = (location.hash.match(/^#b-(.+)/) || [])[1] || "drsquatch";
+if (!BRANDS.some(b => b.id === cur)) cur = "drsquatch";
+const tabLabel = b => (b.tabs.match(/“([^”]+)”/g) || []).map(x => x.replace(/[“”]/g, "")).join(" / ");
+function renderTabs(){
+  const list = BRANDS.filter(b => !catF || b.cats.includes(catF));
+  $("#filters").innerHTML = [["", "All"], ...CATS.map(c => [c, c])].map(([v, l]) => `<button class="chip" data-cat="${v}" aria-pressed="${catF === v}">${l}</button>`).join("");
+  $("#btabs").innerHTML = list.map(b => `<button class="btab${b.id === cur ? " is-on" : ""}${b.main ? " is-main" : ""}" data-tab="${b.id}" role="tab" aria-selected="${b.id === cur}">
+      <span class="btab__k">${esc(tabLabel(b) || b.cats.join(" · "))}</span><b>${esc(b.title)}</b><span class="stars">${"★".repeat(b.stars)}</span></button>`).join("");
 }
-const BRAND_NAME = {};
-function renderBrands(){
-  const list = BRANDS.filter(b => (!filt.cat || b.cats.includes(filt.cat)) && (!filt.fit || b.stars >= filt.fit) && (!filt.sq || /squatch/i.test(b.title)));
-  $("#brandList").innerHTML = list.map(b=>{
-    const g = b.glance, G = (k,l,w) => g[k] ? `<div class="${w?"wide":""}"><small>${l}</small>${esc(g[k])}</div>` : "";
-    const posts = [...new Set(b.rows.filter(r=>r[4] && !r[6]).map(r=>r[4]))];
-    return `<article class="brand${b.main?" is-main is-open":""}" id="b-${b.id}">
-      <div class="brand__head" data-open="${b.id}" role="button" tabindex="0" aria-expanded="${!!b.main}">
-        <div><div class="tags">${b.main?`<span class="tag main">THE MAIN REFERENCE</span>`:""}${b.cats.map(c=>`<span class="tag">${c}</span>`).join("")}<span class="tag">${b.year}</span><span class="stars" title="Fit for Nancy">${"★".repeat(b.stars)}</span></div>
-        <h3>${esc(b.title)} <em>${esc(b.sub)}</em></h3><div class="brand__acct">${esc(b.account)} · ${esc(b.tabs)}</div></div>
-        <button class="toggle" tabindex="-1" aria-hidden="true">+</button>
-      </div>
-      <div class="brand__body">
-        ${b.images?`<div class="gm-imgs">${b.images.map(i=>`<img src="assets/${i}" alt="Gentle Monster Jentle Salon reference" loading="lazy">`).join("")}</div>`:""}
-        ${Object.keys(g).length?`<div class="glance">${G("order","Order",1)}${G("proof","Proof")}${G("prize","Prize")}${G("entry","How to enter")}${G("why","Why it worked")}${G("fit","Fit for Nancy (idea)")}${G("extra","Note",1)}
-          ${g.context?`<div class="wide"><small>Context posts</small>${g.context.map(([u,t])=>`<a class="lnk" href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join(" &nbsp; ")}</div>`:""}</div>`:""}
-        <div class="k" style="color:var(--muted);margin-bottom:4px">Day by day</div>
-        <ol class="tl">${b.rows.map(([d,date,gap,what,url,stats,same])=>`<li class="${same?"same":""}"><span class="dot"></span>
-          <div class="tl__when"><b>${esc(date)}</b><span>${esc(d)}</span></div>
-          <div class="tl__what"><span class="gap">${esc(gap)}</span><br>${esc(what)}</div>
-          <div class="tl__post">${url?`<a href="${url}" target="_blank" rel="noopener">${same?"Same post":"Instagram"} ↗</a>`:`<small>(captions)</small>`}${stats && stats!=="—"?`<small>${esc(stats)}</small>`:""}</div></li>`).join("")}</ol>
-        ${b.takeaway?`<div class="take"><span class="k">Key takeaway for Nancy</span>${esc(b.takeaway)}</div>`:""}
-        ${b.note?`<p class="idea">${esc(b.note)}</p>`:""}
-        <div class="brand__foot">
-          <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">See the full tab in the sheet ↗</a>
-          ${posts.length?`<button class="embtn" data-embed="${b.id}">Show the ${posts.length} Instagram post${posts.length>1?"s":""} here</button>`:""}
-        </div>
-        <div class="embeds" id="emb-${b.id}"></div>
-      </div>
-    </article>`;
-  }).join("") || `<p class="lead">No brands match these filters.</p>`;
+const embedUrl = u => u.replace(/\/$/, "") + "/embed/captioned/";
+function renderBrand(){
+  const b = BRANDS.find(x => x.id === cur), g = b.glance;
+  const G = (k, l) => g[k] ? `<div><small>${l}</small>${esc(g[k])}</div>` : "";
+  const steps = b.rows.map(([d, date, gap, what, url, stats, same], i) => {
+    const conn = i ? `<div class="hstep__gap"><span>${esc(gap)}</span></div>` : `<div class="hstep__gap is-start"><span>${esc(gap)}</span></div>`;
+    if (same || !url) return `<div class="hstep is-mini">${conn}<div class="hstep__dot"></div>
+      <div class="hstep__head"><b>${esc(date)}</b><span>${esc(d)}</span></div>
+      <p class="hstep__what">${esc(what)}</p>
+      <p class="hstep__same">${url ? `In the caption of <a href="${url}" target="_blank" rel="noopener">this post ↗</a>` : "Stated in the captions"}</p></div>`;
+    return `<div class="hstep">${conn}<div class="hstep__dot"></div>
+      <div class="hstep__head"><b>${esc(date)}</b><span>${esc(d)}</span>${stats && stats !== "—" ? `<em>${esc(stats)}</em>` : ""}</div>
+      <p class="hstep__what">${esc(what)}</p>
+      <div class="hstep__embed"><iframe src="${embedUrl(url)}" loading="lazy" allowtransparency="true" scrolling="no" title="Instagram post: ${esc(what)}"></iframe></div>
+      <a class="hstep__open" href="${url}" target="_blank" rel="noopener">Open on Instagram ↗</a></div>`;
+  }).join("");
+  $("#brandView").innerHTML = `<article class="bview${b.main ? " is-main" : ""}" id="b-${b.id}">
+    <div class="bview__top">
+      <div><div class="tags">${b.main ? `<span class="tag main">THE MAIN REFERENCE</span>` : ""}${b.cats.map(c => `<span class="tag">${c}</span>`).join("")}<span class="tag">${b.year}</span><span class="stars" title="Fit for Nancy">${"★".repeat(b.stars)}</span></div>
+      <h3>${esc(b.title)} <em>${esc(b.sub)}</em></h3><div class="brand__acct">${esc(b.account)} · ${esc(b.tabs)}</div></div>
+      <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">See the full tab in the sheet ↗</a>
+    </div>
+    ${Object.keys(g).length ? `<div class="glance2">${G("order", "Order")}${G("proof", "Proof")}${G("prize", "Prize")}${G("entry", "How to enter")}${G("why", "Why it worked")}${G("fit", "Fit for Nancy (idea)")}${G("extra", "Note")}
+      ${g.context ? `<div><small>Context posts</small>${g.context.map(([u, t]) => `<a class="lnk" href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("<br>")}</div>` : ""}</div>` : ""}
+    <div class="htl-wrap"><div class="htl-hint">Timeline · scroll sideways →</div><div class="htl">${steps}</div></div>
+    ${b.images ? `<div class="gm-imgs">${b.images.map(i => `<img src="assets/${i}" alt="Gentle Monster Jentle Salon reference" loading="lazy">`).join("")}</div>` : ""}
+    ${b.takeaway ? `<div class="take"><span class="k">Key takeaway for Nancy</span>${esc(b.takeaway)}</div>` : ""}
+    ${b.note ? `<p class="idea">${esc(b.note)}</p>` : ""}
+  </article>`;
 }
-let igLoaded = false;
-function loadEmbeds(id){
-  const b = BRANDS.find(x=>x.id===id), box = $("#emb-"+id);
-  if (box.classList.contains("is-on")) { box.classList.remove("is-on"); return; }
-  const rows = []; const seen = new Set();
-  b.rows.forEach(r => { if (r[4] && !r[6] && !seen.has(r[4])) { seen.add(r[4]); rows.push(r); } });
-  box.innerHTML = rows.map(([d,date,gap,what,url,stats])=>`<div class="embed"><blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"></blockquote>
-    <div class="embed__fallback"><b>${esc(date)}</b> · ${esc(b.account.split(",")[0])} · ${esc(stats)}<br>${esc(what)}<br><a class="lnk" href="${url}" target="_blank" rel="noopener">Open on Instagram ↗</a></div></div>`).join("");
-  box.classList.add("is-on");
-  if (!igLoaded) { const s = document.createElement("script"); s.async = true; s.src = "https://www.instagram.com/embed.js"; s.onload = () => window.instgrm?.Embeds.process(); document.body.appendChild(s); igLoaded = true; }
-  else window.instgrm?.Embeds.process();
+function selectBrand(id, scroll){
+  cur = id; renderTabs(); renderBrand();
+  history.replaceState(null, "", "#b-" + id);
+  if (scroll) document.getElementById("brands").scrollIntoView({behavior: "smooth"});
+  document.querySelector(".btab.is-on")?.scrollIntoView({inline: "center", block: "nearest"});
 }
 document.addEventListener("click", e => {
-  const c = e.target.closest("[data-cat],[data-fit],[data-sq]");
-  if (c) { if (c.dataset.cat !== undefined) filt.cat = c.dataset.cat; if (c.dataset.fit !== undefined) filt.fit = +c.dataset.fit; if (c.dataset.sq) filt.sq = !filt.sq; renderFilters(); renderBrands(); return; }
-  const o = e.target.closest("[data-open]");
-  if (o) { const a = o.closest(".brand"); a.classList.toggle("is-open"); o.setAttribute("aria-expanded", a.classList.contains("is-open")); return; }
-  const em = e.target.closest("[data-embed]"); if (em) { loadEmbeds(em.dataset.embed); return; }
+  const c = e.target.closest("[data-cat]");
+  if (c) { catF = c.dataset.cat; const list = BRANDS.filter(b => !catF || b.cats.includes(catF)); if (!list.some(b => b.id === cur) && list[0]) cur = list[0].id; renderTabs(); renderBrand(); return; }
+  const t = e.target.closest("[data-tab]"); if (t) { selectBrand(t.dataset.tab); return; }
   const cp = e.target.closest("[data-copy]"); if (cp) { e.preventDefault(); copy(cp.dataset.copy); return; }
 });
-document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-open]")) e.target.click(); });
 
 /* plan */
 $("#monsters").innerHTML = MONSTERS.map(m=>`<div class="mon" style="--c:${m.c}"><img src="assets/${m.img}" alt="${m.name} in its world" loading="lazy"><div class="mon__b"><h4>${m.name}</h4><p><b>Look:</b> ${esc(m.look)}</p><p><b>Personality:</b> ${esc(m.who)}</p><p class="line">${esc(m.line)}</p></div></div>`).join("");
@@ -500,8 +533,7 @@ $("#ptl").innerHTML = PLAN.map(([ph,date,gap,what,acct,from])=>{
     <div class="ptl__card"><span class="ptl__phase">${esc(ph)}</span><p>${esc(what)}</p><div class="ptl__meta">${acct.split(/\s*\+\s*/).map(a=>`<span class="acct-chip${/MONSTER/.test(a)?" m":""}">${esc(a)}</span>`).join("")}
     ${from.length?`<span class="from">Copied from ${from.map(id=>`<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</span>`:""}</div></div></li>`;
 }).join("");
-document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (!g) return; const a = document.getElementById("b-"+g.dataset.goto);
-  if (!a) { filt.cat=""; filt.fit=0; filt.sq=false; renderFilters(); renderBrands(); } setTimeout(()=>document.getElementById("b-"+g.dataset.goto)?.classList.add("is-open"),0); });
+document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (!g) return; e.preventDefault(); catF = ""; selectBrand(g.dataset.goto, true); });
 
 const picks = store.get("mmg.picks") || {};
 function renderMoments(){
@@ -551,7 +583,7 @@ const secs = ["home","findings","brands","plan","resources"].map(id=>document.ge
 const navIo = new IntersectionObserver(es=>es.forEach(e=>{ if (e.isIntersecting) document.querySelectorAll(".nav a").forEach(a=>a.classList.toggle("is-on", a.getAttribute("href")==="#"+e.target.id)); }),{rootMargin:"-40% 0px -55% 0px"});
 secs.forEach(s=>navIo.observe(s));
 
-renderFilters(); renderBrands(); renderMoments(); renderCheck();
+renderTabs(); renderBrand(); renderMoments(); renderCheck();
 </script>
 </body>
 </html>
