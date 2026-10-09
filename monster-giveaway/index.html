@@ -198,6 +198,13 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 @media (max-width:640px){.hstep{flex-basis:84vw}.hstep.is-mini{flex-basis:60vw}.bview{padding:18px}.htl-wrap{margin:14px -18px}.htl,.htl-hint{padding-left:18px;padding-right:18px}.hstep__embed{height:560px}}
 
 /* plan */
+.envs{display:grid;gap:14px;margin-top:10px}
+.env{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px}
+.env__pin{min-width:236px;min-height:120px;display:grid;place-items:center;background:var(--cream);border-radius:14px}
+.env__b b{display:block;font-family:Fraunces,serif;font-weight:400;font-style:italic;font-size:22px;margin:6px 0}
+.env__b p{color:var(--ink-soft);font-size:14.5px;margin-bottom:10px}
+.env__b .k{color:var(--pink)}
+@media (max-width:640px){.env{grid-template-columns:1fr}}
 .story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
 .story img{border-radius:20px;box-shadow:var(--shadow)}
 .story h3{font-size:clamp(30px,4vw,46px);line-height:1.05;font-weight:300}
@@ -426,6 +433,17 @@ footer .sp{margin-left:auto;opacity:.75}
   </div>
   <div class="callout"><b>Free reach matters more than ads:</b> co-host the giveaway with a bigger partner brand (the Crocs × Juicy trick), have creators unbox the PR Mansions and tag both accounts, and use Instagram's Collab post so one post shows on every account.</div>
 
+  <h3 class="subh"><span class="k">5.6b</span>Environment references. <em>Something like this, in our world.</em></h3>
+  <p class="lead" style="margin-top:0">Ideas for the Mansion world: the set, the space, the “world you can walk into” from the brief formula.</p>
+  <div class="envs">
+    <div class="env">
+      <div class="env__pin"><a data-pin-do="embedPin" data-pin-width="medium" href="https://ph.pinterest.com/pin/853643304419609786/"></a></div>
+      <div class="env__b"><span class="k">Pinterest · added by Dione</span><b>“We can do something like this in our environment.”</b>
+      <p>Reference for how the Mansion world could look and feel on set and in the posts.</p>
+      <a class="lnk" href="https://ph.pinterest.com/pin/853643304419609786/" target="_blank" rel="noopener">Open the pin on Pinterest ↗</a></div>
+    </div>
+  </div>
+
   <h3 class="subh"><span class="k">5.7</span>Rules + next steps.</h3>
   <div class="callout">Giveaway rules must include: <b>18+</b>, US only (or the eligible countries), start/end date and time, how the winner is picked and contacted, <b>no purchase necessary</b>, and “not sponsored, endorsed or administered by Instagram”. Get them checked before launch (not legal advice).</div>
   <ul class="check" id="check"></ul>
@@ -555,6 +573,7 @@ $("#res").innerHTML = [
   [LINKS.brief,"Monster Mansion launch brief","The visual theme and the images",true],
   [LINKS.grid,"Monster Mansion grid","The planned grid",true],
   [LINKS.adlib,"Meta Ad Library","Check whether a brand ran ads"],
+  ["https://ph.pinterest.com/pin/853643304419609786/","Environment reference (Pinterest)","“We can do something like this in our environment.”"],
 ].map(([u,b,s,ro])=>`<a href="${u}" target="_blank" rel="noopener"><b>${esc(b)} ↗${ro?`<span class="ro">READ ONLY</span>`:""}</b><small>${esc(s)}</small></a>`).join("") +
   `<a href="#" onclick="return false" style="cursor:default"><b>Short overview PDF</b><small>“Monster Mansion Vol 1 - Findings & Plan.pdf”, 8 pages. Sent separately in chat; it'll be linked here once added.</small></a>`;
 const MASTER = [
@@ -585,5 +604,6 @@ secs.forEach(s=>navIo.observe(s));
 
 renderTabs(); renderBrand(); renderMoments(); renderCheck();
 </script>
+<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 </body>
 </html>
