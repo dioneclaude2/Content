@@ -217,7 +217,7 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .pcard__what{font-size:14.5px;margin-bottom:10px}
 .pcard .ptl__phase{color:var(--pink)}
 .pcard .from{margin-top:8px}
-.pcard__pin{display:flex;align-items:flex-end;min-height:260px;border-radius:14px;margin:0 0 10px;background-size:cover;background-position:center;text-decoration:none;overflow:hidden;position:relative}
+.pcard__pin{display:flex;align-items:flex-end;min-height:420px;border-radius:14px;margin:0 0 10px;background-size:cover;background-position:center;text-decoration:none;overflow:hidden;position:relative}
 .pcard__pin::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(29,31,99,.85))}
 .pcard__pinlab{position:relative;padding:14px;color:#faf3e6;display:grid;gap:4px}
 .pcard__pinlab .k{font-size:9.5px;color:var(--yellow)}
@@ -592,13 +592,13 @@ document.addEventListener("click", e => {
 $("#monsters").innerHTML = MONSTERS.map(m=>`<div class="mon" style="--c:${m.c}"><img src="assets/${m.img}" alt="${m.name} in its world" loading="lazy"><div class="mon__b"><h4>${m.name}</h4><p><b>Look:</b> ${esc(m.look)}</p><p><b>Personality:</b> ${esc(m.who)}</p><p class="line">${esc(m.line)}</p></div></div>`).join("");
 const KIND = {grid:["On the grid","#6a62d6"], tweak:["Grid + small tweak","#F08A1C"], new:["New (add to the grid)","#E5398A"], confirm:["To confirm","#e2445c"]};
 const nameOf = id => { const b = BRANDS.find(x=>x.id===id); return b ? b.title + (b.id === "glossier-mystery" ? " mystery" : b.id === "glossier-7days" ? " 7 Days" : "") : id; };
-const PIN = "https://ph.pinterest.com/pin/853643304419609786/";
-/* Pinterest won't embed this pin (it's only visible when logged in). Until we have the image, show the pumpkin key visual behind the link. */
-const GIVE_REF_IMG = "assets/kv-jack-fur-real.jpg";
+const PIN = "https://pin.it/4eXDSK8KA";
+/* Dione's Pinterest reference for the giveaway post (image saved from the pin). */
+const GIVE_REF_IMG = "assets/giveaway-ref.jpg";
 $("#ptl").innerHTML = PLAN.map((r, i) => {
   const isGive = /Giveaway opens/.test(r.ph);
   const pin = isGive ? `<a class="pcard__pin" href="${PIN}" target="_blank" rel="noopener" style="background-image:url(${GIVE_REF_IMG})">
-      <span class="pcard__pinlab"><span class="k">Look reference · Pinterest</span><b>“We can do something like this in our environment.”</b><span class="lnk">Open the reference ↗</span></span></a>` : "";
+      <span class="pcard__pinlab"><span class="k">Look reference · Pinterest</span><b>Each monster as a 3D character card: chunky pink frame, name plate, breaking out of the frame, on a starry night sky.</b><span class="lnk">Open the pin ↗</span></span></a>` : "";
   const body = pin + (r.moment ? captionsBlock(r.moment) : `<p class="tcard__same">Internal step, no post.</p>`);
   const foot = `<span class="gridref">${esc(r.grid)}</span>${r.acct.split(/\s*\+\s*/).map(a => `<span class="acct-chip${/MONSTER/.test(a) ? " m" : ""}">${esc(a)}</span>`).join("")}${r.from.length ? `<span class="from">Copied from ${r.from.map(id => `<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</span>` : ""}`;
   return tcard({gap: r.gap, first: !i, label: r.ph, date: r.date, what: r.what, body, foot, big: r.big});
@@ -625,7 +625,7 @@ $("#res").innerHTML = [
   [LINKS.brief,"Monster Mansion launch brief","The visual theme and the images",true],
   [LINKS.grid,"Monster Mansion grid","The planned grid",true],
   [LINKS.adlib,"Meta Ad Library","Check whether a brand ran ads"],
-  ["https://ph.pinterest.com/pin/853643304419609786/","Environment reference (Pinterest)","“We can do something like this in our environment.”"],
+  ["https://pin.it/4eXDSK8KA","Giveaway post reference (Pinterest)","3D character card in a pink frame, breaking out of the frame, starry sky"],
 ].map(([u,b,s,ro])=>`<a href="${u}" target="_blank" rel="noopener"><b>${esc(b)} ↗${ro?`<span class="ro">READ ONLY</span>`:""}</b><small>${esc(s)}</small></a>`).join("") +
   `<a href="#" onclick="return false" style="cursor:default"><b>Short overview PDF</b><small>“Monster Mansion Vol 1 - Findings & Plan.pdf”, 8 pages. Sent separately in chat; it'll be linked here once added.</small></a>`;
 const MASTER = [
