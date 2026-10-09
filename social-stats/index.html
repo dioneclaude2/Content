@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=97791fe">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=e79dae1">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -237,7 +237,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=97791fe" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=e79dae1" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -252,7 +252,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=97791fe";
+import * as E from "./engine.js?v=e79dae1";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -435,8 +435,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=97791fe");
-    const logo = await svgToPng("logo-circle.svg?v=97791fe", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=e79dae1");
+    const logo = await svgToPng("logo-circle.svg?v=e79dae1", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -560,7 +560,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=97791fe" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=e79dae1" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1048,6 +1048,7 @@ function eventHTML(rep, R, P, D){
         ${R.byCategory.length ? `<div style="margin-top:14px">${tbl("t-cat", ["Event cost category", N("Lines"), N("USD")], R.byCategory.map(c => `<tr><td>${esc(c.category)}</td><td class="n">${c.lines}</td><td class="n">${F.usd(c.usd)}</td></tr>`))}</div>` : ""}
       </div>
     </div>
+    ${(() => { const b = costBreakdownHTML(R); return b ? `<div class="sec"><h2>Cost breakdown — where the money went</h2>${b.replace('<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>', '<div class="card">')}</div>` : ""; })()}
     <div class="sec"><h2>Ad spend by campaign</h2>${campaignTable(R)}</div>
     <div class="sec"><h2>Content performance</h2>${breakdownTable("t-break", R.breakdown, R.bench)}${T.extra ? `<p class="small dim">Includes the ${T.extra} extra post${T.extra > 1 ? "s" : ""}. Ad-only rows have no engagement data, so they're left out.</p>` : ""}</div>
     <div class="sec"><h2>Event scorecard</h2>${tbl("t-score", ["", ""], score)}</div>
@@ -1173,8 +1174,9 @@ function costBreakdownHTML(R){
   const total = lines.reduce((a, l) => a + (l.usd || 0), 0);
   const rows = groups.flatMap(g => {
     const usd = g.list.reduce((a, x) => a + (x.usd || 0), 0), orig = g.list.reduce((a, x) => a + (x.amt || 0), 0);
-    return [`<tr class="seg"><td>${esc(g.name)} · ${g.list.length}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
-      ...g.list.map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
+    const label = g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? g.list[0].what : g.list.length === 1 && !g.list[0].what ? g.name : `${g.name} · ${g.list.length}`;
+    return [`<tr class="seg"><td>${esc(label)}</td>${one ? `<td class="n">${money(orig, one)}</td>` : ""}<td class="n">${F.usd(usd)}</td><td class="n">${F.pct(total ? usd / total : null)}</td></tr>`,
+      ...(g.list.length === 1 && !g.list[0].what || g.list.length === 1 && g.name === R.infLabel && /invoices/i.test(g.list[0].what) ? [] : g.list).map(x => `<tr><td style="padding-left:20px">${esc(x.what)}</td>${one ? `<td class="n">${x.amt ? money(x.amt, x.cur) : "no fee"}</td>` : ""}<td class="n">${x.amt ? F.usd(x.usd) : "—"}</td><td></td></tr>`)];
   });
   rows.push(`<tr class="total"><td>Total (excl. ads)</td>${one ? `<td class="n">${money(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0), one)}</td>` : ""}<td class="n">${F.usd(total)}</td><td class="n">100%</td></tr>`);
   return `<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>
@@ -1214,7 +1216,6 @@ function eventSummaryHTML(rep, R, P){
       ], F.int)}
       <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
     </div>
-    ${costBreakdownHTML(R)}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
@@ -2336,7 +2337,7 @@ function renderSettings(D){
    has real invoices, and a report someone deleted isn't re-created. */
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=97791fe", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=e79dae1", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }

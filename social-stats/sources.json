@@ -130,6 +130,183 @@
               "source": "Ray Chu Show Collab - Activation Expenses"
             }
           ]
+        },
+        "ASAP HK": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices (4)",
+              "deliverables": "",
+              "fee": 5097.2,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Location rental",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 1025.64,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Props & set-up",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 456.0,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Content production crew",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 2307.69,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
+        },
+        "US Open": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices (5)",
+              "deliverables": "",
+              "fee": 28721.89,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 825.0,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 9925.12,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "General logistics",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 2710.1,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Flights / transportation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 21763.03,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 6561.48,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Talent / production",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 3074.23,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
+        },
+        "Nancy OOO (Cancun)": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices incl. their travel (21)",
+              "deliverables": "",
+              "fee": 208032.58,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 3784.37,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 33782.78,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "General logistics",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 8317.17,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Flights / transportation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 17976.63,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 34576.01,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Talent / production",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 9803.39,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
         }
       }
     }

@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=97791fe";
+import * as E from "./engine.js?v=e79dae1";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -301,7 +301,7 @@ function event(rep, R, Pv, mode, logo) {
   const tot = T.totalViews || 1;
   P.table(["", "Views", "Share"], [["Organic", F.int(T.organicViews), F.pct(T.organicViews / tot)], ["Paid (ads)", F.int(T.paidViews), F.pct(T.paidViews / tot)], { total: true, cells: ["Total", F.int(T.totalViews), "100%"] }],
     { title: "Where the views came from", num: [1, 2] });
-  breakdown(P, R);
+  if (full) breakdown(P, R);                                       // cost breakdown: full report only
   topTables(P, R);
   compareTable(P, R, Pv, full ? null : ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"], Pv ? `Against ${Pv.rep.name}` : "");
 
@@ -352,8 +352,9 @@ function breakdown(P, R) {
   const rows = [];
   for (const g of groups) {
     const usd = g.list.reduce((a, x) => a + (x[2] || 0), 0), orig = g.list.reduce((a, x) => a + (x[1] || 0), 0);
-    rows.push({ shade: true, cells: [`${g.name.toUpperCase()} · ${g.list.length}`, ...(one ? [m(orig)] : []), F.usd(usd), F.pct(total ? usd / total : null)] });
-    for (const [what, amt, usdv] of g.list) rows.push(["    " + what, ...(one ? [amt ? m(amt) : "no fee"] : []), amt ? F.usd(usdv) : "—", ""]);
+    const single = g.list.length === 1 && (!g.list[0][0] || g.name === R.infLabel && /invoices/i.test(g.list[0][0]));
+    rows.push({ shade: true, cells: [single ? (g.list[0][0] || g.name).toUpperCase() : `${g.name.toUpperCase()} · ${g.list.length}`, ...(one ? [m(orig)] : []), F.usd(usd), F.pct(total ? usd / total : null)] });
+    if (!single) for (const [what, amt, usdv] of g.list) rows.push(["    " + what, ...(one ? [amt ? m(amt) : "no fee"] : []), amt ? F.usd(usdv) : "—", ""]);
   }
   rows.push({ total: true, cells: ["Total (excl. ads)", ...(one ? [m(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0))] : []), F.usd(total), "100%"] });
   P.table(["", ...(one ? [one] : []), "USD", "Share"], rows, { title: "Cost breakdown", num: one ? [1, 2, 3] : [1, 2], widths: { 0: P.inner * 0.5 } });
