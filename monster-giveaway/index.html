@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Monster Mansion Giveaway Plan</title>
+<meta name="description" content="Internal team site: how brands ran giveaways and limited drops, and Hello Nancy's plan for Monster Mansion Vol 1.">
+<link rel="icon" href="assets/nancy-cream.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF3E6; --paper:#fffdf8; --ink:#1F1216; --ink-soft:#5e4b52; --muted:#8f7480;
+  --yellow:#FFD42E; --pink:#E5398A; --lilac:#B9B4F2; --orange:#F08A1C;
+  --line:rgba(31,18,22,.12); --line-2:rgba(31,18,22,.22);
+  --night:linear-gradient(170deg,#1D1F63 0%,#3A2F8C 38%,#7A4BA6 70%,#E77FB0 100%);
+  --shadow:0 18px 40px -20px rgba(31,18,22,.35);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cream:#151018; --paper:#1d1720; --ink:#faf3e6; --ink-soft:#d6c6cf; --muted:#a9939f; --line:rgba(250,243,230,.12); --line-2:rgba(250,243,230,.22);
+}}
+:root[data-theme="dark"]{--cream:#151018; --paper:#1d1720; --ink:#faf3e6; --ink-soft:#d6c6cf; --muted:#a9939f; --line:rgba(250,243,230,.12); --line-2:rgba(250,243,230,.22)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{font-family:Inter,system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;font-size:15.5px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,5vw,56px)}
+.k{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+.serif{font-family:Fraunces,serif;font-optical-sizing:auto}
+h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(34px,5vw,58px);line-height:1;letter-spacing:-.02em}
+h2 em{font-style:italic}
+h3{font-family:Fraunces,serif;font-weight:400}
+.lead{font-family:Fraunces,serif;font-style:italic;font-size:clamp(18px,2vw,22px);color:var(--ink-soft);max-width:60ch;margin-top:14px;line-height:1.4}
+:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--cream) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:6px;height:56px;overflow-x:auto;scrollbar-width:none}
+.nav .wrap::-webkit-scrollbar{display:none}
+.nav a{text-decoration:none;font-size:13.5px;padding:7px 12px;border-radius:999px;white-space:nowrap;color:var(--ink-soft)}
+.nav a:hover,.nav a.is-on{background:var(--ink);color:var(--cream)}
+.nav .sheet{margin-left:auto;background:var(--pink);color:#fff}
+.nav .sheet:hover{background:#c12370;color:#fff}
+
+/* hero */
+.hero{background:var(--night);color:#faf3e6;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 32% 8%,#fff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 58% 22%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 76% 12%,#fff 50%,transparent 51%),radial-gradient(1.4px 1.4px at 88% 30%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 22% 40%,#fff 50%,transparent 51%);opacity:.7}
+.moon{position:absolute;right:9%;top:70px;width:40px;height:40px;border-radius:50%;box-shadow:-11px 6px 0 0 #fdf3c4;transform:rotate(-20deg)}
+.hero__bar{position:relative;display:flex;justify-content:space-between;align-items:center;padding:22px 0 14px;border-bottom:1px solid rgba(250,243,230,.25)}
+.hero__bar img{width:110px}
+.hero__body{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:end;padding:56px 0 60px}
+.hero h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(44px,7vw,96px);line-height:.94;letter-spacing:-.03em}
+.hero h1 em{font-style:italic;color:var(--yellow);display:block}
+.hero .kick{color:var(--yellow);margin-bottom:18px;display:block}
+.hero p{font-family:Fraunces,serif;font-style:italic;font-size:21px;margin-top:20px;max-width:34ch;color:rgba(250,243,230,.9)}
+.hero__img{border-radius:16px;overflow:hidden;box-shadow:0 40px 70px -30px rgba(10,10,60,.8);transform:rotate(1.5deg)}
+.hero__img img{aspect-ratio:4/5;object-fit:cover;width:100%}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;font-size:13.5px;font-weight:600;text-decoration:none;border:1px solid rgba(250,243,230,.4);color:#faf3e6;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+.btn--y{background:var(--yellow);color:#1D1F63;border-color:var(--yellow)}
+.btn--y:hover{background:#ffe066}
+
+section{padding:76px 0;border-bottom:1px solid var(--line)}
+.sec-head{margin-bottom:34px}
+.sec-head .k{color:var(--pink);display:block;margin-bottom:12px}
+
+/* start here */
+.start{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.start .card b{font-family:Fraunces,serif;font-weight:400;font-size:22px;display:block;margin-bottom:6px}
+.start .card p{color:var(--ink-soft);font-size:14.5px}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.fact{border-top:2px solid var(--ink);padding-top:10px}
+.fact b{font-family:Fraunces,serif;font-size:26px;font-weight:400;display:block;line-height:1.1}
+.fact span{font-size:13px;color:var(--muted)}
+
+/* findings */
+.chart{display:grid;gap:8px;margin-top:10px}
+.bar{display:grid;grid-template-columns:minmax(150px,280px) 1fr 60px;gap:12px;align-items:center;font-size:13.5px}
+.bar__t{color:var(--ink-soft)}
+.bar__track{height:22px;border-radius:6px;background:color-mix(in srgb,var(--ink) 6%,transparent);overflow:hidden}
+.bar__fill{height:100%;border-radius:6px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.bar__n{font-family:"JetBrains Mono",monospace;font-weight:700;text-align:right}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--ink-soft);margin:6px 0 18px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:6px}
+.tricks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+.trick{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;position:relative;transition:transform .18s,box-shadow .18s}
+.trick:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.trick .num{font-family:Fraunces,serif;font-style:italic;font-size:44px;line-height:1;color:var(--pink)}
+.trick b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:21px;margin:6px 0}
+.trick p{font-size:14px;color:var(--ink-soft)}
+.trick .nancy{margin-top:10px;font-size:13px;font-weight:600;color:var(--pink)}
+.bignums{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+.bignum{background:var(--night);color:#faf3e6;border-radius:18px;padding:22px}
+.bignum b{font-family:Fraunces,serif;font-weight:300;font-size:58px;line-height:1;display:block;color:var(--yellow)}
+.bignum p{font-size:14px;margin-top:8px;color:rgba(250,243,230,.88)}
+.callout{margin-top:22px;border-left:4px solid var(--pink);background:var(--paper);border-radius:0 14px 14px 0;padding:16px 20px;font-size:14.5px}
+.callout b{color:var(--pink)}
+
+/* brands */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;align-items:center}
+.chip{border:1px solid var(--line-2);background:var(--paper);border-radius:999px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;color:inherit}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.chip--sq[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.brands{display:grid;gap:16px}
+.brand{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.brand.is-main{border:2px solid var(--pink);box-shadow:0 20px 50px -30px rgba(229,57,138,.6)}
+.brand__head{display:grid;grid-template-columns:1fr auto;gap:12px;padding:20px 24px;cursor:pointer;align-items:center}
+.brand__head:hover{background:color-mix(in srgb,var(--pink) 4%,transparent)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;align-items:center}
+.tag{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;padding:3px 8px;border-radius:5px;background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.tag.main{background:var(--pink);color:#fff}
+.stars{color:var(--orange);letter-spacing:2px;font-size:14px}
+.brand h3{font-size:clamp(22px,2.6vw,30px);line-height:1.1}
+.brand h3 em{font-style:italic;color:var(--ink-soft);font-weight:300}
+.brand__acct{font-size:13px;color:var(--muted);margin-top:4px}
+.toggle{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-size:18px;transition:transform .2s;background:none;color:inherit;cursor:pointer}
+.brand.is-open .toggle{transform:rotate(45deg);background:var(--ink);color:var(--cream)}
+.brand__body{display:none;padding:0 24px 24px}
+.brand.is-open .brand__body{display:block}
+.glance{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px;margin-bottom:20px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.glance div{font-size:14px}
+.glance small{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin-bottom:2px}
+.glance .wide{grid-column:1/-1}
+.tl{list-style:none;position:relative;margin:6px 0 18px}
+.tl::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line-2)}
+.tl li{position:relative;display:grid;grid-template-columns:28px 130px 1fr auto;gap:12px;padding:10px 0;align-items:start;border-bottom:1px dashed var(--line)}
+.tl li:last-child{border-bottom:0}
+.dot{width:20px;height:20px;border-radius:50%;background:var(--pink);border:4px solid var(--paper);box-shadow:0 0 0 1px var(--pink);position:relative;z-index:1;margin-top:2px}
+.tl li.same .dot{background:var(--paper)}
+.tl__when b{font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:17px;display:block;line-height:1.1}
+.tl__when span{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.tl__what{font-size:14.5px}
+.tl__what .gap{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+.tl__post{text-align:right;min-width:120px}
+.tl__post a{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--pink);text-decoration:none;border:1px solid color-mix(in srgb,var(--pink) 40%,transparent);padding:4px 10px;border-radius:999px}
+.tl__post a:hover{background:var(--pink);color:#fff}
+.tl__post small{display:block;font-family:"JetBrains Mono",monospace;font-size:11.5px;margin-top:4px;color:var(--ink-soft)}
+.take{background:var(--night);color:#faf3e6;border-radius:16px;padding:16px 20px;font-family:Fraunces,serif;font-style:italic;font-size:18px;line-height:1.4}
+.take .k{display:block;font-style:normal;color:var(--yellow);margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.brand__foot{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.lnk{font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--yellow)}
+.lnk:hover{color:var(--pink)}
+.embeds{display:none;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:16px}
+.embeds.is-on{display:grid}
+.embed{border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--cream)}
+.embed .instagram-media{min-width:0 !important;width:100% !important;margin:0 !important}
+.embed__fallback{font-size:13px;padding:6px 4px}
+.embtn{font-family:inherit;font-size:13px;font-weight:600;border:1px solid var(--line-2);background:transparent;color:inherit;border-radius:999px;padding:7px 14px;cursor:pointer}
+.embtn:hover{border-color:var(--pink);color:var(--pink)}
+.gm-imgs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.gm-imgs img{border-radius:12px;aspect-ratio:4/3;object-fit:cover;width:100%}
+.idea{font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
+
+/* plan */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+.story img{border-radius:20px;box-shadow:var(--shadow)}
+.story h3{font-size:clamp(30px,4vw,46px);line-height:1.05;font-weight:300}
+.story h3 em{font-style:italic;color:var(--pink)}
+.story p{margin-top:14px;color:var(--ink-soft)}
+.monsters{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.mon{border-radius:20px;overflow:hidden;background:var(--paper);border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
+.mon:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:var(--shadow)}
+.mon img{aspect-ratio:1/1;object-fit:cover;width:100%}
+.mon__b{padding:16px 18px;border-top:6px solid var(--c)}
+.mon h4{font-family:Fraunces,serif;font-weight:400;font-style:italic;font-size:30px}
+.mon p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+.mon .line{margin-top:10px;font-family:Fraunces,serif;font-style:italic;font-size:17px;color:var(--ink)}
+.draft{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--yellow);color:#1D1F63;padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle}
+.accts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.acct{border-radius:20px;padding:22px}
+.acct.main{background:var(--paper);border:1px solid var(--line)}
+.acct.mon2{background:var(--night);color:#faf3e6}
+.acct h4{font-family:Fraunces,serif;font-weight:400;font-size:24px;margin:6px 0}
+.acct p{font-size:14.5px;opacity:.9}
+.acct .k{color:var(--pink)}
+.acct.mon2 .k{color:var(--yellow)}
+.belong{margin-top:14px;font-size:14px;color:var(--ink-soft)}
+.belong b{color:var(--ink)}
+
+.ptl{list-style:none;position:relative;margin-top:30px}
+.ptl::before{content:"";position:absolute;left:118px;top:0;bottom:0;width:2px;background:linear-gradient(var(--lilac),var(--pink),var(--orange))}
+.ptl li{display:grid;grid-template-columns:100px 40px 1fr;gap:0;padding:12px 0;align-items:start}
+.ptl__date{text-align:right;padding-right:14px}
+.ptl__date b{font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:18px;display:block;line-height:1.1}
+.ptl__date span{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.ptl__dot{width:16px;height:16px;border-radius:50%;background:var(--paper);border:3px solid var(--pc);margin:4px 0 0 11px;position:relative;z-index:1}
+.ptl li.big .ptl__dot{width:22px;height:22px;margin-left:8px;background:var(--pc)}
+.ptl__card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--pc);border-radius:14px;padding:12px 16px}
+.ptl__phase{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pc);font-weight:700}
+.ptl__card p{font-size:14.5px;margin:4px 0 8px}
+.ptl__meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.acct-chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;padding:3px 8px;border-radius:5px;background:var(--ink);color:var(--cream)}
+.acct-chip.m{background:var(--pink);color:#fff}
+.from{font-size:12px;color:var(--muted)}
+.from a{color:var(--ink-soft);font-weight:600}
+.from a:hover{color:var(--pink)}
+.notes2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+
+.moments{display:grid;gap:16px;margin-top:20px}
+.moment{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px 22px}
+.moment__h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}
+.moment__h b{font-family:Fraunces,serif;font-weight:400;font-size:24px}
+.moment__h .when{font-family:Fraunces,serif;font-style:italic;color:var(--pink);font-size:18px}
+.moment ul{list-style:none;display:grid;gap:4px;margin-bottom:12px}
+.moment li{font-size:14px;color:var(--ink-soft);padding-left:16px;position:relative}
+.moment li::before{content:"◆";position:absolute;left:0;color:var(--lilac);font-size:10px;top:3px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--lilac)}
+.opt.is-on{border-color:var(--pink);background:color-mix(in srgb,var(--pink) 6%,var(--paper))}
+.opt input{margin-top:4px;accent-color:var(--pink)}
+.opt small{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.opt pre{font-family:Fraunces,serif;font-size:16px;white-space:pre-wrap;line-height:1.45;margin-top:2px}
+.copy{font-family:inherit;font-size:12px;border:1px solid var(--line-2);background:transparent;color:inherit;border-radius:999px;padding:4px 10px;cursor:pointer}
+.copy:hover{border-color:var(--pink);color:var(--pink)}
+.rule{margin-top:16px;font-family:Fraunces,serif;font-style:italic;font-size:20px;text-align:center;color:var(--ink-soft)}
+
+.ads{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}
+.ad{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14.5px}
+.ad b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:18px;margin-bottom:2px}
+.ad.no{border-left:4px solid #e2445c}
+.ad.yes{border-left:4px solid #00c875}
+.check{list-style:none;display:grid;gap:8px;margin-top:10px}
+.check li{display:flex;gap:10px;align-items:flex-start;font-size:15px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.check li.done{opacity:.55;text-decoration:line-through}
+.check input{accent-color:var(--pink);margin-top:4px}
+.subh{font-family:Fraunces,serif;font-weight:300;font-size:clamp(26px,3vw,36px);margin:56px 0 6px}
+.subh em{font-style:italic;color:var(--pink)}
+.subh .k{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+
+/* resources */
+.res{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.res a{display:block;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 18px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.res a:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.res b{font-family:Fraunces,serif;font-weight:400;font-size:20px;display:block}
+.res small{font-size:13px;color:var(--muted)}
+.res .ro{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;background:var(--ink);color:var(--cream);padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
+.tbl{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;background:var(--paper);border-radius:16px;overflow:hidden}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+.tbl th{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.tbl td a{color:var(--pink);font-weight:600;word-break:break-all}
+.tblwrap{overflow-x:auto}
+footer{background:var(--night);color:#faf3e6;padding:40px 0}
+footer .wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:13.5px}
+footer img{width:90px}
+footer a{color:#faf3e6}
+footer .sp{margin-left:auto;opacity:.75}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);background:var(--ink);color:var(--cream);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:all .2s;z-index:100;pointer-events:none}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:900px){
+  .hero__body,.story,.accts{grid-template-columns:1fr}
+  .hero__img{max-width:420px}
+  .start,.tricks,.bignums,.monsters{grid-template-columns:1fr 1fr}
+  .facts{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  body{font-size:15px}
+  section{padding:56px 0}
+  .start,.tricks,.bignums,.monsters,.glance,.ads,.res,.notes2,.gm-imgs{grid-template-columns:1fr}
+  .bar{grid-template-columns:1fr 50px;}
+  .bar__t{grid-column:1/-1}
+  .tl li{grid-template-columns:24px 1fr}
+  .tl__what,.tl__post{grid-column:2}
+  .tl__post{text-align:left}
+  .ptl::before{left:16px}
+  .ptl li{grid-template-columns:34px 1fr}
+  .ptl__dot{grid-column:1;grid-row:1;margin-left:9px}
+  .ptl__date{grid-column:2;text-align:left;padding:0 0 4px}
+  .ptl__card{grid-column:2}
+  .ptl li.big .ptl__dot{margin-left:6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections"><div class="wrap">
+  <a href="#home">Home</a><a href="#findings">Findings</a><a href="#brands">Brand references</a><a href="#plan">The Plan</a><a href="#resources">Resources</a>
+  <a class="sheet" id="navSheet" target="_blank" rel="noopener">Research sheet ↗</a>
+</div></nav>
+
+<header class="hero" id="home">
+  <div class="moon"></div>
+  <div class="wrap">
+    <div class="hero__bar"><img src="assets/nancy-cream.svg" alt="Nancy"><span class="k">Internal · Giveaway + limited drop</span></div>
+    <div class="hero__body">
+      <div>
+        <span class="k kick">Hello Nancy · Monster Mansion Vol 1 · 18 Oct – 3 Nov 2026</span>
+        <h1>Win the Mansion. <em>Then buy the monsters.</em></h1>
+        <p>How other brands ran giveaways and limited drops, every step linked to their own Instagram post, and our plan for Lemmy, Jack and Medusa.</p>
+        <div class="quick" id="quick"></div>
+      </div>
+      <figure class="hero__img"><img src="assets/mansion-revJ-open.jpg" alt="The Monster Mansion PR box, open, with the Lemmy, Jack and Medusa boxes inside"></figure>
+    </div>
+  </div>
+</header>
+
+<main>
+<section><div class="wrap">
+  <div class="sec-head"><span class="k">00 — Start here</span><h2>The short version. <em>In three lines.</em></h2>
+  <p class="lead">“Three naughty little monsters have moved into the Nancy Monster Mansion Vol 1. Come for the cute. Stay for the O's.” Campaign line: <b>Let the Haunting Begin.</b></p></div>
+  <div class="start">
+    <div class="card"><b>What we found</b><p>It's not about being famous. We studied 17 giveaways and limited drops: celebrities make the numbers bigger, but six simple tricks are what the strong ones share.</p></div>
+    <div class="card"><b>What we copy</b><p>Dr. Squatch × Sydney Sweeney's order: giveaway first, winners, a “1 hour” countdown, then the limited drop, about a week later. Plus Gentle Monster's PR boxes.</p></div>
+    <div class="card"><b>What we do</b><p>Tease 18–20 Oct, reveal 21 Oct, giveaway 22–27 Oct, winners 28 Oct, drop 29 Oct, last chance 1–2 Nov, recap 3 Nov.</p></div>
+  </div>
+  <div class="facts">
+    <div class="fact"><b>3 monsters</b><span>Lemmy · Jack · Medusa</span></div>
+    <div class="fact"><b>10 PR Mansions</b><span>being 3D-printed</span></div>
+    <div class="fact"><b>7 days</b><span>giveaway → drop (Dr. Squatch: 8)</span></div>
+    <div class="fact"><b>2 accounts</b><span>@hellonancy + @[monsters]</span></div>
+  </div>
+</div></section>
+
+<section id="findings"><div class="wrap">
+  <div class="sec-head"><span class="k">01 — Findings</span><h2>It's not about being famous. <em>It's a few simple tricks.</em></h2>
+  <p class="lead">We checked every step against the brand's own Instagram posts, not news articles. Brands with no celebrity still got tens of thousands of likes.</p></div>
+  <h3 style="font-size:22px">Likes on the main giveaway post</h3>
+  <div class="legend"><span><i style="background:var(--pink)"></i>With a celebrity</span><span><i style="background:#6a62d6"></i>No celebrity</span></div>
+  <div class="chart" id="chart"></div>
+  <div class="callout"><b>e.l.f. had no celebrity</b> and still beat Dr. Squatch × Sydney Sweeney, because its prize was something money can't buy.</div>
+  <div class="tricks" id="tricks"></div>
+  <div class="bignums">
+    <div class="bignum"><b>37K</b><p>comments on Dr. Squatch's giveaway. Each comment was an entry, so the comments became the waiting list for the drop.</p></div>
+    <div class="bignum"><b>~6×</b><p>more comments on Feastables' 2026 Halloween giveaway post than on its product post (2,261 vs 390).</p></div>
+    <div class="bignum"><b>9 days</b><p>from Gentle Monster's PR-box reveal to the drop.</p></div>
+  </div>
+  <div class="callout"><b>Honest caveat:</b> only one brand ran a public giveaway and then a limited drop with every step on Instagram: Dr. Squatch × Sydney Sweeney. Others either dropped first and then gave away (e.l.f. × Liquid Death) or gave free PR boxes before the drop (Gentle Monster).</div>
+  <div class="callout"><b>About ads:</b> brands often boost giveaway posts, and you can check any brand in the <a id="adlib1" target="_blank" rel="noopener">Meta Ad Library</a>. Meta doesn't allow ads that sell or show adult toys. Any Hello Nancy ad must show the Mansion and the characters, never the product's use.</div>
+</div></section>
+
+<section id="brands"><div class="wrap">
+  <div class="sec-head"><span class="k">02 — Brand references</span><h2>Every step. <em>Every post.</em></h2>
+  <p class="lead">16 brands, day by day (17 sheet tabs: Dr. Squatch × Sweeney covers two). Fit for Nancy: ★★★ strong · ★★ good · ★ one idea worth taking. Likes / comments were read from the posts in Oct 2026 and may have changed since. The “for Nancy” notes are research ideas; <a href="#plan">The Plan</a> is the final plan.</p></div>
+  <div class="filters" id="filters"></div>
+  <div class="brands" id="brandList"></div>
+</div></section>
+
+<section id="plan"><div class="wrap">
+  <div class="sec-head"><span class="k">03 — The Plan</span><h2>The Monsters moved out. <em>Only Monster Lovers get in.</em></h2></div>
+  <div class="story">
+    <div>
+      <h3>Which monster <em>are you?</em></h3>
+      <p>Lemmy, Jack and Medusa got too naughty for Nancy's house, so they moved into their own Mansion: the new monster account. Following it means you're one of <b>the Residents</b>. The question that pulls everyone in: <b>“Which monster are you?”</b></p>
+      <p>Tone: naughty and iconic, never spooky. No Halloween clichés (no cobwebs or cheesy ghosts).</p>
+    </div>
+    <img src="assets/mansion-revJ-closed.jpg" alt="The Monster Mansion PR box, closed">
+  </div>
+
+  <h3 class="subh"><span class="k">5.2</span>The monsters. <em>Personalities + comment lines.</em> <span class="draft">Drafts, editable</span></h3>
+  <div class="monsters" id="monsters"></div>
+
+  <h3 class="subh"><span class="k">5.3</span>Two accounts. <em>Two jobs.</em></h3>
+  <div class="accts">
+    <div class="acct main"><span class="k">@hellonancy · main</span><h4>The “parent”</h4><p>It keeps pointing to the Mansion: “the kids moved out, go visit them.” Big co-authored moments only.</p></div>
+    <div class="acct mon2"><span class="k">@[monsters] · the Mansion · handle TBC</span><h4>Gets the secrets</h4><p>Winners, the exact drop time, the daily giveaways and the last-chance giveaway. If you don't follow it, you miss things.</p></div>
+  </div>
+  <p class="belong"><b>Belonging:</b> followers are called <i>the Residents</i>. Story poll: “Monster lover 🖤 or a little scared 😳?” Every entry is a choice (Lemmy / Jack / Medusa).</p>
+
+  <h3 class="subh"><span class="k">5.4</span>The timeline. <em>18 Oct – 3 Nov 2026.</em></h3>
+  <p class="lead" style="margin-top:0">Account key: MAIN = @hellonancy · MONSTERS = @[monsters] · BOTH / COLLAB = both accounts (Instagram Collab post).</p>
+  <ol class="ptl" id="ptl"></ol>
+  <div class="notes2">
+    <div class="callout"><b>Giveaway → drop gap:</b> 7 days (Dr. Squatch's was 8).</div>
+    <div class="callout"><b>PR Mansions (10):</b> suggested split: about 8 to the celebrity and creators, 1 for the main giveaway, 1 for the last-chance giveaway.</div>
+  </div>
+
+  <h3 class="subh"><span class="k">5.5</span>Content + captions. <em>Pick one per moment.</em> <span class="draft">Options</span></h3>
+  <p class="lead" style="margin-top:0">Tap an option to pick it. Your picks are saved on this device. “Copy” puts the caption on your clipboard.</p>
+  <div class="moments" id="moments"></div>
+  <p class="rule">Every post asks for one small action: follow, comment your monster, or tap the link.</p>
+
+  <h3 class="subh"><span class="k">5.6</span>Ads. <em>Small and safe.</em></h3>
+  <div class="ads">
+    <div class="ad yes"><b>Boost only the giveaway post</b>22–27 Oct. Ad goal: profile visits to the monster account (not likes).</div>
+    <div class="ad no"><b>Never the product's use</b>Show the Mansion + characters. Meta doesn't allow ads that sell or show adult toys. Sexual wellness ads are only allowed when they focus on health, not pleasure.</div>
+    <div class="ad yes"><b>Audience 18+</b>Existing followers, site visitors and customers first, then people similar to them. A broad giveaway audience brings in “freebie hunters”.</div>
+    <div class="ad no"><b>No ads for the drop itself</b>Have someone check the creative against Meta's adult-products rules before spending. The rules change.</div>
+  </div>
+  <div class="callout"><b>Free reach matters more than ads:</b> co-host the giveaway with a bigger partner brand (the Crocs × Juicy trick), have creators unbox the PR Mansions and tag both accounts, and use Instagram's Collab post so one post shows on every account.</div>
+
+  <h3 class="subh"><span class="k">5.7</span>Rules + next steps.</h3>
+  <div class="callout">Giveaway rules must include: <b>18+</b>, US only (or the eligible countries), start/end date and time, how the winner is picked and contacted, <b>no purchase necessary</b>, and “not sponsored, endorsed or administered by Instagram”. Get them checked before launch (not legal advice).</div>
+  <ul class="check" id="check"></ul>
+</div></section>
+
+<section id="resources"><div class="wrap">
+  <div class="sec-head"><span class="k">04 — Resources</span><h2>Every link. <em>In one place.</em></h2></div>
+  <div class="res" id="res"></div>
+  <h3 class="subh" style="margin-top:40px">Every Instagram post used. <em>All <span id="postCount"></span>.</em></h3>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>Brand</th><th>Date</th><th>Account</th><th>Post</th></tr></thead><tbody id="postTable"></tbody></table></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <img src="assets/nancy-cream.svg" alt="Nancy">
+  <a id="footSheet" target="_blank" rel="noopener">Research sheet</a>
+  <a id="footBrief" target="_blank" rel="noopener">Launch brief</a>
+  <a id="footGrid" target="_blank" rel="noopener">Grid</a>
+  <a id="footAd" target="_blank" rel="noopener">Meta Ad Library</a>
+  <span class="sp">Internal · Hello Nancy · Monster Mansion Vol 1</span>
+</div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("is-on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("is-on"),2000)}
+async function copy(text){try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch{}ta.remove()}toast("Copied")}
+
+/* links */
+[["#navSheet",LINKS.sheet],["#footSheet",LINKS.sheet],["#footBrief",LINKS.brief],["#footGrid",LINKS.grid],["#footAd",LINKS.adlib],["#adlib1",LINKS.adlib]].forEach(([s,u])=>$(s).href=u);
+$("#quick").innerHTML = `<a class="btn btn--y" href="${LINKS.sheet}" target="_blank" rel="noopener">Research sheet ↗</a><a class="btn" href="${LINKS.brief}" target="_blank" rel="noopener">Launch brief ↗</a><a class="btn" href="#plan">The Plan ↓</a>`;
+
+/* chart */
+const max = Math.max(...CHART.map(c=>c[2]));
+$("#chart").innerHTML = CHART.map(([t,celeb,n])=>`<div class="bar"><span class="bar__t">${esc(t)}</span><span class="bar__track"><span class="bar__fill" data-w="${n/max*100}" style="background:${celeb?"var(--pink)":"#6a62d6"}"></span></span><span class="bar__n">${n}K</span></div>`).join("");
+const io = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll(".bar__fill").forEach(b=>b.style.width=b.dataset.w+"%");io.disconnect()}}),{threshold:.3});
+io.observe($("#chart"));
+$("#tricks").innerHTML = TRICKS.map(([b,p,n],i)=>`<div class="trick"><span class="num">${i+1}</span><b>${esc(b)}</b><p>${esc(p)}</p>${n?`<div class="nancy">${esc(n)}</div>`:""}</div>`).join("");
+
+/* brands */
+const filt = {cat:"", fit:0, sq:false};
+const CATS = ["CELEB","NO CELEB","DROP","BIG"];
+function renderFilters(){
+  $("#filters").innerHTML = `<span class="k" style="color:var(--muted)">Filter</span>`+
+    [["","All"],...CATS.map(c=>[c,c])].map(([v,l])=>`<button class="chip" data-cat="${v}" aria-pressed="${filt.cat===v}">${l}</button>`).join("")+
+    [[0,"Any fit"],[3,"★★★"],[2,"★★ +"]].map(([v,l])=>`<button class="chip" data-fit="${v}" aria-pressed="${filt.fit===v}">${l}</button>`).join("")+
+    `<button class="chip chip--sq" data-sq="1" aria-pressed="${filt.sq}">⭐ Dr. Squatch highlight</button>`;
+}
+const BRAND_NAME = {};
+function renderBrands(){
+  const list = BRANDS.filter(b => (!filt.cat || b.cats.includes(filt.cat)) && (!filt.fit || b.stars >= filt.fit) && (!filt.sq || /squatch/i.test(b.title)));
+  $("#brandList").innerHTML = list.map(b=>{
+    const g = b.glance, G = (k,l,w) => g[k] ? `<div class="${w?"wide":""}"><small>${l}</small>${esc(g[k])}</div>` : "";
+    const posts = [...new Set(b.rows.filter(r=>r[4] && !r[6]).map(r=>r[4]))];
+    return `<article class="brand${b.main?" is-main is-open":""}" id="b-${b.id}">
+      <div class="brand__head" data-open="${b.id}" role="button" tabindex="0" aria-expanded="${!!b.main}">
+        <div><div class="tags">${b.main?`<span class="tag main">THE MAIN REFERENCE</span>`:""}${b.cats.map(c=>`<span class="tag">${c}</span>`).join("")}<span class="tag">${b.year}</span><span class="stars" title="Fit for Nancy">${"★".repeat(b.stars)}</span></div>
+        <h3>${esc(b.title)} <em>${esc(b.sub)}</em></h3><div class="brand__acct">${esc(b.account)} · ${esc(b.tabs)}</div></div>
+        <button class="toggle" tabindex="-1" aria-hidden="true">+</button>
+      </div>
+      <div class="brand__body">
+        ${b.images?`<div class="gm-imgs">${b.images.map(i=>`<img src="assets/${i}" alt="Gentle Monster Jentle Salon reference" loading="lazy">`).join("")}</div>`:""}
+        ${Object.keys(g).length?`<div class="glance">${G("order","Order",1)}${G("proof","Proof")}${G("prize","Prize")}${G("entry","How to enter")}${G("why","Why it worked")}${G("fit","Fit for Nancy (idea)")}${G("extra","Note",1)}
+          ${g.context?`<div class="wide"><small>Context posts</small>${g.context.map(([u,t])=>`<a class="lnk" href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join(" &nbsp; ")}</div>`:""}</div>`:""}
+        <div class="k" style="color:var(--muted);margin-bottom:4px">Day by day</div>
+        <ol class="tl">${b.rows.map(([d,date,gap,what,url,stats,same])=>`<li class="${same?"same":""}"><span class="dot"></span>
+          <div class="tl__when"><b>${esc(date)}</b><span>${esc(d)}</span></div>
+          <div class="tl__what"><span class="gap">${esc(gap)}</span><br>${esc(what)}</div>
+          <div class="tl__post">${url?`<a href="${url}" target="_blank" rel="noopener">${same?"Same post":"Instagram"} ↗</a>`:`<small>(captions)</small>`}${stats && stats!=="—"?`<small>${esc(stats)}</small>`:""}</div></li>`).join("")}</ol>
+        ${b.takeaway?`<div class="take"><span class="k">Key takeaway for Nancy</span>${esc(b.takeaway)}</div>`:""}
+        ${b.note?`<p class="idea">${esc(b.note)}</p>`:""}
+        <div class="brand__foot">
+          <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">See the full tab in the sheet ↗</a>
+          ${posts.length?`<button class="embtn" data-embed="${b.id}">Show the ${posts.length} Instagram post${posts.length>1?"s":""} here</button>`:""}
+        </div>
+        <div class="embeds" id="emb-${b.id}"></div>
+      </div>
+    </article>`;
+  }).join("") || `<p class="lead">No brands match these filters.</p>`;
+}
+let igLoaded = false;
+function loadEmbeds(id){
+  const b = BRANDS.find(x=>x.id===id), box = $("#emb-"+id);
+  if (box.classList.contains("is-on")) { box.classList.remove("is-on"); return; }
+  const rows = []; const seen = new Set();
+  b.rows.forEach(r => { if (r[4] && !r[6] && !seen.has(r[4])) { seen.add(r[4]); rows.push(r); } });
+  box.innerHTML = rows.map(([d,date,gap,what,url,stats])=>`<div class="embed"><blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"></blockquote>
+    <div class="embed__fallback"><b>${esc(date)}</b> · ${esc(b.account.split(",")[0])} · ${esc(stats)}<br>${esc(what)}<br><a class="lnk" href="${url}" target="_blank" rel="noopener">Open on Instagram ↗</a></div></div>`).join("");
+  box.classList.add("is-on");
+  if (!igLoaded) { const s = document.createElement("script"); s.async = true; s.src = "https://www.instagram.com/embed.js"; s.onload = () => window.instgrm?.Embeds.process(); document.body.appendChild(s); igLoaded = true; }
+  else window.instgrm?.Embeds.process();
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-cat],[data-fit],[data-sq]");
+  if (c) { if (c.dataset.cat !== undefined) filt.cat = c.dataset.cat; if (c.dataset.fit !== undefined) filt.fit = +c.dataset.fit; if (c.dataset.sq) filt.sq = !filt.sq; renderFilters(); renderBrands(); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) { const a = o.closest(".brand"); a.classList.toggle("is-open"); o.setAttribute("aria-expanded", a.classList.contains("is-open")); return; }
+  const em = e.target.closest("[data-embed]"); if (em) { loadEmbeds(em.dataset.embed); return; }
+  const cp = e.target.closest("[data-copy]"); if (cp) { e.preventDefault(); copy(cp.dataset.copy); return; }
+});
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-open]")) e.target.click(); });
+
+/* plan */
+$("#monsters").innerHTML = MONSTERS.map(m=>`<div class="mon" style="--c:${m.c}"><img src="assets/${m.img}" alt="${m.name} in its world" loading="lazy"><div class="mon__b"><h4>${m.name}</h4><p><b>Look:</b> ${esc(m.look)}</p><p><b>Personality:</b> ${esc(m.who)}</p><p class="line">${esc(m.line)}</p></div></div>`).join("");
+const PC = {"Before":"#8f7480","1":"#B9B4F2","2":"#7A4BA6","3":"#E5398A","4":"#F08A1C","5":"#3A2F8C"};
+const nameOf = id => { const b = BRANDS.find(x=>x.id===id); return b ? b.title + (b.id === "glossier-mystery" ? " mystery" : b.id === "glossier-7days" ? " 7 Days" : "") : id; };
+$("#ptl").innerHTML = PLAN.map(([ph,date,gap,what,acct,from])=>{
+  const c = PC[ph.split(" ")[0]] || "#E5398A";
+  const big = /Giveaway opens|LIMITED DROP|Reveal Lemmy|Winners announced|Giveaway closes/.test(what);
+  return `<li class="${big?"big":""}" style="--pc:${c}"><div class="ptl__date"><b>${esc(date)}</b><span>${esc(gap)}</span></div><span class="ptl__dot"></span>
+    <div class="ptl__card"><span class="ptl__phase">${esc(ph)}</span><p>${esc(what)}</p><div class="ptl__meta">${acct.split(/\s*\+\s*/).map(a=>`<span class="acct-chip${/MONSTER/.test(a)?" m":""}">${esc(a)}</span>`).join("")}
+    ${from.length?`<span class="from">Copied from ${from.map(id=>`<a href="#b-${id}" data-goto="${id}">${esc(nameOf(id))}</a>`).join(" + ")}</span>`:""}</div></div></li>`;
+}).join("");
+document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (!g) return; const a = document.getElementById("b-"+g.dataset.goto);
+  if (!a) { filt.cat=""; filt.fit=0; filt.sq=false; renderFilters(); renderBrands(); } setTimeout(()=>document.getElementById("b-"+g.dataset.goto)?.classList.add("is-open"),0); });
+
+const picks = store.get("mmg.picks") || {};
+function renderMoments(){
+  $("#moments").innerHTML = MOMENTS.map(m=>`<div class="moment"><div class="moment__h"><span class="when">${esc(m.when)}</span><b>${esc(m.title)}</b><span class="acct-chip${/Monster/.test(m.acct)?" m":""}">${esc(m.acct)}</span></div>
+    ${m.content.length?`<div class="k" style="color:var(--muted);margin-bottom:6px">Content options</div><div class="opts" style="margin-bottom:14px">${m.content.map((c,i)=>{const key=m.id+":c";return `<label class="opt${picks[key]===i?" is-on":""}"><input type="radio" name="${key}" value="${i}" ${picks[key]===i?"checked":""}><span>${esc(c)}</span><span></span></label>`}).join("")}</div>`:""}
+    <div class="k" style="color:var(--muted);margin-bottom:6px">Caption options</div>
+    <div class="opts">${m.captions.map(([l,t],i)=>{const key=m.id+":t";return `<label class="opt${picks[key]===i?" is-on":""}"><input type="radio" name="${key}" value="${i}" ${picks[key]===i?"checked":""}><span><small>${esc(l)}</small><pre>${esc(t)}</pre></span><button class="copy" data-copy="${esc(t)}">Copy</button></label>`}).join("")}</div></div>`).join("");
+}
+document.addEventListener("change", e => { const r = e.target; if (r.type === "radio" && r.name.includes(":")) { picks[r.name] = +r.value; store.set("mmg.picks", picks); renderMoments(); } });
+
+const STEPS = ["Confirm the monster account handle.","Pick caption options per moment.","Write the giveaway rules.","Lock the PR Mansion split + creator list.","Use the research sheet for every reference."];
+const done = store.get("mmg.steps") || {};
+function renderCheck(){ $("#check").innerHTML = STEPS.map((s,i)=>`<li class="${done[i]?"done":""}"><input type="checkbox" data-step="${i}" ${done[i]?"checked":""} aria-label="${esc(s)}"><span><b>${i+1}.</b> ${i===4?`Use the <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">research sheet</a> for every reference.`:esc(s)}</span></li>`).join(""); }
+document.addEventListener("change", e => { if (e.target.dataset.step !== undefined) { done[e.target.dataset.step] = e.target.checked; store.set("mmg.steps", done); renderCheck(); } });
+
+/* resources */
+$("#res").innerHTML = [
+  [LINKS.sheet,"Research sheet (Google Sheets)","One tab per brand · 17 tabs · source of truth for the research"],
+  [LINKS.brief,"Monster Mansion launch brief","The visual theme and the images",true],
+  [LINKS.grid,"Monster Mansion grid","The planned grid",true],
+  [LINKS.adlib,"Meta Ad Library","Check whether a brand ran ads"],
+].map(([u,b,s,ro])=>`<a href="${u}" target="_blank" rel="noopener"><b>${esc(b)} ↗${ro?`<span class="ro">READ ONLY</span>`:""}</b><small>${esc(s)}</small></a>`).join("") +
+  `<a href="#" onclick="return false" style="cursor:default"><b>Short overview PDF</b><small>“Monster Mansion Vol 1 - Findings & Plan.pdf”, 8 pages. Sent separately in chat; it'll be linked here once added.</small></a>`;
+const MASTER = [
+  ["Dr. Squatch × Sweeney","3 Oct 2024","@drsquatch","DAqvwdAPZSQ"],["Dr. Squatch × Sweeney","29 May 2025","@drsquatch","DKPmtz_vHWf"],["Dr. Squatch × Sweeney","6 Jun 2025","@drsquatch","DKkEdZ7BqGZ"],["Dr. Squatch × Sweeney","6 Jun 2025","@drsquatch","DKkLV_9u9jS"],
+  ["Gentle Monster × Jennie","19 Apr 2024","@gentlemonster","C5-FsEOrD5U"],["Gentle Monster × Jennie","22 Apr 2024","@gentlemonster","C6Fh2nevSeT"],["Gentle Monster × Jennie","22 Apr 2024","@thatsheart","C6FChcOybTo"],["Gentle Monster × Jennie","22 Apr 2024","@cristinaleontyeva","C6FfY3nxPFx"],["Gentle Monster × Jennie","23 Apr 2024","@gabbi","C6GNZwDpId3"],["Gentle Monster × Jennie","1 May 2024","@thebeaulife.co","C6Z6UjxyeOC"],
+  ["Crocs × Juicy Couture","19 Mar 2025","@crocs","DHZAe3ZJexn"],
+  ["e.l.f. × Liquid Death 2026","12 Jan 2026","@liquiddeath","DTacnJzEgRf"],["e.l.f. × Liquid Death 2026","13 Jan 2026","@elfcosmetics","DTdj11glJG_"],["e.l.f. × Liquid Death 2026","14 Jan 2026","@elfcosmetics","DTf6agsAbLK"],["e.l.f. × Liquid Death 2026","14 Jan 2026","@elfcosmetics","DTgsYELFCPd"],
+  ["e.l.f. × Liquid Death 2024","26 Mar 2024","@liquiddeath","C4-7w5zrEvu"],["e.l.f. × Liquid Death 2024","26 Mar 2024","@elfcosmetics","C4-_JHhL0z2"],["e.l.f. × Liquid Death 2024","27 Mar 2024","@elfcosmetics","C5BjSE5J_91"],
+  ["Glossier: mystery launch","29 Mar 2024","@glossier","C5GpjOrOw3b"],
+  ["Glossier: 7 Days of Gifting","15 Dec 2025","@glossier","DSS-m5FEfm7"],["Glossier: 7 Days of Gifting","17 Dec 2025","@glossier","DSX0W3nEWU9"],["Glossier: 7 Days of Gifting","20 Dec 2025","@glossier","DSfb8L2kbK5"],["Glossier: 7 Days of Gifting","21 Dec 2025","@glossier","DSiCvgpkZt6"],
+  ["e.l.f.: PR list for a year","2 Jan 2026","@elfcosmetics","DTAzZqiAe4o"],
+  ["Crumbl × Kylie","22 Jul 2024","@kyliejenner","C9vbhLOtnK3"],["Crumbl × Kylie","24 Jul 2024","@kyliecosmetics","C9zwowDxLEx"],["Crumbl × Kylie","24 Jul 2024","@crumbl","C90UdZcBucJ"],
+  ["poppi × Subway","17 Aug 2026","@drinkpoppi","DcJ4tJrkrNZ"],["poppi × Subway","18 Aug 2026","@drinkpoppi","DcL4JkStett"],["poppi × Subway","19 Aug 2026","@drinkpoppi","DcOmKwCQmEs"],["poppi × Subway","19 Aug 2026","@drinkpoppi","DcPJrLgyMBL"],["poppi × Subway","20 Aug 2026","@drinkpoppi","DcRJB4jG8Xg"],
+  ["Kylie: Lipstick Day","29 Jul 2021","@kyliecosmetics","CR67CXiBvom"],
+  ["Sol de Janeiro","25 Mar 2026","@soldejaneiro","DWUSt13kR-x"],["Sol de Janeiro","2 Apr 2026","@soldejaneiro","DWoqp7ZkXNF"],
+  ["Dr. Squatch × Spirit Halloween","11 Sep 2025","@spirithalloween","DOeDSJ1DW6u"],["Dr. Squatch × Spirit Halloween","27 Sep 2025","@spirithalloween","DPG7ZZjjtz3"],["Dr. Squatch × Spirit Halloween","1 Oct 2025","@drsquatch","DPRciUHj4EN"],["Dr. Squatch × Spirit Halloween","2 Oct 2025","@spirithalloween","DPUqTqsgiB6"],
+  ["Feastables $1M Halloween","1 Oct 2024","@mrbeast","DAl22e_Rcy2"],["Feastables $1M Halloween","6 Nov 2024","@mrbeast","DCCl-ibRd0j"],
+  ["Feastables Halloween 2026","10 Sep 2026","@feastables","DdHN20hBx-S"],["Feastables Halloween 2026","12 Sep 2026","@feastables","DdMSHZKGxnW"],["Feastables Halloween 2026","14 Sep 2026","@feastables","DdRf7OFBGjs"],
+  ["Kylie: Halloween 2016","31 Oct 2016","@kyliejenner","BMPs495h_Qz"],
+];
+$("#postCount").textContent = MASTER.length;
+$("#postTable").innerHTML = MASTER.map(([b,d,a,c])=>`<tr><td>${esc(b)}</td><td>${esc(d)}</td><td>${esc(a)}</td><td><a href="${IG(c)}" target="_blank" rel="noopener">${IG(c)}</a></td></tr>`).join("");
+
+/* nav highlight */
+const secs = ["home","findings","brands","plan","resources"].map(id=>document.getElementById(id));
+const navIo = new IntersectionObserver(es=>es.forEach(e=>{ if (e.isIntersecting) document.querySelectorAll(".nav a").forEach(a=>a.classList.toggle("is-on", a.getAttribute("href")==="#"+e.target.id)); }),{rootMargin:"-40% 0px -55% 0px"});
+secs.forEach(s=>navIo.observe(s));
+
+renderFilters(); renderBrands(); renderMoments(); renderCheck();
+</script>
+</body>
+</html>
