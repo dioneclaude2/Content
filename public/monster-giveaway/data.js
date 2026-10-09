@@ -314,7 +314,7 @@ const PLAN = [
    what:"Lemmy, Medusa and Jack on sale. “Meet Lemmy, Medusa and Jack” email.",
    grid:"Brief · Soft launch day · PM P1"},
   {ph:"Giveaway opens", moment:"giveaway", date:"22 Oct", gap:"+1 day", acct:"COLLAB", kind:"tweak", big:true, from:["drsquatch","crocs","glossier-7days"],
-   what:"Pick your monster = the giveaway. Win a giant Nancy pumpkin: follow both + comment KNOCK KNOCK and your monster.",
+   what:"Pick your monster = the giveaway. Win a giant Nancy pumpkin: follow both + comment KNOCK KNOCK and your monster. Bonus key: a Story with #NancyMonsterMansion tagging @nancymonstermansion.",
    grid:"Grid · move giveaway (18 Oct) + Pick your monster (19 Oct) → 22 Oct"},
   {ph:"Giveaway closes", date:"27 Oct · 11:59pm ET", gap:"+5 days", acct:"BOTH", kind:"confirm", from:["drsquatch"],
    what:"Entries close. Pick winners.",
@@ -335,13 +335,37 @@ const PLAN = [
 
 const MOMENTS = [
   {id:"giveaway", when:"22 Oct", title:"Giveaway = Pick your monster", acct:"Both",
-    content:[], captions:[["Giveaway post","Pick your monster 🗝\n\nGIVEAWAY 🎃 Win a giant Nancy pumpkin (Lemmy, Medusa & Jack inside).\n1. Follow @nancymonstermansion + @hellonancy_official\n2. Comment KNOCK KNOCK + your monster: Lemmy, Medusa or Jack\nCloses 27.10, 11:59pm ET. Winners in our Stories 28.10.\n18+, US only, no purchase necessary. This promotion is not sponsored, endorsed or administered by, or associated with Instagram."]]},
+    content:[], captions:[["Giveaway post","Pick your monster 🗝\n\nGIVEAWAY 🎃 Win a giant Nancy pumpkin (Lemmy, Medusa & Jack inside).\n1. Follow @nancymonstermansion + @hellonancy_official\n2. Comment KNOCK KNOCK + your monster: Lemmy, Medusa or Jack\n🗝 Bonus key: post a Story with #NancyMonsterMansion and tag @nancymonstermansion\nCloses 27.10, 11:59pm ET. 3 winners (one per monster) in our Stories 28.10.\n18+, US only, no purchase necessary. This promotion is not sponsored, endorsed or administered by, or associated with Instagram."]]},
   {id:"tomorrow", when:"28 Oct", title:"Winners + drop notice", acct:"Both",
     content:[], captions:[["Story","The Mansion has new Residents 🗝 Winners, check your DMs. We will never ask for payment."],["Post","Didn't win? Doors open tomorrow, 9pm ET. Only [X] Monster Mansion Vol 1 made. When they're gone, they're gone."]]},
   {id:"drop", when:"29 Oct", title:"Limited drop", acct:"Both",
-    content:[], captions:[["8pm","1 hour. Let the Haunting Begin. 🗝"],["9pm","Monster Mansion Vol 1 is open. Lemmy, Medusa, Jack. Only [X] made. Link in bio."]]},
+    content:[], captions:[["8pm","1 hour. Let the Haunting Begin. 🗝"],["9pm","Monster Mansion Vol 1 is open. Lemmy, Medusa, Jack. Only [X] made. Link in bio.\n\nGot yours? Post your unboxing with #MonsterMansionUnboxing and we'll repost you. #NancyMonsterMansion #NotSoScaryAfterAll"]]},
   {id:"stock", when:"30 Oct", title:"Stock update", acct:"Both",
     content:[], captions:[["Post","Going fast. 🎃 Only a few Vol 1 left. Link in bio."]]},
   {id:"halloween", when:"31 Oct", title:"Today only", acct:"Monsters + email",
     content:[], captions:[["Post","Happy Halloween from the Mansion. 🗝 Today only: a free extra with every order."]]},
 ];
+
+/* ---------- Proposal: hashtags, ManyChat, mechanics, winners (internal, for the team) ---------- */
+const HASHTAGS = [
+  ["#NancyMonsterMansion", "Main tag: brand + campaign. On every post, creator unboxing, the celebrity post, and the bonus-key Stories.", "Like #GENTLEMONSTERXJENNIE"],
+  ["#NotSoScaryAfterAll", "The campaign line as a tag. Captions and creators.", "Like #deathtochappedlips (e.l.f. × Liquid Death)"],
+  ["#MonsterMansionUnboxing", "For buyers and creators opening their monsters after the drop. We repost them.", "Like #JENTLESALONTRYON"],
+];
+const MANYCHAT = [
+  ["22–27 Oct", "Giveaway comments", "KNOCK KNOCK on the giveaway post → DM “You're in 🗝” + rules link + Resident pass number. Tags the person and saves their monster (Lemmy / Medusa / Jack) from the comment."],
+  ["22–27 Oct", "Bonus key", "Story mention of @nancymonstermansion → DM “+1 key 🗝”, adds 1 to their keys (max 1 bonus)."],
+  ["28 Oct", "Winners + drop notice", "DM the 3 winners. DM everyone else: “Doors open tomorrow, 9pm ET.”"],
+  ["29 Oct", "Early access", "8:30pm ET: DM every entrant their early-access link to the drop."],
+  ["29 Oct →", "Unboxings", "Story mention after the drop → DM a thank-you and flag for repost."],
+];
+const WIN_STEPS = [
+  ["Collect", "ManyChat saves every entrant (tag “gw_entered”), their monster, and their keys (1 + bonus). Back-up: export the post's comments too, in case ManyChat misses some."],
+  ["Close", "27 Oct, 11:59pm ET: turn the giveaway automation off. Export the list to a Google Sheet."],
+  ["Clean", "Remove duplicates, team and brand accounts, and obvious bots (empty or brand-new accounts)."],
+  ["Draw", "Split the list by monster. Draw 1 winner per monster at random, weighted by keys (2 keys = 2 chances), plus 2 back-ups each. Screen-record the draw."],
+  ["Check", "Each winner follows both accounts, is 18+ and in the US, and the account looks real. If not, go to the back-up."],
+  ["Contact", "DM from @nancymonstermansion only. Never ask for payment. Shipping details by form. 48 hours to reply, or the back-up wins."],
+  ["Announce", "28 Oct in Stories, with the winners' OK to show their handle. Log everything in the sheet."],
+];
+const ROLES = [["Dione","ManyChat set-up, the export, the draw, the winners sheet"],["Crystal","Approves the winners and the captions"],["Momo / e-com","Ships the pumpkins; sets the drop stock + early-access link"],["Daphne","Reposts #NancyMonsterMansion Stories and unboxings"]];
