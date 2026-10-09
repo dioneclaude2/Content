@@ -254,6 +254,32 @@ section{padding:76px 0;border-bottom:1px solid var(--line)}
 .cap__h small{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink)}
 .cap p{font-family:Fraunces,serif;font-size:16px;line-height:1.45;white-space:pre-wrap;color:var(--ink)}
 @media (max-width:640px){.tcard{flex-basis:86vw}.tcard__embed{height:520px}}
+.prop{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 6px}
+.pbox{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--pink);border-radius:18px;padding:16px 18px}
+.pbox .k{color:var(--pink)}
+.pbox b{display:block;font-family:Fraunces,serif;font-weight:300;font-size:52px;line-height:1;margin:6px 0}
+.pbox p{font-size:14px;color:var(--ink-soft)}
+.pbox i{color:var(--muted)}
+.ptitle{margin:28px 0 10px}.ptitle .k{color:var(--muted)}
+.tags3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tagc{background:var(--night);color:#faf3e6;border-radius:18px;padding:16px 18px}
+.tagc b{font-family:Fraunces,serif;font-style:italic;font-weight:400;font-size:22px;color:var(--yellow);display:block;word-break:break-word}
+.tagc p{font-size:13.5px;margin:6px 0;opacity:.92}
+.tagc small{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.mc{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.mcc{flex:0 0 260px;scroll-snap-align:start;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--lilac);border-radius:18px;padding:14px 16px}
+.mcc .k{color:var(--pink)}
+.mcc b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:19px;margin:4px 0 6px}
+.mcc p{font-size:13.5px;color:var(--ink-soft)}
+.wsteps{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity;counter-reset:w}
+.wst{flex:0 0 240px;scroll-snap-align:start;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px 16px;position:relative}
+.wst::before{counter-increment:w;content:counter(w);font-family:Fraunces,serif;font-style:italic;font-size:40px;line-height:1;color:var(--pink);display:block}
+.wst b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:4px 0}
+.wst p{font-size:13.5px;color:var(--ink-soft)}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.role{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink-soft)}
+.role b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:18px;color:var(--ink)}
+@media (max-width:900px){.prop,.tags3{grid-template-columns:1fr}.roles{grid-template-columns:1fr 1fr}}
 .story{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
 .story img{border-radius:20px;box-shadow:var(--shadow)}
 .story h3{font-size:clamp(30px,4vw,46px);line-height:1.05;font-weight:300}
@@ -465,7 +491,7 @@ footer .sp{margin-left:auto;opacity:.75}
   </div>
   <p class="belong"><b>Belonging:</b> followers are called <i>the Residents</i>. Story poll: “Monster lover 🖤 or a little scared 😳?” Every entry is a choice (Lemmy / Jack / Medusa).</p>
 
-  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Final.</em></h3>
+  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Proposed.</em></h3>
   <p class="lead" style="margin-top:0">Giveaway + drop only, on the PM board's dates. Grid: <a class="lnk" id="gridLink1" target="_blank" rel="noopener">content grid</a>.</p>
   <p class="mini" style="color:var(--muted);font-size:13px">Account key: MAIN = @hellonancy_official · MONSTERS = @nancymonstermansion · BOTH / COLLAB = both accounts (Instagram Collab post).</p>
   
@@ -476,6 +502,22 @@ footer .sp{margin-left:auto;opacity:.75}
   </div>
 
   <p class="rule">Every post asks for one small action: follow, comment your monster, or tap the link.</p>
+
+  <h3 class="subh"><span class="k">5.5</span>The proposal. <em>How we run it, as a team.</em> <span class="draft">Proposal · internal</span></h3>
+  <p class="lead" style="margin-top:0">Not for the audience. How we collect entries, pick winners, and what we still need to decide.</p>
+  <div class="prop">
+    <div class="pbox pbox--n"><span class="k">Winners</span><b>3</b><p>One per monster: a Lemmy, a Medusa and a Jack winner. Each wins a giant Nancy pumpkin. <i>To confirm: we have 3 pumpkins for this.</i></p></div>
+    <div class="pbox pbox--n"><span class="k">Limited drop</span><b>[X]</b><p>Monster Mansion Vol 1, numbered. Suggestion to discuss: 100 per monster (300 total), small enough to sell out in 1–3 days. <i>To confirm with Momo / e-com.</i></p></div>
+    <div class="pbox pbox--n"><span class="k">Entries</span><b>2 max</b><p>1 entry for the comment + 1 bonus key for a Story with the hashtag tagging @nancymonstermansion.</p></div>
+  </div>
+  <div class="ptitle"><span class="k">The exact hashtags</span></div>
+  <div class="tags3" id="tags3"></div>
+  <div class="ptitle"><span class="k">Where we use ManyChat</span></div>
+  <div class="mc" id="mc"></div>
+  <div class="ptitle"><span class="k">How we pick the winners (team only)</span></div>
+  <div class="wsteps" id="wsteps"></div>
+  <div class="ptitle"><span class="k">Who does what</span></div>
+  <div class="roles" id="roles"></div>
 
   <h3 class="subh"><span class="k">5.6</span>Ads. <em>Small and safe.</em></h3>
   <div class="ads">
@@ -614,6 +656,10 @@ function renderMoments(){
 }
 document.addEventListener("change", e => { const r = e.target; if (r.type === "radio" && r.name.includes(":")) { picks[r.name] = +r.value; store.set("mmg.picks", picks); renderMoments(); } });
 
+$("#tags3").innerHTML = HASHTAGS.map(([t,d,r])=>`<div class="tagc"><b>${esc(t)}</b><p>${esc(d)}</p><small>${esc(r)}</small></div>`).join("");
+$("#mc").innerHTML = MANYCHAT.map(([w,t,d])=>`<div class="mcc"><span class="k">${esc(w)}</span><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("");
+$("#wsteps").innerHTML = WIN_STEPS.map(([t,d])=>`<div class="wst"><b>${esc(t)}</b><p>${esc(d)}</p></div>`).join("");
+$("#roles").innerHTML = ROLES.map(([n,d])=>`<div class="role"><b>${esc(n)}</b>${esc(d)}</div>`).join("");
 const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Grid: giveaway + Pick your monster → 22 Oct; winners → 28 Oct; add the drop posts.","Use the research sheet for every reference."];
 const done = store.get("mmg.steps") || {};
 function renderCheck(){ $("#check").innerHTML = STEPS.map((s,i)=>`<li class="${done[i]?"done":""}"><input type="checkbox" data-step="${i}" ${done[i]?"checked":""} aria-label="${esc(s)}"><span><b>${i+1}.</b> ${/research sheet/.test(s)?`Use the <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">research sheet</a> for every reference.`:esc(s)}</span></li>`).join(""); }
