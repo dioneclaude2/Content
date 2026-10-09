@@ -409,12 +409,12 @@ footer .sp{margin-left:auto;opacity:.75}
   <div class="start">
     <div class="card"><b>What we found</b><p>It's not about being famous. We studied 17 giveaways and limited drops: celebrities make the numbers bigger, but six simple tricks are what the strong ones share.</p></div>
     <div class="card"><b>What we copy</b><p>Dr. Squatch × Sydney Sweeney's order: giveaway first, winners, a “1 hour” countdown, then the limited drop, about a week later. Plus Gentle Monster's PR boxes.</p></div>
-    <div class="card"><b>What we do</b><p>Giveaway opens 21 Oct, limited drop 29 Oct at 9pm ET, winners 5 Nov.</p></div>
+    <div class="card"><b>What we do</b><p>Teasers 18–20 Oct, soft launch 21 Oct, giveaway (Pick your monster) 22–27 Oct, winners 28 Oct, limited drop 29 Oct at 9pm ET.</p></div>
   </div>
   <div class="facts">
     <div class="fact"><b>3 monsters</b><span>Lemmy · Jack · Medusa</span></div>
     <div class="fact"><b>Giant pumpkin</b><span>the prize + the PR kit</span></div>
-    <div class="fact"><b>8 days</b><span>giveaway 21 Oct → drop 29 Oct</span></div>
+    <div class="fact"><b>7 days</b><span>giveaway 22 Oct → drop 29 Oct</span></div>
     <div class="fact"><b>2 accounts</b><span>@hellonancy_official + @nancymonstermansion</span></div>
   </div>
 </div></section>
@@ -465,21 +465,21 @@ footer .sp{margin-left:auto;opacity:.75}
   </div>
   <p class="belong"><b>Belonging:</b> followers are called <i>the Residents</i>. Story poll: “Monster lover 🖤 or a little scared 😳?” Every entry is a choice (Lemmy / Jack / Medusa).</p>
 
-  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Seven steps.</em></h3>
+  <h3 class="subh"><span class="k">5.4</span>Giveaway + drop. <em>Final.</em></h3>
   <p class="lead" style="margin-top:0">Giveaway + drop only, on the PM board's dates. Grid: <a class="lnk" id="gridLink1" target="_blank" rel="noopener">content grid</a>.</p>
   <p class="mini" style="color:var(--muted);font-size:13px">Account key: MAIN = @hellonancy_official · MONSTERS = @nancymonstermansion · BOTH / COLLAB = both accounts (Instagram Collab post).</p>
   
   <div class="htl-wrap uni plan-htl"><div class="htl-hint">Scroll sideways →</div><div class="htl" id="ptl"></div></div>
   <div class="notes2">
-    <div class="callout"><b>Giveaway → drop:</b> 8 days (21 → 29 Oct), close to Dr. Squatch's 8.</div>
-    <div class="callout"><b>Grid check:</b> the grid opens the giveaway 18 Oct and runs Pick your monster 19 Oct; the PM board opens the giveaway 21 Oct. Move them to 21 and 22 Oct.</div>
+    <div class="callout"><b>Dr. Squatch order:</b> giveaway → winners (28 Oct) → drop the next day. Everyone who didn't win hears exactly when to buy.</div>
+    <div class="callout"><b>To settle:</b> the Vol 1 run size ([X] made) and the celebrity on 29 Oct (the grid has 27 Oct).</div>
   </div>
 
   <p class="rule">Every post asks for one small action: follow, comment your monster, or tap the link.</p>
 
   <h3 class="subh"><span class="k">5.6</span>Ads. <em>Small and safe.</em></h3>
   <div class="ads">
-    <div class="ad yes"><b>Boost only the giveaway post</b>From 21 Oct until it closes. Ad goal: profile visits to the monster account (not likes).</div>
+    <div class="ad yes"><b>Boost only the giveaway post</b>22–27 Oct. Ad goal: profile visits to the monster account (not likes).</div>
     <div class="ad no"><b>Never the product's use</b>Show the Mansion + characters. Meta doesn't allow ads that sell or show adult toys. Sexual wellness ads are only allowed when they focus on health, not pleasure.</div>
     <div class="ad yes"><b>Audience 18+</b>Existing followers, site visitors and customers first, then people similar to them. A broad giveaway audience brings in “freebie hunters”.</div>
     <div class="ad no"><b>No ads for the drop itself</b>Have someone check the creative against Meta's adult-products rules before spending. The rules change.</div>
@@ -614,7 +614,7 @@ function renderMoments(){
 }
 document.addEventListener("change", e => { const r = e.target; if (r.type === "radio" && r.name.includes(":")) { picks[r.name] = +r.value; store.set("mmg.picks", picks); renderMoments(); } });
 
-const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Move the grid giveaway post from 18 to 21 Oct and Pick your monster from 19 to 22 Oct; add the 28 Oct drop notice.","Use the research sheet for every reference."];
+const STEPS = ["Check @nancymonstermansion is live by 15 Oct.","Pick a caption on each post card.","Write the giveaway rules.","Lock the giant-pumpkin PR list + creator list.","Grid: giveaway + Pick your monster → 22 Oct; winners → 28 Oct; add the drop posts.","Use the research sheet for every reference."];
 const done = store.get("mmg.steps") || {};
 function renderCheck(){ $("#check").innerHTML = STEPS.map((s,i)=>`<li class="${done[i]?"done":""}"><input type="checkbox" data-step="${i}" ${done[i]?"checked":""} aria-label="${esc(s)}"><span><b>${i+1}.</b> ${/research sheet/.test(s)?`Use the <a class="lnk" href="${LINKS.sheet}" target="_blank" rel="noopener">research sheet</a> for every reference.`:esc(s)}</span></li>`).join(""); }
 document.addEventListener("change", e => { if (e.target.dataset.step !== undefined) { done[e.target.dataset.step] = e.target.checked; store.set("mmg.steps", done); renderCheck(); } });
