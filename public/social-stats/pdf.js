@@ -239,7 +239,7 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   P.kpis([
     A.views == null
       ? ["Views · this week's posts", F.big(T.totalViews), `${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads`]
-      : ["Account views", F.big(A.views), `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
+      : ["Account views", F.big(A.views), A.note ? A.note : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views", true],

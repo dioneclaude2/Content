@@ -1235,7 +1235,7 @@ function weeklySummaryHTML(rep, R, P){
     <div class="tiles big">
       ${A.views == null
         ? `<div class="tile"><div class="k">Views · this week's posts</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads · account total not entered</div></div>`
-        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}</div></div>`}
+        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
@@ -1749,18 +1749,18 @@ const sameSheet = (a, b) => {
 /* a report made from this sheet tab that someone deleted — don't bring it back */
 const deletedFromSheet = url => Object.values(docs).some(v => v?.deleted && v.sheetUrl && sameSheet(v.sheetUrl, url));
 
-async function importSheet(url, repId, costs){
+async function importSheet(url, repId, costs, extraAccount){
   const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
   if (!m) throw new Error("That isn't a Google Sheets link.");
   const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
   url = sheetLink(m[1], gid);
   const text = await sheetCsv(m[1], gid);
   if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
-  return importWeeklyText(text, url, repId);
+  return importWeeklyText(text, url, repId, extraAccount);
 }
 
 /* A weekly report tab's text (from a link or an uploaded file) → weekly report */
-function importWeeklyText(text, url, repId){
+function importWeeklyText(text, url, repId, extraAccount){
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
@@ -1780,7 +1780,11 @@ function importWeeklyText(text, url, repId){
   if (S.range && (rep.fresh || !repId)) Object.assign(patch, { start: S.range.start, end: S.range.end });
   if (rep.type === "week") {
     const acc = { ...(rep.account || {}) };
+    // account numbers published for this week fill gaps; the sheet's own numbers win when it has them
+    const { note, ...extra } = extraAccount || {};
+    for (const [k, v] of Object.entries(extra)) if (v != null && S.account[k] == null) acc[k] = v;
     for (const [k, v] of Object.entries(S.account)) if (v != null) acc[k] = v;     // the sheet's numbers win on refresh
+    acc.note = Object.keys(extra).some(k => S.account[k] == null) ? note || null : null;
     patch.account = acc;
   }
   // per-post ad numbers from the sheet stand in for a Meta export, unless a real export is attached
@@ -2351,7 +2355,7 @@ async function refreshFromSources(){
   for (const w of src.weekly || []) {
     const url = sheetLink(w.sheet, w.gid || "0");
     if (deletedFromSheet(url)) continue;
-    try { await importSheet(url); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+    try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
   }
   for (const e of src.events || []) {
     let costsBy = {};
