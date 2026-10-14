@@ -237,7 +237,9 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   const head = rundownHeadline(rep.rundown) || `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${chg(C["Post views"])} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.`;
   P.para(head, { size: 12, style: "italic", gap: 10 });
   P.kpis([
-    ["Account views", A.views == null ? "—" : F.big(A.views), A.views == null ? "not entered" : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
+    A.views == null
+      ? ["Views · this week's posts", F.big(T.totalViews), `${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads`]
+      : ["Account views", F.big(A.views), `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views", true],

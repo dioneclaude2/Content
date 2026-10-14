@@ -1233,7 +1233,9 @@ function weeklySummaryHTML(rep, R, P){
   return `
     <p class="headline">${esc(head)}</p>
     <div class="tiles big">
-      <div class="tile"><div class="k">Account views</div><div class="v">${A.views == null ? "—" : F.big(A.views)}</div><div class="s">${A.views == null ? "add from the IG dashboard" : `${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}`}</div></div>
+      ${A.views == null
+        ? `<div class="tile"><div class="k">Views · this week's posts</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads · account total not entered</div></div>`
+        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
