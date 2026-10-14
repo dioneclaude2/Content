@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=8f330bc">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=4c8f54b">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -237,7 +237,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=8f330bc" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=4c8f54b" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -252,7 +252,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=8f330bc";
+import * as E from "./engine.js?v=4c8f54b";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -435,8 +435,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=8f330bc");
-    const logo = await svgToPng("logo-circle.svg?v=8f330bc", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=4c8f54b");
+    const logo = await svgToPng("logo-circle.svg?v=4c8f54b", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -560,7 +560,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=8f330bc" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=4c8f54b" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1235,7 +1235,7 @@ function weeklySummaryHTML(rep, R, P){
     <div class="tiles big">
       ${A.views == null
         ? `<div class="tile"><div class="k">Views · this week's posts</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads · account total not entered</div></div>`
-        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}</div></div>`}
+        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
@@ -1749,18 +1749,18 @@ const sameSheet = (a, b) => {
 /* a report made from this sheet tab that someone deleted — don't bring it back */
 const deletedFromSheet = url => Object.values(docs).some(v => v?.deleted && v.sheetUrl && sameSheet(v.sheetUrl, url));
 
-async function importSheet(url, repId, costs){
+async function importSheet(url, repId, costs, extraAccount){
   const m = String(url || "").match(/spreadsheets\/d\/([\w-]{20,})/);
   if (!m) throw new Error("That isn't a Google Sheets link.");
   const gid = (String(url).match(/[#&?]gid=(\d+)/) || [])[1] || "0";
   url = sheetLink(m[1], gid);
   const text = await sheetCsv(m[1], gid);
   if (E.isEventSheet(text)) return importEventTab(text, url, repId, costs);
-  return importWeeklyText(text, url, repId);
+  return importWeeklyText(text, url, repId, extraAccount);
 }
 
 /* A weekly report tab's text (from a link or an uploaded file) → weekly report */
-function importWeeklyText(text, url, repId){
+function importWeeklyText(text, url, repId, extraAccount){
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
@@ -1780,7 +1780,11 @@ function importWeeklyText(text, url, repId){
   if (S.range && (rep.fresh || !repId)) Object.assign(patch, { start: S.range.start, end: S.range.end });
   if (rep.type === "week") {
     const acc = { ...(rep.account || {}) };
+    // account numbers published for this week fill gaps; the sheet's own numbers win when it has them
+    const { note, ...extra } = extraAccount || {};
+    for (const [k, v] of Object.entries(extra)) if (v != null && S.account[k] == null) acc[k] = v;
     for (const [k, v] of Object.entries(S.account)) if (v != null) acc[k] = v;     // the sheet's numbers win on refresh
+    acc.note = Object.keys(extra).some(k => S.account[k] == null) ? note || null : null;
     patch.account = acc;
   }
   // per-post ad numbers from the sheet stand in for a Meta export, unless a real export is attached
@@ -2339,7 +2343,7 @@ function renderSettings(D){
    has real invoices, and a report someone deleted isn't re-created. */
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=8f330bc", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=4c8f54b", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
@@ -2351,7 +2355,7 @@ async function refreshFromSources(){
   for (const w of src.weekly || []) {
     const url = sheetLink(w.sheet, w.gid || "0");
     if (deletedFromSheet(url)) continue;
-    try { await importSheet(url); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+    try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
   }
   for (const e of src.events || []) {
     let costsBy = {};
