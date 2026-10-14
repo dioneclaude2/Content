@@ -329,36 +329,40 @@
     }
   ],
   "account": {
-    "asOf": "2026-10-07",
+    "asOf": "2026-10-14",
     "source": "Instagram Professional dashboard › Account insights",
     "periods": [
       {
         "label": "Last 30 days",
-        "views": 13550000,
+        "range": "14 Sep – 13 Oct",
+        "views": 8884147,
         "days": 30
       },
       {
         "label": "Last 90 days",
-        "range": "9 Jul – 7 Oct",
-        "views": 46700000,
-        "days": 91
+        "range": "16 Jul – 13 Oct",
+        "views": 42722744,
+        "days": 90
       },
       {
         "label": "Last 6 months",
         "views": 71800000,
-        "days": 183
+        "days": 183,
+        "asOf": "2026-10-07"
       },
       {
         "label": "Last 12 months",
         "views": 108800000,
-        "days": 365
+        "days": 365,
+        "asOf": "2026-10-07"
       },
       {
         "label": "All available",
         "range": "about 2 years",
         "views": 112900000,
         "days": 730,
-        "approx": true
+        "approx": true,
+        "asOf": "2026-10-07"
       }
     ]
   }

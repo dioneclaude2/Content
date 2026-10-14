@@ -596,7 +596,7 @@ function accountPanel(D){
     <div class="acct-tiles">${A.periods.map(p => `<div class="tile${p === last ? " hero" : ""}">
       <div class="k">${esc(p.label)}${p.range ? ` <span class="rng">(${esc(p.range)})</span>` : ""}</div>
       <div class="v">${F.big(p.views)}</div>
-      <div class="s">${p.approx ? "≈ " : ""}${F.big(perDay(p))} a day</div></div>`).join("")}</div>
+      <div class="s">${p.approx ? "≈ " : ""}${F.big(perDay(p))} a day${p.asOf && p.asOf !== A.asOf ? ` · as of ${F.date(p.asOf)}` : ""}</div></div>`).join("")}</div>
     ${(() => {                                                     // is the recent pace above or below the longer run?
       const a = A.periods[0], b = A.periods[1];
       if (!a || !b) return "";
