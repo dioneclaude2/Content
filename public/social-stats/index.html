@@ -967,7 +967,7 @@ function weeklyHTML(rep, R, P, D){
       <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
     </div>
     <div class="sec"><h2>This week vs ${P ? esc(prevName) : "last week"}</h2>
-      ${P ? cmpTable("t-wow", R, P, "This week", prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
+      ${P ? cmpTable("t-wow", R, P, rep.name, prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
       <div class="row noprint small" style="margin-top:10px"><span class="muted">Compare with</span><select id="prevPick"><option value="">Automatic (week before)</option>${Object.values(D.reports).filter(r => r.type === "week" && r.id !== rep.id).sort((a, b) => a.start < b.start ? 1 : -1).map(r => `<option value="${r.id}" ${rep.prevId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
     </div>
     <div class="sec"><h2>Rankings</h2>${rankHTML(R)}</div>
@@ -1143,7 +1143,7 @@ function miniCmp(R, P, names){
     const f = v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
     return `<tr><td>${esc(c.name)}</td><td class="n">${f(c.cur)}</td><td class="n">${f(c.prev)}</td><td class="n">${c.change == null ? "—" : `${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`}</td></tr>`;
   });
-  return `<div class="tw"><table><thead><tr><th></th><th class="n">This</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+  return `<div class="tw"><table><thead><tr><th>Metric</th><th class="n">${esc(R.rep.name)}</th><th class="n">${esc(P.rep.name)}</th><th class="n">Change</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
 
 const reachChip = r => { const t = E.reachType(r); return `<span class="chip rt-${t.kind}" title="${esc(t.label)}">${esc(t.label)}</span>`; };

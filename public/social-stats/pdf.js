@@ -208,7 +208,7 @@ function compareTable(P, R, Pv, names, title) {
   const all = E.compareReports(R, Pv);
   const list = names ? names.map(n => all.find(c => c.name === n)).filter(Boolean) : all;
   const f = c => v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
-  P.table(["Metric", "This", clean(Pv.rep.name), "Change", "Status"],
+  P.table(["Metric", clean(R.rep.name), clean(Pv.rep.name), "Change", "Status"],
     list.map(c => [c.name, f(c)(c.cur), f(c)(c.prev), chg(c), c.status ? STATUS[c.status][0] : "—"]),
     { title, num: [1, 2, 3], status: 4 });
 }
