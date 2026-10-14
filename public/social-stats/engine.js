@@ -1178,8 +1178,14 @@ export function insights(built, settings = DEFAULT_SETTINGS) {
 const MON = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12 };
 
 /** "27 Sep – 3 Oct 2026" / "Sep 27 – Oct 3, 2026" → {start, end} */
-export function rangeFrom(text) {
+export function rangeFrom(text, defaultYear) {
   const s = String(text || "");
+  // "Oct 4-10" / "Oct. 3–10" with no year: take the year given (e.g. from the pull date)
+  const ny = s.match(/([A-Za-z]{3,9})\.?\s+(\d{1,2})\s*[–—-]\s*(\d{1,2})(?!\s*[A-Za-z]{3})(?:,?\s*(\d{4}))?/);
+  if (ny && MON[ny[1].slice(0, 3).toLowerCase()] && (ny[4] || defaultYear)) {
+    const mo = MON[ny[1].slice(0, 3).toLowerCase()], y = +(ny[4] || defaultYear);
+    return { start: ymd(y, mo, +ny[2]), end: ymd(y, mo, +ny[3]) };
+  }
   let m = s.match(/(\d{1,2})\s+([A-Za-z]{3,9})\.?\s*(\d{4})?\s*[–—-]\s*(\d{1,2})\s+([A-Za-z]{3,9})\.?\s+(\d{4})/);
   if (m && MON[m[2].slice(0, 3).toLowerCase()] && MON[m[5].slice(0, 3).toLowerCase()]) {
     const y2 = +m[6], m1 = MON[m[2].slice(0, 3).toLowerCase()], m2 = MON[m[5].slice(0, 3).toLowerCase()];
@@ -1206,9 +1212,10 @@ export function parseReportSheet(text) {
   const rows = parseRows(text).map(r => r.map(c => String(c ?? "").trim()));   // every row, title included
   const out = { title: "", range: null, pulled: null, posts: [], ads: [], account: {}, notes: [], type: null };
   out.title = (rows.find(r => r[0]) || [""])[0];
-  out.range = rangeFrom(out.title);
   const pm = out.title.match(/pulled\s+(.+)$/i);
   out.pulled = pm ? toDate(pm[1].trim()) : null;
+  // the dates are before the "pulled …" part; a title without a year borrows the pull date's
+  out.range = rangeFrom(out.title.replace(/·[^·]*pulled.*$/i, ""), out.pulled ? out.pulled.slice(0, 4) : null);
   out.type = /weekly/i.test(out.title) ? "week" : /event/i.test(out.title) ? "event" : null;
 
   /* the post table */

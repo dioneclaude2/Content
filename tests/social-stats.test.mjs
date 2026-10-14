@@ -212,3 +212,13 @@ assert.equal(E.reachType({ boosted: true, views: 1000, paid: 250 }).label, "Boos
 assert.equal(E.reachType({ boosted: false, boostedFlag: false }).short, "Organic");
 assert.equal(E.reachType({ boosted: false, boostedFlag: true }).kind, "unknown");
 console.log("reach label tests passed");
+
+// a weekly tab titled "Oct 4-10" (no year) takes the year from its pull date
+const S2 = E.parseReportSheet(readFileSync(new URL("./fixtures/weekly-oct4.csv", import.meta.url), "utf8"));
+assert.deepEqual(S2.range, { start: "2026-10-04", end: "2026-10-10" });
+assert.equal(S2.pulled, "2026-10-14");
+assert.equal(S2.posts.length, 13);
+assert.deepEqual(E.rangeFrom("Oct. 3-10", "2026"), { start: "2026-10-03", end: "2026-10-10" });
+assert.deepEqual(E.rangeFrom("28 – 31 Aug 2026"), { start: "2026-08-28", end: "2026-08-31" });
+assert.deepEqual(S.range, { start: "2026-09-27", end: "2026-10-03" });   // the first week still reads right
+console.log("week title tests passed");
