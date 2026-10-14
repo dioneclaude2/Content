@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=4c8f54b";
+import * as E from "./engine.js?v=0706f35";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -208,7 +208,7 @@ function compareTable(P, R, Pv, names, title) {
   const all = E.compareReports(R, Pv);
   const list = names ? names.map(n => all.find(c => c.name === n)).filter(Boolean) : all;
   const f = c => v => v == null ? "—" : c.rate ? F.pct(v) : c.money ? F.usd(v) : F.int(v);
-  P.table(["Metric", "This", clean(Pv.rep.name), "Change", "Status"],
+  P.table(["Metric", clean(R.rep.name), clean(Pv.rep.name), "Change", "Status"],
     list.map(c => [c.name, f(c)(c.cur), f(c)(c.prev), chg(c), c.status ? STATUS[c.status][0] : "—"]),
     { title, num: [1, 2, 3], status: 4 });
 }
