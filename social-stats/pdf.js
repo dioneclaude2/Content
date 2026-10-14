@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=cf68b16";
+import * as E from "./engine.js?v=8f330bc";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -237,7 +237,9 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   const head = rundownHeadline(rep.rundown) || `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${chg(C["Post views"])} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.`;
   P.para(head, { size: 12, style: "italic", gap: 10 });
   P.kpis([
-    ["Account views", A.views == null ? "—" : F.big(A.views), A.views == null ? "not entered" : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
+    A.views == null
+      ? ["Views · this week's posts", F.big(T.totalViews), `${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads`]
+      : ["Account views", F.big(A.views), `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views", true],
