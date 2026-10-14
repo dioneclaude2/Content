@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=0706f35";
+import * as E from "./engine.js?v=1badd05";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -239,7 +239,7 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   P.kpis([
     A.views == null
       ? ["Views · this week's posts", F.big(T.totalViews), `${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads`]
-      : ["Account views", F.big(A.views), A.note ? A.note : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
+      : ["Account views", F.big(A.views), A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads${ch("Account views")}` : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views", true],

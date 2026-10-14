@@ -3,17 +3,23 @@
   "weekly": [
     {
       "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
-      "gid": "0"
+      "gid": "0",
+      "account": {
+        "viewsOrganic": 243298,
+        "viewsAds": 937950
+      }
     },
     {
       "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
       "gid": "1425188684",
       "account": {
-        "views": 859301,
-        "interactions": 5931,
-        "followersPct": 0.094,
-        "nonFollowersPct": 0.906,
-        "note": "Instagram “last 7 days” read 14 Oct (covers 7–13 Oct), used for 4–10 Oct"
+        "views": 991569,
+        "viewsOrganic": 460449,
+        "viewsAds": 531120,
+        "interactions": 10600,
+        "followersPct": null,
+        "nonFollowersPct": null,
+        "note": "Meta Business Suite · Instagram · Oct 4–10 (interactions shown rounded: 10.6K)"
       }
     }
   ],
