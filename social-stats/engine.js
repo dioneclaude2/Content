@@ -1212,10 +1212,13 @@ export function parseReportSheet(text) {
   const rows = parseRows(text).map(r => r.map(c => String(c ?? "").trim()));   // every row, title included
   const out = { title: "", range: null, pulled: null, posts: [], ads: [], account: {}, notes: [], type: null };
   out.title = (rows.find(r => r[0]) || [""])[0];
-  const pm = out.title.match(/pulled\s+(.+)$/i);
-  out.pulled = pm ? toDate(pm[1].trim()) : null;
-  // the dates are before the "pulled …" part; a title without a year borrows the pull date's
-  out.range = rangeFrom(out.title.replace(/·[^·]*pulled.*$/i, ""), out.pulled ? out.pulled.slice(0, 4) : null);
+  // the part that says when the data was taken: "… data pulled 6 Oct 2026" / "… scraped via Apify 21 Oct 2026"
+  const parts = out.title.split("·").map(x => x.trim());
+  const dataPart = parts.find(x => /pulled|scraped|exported|as of|data (?:from|on)/i.test(x)) || "";
+  const dm = dataPart.match(/(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+\d{4}|[A-Za-z]{3,9}\.?\s+\d{1,2},?\s+\d{4}|\d{4}-\d{2}-\d{2})\s*$/);
+  out.pulled = dm ? toDate(dm[1]) : null;
+  // the week's dates are in the other parts; a title without a year borrows the data date's
+  out.range = rangeFrom(parts.filter(x => x !== dataPart).join(" · "), out.pulled ? out.pulled.slice(0, 4) : null);
   out.type = /weekly/i.test(out.title) ? "week" : /event/i.test(out.title) ? "event" : null;
 
   /* the post table */
