@@ -222,3 +222,11 @@ assert.deepEqual(E.rangeFrom("Oct. 3-10", "2026"), { start: "2026-10-03", end: "
 assert.deepEqual(E.rangeFrom("28 – 31 Aug 2026"), { start: "2026-08-28", end: "2026-08-31" });
 assert.deepEqual(S.range, { start: "2026-09-27", end: "2026-10-03" });   // the first week still reads right
 console.log("week title tests passed");
+
+// "scraped via Apify 21 Oct 2026" is the data date too
+const S3 = E.parseReportSheet(readFileSync(new URL("./fixtures/weekly-oct11.csv", import.meta.url), "utf8"));
+assert.deepEqual(S3.range, { start: "2026-10-11", end: "2026-10-17" });
+assert.equal(S3.pulled, "2026-10-21");
+assert.equal(S3.posts.length, 16);
+assert.equal(S3.ads.length, 3);
+console.log("apify week tests passed");
