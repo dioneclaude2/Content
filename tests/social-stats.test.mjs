@@ -230,3 +230,25 @@ assert.equal(S3.pulled, "2026-10-21");
 assert.equal(S3.posts.length, 16);
 assert.equal(S3.ads.length, 3);
 console.log("apify week tests passed");
+
+// Brighton (event table without a title row): totals match its Total Spend tab
+{
+  const ev = E.parseEventSheet(readFileSync(new URL("./fixtures/event-brighton.csv", import.meta.url), "utf8"));
+  const posts = E.mergePosts({}, ev.posts, "2026-10-23");
+  const imp = { id: "ib", name: "sheet", level: "ad", hasViews: true, hasFollows: false, rows: ev.ads.map((a, i) => ({ ...a, i })) };
+  const costs = { influencers: [{ creator: "Collaborations / creators", fee: 5260, currency: "GBP" }],
+    eventCosts: [["Merch & giveaways", 1241.93], ["Team meals & event expenses", 546.64], ["Hotel / accommodation", 755]].map(([category, unit]) => ({ category, unit, currency: "GBP" })) };
+  const R = E.buildReport({ id: "eb", type: "event", name: "Brighton", start: "2026-06-01", end: "2026-06-01", dataDate: "2026-10-23", postIds: ev.postIds, importIds: ["ib"], fx: { GBP: 1.35 }, ...costs },
+    { posts, imports: { ib: imp }, reports: {} });
+  assert.equal(ev.posts.length, 15);
+  assert.equal(E.r2(R.T.adSpend), 3235.62);
+  assert.equal(R.T.totalViews, 677288);
+  assert.equal(R.T.paidViews, 479459);
+  assert.equal(R.T.organicViews, 197829);
+  assert.equal(E.r2(R.T.nonAd), 10534.82);
+  assert.equal(E.r2(R.T.totalSpend), 13770.44);
+  assert.equal(E.r2(R.T.blendedCPM), 20.33);
+  assert.equal(E.r2(R.T.organicCPM), 53.25);
+  assert.equal(E.r2(R.T.adsCPM), 6.75);
+  console.log("brighton tests passed");
+}

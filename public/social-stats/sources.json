@@ -337,6 +337,74 @@
           ]
         }
       }
+    },
+    {
+      "sheet": "13_c17wh0dRVka4DQLJU3xXGoJMw4z04LT3l1SGwwWy4",
+      "tabs": [
+        "0"
+      ],
+      "overrides": {
+        "0": {
+          "name": "Brighton",
+          "start": "2026-06-01",
+          "end": "2026-06-01",
+          "dataDate": "2026-10-23",
+          "colour": "Pink",
+          "notes": [
+            "Event name and date (1 Jun) taken from the expenses tab “Brighton 06/01”; the Brighton sheet has no data date, so views are as listed on 23 Oct.",
+            "Costs from the Brighton expenses tab (£7,803.57 = $10,534.82 at the tab's rate, 1 GBP = 1.35 USD)."
+          ]
+        }
+      },
+      "labels": {
+        "Brighton": "Collaborations / creators"
+      },
+      "costs": {
+        "Brighton": {
+          "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals",
+          "fx": {
+            "GBP": 1.35
+          },
+          "influencers": [
+            {
+              "creator": "Collaborations / creators",
+              "deliverables": "Ismene Luke £1,150 · Kelsey Green £1,350 · Harrison (Mel's assistant) £1,050 · Melanie Saggs £1,360 · Thea £350",
+              "fee": 5260.0,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 1241.93,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 755.0,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 546.64,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            }
+          ]
+        }
+      }
     }
   ],
   "account": {

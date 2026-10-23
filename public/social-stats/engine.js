@@ -737,7 +737,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   return {
     rep, fx, dataDate, durationDays, rows, postRows, extraRows, looseRows, campRows, contentRows,
     T, campaigns, breakdown, formats, rankings, dominant, withoutCollabs, shareability, score,
-    influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing,
+    influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing, costFx: cfx,
     infLabel: costing?.influencerLabel || rep.influencerLabel || "Influencers",   // e.g. "Collab / production" for LFW
   };
 }

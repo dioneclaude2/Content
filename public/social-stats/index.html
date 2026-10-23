@@ -1182,7 +1182,7 @@ function costBreakdownHTML(R){
   rows.push(`<tr class="total"><td>Total (excl. ads)</td>${one ? `<td class="n">${money(lines.reduce((a, l) => a + ((l.fee ?? ((l.qty == null ? 1 : l.qty) * (l.unit || 0))) || 0), 0), one)}</td>` : ""}<td class="n">${F.usd(total)}</td><td class="n">100%</td></tr>`);
   return `<div class="card" style="margin-top:14px"><h3>Cost breakdown</h3>
     <div class="tw"><table><thead><tr><th></th>${one ? `<th class="n">${one}</th>` : ""}<th class="n">USD</th><th class="n">Share</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>
-    ${one ? `<p class="small dim" style="margin-top:6px">1 ${one} = $${(+R.fx[one]).toFixed(4)}</p>` : ""}</div>`;
+    ${one ? `<p class="small dim" style="margin-top:6px">1 ${one} = $${(+(R.costFx || R.fx)[one]).toFixed(4)}</p>` : ""}</div>`;
 }
 
 function eventSummaryHTML(rep, R, P){
@@ -1808,13 +1808,18 @@ function importWeeklyText(text, url, repId, extraAccount){
 }
 
 /* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
-function importEventTab(text, url, repId, costs, infLabel, breakdown){
+function importEventTab(text, url, repId, costs, infLabel, breakdown, ov = {}){
   const S = E.parseEventSheet(text);
+  // a tab without a title row gets its name / dates from sources.json
+  if (ov.name) S.name = ov.name;
+  if (ov.start) S.range = { start: ov.start, end: ov.end || ov.start };
+  if (ov.dataDate) S.dataDate = ov.dataDate;
+  if (ov.notes) S.sheetNotes = [...(S.sheetNotes || []), ...ov.notes];
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
   const D = db();
   let rep = repId ? D.reports[repId] : Object.values(D.reports).find(r => r.type === "event" && sameSheet(r.sheetUrl, url));
   if (!rep) {
-    const colour = Object.keys(E.EVENT_COLOURS).find(k => S.name.toLowerCase().includes(k.toLowerCase()))
+    const colour = ov.colour || Object.keys(E.EVENT_COLOURS).find(k => S.name.toLowerCase().includes(k.toLowerCase()))
       || (/london fashion/i.test(S.name) ? "LFW" : "Pink");
     rep = { id: uid(), type: "event", name: S.name, colour, postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
   }
@@ -1839,10 +1844,11 @@ function importEventTab(text, url, repId, costs, infLabel, breakdown){
     };
     const existing = rep.costingId && D.reports[rep.costingId];
     const deletedOne = Object.values(docs).some(v => v?.deleted && v.type === "costing" && v.wasFor === rep.id);
+    const cfx = breakdown?.fx ? { fx: { ...D.settings.fx, ...breakdown.fx } } : {};          // the expense sheet's own FX, so totals match it
     if (deletedOne && !existing) { /* someone deleted this event's costing: leave it deleted */ }
-    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, influencerLabel: infLabel || null, start: patch.start, end: patch.end, colour: rep.colour, ...lines });
+    else if (!existing) patch.costingId = newCosting({ name: S.name, eventName: S.name, influencerLabel: infLabel || null, start: patch.start, end: patch.end, colour: rep.colour, ...cfx, ...lines });
     else if ([...(existing.influencers || []), ...(existing.eventCosts || [])].every(l => l.source === "Total Spend tab" || (breakdown && l.source === breakdown.source)))
-      put("ss.report." + existing.id, { ...existing, ...lines, ...(infLabel ? { influencerLabel: infLabel } : {}) });      // refresh only if nobody has added real invoices
+      put("ss.report." + existing.id, { ...existing, ...lines, ...cfx, ...(infLabel ? { influencerLabel: infLabel } : {}) });      // refresh only if nobody has added real invoices
   }
   if (infLabel) {
     patch.influencerLabel = infLabel;
@@ -2411,9 +2417,10 @@ async function refreshFromSources(){
       if (deletedFromSheet(url)) continue;
       try {
         const text = await sheetCsv(e.sheet, gid);
-        const name = E.parseEventSheet(text).name;
+        const ov = (e.overrides || {})[gid] || {};
+        const name = ov.name || E.parseEventSheet(text).name;
         const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
-        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name], (e.costs || {})[name]); n++;
+        importEventTab(text, url, null, costsBy[key], (e.labels || {})[name], (e.costs || {})[name], ov); n++;
       } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
     }
   }
