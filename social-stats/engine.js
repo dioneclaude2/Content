@@ -169,7 +169,7 @@ function normFormat(v) {
 const yes = v => /^(y|yes|true|1|✓|✔|boosted)$/i.test(String(v || "").trim());
 
 /** Organic person's pasted post table → posts plus problems found. */
-export function mapPosts(table) {
+export function mapPosts(table, { year } = {}) {
   const H = table.headers;
   const c = {
     date: col(H, /^date/, /posted/),
@@ -207,7 +207,7 @@ export function mapPosts(table) {
       collab,
       format: normFormat(r[c.format]),
       content: (r[c.content] || "").trim(),
-      date: toDate(r[c.date]),
+      date: toDate(r[c.date]) || (year && r[c.date] ? toDate(`${String(r[c.date]).trim()} ${year}`) : null),
       boosted: c.boosted ? yes(r[c.boosted]) : null,
       snap: {
         views: num(r[c.views]), reach: num(r[c.reach]), likes: num(r[c.likes]), comments: num(r[c.comments]),
@@ -589,8 +589,10 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const anyFollowCol = ads.some(a => a.hasFollows);
   const adFollows = anyFollowCol ? sum(ads, a => a.follows) : null;
 
+  // ad data without ad views (spend/impressions only): the organic vs paid split is unknown, not "100% organic"
+  const paidUnknown = imports.some(i => !i.hasViews) && !paidViews;
   const T = {
-    totalViews, paidViews, organicViews, postViews,
+    totalViews, paidViews, organicViews, postViews, paidUnknown,
     pctOrganic: div(organicViews, totalViews), pctPaid: div(paidViews, totalViews),
     adSpend, nonAd, totalSpend, influencerCost, eventCost, otherSpend,
     adsCPM: ads.length ? per1k(adSpend, paidViews) : null,
@@ -609,6 +611,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     posts: postRows.length, extra: extraRows.length,
     nancyPosts: postRows.filter(r => !r.collab).length, collabPosts: postRows.filter(r => r.collab).length,
   };
+  if (paidUnknown) Object.assign(T, { paidViews: null, organicViews: null, pctOrganic: null, pctPaid: null, organicCPM: null, organicOnly: null });
   const collabViews = sum(contentRows.filter(r => r.collab), r => r.views);
   T.collabViews = collabViews;
   T.influencerPer1kCollab = influencerCost != null && collabViews ? per1k(influencerCost, collabViews) : null;
@@ -1208,7 +1211,7 @@ export function rangeFrom(text, defaultYear) {
   return null;
 }
 
-export function parseReportSheet(text) {
+export function parseReportSheet(text, opts = {}) {
   const rows = parseRows(text).map(r => r.map(c => String(c ?? "").trim()));   // every row, title included
   const out = { title: "", range: null, pulled: null, posts: [], ads: [], account: {}, notes: [], type: null };
   out.title = (rows.find(r => r[0]) || [""])[0];
@@ -1228,7 +1231,7 @@ export function parseReportSheet(text) {
   let end = rows.findIndex((r, i) => i > hi && (/^total/i.test(r[0]) || !r.some(Boolean)));
   if (end < 0) end = rows.length;
   const table = { headers: header, rows: rows.slice(hi + 1, end).map(r => Object.fromEntries(header.map((h, i) => [h, r[i] ?? ""]))) };
-  const mapped = mapPosts(table);
+  const mapped = mapPosts(table, { year: opts.year || (out.pulled || out.range?.start || "").slice(0, 4) || null });
   out.posts = mapped.posts;
   out.notes.push(...mapped.errors);
 

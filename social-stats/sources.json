@@ -376,5 +376,137 @@
         "asOf": "2026-10-07"
       }
     ]
-  }
+  },
+  "postEvents": [
+    {
+      "name": "London Activation",
+      "colour": "Pink",
+      "start": "2026-06-26",
+      "end": "2026-07-16",
+      "dataDate": "2026-10-23",
+      "posts": {
+        "sheet": "10DSnw1APrSmhe_uQY-DffcK9QsGIF9OHeBBP1Ys8C8M",
+        "gid": "0"
+      },
+      "boosted": [
+        "DaAw_jSDCB8",
+        "DaC1JPmEtgM",
+        "DaDHsvYEuuZ",
+        "DaEPSd8s1va",
+        "DaI3kM7DDC5",
+        "DaIS82Vk4Tx",
+        "DaI8JH_ia82",
+        "DaIrB02ElPU",
+        "DaPcIbzjLoo",
+        "DaIx4b-DdOV",
+        "DaIuaSuEhjz"
+      ],
+      "ads": [
+        {
+          "campaign": "Hello-Regalio-2_Engagement_Nick Kyrgios (set 1, off · 7 ads)",
+          "spend": 46444.64,
+          "impressions": 570275,
+          "reach": 417793
+        },
+        {
+          "campaign": "collab with Nick (set 2, active · 17 ads)",
+          "spend": 18509.89,
+          "impressions": 375263,
+          "reach": 250736
+        }
+      ],
+      "costs": {
+        "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals",
+        "influencerLabel": "Collaborations / creators",
+        "influencers": [
+          {
+            "creator": "Collaborations / creators",
+            "deliverables": "Lottie Moss dinner £10,028.99 · Dr. Tara dinner £3,734 · Marra Group £19,078.18 · Jack Taylor £6,000 (to verify) · Lover Management (3 creators) £4,500 · Nick Kyrgios £0",
+            "fee": 43341.17,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          }
+        ],
+        "eventCosts": [
+          {
+            "category": "Venue & rental",
+            "item": "Kado £82,880 + Gagan's fees £20,000 — marked “needs to be refunded, please verify”",
+            "vendor": "",
+            "qty": null,
+            "unit": 102880.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Merch & giveaways",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 26287.36,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Flights / transportation",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 10040.56,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Prop materials",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 4327.12,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Hotel / accommodation",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 2748.64,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Tech equipment",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 2051.74,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "General expenses",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 1555.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Food & beverage",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 484.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          }
+        ]
+      },
+      "notes": [
+        "Views are as listed in the Socials & Ads sheet (Overall Content Stats, 51 Nancy posts); guest collab posts have no view counts and are not included.",
+        "Ad spend $64,954.53 is by campaign only — the ad tab lists impressions, not ad views, so the organic/paid split and ads CPM can't be worked out.",
+        "Costs from the London expenses tab (£193,715.59). Venue & rental £102,880 is marked to be refunded; microSD cards (£4,478.92), sofas and Deliveroo items are listed but not in the tab's subtotals."
+      ]
+    }
+  ]
 }
