@@ -502,6 +502,10 @@ function route(){
 addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
 
 const app = document.getElementById("app");
+/* …/social-stats/?view=events → events only: no weekly reports, account panel or weekly option */
+const EVENTS_ONLY = new URLSearchParams(location.search).get("view") === "events";
+if (EVENTS_ONLY) document.title = "Nancy Social Stats · Events";
+
 function render(){
   const r = route(), D = db();
   document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.r === (r.name === "r" || r.name === "new" ? "reports" : r.name)));
@@ -565,9 +569,12 @@ function renderDashboard(D){
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
     </div>
-    ${accountPanel(D)}
-    ${block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
-    ${block("Event report", ev, events, "e", `No event report yet. <a href="#/new">Create one</a> for any event, launch or ad push.`)}`;
+    ${EVENTS_ONLY ? "" : accountPanel(D)}
+    ${EVENTS_ONLY ? "" : block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
+    ${block("Event report", ev, events, "e", `No event report yet. <a href="#/new">Create one</a> for any event, launch or ad push.`)}
+    ${EVENTS_ONLY && events.length > 1 ? `<section class="sec"><h2>All events</h2><div class="rcards">${events.map(r => { const R = E.buildReport(r, D, D.settings); const [c1] = evColours(r);
+      return `<a class="rcard" href="#/r/${r.id}" style="--ev:${c1}"><div class="band"></div><div class="small muted">Event · ${F.dateY(r.start)}</div><div class="t">${esc(r.name)}</div>
+        <div class="m"><div><b>${F.big(R.T.totalViews)}</b>views</div><div><b>${F.usd(R.T.totalSpend)}</b>spend</div><div><b>${F.usd(R.T.blendedCPM)}</b>blended CPM</div><div><b>${R.T.er == null ? "—" : F.pct(R.T.er)}</b>eng. rate</div></div></a>`; }).join("")}</div></section>` : ""}`;
   app.querySelectorAll(".pickrep").forEach(sel => sel.onchange = () => {
     const p = new URLSearchParams(route().q); p.set(sel.dataset.key, sel.value);
     location.hash = `#/?${p}`;
@@ -645,7 +652,7 @@ function renderReports(D){
     </div>
     ${group("Events &amp; launches", "event", "No event reports yet.")}
     ${group("Costing", "costing", "No costing reports yet.")}
-    ${group("Weekly", "week", "No weekly reports yet.")}`;
+    ${EVENTS_ONLY ? "" : group("Weekly", "week", "No weekly reports yet.")}`;
 }
 
 /* ───────── create: which report? ───────── */
@@ -664,7 +671,7 @@ function renderNew(D){
         <span class="pd">What an event, launch or ad push reached: views, engagement, ad spend and CPM, with costs pulled from its costing report.</span>
         <span class="pw">For: founders · organic + ads people</span>
       </button>
-      <button class="pick" data-new="week">
+      <button class="pick" data-new="week" ${EVENTS_ONLY ? "hidden" : ""}>
         <span class="pk">Weekly report</span>
         <span class="pd">Last week's posts against the week before: account views vs target, engagement, ad spend, blended CPM.</span>
         <span class="pw">Every Monday</span>
@@ -780,6 +787,7 @@ function prevFor(rep, D){
 
 function renderReport(D, id, tab, q){
   const rep = D.reports[id];
+  if (rep && EVENTS_ONLY && rep.type === "week") { app.innerHTML = `<div class="empty">This link shows event reports only. <a href="#/">Back to events</a></div>`; return; }
   if (!rep) { app.innerHTML = `<div class="empty">This report doesn't exist (or was deleted). <a href="#/">Back to reports</a></div>`; return; }
   const R = E.buildReport(rep, D, D.settings);
   const prev = prevFor(rep, D);
@@ -2223,7 +2231,8 @@ function renderMatch(body, rep, R, D){
 
 /* ───────── compare any two reports ───────── */
 function renderCompare(D, q){
-  const reps = Object.values(D.reports).sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
+  const reps = Object.values(D.reports).filter(r => r.type === "event" || (r.type === "week" && !EVENTS_ONLY))
+    .sort((a, b) => ((a.start || "") < (b.start || "") ? 1 : -1));
   const a = D.reports[q.get("a")], b = D.reports[q.get("b")];
   const opts = sel => reps.map(r => `<option value="${r.id}" ${sel?.id === r.id ? "selected" : ""}>${r.type === "week" ? "Week" : "Event"} · ${esc(r.name)}</option>`).join("");
   let out = "";
