@@ -1,0 +1,597 @@
+{
+  "_about": "Google Sheets the site reads on every visit, so every device shows the same reports. Sheets must be shared as 'Anyone with the link can view'.",
+  "weekly": [
+    {
+      "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
+      "gid": "0",
+      "account": {
+        "viewsOrganic": 243298,
+        "viewsAds": 937950
+      }
+    },
+    {
+      "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
+      "gid": "1425188684",
+      "account": {
+        "views": 991569,
+        "viewsOrganic": 460449,
+        "viewsAds": 531120,
+        "interactions": 10600,
+        "followersPct": null,
+        "nonFollowersPct": null,
+        "note": "Meta Business Suite · Instagram · Oct 4–10 (interactions shown rounded: 10.6K)"
+      }
+    },
+    {
+      "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
+      "gid": "1673637260",
+      "account": {
+        "views": 810899,
+        "viewsOrganic": 267409,
+        "viewsAds": 543490,
+        "interactions": 4500,
+        "note": "Meta Business Suite · Instagram · Oct 11–17 (interactions shown rounded: 4.5K)"
+      }
+    }
+  ],
+  "events": [
+    {
+      "sheet": "1Uaemp2aPcmFQaXJLMf2i3oUBxTo5ucdy5RkE4v_ed84",
+      "tabs": [
+        "0",
+        "1433892578",
+        "868315963",
+        "392856255"
+      ],
+      "totals": "1197350775",
+      "labels": {
+        "London Fashion Week": "Collab / production"
+      },
+      "costs": {
+        "London Fashion Week": {
+          "source": "Ray Chu Show Collab - Activation Expenses",
+          "influencers": [
+            {
+              "creator": "Ray Chu Show",
+              "deliverables": "Collaboration fee",
+              "fee": 5000.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "creator": "Activation space production",
+              "deliverables": "Activation space build",
+              "fee": 1200.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Creative team",
+              "item": "Corrine",
+              "vendor": "",
+              "qty": null,
+              "unit": 1752.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Creative team",
+              "item": "Mel (including travel)",
+              "vendor": "",
+              "qty": null,
+              "unit": 1250.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Lauren (no fee)",
+              "vendor": "",
+              "qty": null,
+              "unit": 0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Bobbi",
+              "vendor": "",
+              "qty": null,
+              "unit": 350.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Mansi (no fee)",
+              "vendor": "",
+              "qty": null,
+              "unit": 0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Team on the day",
+              "item": "Kelsey (three half days plus the main event)",
+              "vendor": "",
+              "qty": null,
+              "unit": 1200.0,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Uber",
+              "vendor": "",
+              "qty": null,
+              "unit": 24.99,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Uber",
+              "vendor": "",
+              "qty": null,
+              "unit": 15.97,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Fabric and materials",
+              "vendor": "",
+              "qty": null,
+              "unit": 17.35,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            },
+            {
+              "category": "Expenses",
+              "item": "Fabric and materials",
+              "vendor": "",
+              "qty": null,
+              "unit": 10.5,
+              "currency": "GBP",
+              "source": "Ray Chu Show Collab - Activation Expenses"
+            }
+          ]
+        },
+        "ASAP HK": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices (4)",
+              "deliverables": "",
+              "fee": 5097.2,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Location rental",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 1025.64,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Props & set-up",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 456.0,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Content production crew",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 2307.69,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
+        },
+        "US Open": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices (5)",
+              "deliverables": "",
+              "fee": 28721.89,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 825.0,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 9925.12,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "General logistics",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 2710.1,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Flights / transportation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 21763.03,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 6561.48,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Talent / production",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 3074.23,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
+        },
+        "Nancy OOO (Cancun)": {
+          "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct",
+          "influencers": [
+            {
+              "creator": "Influencer invoices incl. their travel (21)",
+              "deliverables": "",
+              "fee": 208032.58,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 3784.37,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 33782.78,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "General logistics",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 8317.17,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Flights / transportation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 17976.63,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 34576.01,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            },
+            {
+              "category": "Talent / production",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 9803.39,
+              "currency": "USD",
+              "source": "Event costing sheet (13rusl9Z…) · influencer invoices + event expense tabs, 5 Oct"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sheet": "13_c17wh0dRVka4DQLJU3xXGoJMw4z04LT3l1SGwwWy4",
+      "tabs": [
+        "0"
+      ],
+      "overrides": {
+        "0": {
+          "name": "Brighton",
+          "start": "2026-06-01",
+          "end": "2026-06-01",
+          "dataDate": "2026-10-23",
+          "colour": "Pink",
+          "notes": [
+            "Event name and date (1 Jun) taken from the expenses tab “Brighton 06/01”; the Brighton sheet has no data date, so views are as listed on 23 Oct.",
+            "Costs from the Brighton expenses tab (£7,803.57 = $10,534.82 at the tab's rate, 1 GBP = 1.35 USD)."
+          ]
+        }
+      },
+      "labels": {
+        "Brighton": "Collaborations / creators"
+      },
+      "costs": {
+        "Brighton": {
+          "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals",
+          "fx": {
+            "GBP": 1.35
+          },
+          "influencers": [
+            {
+              "creator": "Collaborations / creators",
+              "deliverables": "Ismene Luke £1,150 · Kelsey Green £1,350 · Harrison (Mel's assistant) £1,050 · Melanie Saggs £1,360 · Thea £350",
+              "fee": 5260.0,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            }
+          ],
+          "eventCosts": [
+            {
+              "category": "Merch & giveaways",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 1241.93,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            },
+            {
+              "category": "Hotel / accommodation",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 755.0,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            },
+            {
+              "category": "Team meals & event expenses",
+              "item": "",
+              "vendor": "",
+              "qty": null,
+              "unit": 546.64,
+              "currency": "GBP",
+              "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "account": {
+    "asOf": "2026-10-14",
+    "source": "Instagram Professional dashboard › Account insights",
+    "periods": [
+      {
+        "label": "Last 30 days",
+        "range": "14 Sep – 13 Oct",
+        "views": 8884147,
+        "days": 30
+      },
+      {
+        "label": "Last 90 days",
+        "range": "16 Jul – 13 Oct",
+        "views": 42722744,
+        "days": 90
+      },
+      {
+        "label": "Last 6 months",
+        "views": 71800000,
+        "days": 183,
+        "asOf": "2026-10-07"
+      },
+      {
+        "label": "Last 12 months",
+        "views": 108800000,
+        "days": 365,
+        "asOf": "2026-10-07"
+      },
+      {
+        "label": "All available",
+        "range": "about 2 years",
+        "views": 112900000,
+        "days": 730,
+        "approx": true,
+        "asOf": "2026-10-07"
+      }
+    ]
+  },
+  "postEvents": [
+    {
+      "name": "London Activation",
+      "colour": "Pink",
+      "start": "2026-06-26",
+      "end": "2026-07-16",
+      "dataDate": "2026-10-23",
+      "posts": {
+        "sheet": "10DSnw1APrSmhe_uQY-DffcK9QsGIF9OHeBBP1Ys8C8M",
+        "gid": "0"
+      },
+      "boosted": [
+        "DaAw_jSDCB8",
+        "DaC1JPmEtgM",
+        "DaDHsvYEuuZ",
+        "DaEPSd8s1va",
+        "DaI3kM7DDC5",
+        "DaIS82Vk4Tx",
+        "DaI8JH_ia82",
+        "DaIrB02ElPU",
+        "DaPcIbzjLoo",
+        "DaIx4b-DdOV",
+        "DaIuaSuEhjz"
+      ],
+      "ads": [
+        {
+          "campaign": "Hello-Regalio-2 · London Activation",
+          "ad": "London Activation",
+          "spend": 4429.0,
+          "views": 1012637,
+          "follows": 220
+        },
+        {
+          "campaign": "Hello-Nancy-21 · Nick Kyrgios",
+          "ad": "Nick Kyrgios",
+          "spend": 3745.0,
+          "views": 456453,
+          "follows": 164
+        },
+        {
+          "campaign": "Hello-Regalio-2 · Nick Kyrgios",
+          "ad": "Nick Kyrgios",
+          "spend": 71581.0,
+          "views": 10670762,
+          "follows": 1557
+        },
+        {
+          "campaign": "Hello-Regalio-2 · Lottie Moss",
+          "ad": "Lottie Moss",
+          "spend": 1465.0,
+          "views": 219771,
+          "follows": 21
+        }
+      ],
+      "costs": {
+        "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals",
+        "influencerLabel": "Collaborations / creators",
+        "influencers": [
+          {
+            "creator": "Collaborations / creators",
+            "deliverables": "Lottie Moss dinner £10,028.99 · Dr. Tara dinner £3,734 · Marra Group £19,078.18 · Jack Taylor £6,000 (to verify) · Lover Management (3 creators) £4,500 · Nick Kyrgios £0",
+            "fee": 43341.17,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          }
+        ],
+        "eventCosts": [
+          {
+            "category": "Venue & rental",
+            "item": "Kado £82,880 + Gagan's fees £20,000 — marked “needs to be refunded, please verify”",
+            "vendor": "",
+            "qty": null,
+            "unit": 102880.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Merch & giveaways",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 26287.36,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Flights / transportation",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 10040.56,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Prop materials",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 4327.12,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Hotel / accommodation",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 2748.64,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Tech equipment",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 2051.74,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "General expenses",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 1555.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          },
+          {
+            "category": "Food & beverage",
+            "item": "",
+            "vendor": "",
+            "qty": null,
+            "unit": 484.0,
+            "currency": "GBP",
+            "source": "London expenses tab (13rusl9Z… · London 6/27-6/28) · category subtotals"
+          }
+        ]
+      },
+      "notes": [
+        "London Activation includes the Nick Kyrgios and Lottie Moss collaborations.",
+        "Views of the 51 Nancy posts are as listed in the Socials & Ads sheet; guest collab posts have no view counts and are not included.",
+        "Ad spend, ad views and follows are lifetime per campaign (Meta). The ads can't be matched to individual posts, so their 12.36M views are added as their own rows — up to 5.72M of that (the views of the 10 boosted Nancy posts) may already be inside the post views.",
+        "Costs from the London expenses tab (£193,715.59). Venue & rental £102,880 is marked to be refunded; microSD cards (£4,478.92), sofas and Deliveroo items are listed but not in the tab's subtotals."
+      ]
+    }
+  ]
+}
