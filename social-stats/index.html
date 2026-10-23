@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=12baed6">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=a48619d">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -237,7 +237,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=12baed6" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=a48619d" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -252,7 +252,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=12baed6";
+import * as E from "./engine.js?v=a48619d";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -435,8 +435,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=12baed6");
-    const logo = await svgToPng("logo-circle.svg?v=12baed6", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=a48619d");
+    const logo = await svgToPng("logo-circle.svg?v=a48619d", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -560,7 +560,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=12baed6" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=a48619d" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -895,8 +895,8 @@ function breakdownTable(id, groups, bench){
 
 function campaignTable(R){
   if (!R.campaigns.length) return `<p>${miss(R.missing.ads || { need: "ad exports", who: "Ads person" })}</p>`;
-  const rows = R.campaigns.map(c => `<tr><td>${esc(c.campaign)}</td><td class="n">${c.mixedCur ? "mixed" : `${esc(c.currency)} ${c.spend.toLocaleString("en-US", { maximumFractionDigits: 2 })}`}</td><td class="n">${F.usd(c.usd)}</td><td class="n">${F.int(c.views)}</td><td class="n">${F.int(c.reach)}</td><td class="n">${F.usd(c.cpm)}</td><td class="n">${F.pct(c.pctPaid)}</td><td class="n">${c.follows == null ? miss(R.missing.adFollows) : F.int(c.follows)}</td><td class="n">${c.cpf == null ? "—" : F.usd(c.cpf)}</td></tr>`);
-  rows.push(`<tr class="total"><td>Total</td><td></td><td class="n">${F.usd(R.T.adSpend)}</td><td class="n">${F.int(R.T.paidViews)}</td><td class="n">${F.int(R.campaigns.reduce((s, c) => s + c.reach, 0))}</td><td class="n">${F.usd(R.T.adsCPM)}</td><td class="n">100%</td><td class="n">${F.int(R.T.adFollows)}</td><td class="n">${F.usd(R.T.costPerFollow)}</td></tr>`);
+  const rows = R.campaigns.map(c => `<tr><td>${esc(c.campaign)}</td><td class="n">${c.mixedCur ? "mixed" : `${esc(c.currency)} ${c.spend.toLocaleString("en-US", { maximumFractionDigits: 2 })}`}</td><td class="n">${F.usd(c.usd)}</td><td class="n">${F.int(c.views)}</td><td class="n">${c.reach ? F.int(c.reach) : "—"}</td><td class="n">${F.usd(c.cpm)}</td><td class="n">${F.pct(c.pctPaid)}</td><td class="n">${c.follows == null ? miss(R.missing.adFollows) : F.int(c.follows)}</td><td class="n">${c.cpf == null ? "—" : F.usd(c.cpf)}</td></tr>`);
+  rows.push(`<tr class="total"><td>Total</td><td></td><td class="n">${F.usd(R.T.adSpend)}</td><td class="n">${F.int(R.T.paidViews)}</td><td class="n">${(r => r ? F.int(r) : "—")(R.campaigns.reduce((s, c) => s + c.reach, 0))}</td><td class="n">${F.usd(R.T.adsCPM)}</td><td class="n">100%</td><td class="n">${F.int(R.T.adFollows)}</td><td class="n">${F.usd(R.T.costPerFollow)}</td></tr>`);
   return tbl("t-camp", ["Campaign", N("Spend (original)"), N("Spend (USD)"), N("Views"), N("Reach*"), N("CPM"), N("% of paid views"), N("Follows"), N("Cost / follow")], rows)
     + `<p class="small dim">*Reach is summed across ads, so people reached by two ads are counted twice.</p>`;
 }
@@ -2359,12 +2359,15 @@ async function importPostsEvent(cfg){
   for (const p of Object.values(E.mergePosts(db().posts, posts, cfg.dataDate, rep.id))) put("ss.post." + p.id, p);
   const patch = { name: cfg.name, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate: cfg.dataDate, sheetUrl: url,
     postIds: [...new Set(posts.map(p => p.id))], sheetNotes: cfg.notes || [], fresh: false };
-  // ad spend known only per campaign (the ad tab has impressions, not ad views)
+  // ad spend per campaign; with ad views + follows when known (otherwise spend only)
   if (cfg.ads?.length) {
+    const withViews = cfg.ads.every(a => a.views != null);
     const id = (rep.importIds || []).find(i => db().imports[i]?.fromSheet) || uid();
-    put("ss.import." + id, { id, name: `${cfg.name} — ad spend by campaign (Socials & Ads sheet)`, fromSheet: true, level: "campaign", hasViews: false, hasFollows: false,
-      rows: cfg.ads.map((a, i) => ({ i, ad: "", campaign: a.campaign, adset: "", spend: a.spend, currency: a.currency || "USD", views: 0, impressions: a.impressions ?? null, reach: a.reach ?? null, follows: null, postId: "", permalink: "", start: null, end: null, results: null, indicator: "" })),
-      rangeStart: cfg.start, rangeEnd: cfg.dataDate, uploaded: today(), warnings: ["Spend per campaign only — the sheet has impressions, not ad views."] });
+    put("ss.import." + id, { id, name: `${cfg.name} — ads by campaign`, fromSheet: true, level: withViews ? "ad" : "campaign", hasViews: withViews,
+      hasFollows: cfg.ads.every(a => a.follows != null),
+      rows: cfg.ads.map((a, i) => ({ i, ad: a.ad || "", campaign: a.campaign, adset: "", spend: a.spend, currency: a.currency || "USD", views: a.views ?? 0, impressions: a.impressions ?? null, reach: a.reach ?? null, follows: a.follows ?? null, postId: "", permalink: "", start: null, end: null, results: null, indicator: "" })),
+      rangeStart: cfg.start, rangeEnd: cfg.dataDate, uploaded: today(),
+      warnings: [withViews ? "Lifetime totals per campaign — not matched to individual posts." : "Spend per campaign only — no ad views."] });
     patch.importIds = [id];
   }
   if (cfg.costs) {
@@ -2382,7 +2385,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=12baed6", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=a48619d", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }

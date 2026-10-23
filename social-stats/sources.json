@@ -403,16 +403,32 @@
       ],
       "ads": [
         {
-          "campaign": "Hello-Regalio-2_Engagement_Nick Kyrgios (set 1, off · 7 ads)",
-          "spend": 46444.64,
-          "impressions": 570275,
-          "reach": 417793
+          "campaign": "Hello-Regalio-2 · London Activation",
+          "ad": "London Activation",
+          "spend": 4429.0,
+          "views": 1012637,
+          "follows": 220
         },
         {
-          "campaign": "collab with Nick (set 2, active · 17 ads)",
-          "spend": 18509.89,
-          "impressions": 375263,
-          "reach": 250736
+          "campaign": "Hello-Nancy-21 · Nick Kyrgios",
+          "ad": "Nick Kyrgios",
+          "spend": 3745.0,
+          "views": 456453,
+          "follows": 164
+        },
+        {
+          "campaign": "Hello-Regalio-2 · Nick Kyrgios",
+          "ad": "Nick Kyrgios",
+          "spend": 71581.0,
+          "views": 10670762,
+          "follows": 1557
+        },
+        {
+          "campaign": "Hello-Regalio-2 · Lottie Moss",
+          "ad": "Lottie Moss",
+          "spend": 1465.0,
+          "views": 219771,
+          "follows": 21
         }
       ],
       "costs": {
@@ -503,8 +519,9 @@
         ]
       },
       "notes": [
-        "Views are as listed in the Socials & Ads sheet (Overall Content Stats, 51 Nancy posts); guest collab posts have no view counts and are not included.",
-        "Ad spend $64,954.53 is by campaign only — the ad tab lists impressions, not ad views, so the organic/paid split and ads CPM can't be worked out.",
+        "London Activation includes the Nick Kyrgios and Lottie Moss collaborations.",
+        "Views of the 51 Nancy posts are as listed in the Socials & Ads sheet; guest collab posts have no view counts and are not included.",
+        "Ad spend, ad views and follows are lifetime per campaign (Meta). The ads can't be matched to individual posts, so their 12.36M views are added as their own rows — up to 5.72M of that (the views of the 10 boosted Nancy posts) may already be inside the post views.",
         "Costs from the London expenses tab (£193,715.59). Venue & rental £102,880 is marked to be refunded; microSD cards (£4,478.92), sofas and Deliveroo items are listed but not in the tab's subtotals."
       ]
     }
