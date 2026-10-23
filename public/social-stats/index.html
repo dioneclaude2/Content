@@ -923,6 +923,7 @@ function notesHTML(rep, R, D){
     <div><b>Time zones:</b> post dates in New York time; Instagram account insights count days in Pacific time.</div>
     ${rep.type === "week" ? `<div><b>Ads on older posts</b> count toward spend and paid views as their own rows; their posts' Instagram views stay with the week they were posted.</div>` : ""}
     ${missing.length ? `<div><b>Missing:</b> ${missing.map(m => `${esc(m.need)} (${esc(m.who)})`).join(" · ")}</div>` : ""}
+    ${(rep.sheetNotes || []).map(n => `<div><b>About the data:</b> ${esc(n)}</div>`).join("")}
   </div></div>`;
 }
 
@@ -1193,7 +1194,7 @@ function eventSummaryHTML(rep, R, P){
     <p class="headline">${esc(head)}</p>
     <div class="tiles big">
       <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
-      <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.pct(T.pctOrganic)} organic</div></div>
+      <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
     </div>
@@ -1210,7 +1211,7 @@ function eventSummaryHTML(rep, R, P){
         { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
         { label: "Ads", value: T.adSpend },
       ], F.usd)}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
-      <div class="card"><h3>Where the views came from</h3>${splitBar([
+      <div class="card"><h3>Where the views came from</h3>${T.paidUnknown ? `<p class="small muted">Organic vs paid can't be split: the ad data has spend and impressions, but no ad views. ${F.int(T.totalViews)} views in total.</p>` : splitBar([
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
       ], F.int)}
@@ -2344,6 +2345,41 @@ function renderSettings(D){
    (and anyone with the link) sees the same, current reports. Invoices and edits
    made in the app stay on top: a refresh never replaces a costing report that
    has real invoices, and a report someone deleted isn't re-created. */
+/* An event built from a plain post list (Content · Date · Type · Views · … · Link) plus
+   campaign-level ad spend and a sector cost breakdown, all described in sources.json. */
+async function importPostsEvent(cfg){
+  const url = sheetLink(cfg.posts.sheet, cfg.posts.gid);
+  const S = E.parseReportSheet(await sheetCsv(cfg.posts.sheet, cfg.posts.gid), { year: cfg.start.slice(0, 4) });
+  if (!S.posts.length) throw new Error("no posts");
+  const boosted = new Set(cfg.boosted || []);
+  const posts = S.posts.map(p => ({ ...p, account: "Hello Nancy", collab: false, boosted: boosted.has(p.id) }));
+  const D = db();
+  let rep = Object.values(D.reports).find(r => r.type === "event" && sameSheet(r.sheetUrl, url));
+  if (!rep) rep = { id: uid(), type: "event", postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
+  for (const p of Object.values(E.mergePosts(db().posts, posts, cfg.dataDate, rep.id))) put("ss.post." + p.id, p);
+  const patch = { name: cfg.name, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate: cfg.dataDate, sheetUrl: url,
+    postIds: [...new Set(posts.map(p => p.id))], sheetNotes: cfg.notes || [], fresh: false };
+  // ad spend known only per campaign (the ad tab has impressions, not ad views)
+  if (cfg.ads?.length) {
+    const id = (rep.importIds || []).find(i => db().imports[i]?.fromSheet) || uid();
+    put("ss.import." + id, { id, name: `${cfg.name} — ad spend by campaign (Socials & Ads sheet)`, fromSheet: true, level: "campaign", hasViews: false, hasFollows: false,
+      rows: cfg.ads.map((a, i) => ({ i, ad: "", campaign: a.campaign, adset: "", spend: a.spend, currency: a.currency || "USD", views: 0, impressions: a.impressions ?? null, reach: a.reach ?? null, follows: null, postId: "", permalink: "", start: null, end: null, results: null, indicator: "" })),
+      rangeStart: cfg.start, rangeEnd: cfg.dataDate, uploaded: today(), warnings: ["Spend per campaign only — the sheet has impressions, not ad views."] });
+    patch.importIds = [id];
+  }
+  if (cfg.costs) {
+    const lines = { influencers: cfg.costs.influencers || [], eventCosts: cfg.costs.eventCosts || [] };
+    const existing = rep.costingId && db().reports[rep.costingId];
+    const fromSheet = l => l.source === cfg.costs.source;
+    if (!existing) patch.costingId = newCosting({ name: cfg.name, eventName: cfg.name, influencerLabel: cfg.costs.influencerLabel || null, start: cfg.start, end: cfg.end, colour: cfg.colour || "Pink", ...lines });
+    else if ([...(existing.influencers || []), ...(existing.eventCosts || [])].every(fromSheet))
+      put("ss.report." + existing.id, { ...existing, ...lines, influencerLabel: cfg.costs.influencerLabel || existing.influencerLabel || null });
+    patch.influencerLabel = cfg.costs.influencerLabel || null;
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch });
+  return rep.id;
+}
+
 async function refreshFromSources(){
   let src;
   try { src = await (await fetch("sources.json?v=dev", { cache: "no-cache" })).json(); } catch { return; }
@@ -2359,6 +2395,10 @@ async function refreshFromSources(){
     const url = sheetLink(w.sheet, w.gid || "0");
     if (deletedFromSheet(url)) continue;
     try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+  }
+  for (const e of src.postEvents || []) {
+    try { if (!deletedFromSheet(sheetLink(e.posts.sheet, e.posts.gid))) { await importPostsEvent(e); n++; } }
+    catch (err) { failed++; console.warn("Event", e.name, err); }
   }
   for (const e of src.events || []) {
     let costsBy = {};

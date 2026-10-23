@@ -220,6 +220,7 @@ function notes(P, R) {
   P.h2("Data notes");
   const base = [
     `Data pulled ${F.date(R.dataDate)}. Engagement rate = (likes + comments + saves + shares) ÷ views. Instagram views include ad views; organic = views − ad views. Money in USD.`,
+    ...(R.rep.sheetNotes || []),
     ...items,
   ];
   for (const t of base) P.para("• " + t, { size: 8.5, color: MUTED, gap: 1 });
@@ -287,7 +288,7 @@ function event(rep, R, Pv, mode, logo) {
   P.para(head, { size: 12, style: "italic", gap: 10 });
   P.kpis([
     ["Total spend", F.usd(T.totalSpend), "ads, influencers and event costs"],
-    ["Total views", F.big(T.totalViews), `${F.pct(T.pctOrganic)} organic`],
+    ["Total views", F.big(T.totalViews), T.paidUnknown ? "organic / paid split unknown" : `${F.pct(T.pctOrganic)} organic`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views, all spend", true],
     ["Eng. rate", F.pct(T.er), T.er == null ? "needs likes, comments, saves, shares" : `brand benchmark ${F.pct(R.bench)}`],
   ]);
@@ -301,7 +302,8 @@ function event(rep, R, Pv, mode, logo) {
     { total: true, cells: ["Total spend", F.usd(T.totalSpend), "100%"] },
   ], { title: "Where the money went", num: [1, 2] });
   const tot = T.totalViews || 1;
-  P.table(["", "Views", "Share"], [["Organic", F.int(T.organicViews), F.pct(T.organicViews / tot)], ["Paid (ads)", F.int(T.paidViews), F.pct(T.paidViews / tot)], { total: true, cells: ["Total", F.int(T.totalViews), "100%"] }],
+  if (T.paidUnknown) { P.h2("Where the views came from"); P.para(`Organic vs paid can't be split: the ad data has spend and impressions, but no ad views. ${F.int(T.totalViews)} views in total.`, { size: 9, color: MUTED }); }
+  else P.table(["", "Views", "Share"], [["Organic", F.int(T.organicViews), F.pct(T.organicViews / tot)], ["Paid (ads)", F.int(T.paidViews), F.pct(T.paidViews / tot)], { total: true, cells: ["Total", F.int(T.totalViews), "100%"] }],
     { title: "Where the views came from", num: [1, 2] });
   if (full) breakdown(P, R);                                       // cost breakdown: full report only
   topTables(P, R);
