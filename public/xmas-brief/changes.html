@@ -368,21 +368,28 @@ html.static .reveal{opacity:1;transform:none;transition:none}
 .bbx+.bbx{margin-top:clamp(40px,5vw,72px)}
 
 /* ---------- changes view (Momo feedback) ---------- */
-.cbanner{background:#1a1717;color:#f4f3f0;padding:28px 0 30px;border-bottom:4px solid #e9559c}
+.cbanner{background:#1a1717;color:#f4f3f0;padding:30px 0 34px;border-bottom:4px solid #e9559c}
 .cbanner h2{font-family:"PPE",serif;font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.05}
-.cbanner p{color:rgba(244,243,240,.75);font-size:15px;margin-top:8px;max-width:70ch}
-.cbanner ol{margin:18px 0 0 20px;display:grid;gap:8px;font-size:15px;max-width:80ch}
-.cbanner ol a{color:#f6e27a}
-.cbanner .same{margin-top:16px;font-size:14px;color:rgba(244,243,240,.6)}
+.cbanner .lead{color:rgba(244,243,240,.75);font-size:15px;margin-top:8px;max-width:72ch}
+.cbanner .key{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:14px}
+.cbanner ol{list-style:none;margin-top:22px;display:grid;gap:0;max-width:900px;border-top:1px solid rgba(244,243,240,.18)}
+.cbanner li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid rgba(244,243,240,.18);font-size:15px}
+.cbanner li .ctag{justify-self:start;align-self:start}
+.eyebrow:has(del){flex-direction:column;align-items:flex-start;gap:4px}
+.eyebrow:has(del)::before{display:none}
+.cbanner li q{display:block;margin-top:6px;font-size:13.5px;color:rgba(244,243,240,.62);quotes:"“" "”"}
+.cbanner li q::before{content:"Momo: “"}
+.cbanner .same{margin-top:18px;font-size:14px;color:rgba(244,243,240,.62);max-width:80ch}
 .cbanner .same b{color:#f4f3f0;font-weight:500}
-.chg{outline:2px dashed #e9559c;outline-offset:3px;border-radius:3px}
-.chg .was{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:none;color:#5d5754;font-weight:400;margin-top:4px}
-.chg-tag,.rm-tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;background:#e9559c;color:#fff;padding:6px 11px;border-radius:999px;margin-bottom:18px}
-.chg-sec{outline:3px dashed #e9559c;outline-offset:-10px}
-.removed{position:relative}
-.removed>.wrap{opacity:.32;filter:grayscale(1);text-decoration:line-through;text-decoration-color:rgba(233,85,156,.7)}
-.removed .rm-tag{position:sticky;top:72px;z-index:5;margin:0 0 0 clamp(16px,5vw,64px);background:#c2306f;font-size:12px}
-.removed .rm-tag b{margin-right:8px}
+.ctag{display:inline-block;font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:none;background:#e9559c;color:#fff;padding:5px 9px;border-radius:999px;margin:0 0 6px;vertical-align:middle;white-space:nowrap}
+del{display:block;text-decoration:line-through;text-decoration-color:#e9559c;text-decoration-thickness:2px;opacity:.42}
+ins{display:block;text-decoration:none}
+ins,ins *{background:#f6e27a;color:#1a1717!important;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+ins{display:table;padding:0 .15em;margin-top:4px}
+.rm{position:relative;margin-top:18px}
+.rm>.ctag{background:#c2306f}
+.rm>*:not(.ctag){opacity:.36;filter:grayscale(1);text-decoration:line-through;text-decoration-color:#e9559c}
+.chip-x{text-decoration:line-through;text-decoration-color:#e9559c;opacity:.6}
 </style>
 </head>
 <body>
@@ -399,13 +406,17 @@ html.static .reveal{opacity:1;transform:none;transition:none}
   <div class="wrap">
     <span class="kicker" style="color:#f6e27a">Changes view · Momo feedback, 26–27 Oct</span>
     <h2>What changed in this version</h2>
-    <p>Everything changed is outlined in pink with a numbered tag. Removed parts are greyed out and struck through. The clean version creators see is <a href="./" style="color:#f6e27a">here</a>.</p>
+    <p class="lead">Each change has a numbered pink tag on the page. Old wording is struck through on top, and the new wording is highlighted underneath. Removed parts are greyed out and struck through. The clean version creators see is <a href="./" style="color:#f6e27a">here</a>.</p>
+    <div class="key"><span><del style="display:inline;opacity:.6">old wording</del></span><span><ins style="display:inline">new wording</ins></span></div>
     <ol>
-      <li><a href="#c1-old">Removed “Talking focus &amp; selling point”</a>: the prices, odds, Mystery Monster and Monster Set blocks and talking points 01–06.</li>
-      <li><a href="#c2">Added one line in its place</a>: “Get your audience super excited about the monsters, in your own way!”</li>
-      <li><a href="#res">Resident cards now match the collection page</a>: the pink line says what each monster does (Suction + Licking), and the bottom line is the tagline (The Cheeky Kisser).</li>
+      <li><span class="ctag">1</span><div><a href="#drop" style="color:#f6e27a">Section renamed</a>: “Talking focus &amp; selling point” is now “What's in the drop”. It now explains the products, not the offer.<q>just focus on educating what the products is so they are so excited</q></div></li>
+      <li><span class="ctag">2</span><div>The sales headline (“…Pre-order now!”) is replaced with one line: “Get your audience super excited about the monsters, in your own way!”<q>we can just maybe make one sentence on “Make them super excited about products in your own way!”</q></div></li>
+      <li><span class="ctag">3</span><div>Mystery Monster: removed the price ($89 · $79 with your list link), the limit (max 2 per person) and the ships row. The bag, the photo and the 45 / 45 / 10 odds stay.<q>influencers video always work the best when they dont focus on offer</q></div></li>
+      <li><span class="ctag">4</span><div>Monster Set: removed the price ($199), the numbered 001–300 row and the ships row. The set contents and the hidden 4th toy stay.<q>influencers video always work the best when they dont focus on offer</q></div></li>
+      <li><span class="ctag">5</span><div>Removed talking points 01–06.<q>Remove talking point part</q></div></li>
+      <li><span class="ctag">6</span><div><a href="#res" style="color:#f6e27a">Resident cards</a> now match the collection page: the pink line says what each monster does, and the bottom line is the tagline.<q>change pink one to have “Suction + Licking” etc &amp; bottom part to have tagline</q></div></li>
     </ol>
-    <p class="same"><b>Checked, no change:</b> sold-out wording is already “48 hours” everywhere (no “Day 1” or “on launch”).</p>
+    <p class="same"><b>Checked, no change:</b> the sold-out wording is already “48 hours” everywhere (no “Day 1” or “on launch”). The landing page isn't added (Momo: “no need to add”). Everything else is unchanged (Momo: “otherwise its perfecttt”).</p>
   </div>
 </div>
 
@@ -462,12 +473,11 @@ html.static .reveal{opacity:1;transform:none;transition:none}
   </div>
 </section>
 
-<!-- TALKING FOCUS -->
-<section class="dark removed" id="c1-old">
-  <div class="rm-tag"><b>1 · Removed</b> Talking focus &amp; selling point (prices, odds, Mystery Monster, Monster Set, talking points 01–06)</div>
+<!-- WHAT'S IN THE DROP -->
+<section class="dark" id="drop">
   <div class="wrap">
-    <span class="kicker eyebrow reveal">Talking focus &amp; selling point</span>
-    <h2 class="big reveal">They ghosted you in 48 hours.<br>1 in 10 bags hides Neon Jack.<br><b>Don't get ghosted twice. Pre-order now!</b></h2>
+    <span class="kicker eyebrow reveal"><span class="ctag">1</span><del>Talking focus &amp; selling point</del><ins>What's in the drop</ins></span>
+    <h2 class="big reveal"><span class="ctag">2</span><del>They ghosted you in 48 hours.<br>1 in 10 bags hides Neon Jack.<br><b>Don't get ghosted twice. Pre-order now!</b></del><ins>Get your audience super excited about the monsters, <b>in your own way!</b></ins></h2>
 
     <div class="bbx">
       <figure class="reveal sq"><img src="assets/x-bag-sealed-red.webp" alt="Sealed red Silk Bow Mystery Monster bag" loading="lazy"></figure>
@@ -482,12 +492,12 @@ html.static .reveal{opacity:1;transform:none;transition:none}
           <div><span class="c">45%</span><div><b>Green Medusa</b><span class="tag">The Naughtiest of Them All</span><p>Neon-green tentacle, red base. Insertable + vibration.</p></div></div>
           <div><span class="c">10%</span><div><b>Neon Jack</b><span class="tag">1 in 10 bags</span><p>Neon lime pumpkin. Suction + vibration.</p></div></div>
         </div>
-        <dl>
+<div class="rm"><span class="ctag">3 · Removed · offer details</span>        <dl>
           <div><dt>Price</dt><dd>$89 · $79 with your list link</dd></div>
           <div><dt>Limit</dt><dd>Max 2 per person. Your 2nd is never a double</dd></div>
           <div><dt>Ships</dt><dd>Pre-order · ships by 1 December</dd></div>
         </dl>
-      </div>
+</div>      </div>
     </div>
 
     <div class="bbx">
@@ -504,15 +514,15 @@ html.static .reveal{opacity:1;transform:none;transition:none}
           <div><span class="c">1</span><div><b>Neon Jack</b><span class="tag">Guaranteed</span><p>Air suction + vibration.</p></div></div>
           <div><span class="c">+</span><div><b>A hidden 4th toy</b><span class="tag">Secret</span><p>A Nancy toy we're keeping quiet about.</p></div></div>
         </div>
-        <dl>
+<div class="rm"><span class="ctag">4 · Removed · offer details</span>        <dl>
           <div><dt>Price</dt><dd>$199 the set</dd></div>
           <div><dt>Numbered</dt><dd>001–300, in order of purchase</dd></div>
           <div><dt>Ships</dt><dd>Pre-order · ships by 1 December</dd></div>
         </dl>
-      </div>
+</div>      </div>
     </div>
 
-    <div class="k tp reveal">Talking points</div>
+<div class="rm"><span class="ctag">5 · Removed · talking points</span>    <div class="k tp reveal">Talking points</div>
     <div class="talkpts">
       <div class="reveal"><div class="n">01</div><h3>They ghosted you in 48 hours. 👻</h3><p>Vol. I: 5,000 sold out in 48 hours. Now they're crashing Christmas.</p></div>
       <div class="reveal"><div class="n">02</div><h3>Hunt Neon Jack.</h3><p>1 in 10 Mystery Monster bags hides Neon Jack. Red Lemmy and Green Medusa are 45% each.</p></div>
@@ -521,16 +531,7 @@ html.static .reveal{opacity:1;transform:none;transition:none}
       <div class="reveal"><div class="n">05</div><h3>Christmas colours only.</h3><p>Not a restock. Red Lemmy, Green Medusa and Neon Jack are this Christmas only.</p></div>
       <div class="reveal"><div class="n">06</div><h3>Don't push what's gone.</h3><p>The Halloween colours and the Original Monster Set are sold out, and there are no Golden Tickets this edition. Point people to the Christmas pre-order.</p></div>
     </div>
-  </div>
-</section>
-
-<!-- THE FOCUS -->
-<section class="dark chg-sec" id="c2">
-  <div class="wrap">
-    <div class="chg-tag">2 · New · replaces the talking points</div>
-    <span class="kicker eyebrow reveal">The focus</span>
-    <h2 class="big reveal">Get your audience super excited about the monsters, <b>in your own way!</b></h2>
-  </div>
+</div>  </div>
 </section>
 
 <!-- RESIDENTS -->
@@ -549,11 +550,11 @@ html.static .reveal{opacity:1;transform:none;transition:none}
         <div class="body">
           <div class="no">Red Lemmy · 45% · 👄</div>
           <div class="nm">Lemmy</div>
-          <div class="tt chg">Suction + Licking<span class="was">3 · was: The Cheeky Kisser</span></div>
+          <div class="tt"><span class="ctag">6</span><del>The Cheeky Kisser</del><ins>Suction + Licking</ins></div>
           <p>Lemmy only ever wanted one thing: to taste. Soft lips that cling, a slow and deliberate lick. All red this Christmas.</p>
         </div>
         <div class="spec"><div class="q">"All lips. No manners."</div><p class="d">Lemmy is a pair of soft lips with a tongue inside. Place the lips over your clit and they seal tight: the lips suck while the tongue licks inside the seal. Use the licking on its own, the suction on its own, or both at once. Three suction levels plus a long-suction mode for when you want it to linger, and the tongue has 3 speeds and 6 rhythms. He's quiet, shower-safe, and charges on a magnetic cable.</p><dl><div><dt>Material</dt><dd>Liquid silicone + ABS</dd></div><div><dt>Settings</dt><dd>3 suction + long suction · 3 licking speeds + 6 rhythms</dd></div><div><dt>Use</dt><dd>External</dd></div><div><dt>Water</dt><dd>IPX6 · shower-safe, not for the bath</dd></div><div><dt>Charge time</dt><dd>Up to 100 min, magnetic cable</dd></div><div><dt>Play time</dt><dd>About 63 min at max</dd></div><div><dt>Size</dt><dd>126.7 × 86.7 × 64.9 mm</dd></div><div><dt>Colour</dt><dd>All red · Christmas only</dd></div></dl></div>
-        <div class="what chg">The Cheeky Kisser<span class="was">3 · was: Suction + licking stimulator</span></div>
+        <div class="what"><span class="ctag">6</span><del>Suction + licking stimulator</del><ins>The Cheeky Kisser</ins></div>
         <div class="close"><video data-src="assets/close-lemmy.mp4" poster="assets/close-lemmy.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
       </article>
       <article class="rcard reveal">
@@ -565,11 +566,11 @@ html.static .reveal{opacity:1;transform:none;transition:none}
         <div class="body">
           <div class="no">Green Medusa · 45% · 🐍</div>
           <div class="nm">Medusa</div>
-          <div class="tt chg">Insertable + Vibration<span class="was">3 · was: The Naughtiest of Them All</span></div>
+          <div class="tt"><span class="ctag">6</span><del>The Naughtiest of Them All</del><ins>Insertable + Vibration</ins></div>
           <p>One look turns you to stone. Up close, it's the opposite: slow, serpentine, coiling exactly where it counts. Neon green on a red base this Christmas.</p>
         </div>
         <div class="spec"><div class="q">"One flick and you're hers."</div><p class="d">Medusa works inside and out. The neon-green tentacle is insertable and swirls in circles inside you, while the curled red tip vibrates right against your clit. Run either one on its own, or both together. 3 speeds and 7 patterns to play with, and she's happy in the shower too.</p><dl><div><dt>Material</dt><dd>Silicone + TPE</dd></div><div><dt>Settings</dt><dd>3 speeds + 7 patterns</dd></div><div><dt>Use</dt><dd>Internal + external</dd></div><div><dt>Water</dt><dd>IPX6 · shower-safe, not for the bath</dd></div><div><dt>Charge time</dt><dd>About 100 min, magnetic cable</dd></div><div><dt>Play time</dt><dd>50+ min</dd></div><div><dt>Size</dt><dd>155 × 104 × 48 mm</dd></div><div><dt>Colour</dt><dd>Neon green, red base · Christmas only</dd></div></dl></div>
-        <div class="what chg">The Naughtiest of Them All<span class="was">3 · was: Insertable + clitoral vibrator</span></div>
+        <div class="what"><span class="ctag">6</span><del>Insertable + clitoral vibrator</del><ins>The Naughtiest of Them All</ins></div>
         <div class="close"><video data-src="assets/close-medusa.mp4" poster="assets/close-medusa.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
       </article>
       <article class="rcard reveal">
@@ -581,11 +582,11 @@ html.static .reveal{opacity:1;transform:none;transition:none}
         <div class="body">
           <div class="no">Neon Jack · 1 in 10 bags · 🎃</div>
           <div class="nm">Jack</div>
-          <div class="tt chg">Suction + Vibration<span class="was">3 · was: The Sweet Troublemaker</span></div>
+          <div class="tt"><span class="ctag">6</span><del>The Sweet Troublemaker</del><ins>Suction + Vibration</ins></div>
           <p>Arrives thirsty, leaves hungry for more. Small, but he gets around. Neon only this edition, and the hardest one to find.</p>
         </div>
         <div class="spec"><div class="q">"Don't let the smile fool you."</div><p class="d">Jack is a palm-sized pumpkin with two motors. Turn him over and there's a soft opening in the base: that's the suction, gentle air pulses that start soft and build over 11 levels. A second motor makes the whole pumpkin vibrate, with 7 speeds and 3 patterns. Use one, or press both buttons for a bigger finish. He's fully waterproof and charges by USB-C.</p><dl><div><dt>Material</dt><dd>Silicone + plastic</dd></div><div><dt>Settings</dt><dd>11 suction · 7 vibration + 3 patterns</dd></div><div><dt>Use</dt><dd>External</dd></div><div><dt>Water</dt><dd>IPX7 · fully waterproof, bath + shower</dd></div><div><dt>Charge time</dt><dd>60–120 min, USB-C</dd></div><div><dt>Play time</dt><dd>About 60 min at max</dd></div><div><dt>Size</dt><dd>76 × 62 × 63 mm</dd></div><div><dt>Colour</dt><dd>Neon lime · Christmas only</dd></div></dl></div>
-        <div class="what chg">The Sweet Troublemaker<span class="was">3 · was: Air suction + vibration</span></div>
+        <div class="what"><span class="ctag">6</span><del>Air suction + vibration</del><ins>The Sweet Troublemaker</ins></div>
         <div class="close"><video data-src="assets/close-jack.mp4" poster="assets/close-jack.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
       </article>
     </div>
