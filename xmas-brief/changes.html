@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changes · Monster Mansion · Christmas Creator Brief</title>
+<meta name="description" content="Nancy Monster Mansion Christmas Edition: the creator brief. The story, the residents, what you'll get and how to post.">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<link rel="icon" href="assets/nancy.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:"PPE";src:url(assets/PPEditorialNew-Ultralight.woff) format("woff");font-weight:200;font-display:swap}
+@font-face{font-family:"PPE";src:url(assets/PPEditorialNew-Regular.woff) format("woff");font-weight:400;font-display:swap}
+:root{
+  --paper:#f4f3f0; --paper-2:#eae8e3; --white:#fff;
+  --ink:#1a1717; --ink-soft:#5d5754; --line:rgba(26,23,23,.14);
+  --pink:#e9559c; --pink-deep:#c2306f; --pink-soft:#fbdbe9;
+  --butter:#f6e27a; --pumpkin:#f08a2c; --stone:#d9d6d0;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,5vw,64px)}
+.serif{font-family:"PPE",Georgia,serif;font-style:normal}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+.pink{color:var(--pink)}
+
+/* ---------- top bar + tabs ---------- */
+.bar{position:sticky;top:0;z-index:50;background:rgba(244,243,240,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.bar img{height:22px;width:auto}
+.tabs{display:flex;gap:4px;background:var(--paper-2);border-radius:999px;padding:4px}
+.tabs button{border:0;background:transparent;font:500 13px/1 "DM Sans",sans-serif;color:var(--ink-soft);padding:9px 16px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.bar .vol{font-size:10.5px;color:var(--ink-soft)}
+@media (max-width:640px){.bar .vol{display:none}.tabs button{padding:9px 12px;font-size:12.5px}}
+.panel[hidden]{display:none}
+
+/* top banner: Medusa film feathered into a grey stage that follows the film's backdrop colour (same as the games hub) */
+.banner{position:relative;height:min(74vh,720px);overflow:hidden;background:#e2e5e5}
+.banner .stage{position:absolute;inset:0;background:#e2e5e5;transition:background 1s linear}
+.banner .vwrap{position:absolute;left:50%;top:50%;height:118%;aspect-ratio:9/16;transform:translate(-50%,-50%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%)}
+.banner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:760px){.banner{height:auto;aspect-ratio:4/5}.banner .vwrap{height:100%;width:100%;-webkit-mask-image:none;mask-image:none}.banner video{object-position:50% 40%}}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(40px,7vw,96px) 0 clamp(36px,5vw,64px);border-bottom:1px solid var(--line)}
+.hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,72px);align-items:center}
+.hero h1{font-family:"PPE",serif;font-weight:200;font-size:clamp(54px,9.4vw,128px);line-height:.92;letter-spacing:-.02em}
+.hero h1 span{display:block}
+.hero h1 .l2{color:var(--pink);font-weight:400}
+.hero .sub{margin-top:24px;font-size:clamp(16px,1.5vw,19px);color:var(--ink-soft);max-width:44ch}
+.hero .kicker{color:var(--pink);display:block;margin-bottom:22px}
+.frame{position:relative;border-radius:6px;overflow:hidden;background:var(--stone);aspect-ratio:9/16;max-height:72vh;margin-left:auto}
+.frame video,.frame img{width:100%;height:100%;object-fit:cover}
+.meta{display:flex;flex-wrap:wrap;margin-top:clamp(28px,4vw,48px);border-top:1px solid var(--line)}
+.meta div{flex:1 1 150px;padding:18px 20px 0 0}
+.meta .big{font-family:"PPE",serif;font-size:clamp(24px,2.6vw,32px);line-height:1}
+.meta .sm{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:8px}
+
+/* ---------- sections ---------- */
+section{padding:clamp(64px,9vw,128px) 0;border-bottom:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--pink);margin-bottom:clamp(20px,3vw,34px)}
+.eyebrow::before{content:"";width:30px;height:1px;background:currentColor}
+h2.big{font-family:"PPE",serif;font-weight:200;letter-spacing:-.02em;line-height:1;font-size:clamp(40px,6.6vw,86px)}
+h2.big b{font-weight:400;color:var(--pink)}
+.lede{margin-top:20px;font-size:clamp(16px,1.4vw,18px);color:var(--ink-soft);max-width:52ch}
+.dark{background:var(--ink);color:var(--paper)}
+.dark .lede{color:rgba(244,243,240,.72)}
+.dark .eyebrow{color:var(--butter)}
+.dark h2.big b{color:var(--butter)}
+.blush{background:var(--pink-soft)}
+.white{background:var(--white)}
+
+/* story */
+.story .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,80px);align-items:end}
+.quote{font-family:"PPE",serif;font-size:clamp(22px,2.4vw,30px);line-height:1.3;max-width:26ch}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.pill{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:8px 13px;background:var(--white)}
+.lede.home{color:var(--ink);border-left:2px solid var(--pink);padding-left:16px}
+.lede.home b{color:var(--pink);font-weight:500}
+.pills .pill{background:var(--pink);border-color:var(--pink);color:#fff}
+.story .chapter{margin-top:clamp(72px,9vw,128px);align-items:center}
+.story .chapter img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:4px;display:block}
+.story .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.story .pair img{border-radius:4px;aspect-ratio:4/5;object-fit:cover;width:100%}
+
+
+/* deliverables */
+.deliv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:clamp(30px,4vw,48px)}
+.dv{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 18px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.dv .n{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--pink);font-weight:500}
+.dv h3{font-family:"PPE",serif;font-weight:400;font-size:clamp(24px,2.2vw,28px);line-height:1.05}
+.dv p{font-size:14px;color:var(--ink-soft)}
+.dv .where{margin-top:auto;align-self:flex-start;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:var(--white)}
+.dv.hot{background:var(--pink);border-color:var(--pink);color:#fff}
+.dv.hot .n,.dv.hot p{color:rgba(255,255,255,.88)}
+.dv.hot .where{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#fff}
+@media (max-width:1000px){.deliv{grid-template-columns:repeat(2,minmax(0,1fr))}.dv.hot{grid-column:1/-1}}
+@media (max-width:560px){.deliv{grid-template-columns:1fr}}
+/* talking focus */
+.talkpts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,28px);margin-top:clamp(32px,4vw,48px)}
+.talkpts>div{border-top:1px solid rgba(244,243,240,.22);padding-top:16px}
+.talkpts .n{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--butter)}
+.talkpts h3{font-family:"PPE",serif;font-weight:400;font-size:clamp(26px,2.6vw,34px);line-height:1.05;margin:10px 0 8px}
+.talkpts p{font-size:15px;color:rgba(244,243,240,.72)}
+.bigpts{display:grid;gap:0;margin-top:clamp(28px,4vw,44px);border-top:1px solid rgba(244,243,240,.22)}
+.bigpts div{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:baseline;gap:12px;padding:clamp(16px,2.4vw,24px) 0;border-bottom:1px solid rgba(244,243,240,.22)}
+.bigpts .n{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;color:var(--butter)}
+.bigpts p{font-family:"PPE",serif;font-weight:200;font-size:clamp(28px,4vw,52px);line-height:1.05;color:#f4f3f0}
+.bigpts p em{font-style:normal;color:var(--pink)}
+.saylines{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(28px,4vw,40px)}
+.saylines span{font-family:"PPE",serif;font-size:clamp(18px,1.8vw,22px);padding:10px 18px;border-radius:999px;border:1px solid rgba(233,85,156,.6);color:#fff;background:rgba(233,85,156,.16)}
+.saylbl{display:block;margin-top:clamp(30px,4vw,44px);color:var(--pink)}
+@media (max-width:860px){.talkpts{grid-template-columns:1fr}}
+/* phases */
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:clamp(36px,5vw,56px)}
+.ph5{position:relative;padding:22px 18px 0 0;display:flex;flex-direction:column;align-items:flex-start}
+.ph5::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--stone)}
+.ph5.on::before{background:var(--pink)}
+.ph5::after{content:"";position:absolute;left:0;top:-5px;width:14px;height:14px;border-radius:50%;background:var(--paper);border:3px solid var(--pink)}
+.ph5 .d{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--pink);font-weight:500;letter-spacing:.04em}
+.ph5 .n{font-family:"PPE",serif;font-size:clamp(24px,2.4vw,30px);line-height:1.05;margin-top:8px}
+.ph5 p{font-size:14px;color:var(--ink-soft);margin:8px 0 14px}
+.ph5.hot .n,.ph5.hot p{color:var(--pink)}
+.ph5.hot .key{background:var(--pink);color:#fff;border-color:var(--pink);white-space:nowrap;padding:6px 11px;animation:keyglow 2.4s ease-in-out infinite}
+@keyframes keyglow{0%,100%{box-shadow:0 0 0 1px rgba(233,85,156,.35),0 6px 18px rgba(233,85,156,.4),0 0 26px rgba(233,85,156,.3)}50%{box-shadow:0 0 0 5px rgba(233,85,156,.14),0 8px 26px rgba(233,85,156,.6),0 0 48px rgba(233,85,156,.5)}}
+@media (prefers-reduced-motion:reduce){.ph5.hot .key{animation:none}}
+.ph5 .key{display:inline-block;margin-top:auto;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--white);border:1px solid var(--line);border-radius:999px;padding:5px 9px}
+@media (max-width:960px){.phases{grid-template-columns:1fr}.ph5{padding:0 0 26px 30px}.ph5::before{left:5px;right:auto;top:0;bottom:0;width:4px;height:auto}.ph5::after{left:0;top:0}}
+
+/* residents */
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);margin-top:clamp(36px,5vw,60px)}
+.rcard{background:var(--white);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.rcard .ph{aspect-ratio:4/5;overflow:hidden;background:var(--stone);position:relative}
+.rcard .ph img,.rcard .ph video{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .4s}
+.rcard .ph video{opacity:0}
+.rcard:hover .ph video,.rcard.play .ph video{opacity:1}
+.rcard .hint{position:absolute;left:12px;bottom:12px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.88);padding:6px 9px;border-radius:999px;z-index:2}
+.rcard .body{padding:20px 20px 24px}
+.rcard .no{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;color:var(--ink-soft);text-transform:uppercase}
+.rcard .nm{font-family:"PPE",serif;font-size:40px;line-height:1;margin-top:8px}
+.rcard .tt{color:var(--pink);font-weight:500;margin-top:6px}
+.rcard p{color:var(--ink-soft);font-size:15px;margin-top:10px}
+.rcard .what{margin-top:auto;padding:14px 20px;border-top:1px solid var(--line);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+
+.rcard .spec{padding:0 20px 22px}
+.rcard .spec .q{font-family:"PPE",serif;font-size:24px;line-height:1.1;padding-top:18px;border-top:1px solid var(--line)}
+.rcard .spec .d{color:var(--ink);font-size:14.5px;line-height:1.6;margin-top:10px}
+.rcard .spec dl{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;margin-top:16px;border-top:1px solid var(--ink)}
+.rcard .spec dl div{padding:10px 0;border-bottom:1px solid var(--line);min-width:0}
+.rcard .spec dt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.rcard .spec dd{margin:4px 0 0;font-size:13.5px;line-height:1.4}
+.rcard .spec dd s{color:var(--ink-soft);margin-left:6px}
+.rcard .spec dd code{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em}
+
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(32px,4vw,52px)}
+.hcard{margin:0}
+.hcard video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:14px;background:var(--stone);display:block}
+.hcard figcaption{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
+.hcard figcaption b{font-family:"PPE",serif;font-weight:400;font-size:clamp(26px,2.6vw,34px)}
+.hcard figcaption span{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+@media (max-width:860px){.howto{grid-template-columns:1fr;max-width:420px}}
+.close{position:relative;aspect-ratio:9/16;background:var(--stone);overflow:hidden}
+.close video{width:100%;height:100%;object-fit:cover}
+.close .snd{position:absolute;right:12px;bottom:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:17px;cursor:pointer}
+/* look */
+.look .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:clamp(32px,4vw,52px)}
+.look .grid figure{border-radius:4px;overflow:hidden;background:var(--stone);aspect-ratio:4/5}
+.look .grid img,.look .grid video{width:100%;height:100%;object-fit:cover}
+.look .grid .w2{grid-column:span 2}
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,28px);margin-top:clamp(32px,4vw,52px)}
+.rule{border-top:1px solid var(--line);padding-top:16px}
+.rule .n{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--pink);letter-spacing:.12em}
+.rule h3{font-family:"PPE",serif;font-weight:400;font-size:22px;line-height:1.15;margin:8px 0 6px}
+.rule p{font-size:14.5px;color:var(--ink-soft)}
+
+/* gifting */
+.gift .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,24px);margin-top:clamp(36px,5vw,56px)}
+.gcard{background:var(--white);border-radius:6px;overflow:hidden}
+.gcard img{width:100%;aspect-ratio:1;object-fit:cover}
+.gcard .body{padding:20px 22px 24px}
+.gcard .tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--ink);color:var(--paper)}
+.gcard.cust .tag{background:var(--pumpkin);color:var(--ink)}
+.gcard h3{font-family:"PPE",serif;font-weight:400;font-size:30px;line-height:1.05;margin:14px 0 6px}
+.gcard p{color:var(--ink-soft);font-size:15px}
+.gift .grid{grid-template-columns:1fr}
+.gift .gcard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center}
+.gift .gcard .body{padding:clamp(22px,4vw,52px)}
+.gift .gcard h3{font-size:clamp(30px,3.4vw,44px)}
+.gift .gcard p{font-size:16px;max-width:36ch}
+@media (max-width:720px){.gift .gcard{grid-template-columns:1fr}}
+.odds{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.odds span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:6px 11px}
+.odds .gold{background:#f3d77a;border-color:#e0bd4f}
+
+/* ask */
+.ask{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);margin-top:clamp(36px,5vw,56px)}
+.ask.four{grid-template-columns:repeat(4,1fr)}
+.acard{border:1px solid rgba(244,243,240,.2);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.acard .ph{aspect-ratio:4/5;overflow:hidden;background:#2a2626}
+.acard .ph img,.acard .ph video{width:100%;height:100%;object-fit:cover}
+.acard .body{padding:20px}
+.acard .n{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--butter);letter-spacing:.14em}
+.acard h3{font-family:"PPE",serif;font-weight:400;font-size:26px;line-height:1.1;margin:8px 0}
+.acard p{font-size:14.5px;color:rgba(244,243,240,.72)}
+.keyline{margin-top:clamp(32px,4vw,48px);display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid rgba(244,243,240,.2)}
+.keyline div{padding:18px 20px 0 0;display:flex;flex-direction:column}
+.keyline .big{font-family:"PPE",serif;font-size:clamp(22px,2.4vw,30px);color:var(--butter);line-height:1}
+.keyline .sm{font-size:16px;color:rgba(244,243,240,.85);margin-top:auto;padding-top:12px;white-space:nowrap}
+@media (max-width:760px){.keyline .sm{white-space:normal}}
+
+/* games */
+.games{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:clamp(32px,4vw,52px)}
+.game{text-decoration:none;background:var(--white);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s}
+.game:hover{transform:translateY(-3px)}
+.game .ph{aspect-ratio:9/14;background:var(--stone);overflow:hidden}
+.game .ph img{width:100%;height:100%;object-fit:cover}
+.game .body{padding:12px 14px 16px}
+.game .nm{font-family:"PPE",serif;font-size:20px;line-height:1.1}
+.game .d{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--pink);color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:14px 22px;border-radius:999px;margin-top:28px}
+.btn.ink{background:var(--ink)}
+
+/* tag + share */
+.steps{display:grid;grid-template-columns:minmax(0,640px);gap:clamp(14px,2vw,28px);margin-top:clamp(32px,4vw,48px)}
+.step{border-top:1px solid var(--line);padding-top:16px}
+.step .n{font-family:"PPE",serif;font-size:44px;line-height:1;color:var(--pink)}
+.step p{margin-top:10px;font-size:15.5px}
+.tagrow{margin-top:clamp(14px,2vw,20px);background:var(--pink-soft);border-radius:18px;padding:clamp(22px,3vw,36px) clamp(22px,3vw,40px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 40px}
+.tagrow h3{font-family:"PPE",serif;font-weight:400;font-size:clamp(30px,3.6vw,48px);line-height:1}
+.tagrow h3 b{font-weight:400;color:var(--pink)}
+.tagrow .handles{margin-top:0}
+.tagrow .handles a{font-size:clamp(22px,2.4vw,32px)}
+.handles{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:22px}
+.handles a{font-family:"PPE",serif;font-size:clamp(26px,3.6vw,44px);line-height:1.1;text-decoration:none;border-bottom:1px solid currentColor}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:13px;padding:9px 14px;border-radius:999px;background:var(--white);border:1px solid var(--line)}
+.chip.k{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.note{margin-top:28px;background:var(--white);border-left:3px solid var(--pink);padding:16px 18px;font-size:14.5px;border-radius:0 4px 4px 0;max-width:68ch}
+
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,28px);margin-top:clamp(32px,4vw,48px)}
+.dd .col{background:var(--white);border-radius:6px;padding:22px 24px}
+.dd h3{font-family:"PPE",serif;font-weight:400;font-size:26px;margin-bottom:12px}
+.dd ul{list-style:none}
+.dd li{padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.dd .do h3{color:var(--pink)}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.words span{font-family:"JetBrains Mono",monospace;font-size:12px;background:var(--paper);padding:5px 9px;border-radius:4px}
+
+/* ---------- stunts tab ---------- */
+.shero{position:relative;min-height:min(88svh,820px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#111}
+.shero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.shero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.1) 35%,rgba(0,0,0,.85) 100%)}
+.shero .wrap{position:relative;z-index:2;width:100%;padding-bottom:clamp(28px,5vw,56px)}
+.shero .kicker{color:var(--butter)}
+.shero h1{font-family:"PPE",serif;font-weight:200;font-size:clamp(52px,9vw,124px);line-height:.92;letter-spacing:-.02em;margin-top:16px}
+.shero h1 b{font-weight:400;color:var(--butter)}
+.shero p{margin-top:16px;max-width:52ch;font-size:clamp(15px,1.4vw,18px);color:rgba(255,255,255,.88)}
+.idea-h{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.idea-h .n{font-family:"PPE",serif;font-size:clamp(40px,6vw,80px);font-weight:200;color:var(--pink);line-height:1}
+.sheet{margin-top:clamp(28px,4vw,44px);border-radius:6px;overflow:hidden;background:var(--white)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,24px);margin-top:24px}
+.facts div{border-top:1px solid var(--line);padding-top:12px}
+.facts .l{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.facts .v{margin-top:6px;font-size:15px}
+.reel{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(20px,4vw,56px);align-items:start;margin-top:clamp(28px,4vw,44px)}
+.reel .frame{max-height:none;margin:0;width:100%}
+.beats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.beat img{border-radius:4px;aspect-ratio:9/16;object-fit:cover;width:100%;background:var(--stone)}
+.beat .t{font-size:13.5px;margin-top:8px}
+.beat .t b{font-family:"JetBrains Mono",monospace;font-weight:500;font-size:11px;color:var(--pink);letter-spacing:.1em;margin-right:6px}
+.pap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:clamp(28px,4vw,44px)}
+.pap img{border-radius:4px;width:100%;aspect-ratio:4/5;object-fit:cover;background:#222}
+.pap .w2{grid-column:span 2}
+.pap .w2 img{aspect-ratio:auto;height:100%}
+.ros{margin-top:clamp(32px,4vw,52px);border-top:1px solid var(--line)}
+.ros .row{display:grid;grid-template-columns:170px 1fr;gap:clamp(14px,3vw,40px);padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.ros .d{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--pink);font-weight:500}
+.ros .w{font-family:"PPE",serif;font-size:clamp(20px,2vw,26px);line-height:1.15}
+.ros .s{font-size:14.5px;color:var(--ink-soft);margin-top:4px}
+.dark .ros{border-color:rgba(244,243,240,.2)}
+.dark .ros .row{border-color:rgba(244,243,240,.2)}
+.dark .ros .d{color:var(--butter)}
+.dark .ros .s{color:rgba(244,243,240,.7)}
+.venues{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(14px,2vw,24px);margin-top:clamp(32px,4vw,48px)}
+.venue{background:var(--white);border-radius:6px;padding:22px 24px}
+.venue.go{background:var(--ink);color:var(--paper)}
+.venue .st{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--paper-2);color:var(--ink)}
+.venue.go .st{background:var(--butter)}
+.venue h3{font-family:"PPE",serif;font-weight:400;font-size:30px;line-height:1.05;margin:14px 0 4px}
+.venue .when{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--pink)}
+.venue.go .when{color:var(--butter)}
+.venue dl{margin-top:14px}
+.venue dt{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-top:10px}
+.venue dd{font-size:14.5px}
+.bbx{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,4vw,64px);align-items:start;margin-top:clamp(48px,6vw,88px)}
+.bbx figure{border-radius:14px;overflow:hidden;aspect-ratio:4/5;background:#2a2826}
+.bbx figure img{width:100%;height:100%;object-fit:cover}
+.dark .k{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--pink)}
+.dark .k.sub{color:rgba(244,243,240,.72);margin-top:26px}
+.dark .k.tp{color:var(--butter);margin-top:clamp(56px,7vw,96px)}
+.bbx h3{font-family:"PPE",serif;font-weight:400;font-size:clamp(48px,6vw,84px);line-height:.95;margin-top:10px}
+.bbx .q{font-family:"PPE",serif;font-size:clamp(24px,2.6vw,34px);line-height:1.1;color:var(--butter);margin-top:16px}
+.bbx .d{font-size:16px;line-height:1.65;color:rgba(244,243,240,.75);margin-top:14px}
+.bbx .inside{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.bbx .inside>div{display:flex;gap:20px;align-items:center;background:rgba(244,243,240,.06);border-radius:12px;padding:16px 20px}
+.bbx .inside .c{font-family:"PPE",serif;font-size:44px;line-height:1;color:var(--butter);min-width:48px;text-align:center}
+.bbx .inside b{font-weight:500;font-size:16px}
+.bbx .inside .tag{display:inline-block;margin-left:10px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--butter);border:1px solid rgba(250,226,140,.5);border-radius:999px;padding:3px 8px;vertical-align:2px}
+.bbx .inside p{font-size:14px;color:rgba(244,243,240,.68);margin-top:4px}
+.bbx dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px}
+.bbx dl div{border-top:1px solid rgba(244,243,240,.22);padding-top:12px}
+.bbx dt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,243,240,.6)}
+.bbx dd{margin:6px 0 0;font-size:15px;font-weight:500}
+.bbx figure.sq{aspect-ratio:1/1;background:#ecebe9}
+.bbx .inside .tbc{border:1px dashed rgba(244,243,240,.3);background:transparent}
+.dark .talkpts{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:20px}
+@media (max-width:860px){.bbx{grid-template-columns:1fr}.bbx dl{grid-template-columns:1fr 1fr}.dark .talkpts{grid-template-columns:1fr}}
+.talk{display:grid;grid-template-columns:repeat(2,1fr);gap:0 clamp(20px,4vw,56px);margin-top:clamp(28px,4vw,44px)}
+.talk div{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line);font-size:15.5px}
+.talk div b{font-family:"JetBrains Mono",monospace;font-weight:500;font-size:12px;color:var(--pink);padding-top:3px;min-width:22px}
+
+/* footer */
+footer{background:var(--ink);color:var(--paper);padding:clamp(48px,7vw,88px) 0 28px}
+footer .top{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-start}
+footer .top img{height:34px;filter:brightness(0) invert(1)}
+footer .r{font-size:14.5px;line-height:1.8;color:rgba(244,243,240,.8);text-align:right}
+footer .r a{text-decoration:none}
+footer .tag{font-family:"PPE",serif;font-weight:200;font-size:clamp(34px,5.5vw,72px);line-height:1;margin-top:clamp(36px,5vw,64px)}
+footer .tag b{font-weight:400;color:var(--pink)}
+footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:18px;border-top:1px solid rgba(244,243,240,.18);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;color:rgba(244,243,240,.55)}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+html.static .reveal{opacity:1;transform:none;transition:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+@media (max-width:960px){
+  .games{grid-template-columns:repeat(3,1fr)}
+  .ask.four{grid-template-columns:repeat(2,1fr)}
+  .rules,.facts{grid-template-columns:repeat(2,1fr)}
+  .look .grid{grid-template-columns:repeat(3,1fr)}
+  .look .grid .w2{grid-column:span 1}
+}
+@media (max-width:760px){
+  .hero .grid,.story .grid,.gift .grid,.dd,.reel,.venues,.talk{grid-template-columns:1fr}
+  .frame{max-height:none;width:72%;margin:0 auto}
+  .res,.ask,.ask.four,.steps{grid-template-columns:1fr}
+  .keyline{grid-template-columns:1fr}
+  .games{grid-template-columns:repeat(2,1fr)}
+  .pap{grid-template-columns:repeat(2,1fr)}
+  .ros .row{grid-template-columns:1fr;gap:4px}
+  footer .r{text-align:left}
+  .reel .frame{width:72%;margin:0 auto}
+}
+@media (max-width:420px){.rules,.facts{grid-template-columns:1fr}}
+.banner.xb{background:#0e1a12}
+.banner.xb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 70%}
+@media (max-width:760px){.banner.xb{aspect-ratio:1/1}}
+.tbcx{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;border:1px dashed currentColor;border-radius:999px;padding:2px 7px;vertical-align:middle;opacity:.7}
+.bbx+.bbx{margin-top:clamp(40px,5vw,72px)}
+
+/* ---------- changes view (Momo feedback) ---------- */
+.cbanner{background:#1a1717;color:#f4f3f0;padding:28px 0 30px;border-bottom:4px solid #e9559c}
+.cbanner h2{font-family:"PPE",serif;font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.05}
+.cbanner p{color:rgba(244,243,240,.75);font-size:15px;margin-top:8px;max-width:70ch}
+.cbanner ol{margin:18px 0 0 20px;display:grid;gap:8px;font-size:15px;max-width:80ch}
+.cbanner ol a{color:#f6e27a}
+.cbanner .same{margin-top:16px;font-size:14px;color:rgba(244,243,240,.6)}
+.cbanner .same b{color:#f4f3f0;font-weight:500}
+.chg{outline:2px dashed #e9559c;outline-offset:3px;border-radius:3px}
+.chg .was{display:block;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:none;color:#5d5754;font-weight:400;margin-top:4px}
+.chg-tag,.rm-tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;background:#e9559c;color:#fff;padding:6px 11px;border-radius:999px;margin-bottom:18px}
+.chg-sec{outline:3px dashed #e9559c;outline-offset:-10px}
+.removed{position:relative}
+.removed>.wrap{opacity:.32;filter:grayscale(1);text-decoration:line-through;text-decoration-color:rgba(233,85,156,.7)}
+.removed .rm-tag{position:sticky;top:72px;z-index:5;margin:0 0 0 clamp(16px,5vw,64px);background:#c2306f;font-size:12px}
+.removed .rm-tag b{margin-right:8px}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <img src="assets/nancy.svg" alt="Nancy">
+    
+    <span class="vol kicker">Monster Mansion · Christmas Edition</span>
+  </div>
+</div>
+
+<div class="cbanner">
+  <div class="wrap">
+    <span class="kicker" style="color:#f6e27a">Changes view · Momo feedback, 26–27 Oct</span>
+    <h2>What changed in this version</h2>
+    <p>Everything changed is outlined in pink with a numbered tag. Removed parts are greyed out and struck through. The clean version creators see is <a href="./" style="color:#f6e27a">here</a>.</p>
+    <ol>
+      <li><a href="#c1-old">Removed “Talking focus &amp; selling point”</a>: the prices, odds, Mystery Monster and Monster Set blocks and talking points 01–06.</li>
+      <li><a href="#c2">Added one line in its place</a>: “Get your audience super excited about the monsters, in your own way!”</li>
+      <li><a href="#res">Resident cards now match the collection page</a>: the pink line says what each monster does (Suction + Licking), and the bottom line is the tagline (The Cheeky Kisser).</li>
+    </ol>
+    <p class="same"><b>Checked, no change:</b> sold-out wording is already “48 hours” everywhere (no “Day 1” or “on launch”).</p>
+  </div>
+</div>
+
+<!-- =================================================== CREATOR BRIEF -->
+<main id="brief" class="panel">
+
+<section class="banner xb" aria-label="Monster Mansion Christmas Edition">
+  <img src="assets/x-fullhouse-open.webp" alt="The red Nancy Silk Bow gift bag in the snow with the Lemmy, Medusa and Jack Christmas boxes">
+</section>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <span class="kicker">Nancy Monster Mansion · Christmas Edition · Creator brief</span>
+        <h1><span>Now they're crashing</span><span class="l2">Christmas.</span></h1>
+        <p class="sub">They ghosted you in 48 hours. Now the monsters are back, in Christmas colours you can only get this season. Here's the campaign brief for the Christmas Edition, with references to help you play around and make it your own.</p>
+      </div>
+      <div class="frame">
+        <video src="assets/x-hero.mp4" poster="assets/x-hero.jpg" autoplay muted loop playsinline></video>
+      </div>
+    </div>
+    <div class="meta">
+      <div><div class="big">Pre-orders open 1 Nov</div><div class="sm">Ships by 1 December</div></div>
+      <div><div class="big">29 – 31 Oct</div><div class="sm">Creators post</div></div>
+      <div><div class="big">@nancymonsters<br>+ @hellonancy_official</div><div class="sm">Tag both accounts</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- STORY -->
+<section class="story">
+  <div class="wrap">
+    <div class="grid">
+      <div class="reveal">
+        <span class="kicker eyebrow">The story</span>
+        <h2 class="big">They ghosted you in 48 hours. <b>Don't get ghosted twice.</b></h2>
+        <p class="lede">Monster Mansion Vol. I was Hello Nancy's first collectible series: 5,000 sold out in 48 hours. Now the same three residents are back for Christmas, dressed for the season.</p>
+        <p class="lede">Lemmy wears all red. Medusa goes neon green with a red base. And Jack only comes in neon this time, hiding in just 1 in 10 bags.</p>
+        <p class="lede home"><b>This is not a restock.</b> The monsters come back, their colours don't. Every edition is one run: when Christmas is gone, so are Red Lemmy, Green Medusa and Neon Jack.</p>
+        <div class="pills">
+          <span class="pill">Christmas only</span>
+          <span class="pill">Pre-order</span>
+          <span class="pill">18+</span>
+        </div>
+      </div>
+      <div class="pair reveal">
+        <img src="assets/x-photo-lemmy-red.webp" alt="Red Lemmy held in a hand on green fur" loading="lazy">
+        <img src="assets/x-photo-medusa-red.webp" alt="Green Medusa held in a hand on green fur" loading="lazy">
+        <img src="assets/x-jack-tray.webp" alt="Neon Jack revealed under a silver cloche" loading="lazy">
+        <img src="assets/x-photo-jack-neon.webp" alt="Neon Jack held in a palm on red fur" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TALKING FOCUS -->
+<section class="dark removed" id="c1-old">
+  <div class="rm-tag"><b>1 · Removed</b> Talking focus &amp; selling point (prices, odds, Mystery Monster, Monster Set, talking points 01–06)</div>
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">Talking focus &amp; selling point</span>
+    <h2 class="big reveal">They ghosted you in 48 hours.<br>1 in 10 bags hides Neon Jack.<br><b>Don't get ghosted twice. Pre-order now!</b></h2>
+
+    <div class="bbx">
+      <figure class="reveal sq"><img src="assets/x-bag-sealed-red.webp" alt="Sealed red Silk Bow Mystery Monster bag" loading="lazy"></figure>
+      <div class="reveal">
+        <div class="k">Hunt him</div>
+        <h3>Mystery Monster</h3>
+        <div class="q">"One sealed bag. One full-size Christmas monster. A mystery till it's yours."</div>
+        <p class="d">One sealed Silk Bow bag with one full-size Christmas monster inside, in its own Christmas box. You find out who when you tear it open. 1 in 10 bags hides Neon Jack, in every batch we pack.</p>
+        <div class="k sub">The odds</div>
+        <div class="inside">
+          <div><span class="c">45%</span><div><b>Red Lemmy</b><span class="tag">The Cheeky Kisser</span><p>All red, lips to tongue. Suction + licking.</p></div></div>
+          <div><span class="c">45%</span><div><b>Green Medusa</b><span class="tag">The Naughtiest of Them All</span><p>Neon-green tentacle, red base. Insertable + vibration.</p></div></div>
+          <div><span class="c">10%</span><div><b>Neon Jack</b><span class="tag">1 in 10 bags</span><p>Neon lime pumpkin. Suction + vibration.</p></div></div>
+        </div>
+        <dl>
+          <div><dt>Price</dt><dd>$89 · $79 with your list link</dd></div>
+          <div><dt>Limit</dt><dd>Max 2 per person. Your 2nd is never a double</dd></div>
+          <div><dt>Ships</dt><dd>Pre-order · ships by 1 December</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="bbx">
+      <figure class="reveal sq"><img src="assets/x-fullhouse-open.webp" alt="Silk Bow gift bag with Lemmy, Medusa and Jack Christmas boxes" loading="lazy"></figure>
+      <div class="reveal">
+        <div class="k">Guarantee him</div>
+        <h3>Monster Set</h3>
+        <div class="q">"All three. Neon Jack guaranteed. Plus a hidden 4th toy."</div>
+        <p class="d">Red Lemmy, Green Medusa and a guaranteed Neon Jack, plus a hidden 4th toy (a Nancy toy we don't reveal), packed in the Silk Bow gift bag. Numbered 001 to 300, assigned in order of purchase.</p>
+        <div class="k sub">In the set</div>
+        <div class="inside">
+          <div><span class="c">1</span><div><b>Red Lemmy</b><span class="tag">The Cheeky Kisser</span><p>Suction + licking stimulator.</p></div></div>
+          <div><span class="c">1</span><div><b>Green Medusa</b><span class="tag">The Naughtiest of Them All</span><p>Insertable + clitoral vibrator.</p></div></div>
+          <div><span class="c">1</span><div><b>Neon Jack</b><span class="tag">Guaranteed</span><p>Air suction + vibration.</p></div></div>
+          <div><span class="c">+</span><div><b>A hidden 4th toy</b><span class="tag">Secret</span><p>A Nancy toy we're keeping quiet about.</p></div></div>
+        </div>
+        <dl>
+          <div><dt>Price</dt><dd>$199 the set</dd></div>
+          <div><dt>Numbered</dt><dd>001–300, in order of purchase</dd></div>
+          <div><dt>Ships</dt><dd>Pre-order · ships by 1 December</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="k tp reveal">Talking points</div>
+    <div class="talkpts">
+      <div class="reveal"><div class="n">01</div><h3>They ghosted you in 48 hours. 👻</h3><p>Vol. I: 5,000 sold out in 48 hours. Now they're crashing Christmas.</p></div>
+      <div class="reveal"><div class="n">02</div><h3>Hunt Neon Jack.</h3><p>1 in 10 Mystery Monster bags hides Neon Jack. Red Lemmy and Green Medusa are 45% each.</p></div>
+      <div class="reveal"><div class="n">03</div><h3>Or guarantee him.</h3><p>The Monster Set ($199) has all three, Neon Jack guaranteed, plus a hidden 4th toy. Numbered 001–300.</p></div>
+      <div class="reveal"><div class="n">04</div><h3>Pre-orders open 1 Nov.</h3><p>Mystery Monster $89 ($79 with your list link). Everything ships by 1 December, in time for Christmas.</p></div>
+      <div class="reveal"><div class="n">05</div><h3>Christmas colours only.</h3><p>Not a restock. Red Lemmy, Green Medusa and Neon Jack are this Christmas only.</p></div>
+      <div class="reveal"><div class="n">06</div><h3>Don't push what's gone.</h3><p>The Halloween colours and the Original Monster Set are sold out, and there are no Golden Tickets this edition. Point people to the Christmas pre-order.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOCUS -->
+<section class="dark chg-sec" id="c2">
+  <div class="wrap">
+    <div class="chg-tag">2 · New · replaces the talking points</div>
+    <span class="kicker eyebrow reveal">The focus</span>
+    <h2 class="big reveal">Get your audience super excited about the monsters, <b>in your own way!</b></h2>
+  </div>
+</section>
+
+<!-- RESIDENTS -->
+<section id="res">
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">Meet the residents · Christmas Edition</span>
+    <h2 class="big reveal">Three <b>monsters.</b></h2>
+    <p class="lede reveal">Call them by name. Each one has a title and a personality, so lean into it. This edition, Lemmy wears all red, Medusa neon green with a red base, and Jack neon only.</p>
+    <div class="res">
+      <article class="rcard reveal">
+        <div class="ph">
+          <img src="assets/x-lemmy-tip.webp" alt="Red Lemmy" loading="lazy">
+          <video data-src="assets/x-feel-lemmy.mp4" muted loop playsinline preload="none"></video>
+          <span class="hint">Hover · the feeling</span>
+        </div>
+        <div class="body">
+          <div class="no">Red Lemmy · 45% · 👄</div>
+          <div class="nm">Lemmy</div>
+          <div class="tt chg">Suction + Licking<span class="was">3 · was: The Cheeky Kisser</span></div>
+          <p>Lemmy only ever wanted one thing: to taste. Soft lips that cling, a slow and deliberate lick. All red this Christmas.</p>
+        </div>
+        <div class="spec"><div class="q">"All lips. No manners."</div><p class="d">Lemmy is a pair of soft lips with a tongue inside. Place the lips over your clit and they seal tight: the lips suck while the tongue licks inside the seal. Use the licking on its own, the suction on its own, or both at once. Three suction levels plus a long-suction mode for when you want it to linger, and the tongue has 3 speeds and 6 rhythms. He's quiet, shower-safe, and charges on a magnetic cable.</p><dl><div><dt>Material</dt><dd>Liquid silicone + ABS</dd></div><div><dt>Settings</dt><dd>3 suction + long suction · 3 licking speeds + 6 rhythms</dd></div><div><dt>Use</dt><dd>External</dd></div><div><dt>Water</dt><dd>IPX6 · shower-safe, not for the bath</dd></div><div><dt>Charge time</dt><dd>Up to 100 min, magnetic cable</dd></div><div><dt>Play time</dt><dd>About 63 min at max</dd></div><div><dt>Size</dt><dd>126.7 × 86.7 × 64.9 mm</dd></div><div><dt>Colour</dt><dd>All red · Christmas only</dd></div></dl></div>
+        <div class="what chg">The Cheeky Kisser<span class="was">3 · was: Suction + licking stimulator</span></div>
+        <div class="close"><video data-src="assets/close-lemmy.mp4" poster="assets/close-lemmy.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
+      </article>
+      <article class="rcard reveal">
+        <div class="ph">
+          <img src="assets/x-medusa-hand.webp" alt="Green Medusa" loading="lazy">
+          <video data-src="assets/x-feel-medusa.mp4" muted loop playsinline preload="none"></video>
+          <span class="hint">Hover · the feeling</span>
+        </div>
+        <div class="body">
+          <div class="no">Green Medusa · 45% · 🐍</div>
+          <div class="nm">Medusa</div>
+          <div class="tt chg">Insertable + Vibration<span class="was">3 · was: The Naughtiest of Them All</span></div>
+          <p>One look turns you to stone. Up close, it's the opposite: slow, serpentine, coiling exactly where it counts. Neon green on a red base this Christmas.</p>
+        </div>
+        <div class="spec"><div class="q">"One flick and you're hers."</div><p class="d">Medusa works inside and out. The neon-green tentacle is insertable and swirls in circles inside you, while the curled red tip vibrates right against your clit. Run either one on its own, or both together. 3 speeds and 7 patterns to play with, and she's happy in the shower too.</p><dl><div><dt>Material</dt><dd>Silicone + TPE</dd></div><div><dt>Settings</dt><dd>3 speeds + 7 patterns</dd></div><div><dt>Use</dt><dd>Internal + external</dd></div><div><dt>Water</dt><dd>IPX6 · shower-safe, not for the bath</dd></div><div><dt>Charge time</dt><dd>About 100 min, magnetic cable</dd></div><div><dt>Play time</dt><dd>50+ min</dd></div><div><dt>Size</dt><dd>155 × 104 × 48 mm</dd></div><div><dt>Colour</dt><dd>Neon green, red base · Christmas only</dd></div></dl></div>
+        <div class="what chg">The Naughtiest of Them All<span class="was">3 · was: Insertable + clitoral vibrator</span></div>
+        <div class="close"><video data-src="assets/close-medusa.mp4" poster="assets/close-medusa.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
+      </article>
+      <article class="rcard reveal">
+        <div class="ph">
+          <img src="assets/x-jack-hand.webp" alt="Neon Jack" loading="lazy">
+          <video data-src="assets/x-feel-jack.mp4" muted loop playsinline preload="none"></video>
+          <span class="hint">Hover · the feeling</span>
+        </div>
+        <div class="body">
+          <div class="no">Neon Jack · 1 in 10 bags · 🎃</div>
+          <div class="nm">Jack</div>
+          <div class="tt chg">Suction + Vibration<span class="was">3 · was: The Sweet Troublemaker</span></div>
+          <p>Arrives thirsty, leaves hungry for more. Small, but he gets around. Neon only this edition, and the hardest one to find.</p>
+        </div>
+        <div class="spec"><div class="q">"Don't let the smile fool you."</div><p class="d">Jack is a palm-sized pumpkin with two motors. Turn him over and there's a soft opening in the base: that's the suction, gentle air pulses that start soft and build over 11 levels. A second motor makes the whole pumpkin vibrate, with 7 speeds and 3 patterns. Use one, or press both buttons for a bigger finish. He's fully waterproof and charges by USB-C.</p><dl><div><dt>Material</dt><dd>Silicone + plastic</dd></div><div><dt>Settings</dt><dd>11 suction · 7 vibration + 3 patterns</dd></div><div><dt>Use</dt><dd>External</dd></div><div><dt>Water</dt><dd>IPX7 · fully waterproof, bath + shower</dd></div><div><dt>Charge time</dt><dd>60–120 min, USB-C</dd></div><div><dt>Play time</dt><dd>About 60 min at max</dd></div><div><dt>Size</dt><dd>76 × 62 × 63 mm</dd></div><div><dt>Colour</dt><dd>Neon lime · Christmas only</dd></div></dl></div>
+        <div class="what chg">The Sweet Troublemaker<span class="was">3 · was: Air suction + vibration</span></div>
+        <div class="close"><video data-src="assets/close-jack.mp4" poster="assets/close-jack.jpg" muted loop playsinline preload="none"></video><button class="snd" aria-label="Sound on">🔇</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO -->
+<section class="white">
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">Product walk-throughs</span>
+    <h2 class="big reveal">How <b>to?</b></h2>
+    <p class="lede reveal">A quick walk-through of each monster: the buttons, the modes and how to use it. Filmed with the Vol. I colours: same monsters, same buttons. Sound on, and watch before you film.</p>
+    <div class="howto">
+      <figure class="hcard reveal"><video src="assets/howto-lemmy.mp4" poster="assets/howto-lemmy.jpg" controls playsinline preload="none"></video><figcaption><b>Lemmy</b><span>How to · 1:42</span></figcaption></figure>
+      <figure class="hcard reveal"><video src="assets/howto-medusa.mp4" poster="assets/howto-medusa.jpg" controls playsinline preload="none"></video><figcaption><b>Medusa</b><span>How to · 1:36</span></figcaption></figure>
+      <figure class="hcard reveal"><video src="assets/howto-jack.mp4" poster="assets/howto-jack.jpg" controls playsinline preload="none"></video><figcaption><b>Jack</b><span>How to · 1:23</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- THE LOOK -->
+<section class="look">
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">The look</span>
+    <h2 class="big reveal">Monsters, <b>dressed for Christmas.</b></h2>
+    <p class="lede reveal">You don't need to copy it. We're just sharing what sits on our grid for the Christmas Edition.</p>
+    <div class="grid">
+      <figure class="w2 reveal"><img src="assets/x-medusa-hand2.webp" alt="Green Medusa on a hand in a silver sleeve, green fur" loading="lazy"></figure>
+      <figure class="w2 reveal"><img src="assets/x-lemmy-hand.webp" alt="Red Lemmy on a palm with pink organza" loading="lazy"></figure>
+      <figure class="w2 reveal"><img src="assets/x-jack-tray.webp" alt="Neon Jack on a silver tray, red satin gloves" loading="lazy"></figure>
+      <figure class="w2 reveal"><img src="assets/x-reveal-lemmy.webp" alt="Lemmy Christmas Monster Edition box" loading="lazy"></figure>
+      <figure class="w2 reveal"><img src="assets/x-medusa-white.webp" alt="Green Medusa next to her Christmas box" loading="lazy"></figure>
+      <figure class="w2 reveal"><img src="assets/x-reveal-neon-jack.webp" alt="Jack Christmas Monster Edition box" loading="lazy"></figure>
+    </div>
+    <div class="rules">
+      <div class="rule reveal"><div class="n">01</div><h3>Red, fir green, snow</h3><p>Red satin, green fur, a dusting of snow. Let the monster carry the colour.</p></div>
+      <div class="rule reveal"><div class="n">02</div><h3>Styled, not costumed</h3><p>Party dressing, satin, silver. Look like you're the best gift under the tree.</p></div>
+      <div class="rule reveal"><div class="n">03</div><h3>Cheeky, not crude</h3><p>Innuendo in the caption, never in the frame.</p></div>
+      <div class="rule reveal"><div class="n">04</div><h3>Skip the Christmas clichés</h3><p>No Santa hats or cartoon elves. And no Halloween orange.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE ASK -->
+<section class="dark">
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">What we'd love from you</span>
+    <h2 class="big reveal">Creative Unboxing <b>or MORE</b></h2>
+    <p class="lede reveal">Tear your bag open your way. Pick a format below or bring your own idea. We're open to making the next viral moment together.</p>
+    <div class="ask four">
+      <div class="acard reveal">
+        <div class="ph"><img src="assets/x-bag-sealed-red.webp" alt="Sealed red Silk Bow Mystery Monster bag" loading="lazy"></div>
+        <div class="body"><div class="n">01 · The tear-open</div><h3>Who did you get?</h3><p>Shake it, guess, tear it open. Did Neon Jack find you? Your honest first reaction is the content.</p></div>
+      </div>
+      <div class="acard reveal">
+        <div class="ph"><img src="assets/x-photo-lemmy-red.webp" alt="Red Lemmy held on green fur" loading="lazy"></div>
+        <div class="body"><div class="n">02 · Get ready with me</div><h3>GRWM for the Christmas party</h3><p>Getting ready for the holiday party, and the gift gets opened along the way.</p></div>
+      </div>
+      <div class="acard reveal">
+        <div class="ph"><img src="assets/x-fullhouse-open.webp" alt="Silk Bow gift bag with the three Christmas boxes in the snow" loading="lazy"></div>
+        <div class="body"><div class="n">03 · The hunt for Neon Jack</div><h3>Meet the whole set</h3><p>Line up all three Christmas monsters and the hidden 4th toy, and meet them one by one.</p></div>
+      </div>
+      <div class="acard reveal">
+        <div class="ph"><video src="assets/x-feel-medusa.mp4" muted loop playsinline autoplay></video></div>
+        <div class="body"><div class="n">04 · Your idea</div><h3>Got something wilder?</h3><p>Pitch it to us. If it feels like you and it could travel, let's make it.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="white">
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">Deliverables</span>
+    <h2 class="big reveal"><b>Deliverables.</b></h2>
+    <p class="lede reveal">Content goes LIVE from October 29–31, ahead of pre-orders opening on November 1.</p>
+    <div class="deliv">
+      <div class="dv reveal"><div class="n">01</div><h3>Collab feed post</h3><p>A collab feed post on Instagram with @nancymonsters &amp; @hellonancy_official.</p><span class="where">Instagram feed</span></div>
+      <div class="dv reveal"><div class="n">02</div><h3>Partner TikTok</h3><p>A partner TikTok video with @nancymonsters &amp; @hellonancy_official.</p><span class="where">TikTok</span></div>
+      <div class="dv reveal"><div class="n">03</div><h3>3–5 IG Stories</h3><p>To hype the pre-order and the hunt for Neon Jack 🎁</p><span class="where">Instagram Stories</span></div>
+      <div class="dv reveal"><div class="n">04</div><h3>90 days of boosting</h3><p>Whitelisting on IG &amp; Partnership on TikTok, so we can boost the content 💖</p><span class="where">IG + TikTok ads</span></div>
+    </div>
+    <div class="tagrow reveal">
+      <h3>Tag and <b>collaborate with us.</b></h3>
+      <div class="handles">
+        <a href="https://instagram.com/hellonancy_official" target="_blank" rel="noopener">@hellonancy_official</a>
+        <a href="https://instagram.com/nancymonsters" target="_blank" rel="noopener">@nancymonsters</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DO / DON'T -->
+<section>
+  <div class="wrap">
+    <span class="kicker eyebrow reveal">Keep it Nancy</span>
+    <h2 class="big reveal">Do. <b>Don't.</b></h2>
+    <div class="dd">
+      <div class="col do reveal">
+        <h3>Do</h3>
+        <ul>
+          <li>Call them by name: Red Lemmy, Green Medusa, Neon Jack</li>
+          <li>Keep it playful, confident, a little cheeky</li>
+          <li>Say “pleasure” freely. Never censor it.</li>
+          <li>Say “pre-order”: it ships by 1 December</li>
+          <li>Post for an 18+ audience</li>
+        </ul>
+      </div>
+      <div class="col reveal">
+        <h3>Don't</h3>
+        <ul>
+          <li>Anything explicit</li>
+          <li>Call it a restock, or mention Golden Tickets</li>
+          <li>Hard-sell. Tease the hunt, don't shout prices</li>
+          <li>Use leetspeak (no s3x). Asterisks only:
+            <div class="words"><span>s*x toy</span><span>v*brator</span><span>cl*t</span><span>l*be</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <img src="assets/nancy.svg" alt="Nancy">
+      <div class="r">
+        Questions? Reach out to <b>Crystal</b> or <b>Brittany</b>, whoever invited you.<br>
+        <a href="https://www.hellonancy.com" target="_blank" rel="noopener">hellonancy.com</a> ·
+        <a href="https://instagram.com/hellonancy_official" target="_blank" rel="noopener">@hellonancy_official</a> ·
+        <a href="https://instagram.com/nancymonsters" target="_blank" rel="noopener">@nancymonsters</a>
+      </div>
+    </div>
+    <div class="tag">Don't get ghosted <b>twice.</b></div>
+    <div class="bot"><span>Nancy Monster Mansion · Christmas Edition · Pre-orders open 1 Nov · Ships by 1 Dec 2026</span><span>18+ · Private brief, please don't share</span></div>
+  </div>
+</footer>
+
+<script>
+let io;
+// single page: start the observers
+setTimeout(()=>observe(),0);
+
+// lazy video src
+function load(v){if(v.dataset.src&&!v.src){v.src=v.dataset.src;}}
+// resident cards: hover plays the feeling loop; on touch, autoplay when in view
+const touch=matchMedia('(hover:none)').matches;
+document.querySelectorAll('.rcard').forEach(c=>{
+  const v=c.querySelector('video');
+  if(!touch){
+    c.addEventListener('mouseenter',()=>{load(v);v.play().catch(()=>{})});
+    c.addEventListener('mouseleave',()=>v.pause());
+  }
+  c.querySelector('.hint').textContent=touch?'The feeling':'Hover · the feeling';
+});
+
+function observe(){
+  io&&io.disconnect();
+  io=new IntersectionObserver(es=>es.forEach(e=>{
+    const t=e.target;
+    if(t.classList.contains('reveal')){if(e.isIntersecting){t.classList.add('in');}}
+    if(t.classList.contains('rcard')&&touch){const v=t.querySelector('video');if(e.isIntersecting){load(v);t.classList.add('play');v.play().catch(()=>{})}else{v.pause()}}
+    if(t.tagName==='VIDEO'&&t.dataset.src){if(e.isIntersecting)load(t)}
+  }),{threshold:.15});
+  if(location.search.includes('static'))document.documentElement.classList.add('static');
+  document.querySelectorAll('.panel:not([hidden]) .reveal,.panel:not([hidden]) .rcard,.panel:not([hidden]) video[data-src]').forEach(el=>io.observe(el));
+}
+
+// close-up films under each resident: play in view, one sound at a time
+const closes=[...document.querySelectorAll('.close video')];
+const cio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){load(v);v.play().catch(()=>{})}else v.pause()}),{threshold:.3});
+closes.forEach(v=>cio.observe(v));
+document.querySelectorAll('.close .snd').forEach(b=>b.addEventListener('click',()=>{
+  const v=b.previousElementSibling,on=v.muted;
+  closes.forEach(o=>{o.muted=true;o.nextElementSibling.textContent='🔇'});
+  if(on){load(v);v.muted=false;v.play().catch(()=>{});b.textContent='🔊'}
+}));
+
+// banner: stage colour follows the film's grey backdrop so the feathered edges disappear
+const vHero=document.getElementById('vHero'),stage=document.getElementById('stage');
+const sx=document.createElement('canvas').getContext('2d',{willReadFrequently:true});sx.canvas.width=sx.canvas.height=16;let lastS=0;
+if(vHero)requestAnimationFrame(function tick(now){
+  if(now-lastS>200&&vHero.readyState>=2&&!vHero.closest('[hidden]')){lastS=now;try{
+    sx.drawImage(vHero,0,0,16,16);const d=sx.getImageData(0,0,16,16).data;
+    const col=x=>{let r=0,g=0,b=0;for(let y=1;y<3;y++){const i=(y*16+x)*4;r+=d[i];g+=d[i+1];b+=d[i+2];}return[r/2,g/2,b/2]};
+    const ok=c=>Math.max(...c)-Math.min(...c)<14&&Math.min(...c)>170,f=c=>`rgb(${c.map(Math.round)})`;
+    const L=col(0),R=col(15);if(ok(L)&&ok(R))stage.style.background=`linear-gradient(90deg,${f(L)} 0%,${f(L)} 30%,${f(R)} 70%,${f(R)} 100%)`;
+  }catch(e){}}
+  requestAnimationFrame(tick);
+});
+</script>
+<script>
+(()=>{const hs=[...document.querySelectorAll('.hcard video')];
+hs.forEach(v=>v.addEventListener('play',()=>{
+  hs.forEach(o=>{if(o!==v)o.pause()});
+  document.querySelectorAll('.close video').forEach(o=>{o.muted=true;const b=o.nextElementSibling;if(b)b.textContent='🔇'});
+}));})();
+</script>
+</body>
+</html>
