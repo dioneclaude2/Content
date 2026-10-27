@@ -380,6 +380,7 @@ html.static .reveal{opacity:1;transform:none;transition:none}
 .cbanner li q{display:block;margin-top:6px;font-size:13.5px;color:rgba(244,243,240,.62);quotes:"“" "”"}
 .cbanner li q::before{content:"Momo: “"}
 .cbanner li q.you::before{content:"Dione: “"}
+.cbanner li q.crystal::before{content:"Crystal: “"}
 .cbanner .same{margin-top:18px;font-size:14px;color:rgba(244,243,240,.62);max-width:80ch}
 .cbanner .same b{color:#f4f3f0;font-weight:500}
 .ctag{display:inline-block;font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:none;background:#e9559c;color:#fff;padding:5px 9px;border-radius:999px;margin:0 0 6px;vertical-align:middle;white-space:nowrap}
@@ -391,6 +392,8 @@ ins{display:table;padding:0 .15em;margin-top:4px}
 .rm{position:relative;margin-top:18px}
 .rm>.ctag{background:#c2306f}
 .rm>*:not(.ctag){opacity:.36;filter:grayscale(1);text-decoration:line-through;text-decoration-color:#e9559c}
+.newblk{position:relative;margin-top:28px;outline:2px solid #f6e27a;outline-offset:12px;border-radius:2px}
+.newblk>.ctag{background:#b8860b}
 .chip-x{text-decoration:line-through;text-decoration-color:#e9559c;opacity:.6}
 </style>
 </head>
@@ -406,7 +409,7 @@ ins{display:table;padding:0 .15em;margin-top:4px}
 
 <div class="cbanner">
   <div class="wrap">
-    <span class="kicker" style="color:#f6e27a">Changes view · Momo feedback, 26–27 Oct</span>
+    <span class="kicker" style="color:#f6e27a">Changes view · Momo + Crystal feedback, 26–27 Oct</span>
     <h2>What changed in this version</h2>
     <p class="lead">Each change has a numbered pink tag on the page. Old wording is struck through on top, and the new wording is highlighted underneath. Removed parts are greyed out and struck through. The clean version creators see is <a href="./" style="color:#f6e27a">here</a>.</p>
     <div class="key"><span><del style="display:inline;opacity:.6">old wording</del></span><span><ins style="display:inline">new wording</ins></span></div>
@@ -416,8 +419,9 @@ ins{display:table;padding:0 .15em;margin-top:4px}
       <li><span class="ctag">3</span><div>Added a small “Product details” label under it, so the Mystery Monster and Monster Set info below reads as product info, not lines to say.<q class="you">you can just add product information, or like another term for it, so it doesn't look like we're telling them</q></div></li>
       <li><span class="ctag">4</span><div>Mystery Monster: removed the Price ($89 · $79 with your list link), Limit (max 2 per person) and Ships rows. The bag, photo, description and 45 / 45 / 10 odds stay.<q>influencers video always work the best when they dont focus on offer</q></div></li>
       <li><span class="ctag">5</span><div>Monster Set: removed the Price ($199), Numbered (001–300) and Ships rows, and the “Numbered 001 to 300, assigned in order of purchase” sentence in the description. The set contents and hidden 4th toy stay. The offer is also still being finalised with Ivan and Rahul.<q>Ivan is working on the offer with Rahul so I am also waiting for their go signal</q></div></li>
-      <li><span class="ctag">6</span><div>Removed talking points 01–06.<q>Remove talking point part</q></div></li>
+      <li><span class="ctag">6</span><div>Talking points 01–06 are replaced with six “Exciting points” about the products and the fun, with no prices, offers or pre-order push. They include “Don't be late for Halloween” and “Something exciting for Christmas”.<q>we want to utilize current influencers to focus on products and how exciting it is</q><q class="crystal">please help me update the talking point to the exciting point</q></div></li>
       <li><span class="ctag">7</span><div><a href="#res" style="color:#f6e27a">Resident cards</a> now match the collection page: the pink line says what each monster does, and the bottom line is the tagline.<q>change pink one to have “Suction + Licking” etc &amp; bottom part to have tagline</q></div></li>
+      <li><span class="ctag">8</span><div>Added the call to action under Deliverables: “Check out our website at hellonancy.com and find out more.” No campaign UTM links.<q>lets do check out their website at hellonancy.com and find out more so its more easy and stratightforward (instead of specific utm for this campaign)</q></div></li>
     </ol>
     <p class="same"><b>Checked, no change:</b> the sold-out wording is already “48 hours” everywhere (no “Day 1” or “on launch”). The landing page isn't added (Momo: “no need to add”). Everything else is unchanged (Momo: “otherwise its perfecttt”).</p>
   </div>
@@ -526,7 +530,7 @@ ins{display:table;padding:0 .15em;margin-top:4px}
 </div>      </div>
     </div>
 
-<div class="rm"><span class="ctag">6 · Removed · talking points</span>    <div class="k tp reveal">Talking points</div>
+<div class="rm"><span class="ctag">6 · Removed · old talking points</span>    <div class="k tp reveal">Talking points</div>
     <div class="talkpts">
       <div class="reveal"><div class="n">01</div><h3>They ghosted you in 48 hours. 👻</h3><p>Vol. I: 5,000 sold out in 48 hours. Now they're crashing Christmas.</p></div>
       <div class="reveal"><div class="n">02</div><h3>Hunt Neon Jack.</h3><p>1 in 10 Mystery Monster bags hides Neon Jack. Red Lemmy and Green Medusa are 45% each.</p></div>
@@ -535,7 +539,19 @@ ins{display:table;padding:0 .15em;margin-top:4px}
       <div class="reveal"><div class="n">05</div><h3>Christmas colours only.</h3><p>Not a restock. Red Lemmy, Green Medusa and Neon Jack are this Christmas only.</p></div>
       <div class="reveal"><div class="n">06</div><h3>Don't push what's gone.</h3><p>The Halloween colours and the Original Monster Set are sold out, and there are no Golden Tickets this edition. Point people to the Christmas pre-order.</p></div>
     </div>
-</div>  </div>
+</div>
+    <div class="newblk"><span class="ctag">6 · New · exciting points</span>
+    <div class="k tp reveal">Exciting points</div>
+    <div class="talkpts">
+      <div class="reveal"><div class="n">01</div><h3>They ghosted you in 48 hours. 👻</h3><p>Vol. I: 5,000 monsters sold out in 48 hours. Now they're back, and they're here to party.</p></div>
+      <div class="reveal"><div class="n">02</div><h3>Meet the monsters.</h3><p>Lemmy, the Cheeky Kisser (suction + licking). Medusa, the Naughtiest of Them All (insertable + vibration). Jack, the Sweet Troublemaker (suction + vibration).</p></div>
+      <div class="reveal"><div class="n">03</div><h3>Who did you get?</h3><p>Every Mystery Monster bag is a surprise, and 1 in 10 hides Neon Jack. Make the reveal the moment.</p></div>
+      <div class="reveal"><div class="n">04</div><h3>Don't be late for Halloween. 🎃</h3><p>The monsters are crashing spooky season. Have fun with them, your way.</p></div>
+      <div class="reveal"><div class="n">05</div><h3>Something exciting for Christmas. 🎄</h3><p>A Christmas set is coming, in colours you can only get this season.</p></div>
+      <div class="reveal"><div class="n">06</div><h3>Find out more.</h3><p>Check out our website at hellonancy.com and find out more.</p></div>
+    </div>
+    </div>
+  </div>
 </section>
 
 <!-- RESIDENTS -->
@@ -667,6 +683,7 @@ ins{display:table;padding:0 .15em;margin-top:4px}
     <span class="kicker eyebrow reveal">Deliverables</span>
     <h2 class="big reveal"><b>Deliverables.</b></h2>
     <p class="lede reveal">Content goes LIVE from October 29–31, ahead of pre-orders opening on November 1.</p>
+    <div class="newblk"><span class="ctag">8 · New</span><p class="lede reveal"><b>Call to action:</b> “Check out our website at hellonancy.com and find out more.”</p></div>
     <div class="deliv">
       <div class="dv reveal"><div class="n">01</div><h3>Collab feed post</h3><p>A collab feed post on Instagram with @nancymonsters &amp; @hellonancy_official.</p><span class="where">Instagram feed</span></div>
       <div class="dv reveal"><div class="n">02</div><h3>Partner TikTok</h3><p>A partner TikTok video with @nancymonsters &amp; @hellonancy_official.</p><span class="where">TikTok</span></div>
