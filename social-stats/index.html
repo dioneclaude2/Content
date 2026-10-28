@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=1c7e7c8">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=384a832">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -221,6 +221,12 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hb .ht{height:12px;background:var(--line-2);border-radius:4px;overflow:hidden}
 .hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
 .warnc{color:var(--warn)}
+.embeds{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.emb{flex:0 0 300px;margin:0;scroll-snap-align:start;display:flex;flex-direction:column;gap:6px}
+.emb figcaption{font-size:12.5px;line-height:1.5}
+.emb figcaption .chip{margin-left:6px}
+.emb iframe{width:100%;height:560px;border:1px solid var(--line);border-radius:14px;background:#fff}
+@media print{.embeds{display:none}}
 .chip.rt-organic{background:var(--good-bg);color:var(--good)}
 .chip.rt-boosted{background:var(--pink-soft);color:#B0008F}
 .chip.rt-unknown{background:var(--warn-bg);color:var(--warn)}
@@ -237,7 +243,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=1c7e7c8" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=384a832" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -252,7 +258,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=1c7e7c8";
+import * as E from "./engine.js?v=384a832";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -435,8 +441,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=1c7e7c8");
-    const logo = await svgToPng("logo-circle.svg?v=1c7e7c8", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=384a832");
+    const logo = await svgToPng("logo-circle.svg?v=384a832", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -564,7 +570,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=1c7e7c8" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=384a832" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -889,6 +895,19 @@ function tiles(list){
   return `<div class="tiles">${list.map(([k, v, s]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`).join("")}</div>`;
 }
 
+/* Top 5 posts by views, embedded from Instagram (playable), side by side */
+function topEmbedsHTML(R){
+  const list = R.contentRows.filter(r => r.views != null && r.id && !r.adOnly).sort((a, b) => b.views - a.views).slice(0, 5);
+  if (!list.length) return "";
+  return `<div class="sec"><h2>Top 5 posts</h2>
+    <div class="embeds">${list.map((r, i) => `<figure class="emb">
+      <figcaption><b>#${i + 1}</b> · ${F.int(r.views)} views · ${r.er == null ? "—" : F.pct(r.er)} eng.${reachChip(r)}</figcaption>
+      <iframe src="https://www.instagram.com/p/${esc(r.id)}/embed/" loading="lazy" scrolling="no" allowtransparency="true" title="${esc((r.content || r.id).slice(0, 60))}"></iframe>
+      <a class="small" href="${esc(r.link)}" target="_blank" rel="noopener">Open on Instagram ↗</a>
+    </figure>`).join("")}</div>
+    <p class="small dim">Ranked by views. A box saying the post “may be broken” means its owner turned off embedding — use Open on Instagram.</p></div>`;
+}
+
 function rankHTML(R){
   return `<div class="grid g3">${Object.entries(R.rankings).map(([name, list]) => `<div class="card" style="padding:14px">
     <h3>${esc(name)}</h3>
@@ -969,6 +988,7 @@ function weeklyHTML(rep, R, P, D){
       ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
     ])}</div>
     ${R.dominant ? `<div class="sec"><div class="flag warn"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post — ${link(R.dominant, 60)} — drove ${F.pct(R.dominant.views / T.postViews)} of this week's post views.${R.withoutCollabs ? ` Without collab posts: ${F.int(R.withoutCollabs.views)} views, blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div></div>` : ""}
+    ${topEmbedsHTML(R)}
     <div class="sec"><h2>Summary</h2>${tbl("t-sum", ["Metric", N("Value"), `vs target / ${esc(prevName)}`, "Status"], summary)}</div>
     <div class="sec"><h2>This week's posts</h2>${R.rows.length ? weeklyPostTable(R) : `<div class="empty">${miss(R.missing.posts || { need: "posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}</div>
     <div class="sec grid g2">
@@ -1045,6 +1065,7 @@ function eventHTML(rep, R, P, D){
       ["Engagements", F.big(T.interactions), `${F.usd(T.costPerEngagement)} each`],
       ["Follows", T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0)), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
     ])}</div>
+    ${topEmbedsHTML(R)}
     <div class="sec"><h2>Event table</h2>
       ${R.rows.length ? tbl("t-event", ["Sr. no.", "Platform", "Format", "Link", "Boosted", N("Amount spent (USD)"), N("Total views"), N("Organic views"), N("Boosted views"), N("Boosted CPM"), "Note"], evRows, { ev: true })
         : `<div class="empty">${miss({ need: "the event's posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}
@@ -2400,7 +2421,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=1c7e7c8", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=384a832", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
