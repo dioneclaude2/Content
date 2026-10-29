@@ -528,6 +528,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     r.organic = r.views == null ? null : r.views - r.paid;
     r.cpm = r.paid && r.spend ? per1k(r.spend, r.paid) : null;     // no CPM when the spend sits in a campaign row
     r.er = r.interactions != null && r.views ? r.interactions / r.views : null;
+    r.erInter = r.views ? r.interactions : null;               // only posts with a view count feed engagement rate
     r.campaigns = [...new Set(r.ads.map(a => a.campaign).filter(Boolean))].join(", ");
   }
 
@@ -600,7 +601,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     blendedCPM: per1k(totalSpend, totalViews),
     adsOnly: ads.length ? div(adSpend, paidViews) : null,
     organicOnly: nonAd ? div(nonAd, organicViews) : null,
-    interactions, er: div(interactions, postViews),
+    interactions, er: hasEng(contentRows) ? div(sum(contentRows, r => r.erInter), sum(contentRows.filter(r => r.erInter != null), r => r.views)) : null,
     reach: sum(contentRows, r => r.reach),
     likes: sum(contentRows, r => r.likes), comments: sum(contentRows, r => r.comments),
     saves: sum(contentRows, r => r.saves), shares: sum(contentRows, r => r.shares),
@@ -639,10 +640,11 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   /* 10 · breakdowns */
   const group = (name, list) => {
     const views = sum(list, r => r.views), inter = hasEng(list) ? sum(list, r => r.interactions) : null;
+    const er = inter == null ? null : div(sum(list, r => r.erInter), sum(list.filter(r => r.erInter != null), r => r.views));
     return {
       name, posts: list.length, views, reach: sum(list, r => r.reach), likes: sum(list, r => r.likes),
       comments: sum(list, r => r.comments), saves: sum(list, r => r.saves), shares: sum(list, r => r.shares),
-      interactions: inter, er: div(inter, views), vsBench: views && inter != null ? div(inter, views) - bench : null,
+      interactions: inter, er, vsBench: er == null ? null : er - bench,
       paid: sum(list, r => r.paid), spend: sum(list, r => r.spend),
       avgViews: list.length ? views / list.length : null,
       avgER: (() => { const e = list.map(r => r.er).filter(x => x != null); return e.length ? sum(e) / e.length : null; })(),
@@ -1301,7 +1303,11 @@ export function parseEventSheet(text) {
   const H = rows[hi];
   const at = re => H.findIndex(h => re.test(h));
   const c = { sr: at(/^sr/i), plat: at(/^platform|^account/i), fmt: at(/^format/i), link: at(/^link$/i), boosted: at(/^boosted \(|^boosted$/i),
-    spend: at(/amount spent/i), total: at(/^total views/i), organic: at(/^organic views/i), paid: at(/^boosted views/i) };
+    spend: at(/amount spent/i), total: at(/^total views/i), organic: at(/^organic views/i), paid: at(/^boosted views/i),
+    // optional extras some tabs carry
+    date: at(/^post date|^date posted|^date$/i), caption: at(/^caption|^content$/i), likes: at(/^likes/i), comments: at(/^comments/i),
+    saves: at(/^saves/i), shares: at(/^shares/i), reach: at(/^reach/i), follows: at(/^follows/i) };
+  const cell = (r, k) => (c[k] >= 0 ? num(r[c[k]]) : null);
   const seeRow = [];                                     // posts whose ads sit in a shared campaign row
   let i = hi + 1;
   for (; i < rows.length; i++) {
@@ -1318,8 +1324,10 @@ export function parseEventSheet(text) {
       const account = plat.replace(/\s*\(.*\)\s*$/, "") || "Hello Nancy";
       const extra = /extra|pre-event/i.test(plat);
       out.posts.push({ id: code, link: /^https?:/.test(link) ? link : `https://www.instagram.com/p/${code}/`, igId: "", account,
-        collab: /^@/.test(account), format: normFormat(r[c.fmt]), content: "", date: null, boosted: yes(r[c.boosted]),
-        snap: { views: total, reach: null, likes: null, comments: null, saves: null, shares: null, visits: null, follows: null } });
+        collab: /^@/.test(account), format: normFormat(r[c.fmt]), content: c.caption >= 0 ? (r[c.caption] || "") : "",
+        date: c.date >= 0 ? toDate(r[c.date]) : null, boosted: yes(r[c.boosted]),
+        snap: { views: total, reach: cell(r, "reach"), likes: cell(r, "likes"), comments: cell(r, "comments"), saves: cell(r, "saves"),
+          shares: cell(r, "shares"), visits: null, follows: cell(r, "follows") } });
       if (!extra) out.postIds.push(code);
       if (/see .*row/i.test(spendRaw)) { seeRow.push(link); continue; }
       if ((paid || 0) > 0 || (spend || 0) > 0)
@@ -1347,6 +1355,13 @@ export function parseEventSheet(text) {
     const y = +out.range.end.slice(0, 4), mo = MON[dm[2].slice(0, 3).toLowerCase()];
     out.dataDate = ymd(mo < +out.range.end.slice(5, 7) ? y + 1 : y, mo, +dm[1]);
   }
+  // "… scraped via Apify on 27 Oct 2026" in the title is the data date too
+  const tm = out.title.match(/(?:scraped|pulled|exported)[^·]*?(\d{1,2}\s+[A-Za-z]{3,9}\.?\s+\d{4})/i);
+  if (!out.dataDate && tm) out.dataDate = toDate(tm[1]);
+  // a title with only a month ("Oct 2026") gives no event days: use the posts' own dates
+  const dates = out.posts.map(p => p.date).filter(Boolean).sort();
+  if (dates.length && (!out.range || out.range.start === out.dataDate || !/\d{1,2}\s*(?:[–—-]\s*\d{1,2}\s*)?[A-Za-z]{3,9}|[A-Za-z]{3,9}\.?\s+\d{1,2}\b/.test(out.title.split("·").slice(1, 2).join(""))))
+    out.range = { start: dates[0], end: dates[dates.length - 1] };
   return out;
 }
 
@@ -1367,6 +1382,16 @@ export function parseEventTotals(text) {
       }
     });
   }
+  // the top block ("<Name> Event" · Total Spend · Ads · Event …) for events without that split
+  (rows[0] || []).forEach((cell, j) => {
+    const m = String(cell).match(/^(.+?)\s+event$/i);
+    if (!m || out[m[1].trim()]) return;
+    const row = label => rows.find(r => new RegExp(`^${label}`, "i").test(r[j] || ""));
+    const ev = row("event$");
+    if (!ev) return;
+    const src = row("event cost source");
+    out[m[1].trim()] = { influencerCost: null, eventCost: num(ev[j + 1]), source: src ? src[j + 1] : "" };
+  });
   return out;
 }
 

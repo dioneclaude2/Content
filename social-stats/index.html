@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=901b570">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=3c1fb99">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -221,6 +221,7 @@ input.ed,select.ed{padding:5px 7px;font-size:12.5px;border-radius:8px}
 .hb .ht{height:12px;background:var(--line-2);border-radius:4px;overflow:hidden}
 .hb .ht i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
 .warnc{color:var(--warn)}
+.flag.adsnote{background:var(--pink-soft);color:#7a0060;margin:0 0 14px}
 .embeds{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
 .emb{flex:0 0 300px;margin:0;scroll-snap-align:start;display:flex;flex-direction:column;gap:6px}
 .emb figcaption{font-size:12.5px;line-height:1.5}
@@ -245,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=901b570" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=3c1fb99" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -260,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=901b570";
+import * as E from "./engine.js?v=3c1fb99";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -443,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=901b570");
-    const logo = await svgToPng("logo-circle.svg?v=901b570", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=3c1fb99");
+    const logo = await svgToPng("logo-circle.svg?v=3c1fb99", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -572,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=901b570" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=3c1fb99" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1067,6 +1068,7 @@ function eventHTML(rep, R, P, D){
       ["Engagements", F.big(T.interactions), `${F.usd(T.costPerEngagement)} each`],
       ["Follows", T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0)), `${T.adFollows == null ? "ads: missing" : F.int(T.adFollows) + " from ads"} · ${F.int(T.postFollows)} from posts`],
     ])}</div>
+    ${rep.adsNote ? `<div class="sec">${adsNoteHTML(rep)}</div>` : ""}
     ${topEmbedsHTML(R)}
     <div class="sec"><h2>Event table</h2>
       ${R.rows.length ? tbl("t-event", ["Sr. no.", "Platform", "Format", "Link", "Boosted", N("Amount spent (USD)"), N("Total views"), N("Organic views"), N("Boosted views"), N("Boosted CPM"), "Note"], evRows, { ev: true })
@@ -1216,6 +1218,8 @@ function costBreakdownHTML(R){
     ${one ? `<p class="small dim" style="margin-top:6px">1 ${one} = $${(+(R.costFx || R.fx)[one]).toFixed(4)}</p>` : ""}</div>`;
 }
 
+const adsNoteHTML = rep => rep.adsNote ? `<div class="flag info adsnote"><b>Ads</b><span>${esc(rep.adsNote)}</span></div>` : "";
+
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
@@ -1223,6 +1227,7 @@ function eventSummaryHTML(rep, R, P){
   const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
   return `
     <p class="headline">${esc(head)}</p>
+    ${adsNoteHTML(rep)}
     <div class="tiles big">
       <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
@@ -1857,7 +1862,7 @@ function importEventTab(text, url, repId, costs, infLabel, breakdown, ov = {}){
   const pulled = S.dataDate || rep.dataDate || today();
   const merged = E.mergePosts(db().posts, S.posts, pulled, rep.id);
   for (const p of Object.values(merged)) put("ss.post." + p.id, p);
-  const patch = { sheetUrl: url, start: S.range?.start || rep.start || today(), end: S.range?.end || rep.end || today(), dataDate: pulled,
+  const patch = { adsNote: ov.adsNote || null, sheetUrl: url, start: S.range?.start || rep.start || today(), end: S.range?.end || rep.end || today(), dataDate: pulled,
     postIds: [...new Set([...(rep.postIds || []), ...S.postIds])], sheetNotes: S.sheetNotes, fresh: false };
   const realExports = (rep.importIds || []).filter(i => D.imports[i] && !D.imports[i].fromSheet);
   if (S.ads.length && !realExports.length) {
@@ -2423,7 +2428,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=901b570", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=3c1fb99", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
@@ -2451,7 +2456,8 @@ async function refreshFromSources(){
         const text = await sheetCsv(e.sheet, gid);
         const ov = (e.overrides || {})[gid] || {};
         const name = ov.name || E.parseEventSheet(text).name;
-        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase());
+        const key = Object.keys(costsBy).find(k => k.toLowerCase() === name.toLowerCase())
+          || Object.keys(costsBy).find(k => name.toLowerCase().startsWith(k.toLowerCase()));
         importEventTab(text, url, null, costsBy[key], (e.labels || {})[name], (e.costs || {})[name], ov); n++;
       } catch (err) { failed++; console.warn("Sheet tab", gid, err); }
     }

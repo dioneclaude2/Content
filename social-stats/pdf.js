@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=901b570";
+import * as E from "./engine.js?v=3c1fb99";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -286,6 +286,7 @@ function event(rep, R, Pv, mode, logo) {
     `${F.date(rep.start)} – ${F.date(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.date(R.dataDate)}`);
   const head = rundownHeadline(rep.rundown) || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "No posts or ad data yet.");
   P.para(head, { size: 12, style: "italic", gap: 10 });
+  if (rep.adsNote) P.note("Ads", rep.adsNote, MUTED);
   P.kpis([
     ["Total spend", F.usd(T.totalSpend), "ads, influencers and event costs"],
     ["Total views", F.big(T.totalViews), T.paidUnknown ? "organic / paid split unknown" : `${F.pct(T.pctOrganic)} organic`],
