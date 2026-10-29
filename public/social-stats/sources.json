@@ -336,6 +336,11 @@
             }
           ]
         }
+      },
+      "overrides": {
+        "392856255": {
+          "adsNote": "No ads ran"
+        }
       }
     },
     {
@@ -402,6 +407,33 @@
               "currency": "GBP",
               "source": "Brighton expenses tab (13rusl9Z… · Brighton 06/01) · category subtotals"
             }
+          ]
+        }
+      }
+    },
+    {
+      "sheet": "1EQB88LkWoHRxl33MyNeqI1q563RUo-YnDx_jc1BWO44",
+      "tabs": [
+        "747848064",
+        "1751495182"
+      ],
+      "totals": "1197350775",
+      "overrides": {
+        "747848064": {
+          "adsNote": "No ads ran",
+          "colour": "Pink",
+          "notes": [
+            "Event cost £6,615.83 (Lauren's expense sheet) = $8,760.35, total only — no breakdown yet.",
+            "Engagement counts likes + comments only (saves and shares aren't in the sheet). Two carousels have no public view count."
+          ]
+        },
+        "1751495182": {
+          "adsNote": "Only one ad ran: a whitelisted ad through @huebyru — $266, 34,752 views",
+          "colour": "Pink",
+          "notes": [
+            "Event cost £23,874.97 (Lauren's expense sheet) = $31,583.36, total only — no breakdown yet.",
+            "Engagement counts likes + comments only (saves and shares aren't in the sheet). One post couldn't be scraped; carousels have no public view count.",
+            "The ads team reported the whitelisted ad at $60.72 CPM (impression-based); the views-based CPM is shown here."
           ]
         }
       }

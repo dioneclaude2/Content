@@ -286,6 +286,7 @@ function event(rep, R, Pv, mode, logo) {
     `${F.date(rep.start)} – ${F.date(rep.end)} · ${R.durationDays} day${R.durationDays === 1 ? "" : "s"} · ${T.posts} event posts (${T.nancyPosts} Nancy, ${T.collabPosts} collab)${T.extra ? ` + ${T.extra} extra` : ""} · data pulled ${F.date(R.dataDate)}`);
   const head = rundownHeadline(rep.rundown) || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "No posts or ad data yet.");
   P.para(head, { size: 12, style: "italic", gap: 10 });
+  if (rep.adsNote) P.note("Ads", rep.adsNote, MUTED);
   P.kpis([
     ["Total spend", F.usd(T.totalSpend), "ads, influencers and event costs"],
     ["Total views", F.big(T.totalViews), T.paidUnknown ? "organic / paid split unknown" : `${F.pct(T.pctOrganic)} organic`],
