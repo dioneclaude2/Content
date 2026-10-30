@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=3c1fb99">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=dea8edd">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=3c1fb99" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=dea8edd" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=3c1fb99";
+import * as E from "./engine.js?v=dea8edd";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=3c1fb99");
-    const logo = await svgToPng("logo-circle.svg?v=3c1fb99", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=dea8edd");
+    const logo = await svgToPng("logo-circle.svg?v=dea8edd", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -573,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=3c1fb99" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=dea8edd" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -2428,7 +2428,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=3c1fb99", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=dea8edd", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
