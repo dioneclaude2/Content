@@ -132,7 +132,6 @@ details.guide[open] summary::after{content:"Hide"}
     <nav class="tabs" role="tablist" aria-label="Main">
       <button class="tab" role="tab" data-tab="plan" aria-selected="true">Plan</button>
       <button class="tab" role="tab" data-tab="pipe" aria-selected="false">Pipeline</button>
-      <button class="tab" role="tab" data-tab="intel" aria-selected="false">Intel</button>
       <button class="tab" id="moreBtn" aria-expanded="false">More ▾</button>
       <div class="more" id="moreMenu" hidden>
         <button data-more="Calendar">Calendar<small>Every moment, month by month</small></button>
@@ -159,9 +158,6 @@ details.guide[open] summary::after{content:"Hide"}
     <div class="board" id="board"></div>
   </section>
 
-  <section id="intel" class="view" hidden>
-    <div class="panel"><b>Intel stays as it is today.</b>Pill badges: Intimacy science · Pop culture · Trending now · CapCut · Trends · Competitors · Rules watch. Refreshed every Monday at 6 AM.</div>
-  </section>
 
   <div class="panel" id="soon" hidden></div>
 </div>
@@ -222,7 +218,7 @@ const host = u => { try { return new URL(normUrl(u)).hostname.replace(/^www\./, 
 /* ---------- tabs ---------- */
 document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
   document.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === t));
-  ["plan","pipe","intel"].forEach(id => $("#" + id).hidden = id !== t.dataset.tab);
+  ["plan","pipe"].forEach(id => $("#" + id).hidden = id !== t.dataset.tab);
   $("#soon").hidden = true; closeMore();
   if (t.dataset.tab === "pipe") renderPipe();
 });
