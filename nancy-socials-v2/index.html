@@ -119,6 +119,18 @@ details.guide[open] summary::after{content:"Hide"}
 .day.suggest{border-color:var(--c)}
 .day.suggest small{color:var(--c)}
 .day[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#160b10}
+.final{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.final-h{display:flex;justify-content:space-between;align-items:baseline}
+.final-h span{font-size:12px;color:var(--muted)}
+.final video,.final img{width:100%;max-height:420px;border-radius:10px;background:#000;object-fit:contain}
+.final-row{display:flex;gap:8px;flex-wrap:wrap}
+.final small{font-size:11.5px;color:var(--dim)}
+.final .pv{color:#FFD2BA}
+.btn.up{justify-self:start}
+label.btn{display:inline-flex;align-items:center}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.final-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+.badge-final{position:absolute;top:30px;left:6px;z-index:2;font-size:9.5px;font-weight:900;background:#3DDC97;color:#0b1a12;border-radius:999px;padding:2px 7px}
 .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:800}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px;font-size:13.5px;color:var(--muted);line-height:1.5}
 .panel b{color:var(--text)}
@@ -245,7 +257,10 @@ function renderPlan(){
     posts.forEach((p, j) => {
       const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color;
       const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
-      if (md) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
+      if (p.final) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}${p.final.type.startsWith("video")
+          ? `<video class="final-media" src="${p.final.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${p.final.url}" alt="">`}
+        <span class="badge-final">✓ Final</span><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
+      else if (md) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
       else tiles.push(`<div class="tile" style="--c:${c}" data-key="${key}" data-j="${j}" role="button" tabindex="0">${tag}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
     if (!posts.length && !moms.length) tiles.push(`<div class="tile empty" data-new="${key}" role="button" tabindex="0">${tag}<b>Post ${++n}</b><small>Open · tap to fill in</small></div>`);
@@ -299,6 +314,16 @@ function openPost(acct, key, j){
     <div class="sheet-h"><b>${a.name} · ${label(new Date(key + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
+    <div class="final">
+      <div class="final-h"><b>Final edit</b><span>${p.final ? "✓ Uploaded" : "Not uploaded yet"}</span></div>
+      ${p.final ? `${p.final.type.startsWith("video") ? `<video src="${p.final.url}" controls playsinline></video>` : `<img src="${p.final.url}" alt="">`}
+        <div class="final-row"><a class="btn" href="${p.final.url}" download="${esc(p.final.name)}">⬇ Download original</a>
+          <label class="btn ghost">Replace<input type="file" id="fFile" accept="video/*,image/*" hidden></label></div>
+        <small>${esc(p.final.name)} · ${(p.final.size / 1048576).toFixed(1)} MB · full quality</small>`
+      : `<label class="btn up">⬆ Upload final edit<input type="file" id="fFile" accept="video/*,image/*" hidden></label>
+        <small>Pick the finished video or image. It replaces the reference on the grid.</small>`}
+      <small class="pv">Preview only: the file stays in this browser. In the real version it saves to your Google Drive.</small>
+    </div>
     <label class="field"><span>Idea</span><input id="fTitle" value="${esc(p.title)}" placeholder="What's the post?"></label>
     <label class="field"><span>Reference link</span><input id="fRef" value="${esc(p.ref)}" placeholder="Paste a link: IG, TikTok, YouTube, Drive…" inputmode="url" autocomplete="off"></label>
     <div class="field"><span>Content type</span>${TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${list.map(([n, c]) => `<button class="chip" data-type="${esc(n)}" style="--tc:${c}" aria-pressed="${p.type === n}">${esc(n)}</button>`).join("")}</div></div>`).join("")}</div>
@@ -312,6 +337,12 @@ function openPost(acct, key, j){
       ${a.test && p.title ? `<button class="btn gold" id="fWin">🔥 Worked → Official</button>` : ""}
       <button class="btn ghost" id="fDel">Delete post</button>
     </div>`);
+  $("#fFile").onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    if (p.final) URL.revokeObjectURL(p.final.url);
+    p.final = {name: f.name, type: f.type || "video/mp4", size: f.size, url: URL.createObjectURL(f)};
+    openPost(acct, key, j);
+  };
   $("#fTitle").oninput = e => p.title = e.target.value;
   $("#fRef").onchange = e => { p.ref = normUrl(e.target.value); openPost(acct, key, j); };
   $("#fNote").oninput = e => p.note = e.target.value;
