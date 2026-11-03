@@ -131,6 +131,16 @@ label.btn{display:inline-flex;align-items:center}
 a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .final-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 .badge-final{position:absolute;top:30px;left:6px;z-index:2;font-size:9.5px;font-weight:900;background:#3DDC97;color:#0b1a12;border-radius:999px;padding:2px 7px}
+.sync{display:inline-flex;align-items:center;gap:6px;font-weight:700;letter-spacing:0}
+.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,#7A6D74)}
+.addcard{display:grid;grid-template-columns:2fr 1.5fr 1fr auto;gap:8px}
+.addcard input,.addcard select{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13.5px;min-width:0}
+@media (max-width:620px){.addcard{grid-template-columns:1fr}}
+.card{cursor:pointer}
+.card .ctl{display:flex;gap:6px;align-items:center}
+.card .ctl button{border:1px solid var(--line);background:none;border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;color:var(--muted)}
+.tnote{font-size:12.5px;color:var(--muted);line-height:1.45}
+.tnote b{color:var(--text)}
 .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:800}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px;font-size:13.5px;color:var(--muted);line-height:1.5}
 .panel b{color:var(--text)}
@@ -138,7 +148,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 </style>
 </head><body>
 <div class="wrap">
-  <div class="note">PREVIEW FOR DISCUSSION · changes here aren't saved and don't touch your live planner</div>
+  <div class="note"><span class="sync" id="sync">Connecting…</span></div>
   <div class="top">
     <div class="brand">Nancy <em>socials</em></div>
     <nav class="tabs" role="tablist" aria-label="Main">
@@ -166,6 +176,12 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
   </section>
 
   <section id="pipe" class="view" hidden>
+    <form class="addcard" id="addCard">
+      <input name="title" placeholder="New Pipeline card: what's the idea?" required aria-label="Card title">
+      <input name="ref" placeholder="Reference link (optional)" inputmode="url" autocomplete="off" aria-label="Reference link">
+      <select name="by" id="addBy" aria-label="Added by"></select>
+      <button class="btn" type="submit">Add</button>
+    </form>
     <div class="pills" id="byPills"></div>
     <div class="board" id="board"></div>
   </section>
@@ -179,7 +195,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 
 <script>
 const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-// Real moments from the Nancy calendar: big single-day ones on their date, month-long ones on the day they start.
+// Big single-day moments on their date; month-long ones on the day they start.
 const MOMENTS = [["2026-11-11","Singles Day (11.11)"],["2026-11-20","Trans Day of Remembrance"],["2026-11-26","Thanksgiving (US)"],["2026-11-27","Black Friday"],["2026-11-30","Cyber Monday"],["2026-12-01","World AIDS Day"],["2026-12-17","Holiday shipping cutoff"],["2026-12-24","Christmas Eve"],["2026-12-25","Christmas Day"],["2026-12-26","Boxing Day"],["2026-12-31","New Year's Eve"],["2026-11-01","No Nut November (all month)"],["2026-11-01","Movember (all month)"],["2027-01-01","Dry January (all month)"]];
 const ACCOUNTS = {
   community: {name:"Community", color:"var(--community)", job:"Testing outliers", test:true},
@@ -197,23 +213,82 @@ const TYPES = [
 const TYPE_COLOR = Object.fromEntries(TYPES.flatMap(g => g[1]).map(t => [t[0], t[1]]));
 const TEAM = {Dione:"#FF4F8B", Susan:"#4FB3FF", Crystal:"#FFB547"};
 const STAGES = ["Reference","Idea","Draft","Scheduled","Posted"];
-// Your real Pipeline cards and references, copied from the live site.
-let pipeline = [{"id": 1, "title": "Trending animation  - use moving lemons", "ref": "https://www.instagram.com/p/Dc_K2wxDzgc/?img_index=4&stkn=Yjg1ZndkbWZnbzRw", "by": "Crystal", "stage": 1, "notes": []}, {"id": 2, "title": "How would we react based on how many vibrators you have 😜", "ref": "https://www.instagram.com/reels/Ddzxb3TBeKP/", "by": "Dione", "stage": 0, "notes": [["Dione", "Outlier content almost all contents in this format are viral!"]]}, {"id": 3, "title": "Have you faked an Orgasam interview woman Vs. Men", "ref": "https://www.instagram.com/reels/DdOtNnQs0o2/", "by": "Dione", "stage": 0, "notes": [["Dione", "Interviewers asked women and men and the answers contrast says everything."]]}, {"id": 4, "title": "You ordered a v*brator from Nancy", "ref": "https://www.instagram.com/reels/Da6TaqsyCBh/", "by": "Dione", "stage": 0, "notes": [["Dione", "A delivery guy recording a CCTV video telling the recipient her order's been vibrating for awhile and its annoying him. If ever it dies, its not his doing."]]}, {"id": 5, "title": "OOO photo ideas", "ref": "https://www.instagram.com/p/DeY2OOIEazl/?cplk=MTN2czBxZGwwemc2NA==", "by": "Crystal", "stage": 0, "notes": []}, {"id": 6, "title": "Bad, Better, Best trend", "ref": "https://www.instagram.com/p/DeaFyHDknRJ/?img_index=3&srtk=ejBycmwzZ2Y5Z2Q5", "by": "Susan", "stage": 1, "notes": []}, {"id": 7, "title": "Fav toys", "ref": "https://www.instagram.com/reel/DeeMfISy47H/?vrfl=ZzFmcHk5NGRlMG1t", "by": "Susan", "stage": 1, "notes": []}, {"id": 8, "title": "Outlier", "ref": "https://www.instagram.com/reel/DajYvF4Sx90/?stkn=Njk4aDM3OTBxc2h5", "by": "Dione", "stage": 3, "notes": [], "fromOld": true}, {"id": 9, "title": "Reference and Script below", "ref": "https://www.instagram.com/reel/Dc9yVXUT392/?stkn=MWZrZWdzdm9tN3Y1aQ==", "by": "Dione", "stage": 3, "notes": [], "fromOld": true}];
-const slots = Object.fromEntries(Object.keys(ACCOUNTS).map(k => [k, {}]));
-// Posts with references from the old plan, on Official on their real dates (week of Oct 5).
-[{"day": "2026-10-05", "type": "Meme", "title": "\"Wait what? my lemon tastes weird\"\n\nchange the sound to lem vibrating sound", "ref": "https://www.instagram.com/reels/DcgPqDDNtuD/"}, {"day": "2026-10-07", "type": "Event teaser", "title": "RUSHITA PAINTING TEASER REEL", "ref": "https://app.shade.inc/publish/401eed3a-9d8f-4f44-a385-886e3c47163d"}, {"day": "2026-10-05", "type": "Outlier test", "title": "\"I feel hot.. I think\" outlier hook format with ACE and SMASH", "ref": "https://www.instagram.com/reels/DZYPWfJBIi8/"}].forEach(x => { (slots.official[x.day] ||= []).push({type: x.type, title: x.title, ref: x.ref, film: "", edit: "", note: ""}); });
-let current = "community", monday = new Date(2026, 10, 2), byFilter = "all";
-const $ = s => document.querySelector(s);
+
+/* ───────── Team sync ─────────
+   Every post and Pipeline card is saved as its own record (ns.v2.post.<id>, ns.v2.card.<id>)
+   in the shared store, so two people editing different things never overwrite each other. */
+const API = "https://content-nine-topaz.vercel.app/api/socials";
+const POSTS = new Map(), CARDS = new Map();
+const dirty = new Map();          // key -> record waiting to upload (null = delete)
+const finals = new Map();         // post id -> uploaded file (this browser only until Google Drive is connected)
+let openId = null, timer = null, lastOk = 0;
+const keyOf = (kind, id) => `ns.v2.${kind}.${id}`;
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+function showSync(text, color){ const el = $("#sync"); el.textContent = text; el.style.setProperty("--c", color); }
+function save(kind, rec){
+  rec.at = Date.now();
+  (kind === "post" ? POSTS : CARDS).set(rec.id, rec);
+  dirty.set(keyOf(kind, rec.id), rec); schedule();
+}
+function remove(kind, id){
+  (kind === "post" ? POSTS : CARDS).delete(id);
+  dirty.set(keyOf(kind, id), null); schedule();
+}
+function schedule(){ showSync("Saving…", "#FFB547"); clearTimeout(timer); timer = setTimeout(flush, 400); }
+async function flush(){
+  for (const [key, value] of [...dirty]){
+    try {
+      const r = await fetch(API, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({key, value})});
+      if (!r.ok) throw new Error(r.status);
+      if (dirty.get(key) === value) dirty.delete(key);
+    } catch { showSync("Offline · will retry", "#FF8A4C"); clearTimeout(timer); timer = setTimeout(flush, 5000); return; }
+  }
+  showSync("Saved · synced with team", "#3DDC97");
+}
+async function pull(){
+  let docs;
+  try { const r = await fetch(API, {cache: "no-store"}); if (!r.ok) throw 0; docs = (await r.json()).docs || {}; }
+  catch { showSync("Offline · showing your last view", "#FF8A4C"); return false; }
+  let changed = false;
+  const seen = {post: new Set(), card: new Set()};
+  for (const [k, v] of Object.entries(docs)){
+    const m = k.match(/^ns\.v2\.(post|card)\.(.+)$/); if (!m || !v) continue;
+    const [, kind, id] = m, map = kind === "post" ? POSTS : CARDS;
+    seen[kind].add(id);
+    if (dirty.has(k) || (kind === "post" && id === openId)) continue;     // our own unsaved edit wins
+    const cur = map.get(id);
+    if (!cur || JSON.stringify(cur) !== JSON.stringify(v)){ map.set(id, v); changed = true; }
+  }
+  for (const [kind, map] of [["post", POSTS], ["card", CARDS]])
+    for (const id of [...map.keys()]) if (!seen[kind].has(id) && !dirty.has(keyOf(kind, id)) && id !== openId){ map.delete(id); changed = true; }
+  lastOk = Date.now();
+  if (!dirty.size) showSync("Synced with team", "#3DDC97");
+  return changed;
+}
+// Send anything unsaved if the page is closed or hidden.
+function flushOnExit(){ for (const [key, value] of dirty){ try { navigator.sendBeacon(API, new Blob([JSON.stringify({key, value})], {type: "text/plain"})); } catch {} } }
+addEventListener("pagehide", flushOnExit);
+document.addEventListener("visibilitychange", async () => { if (document.hidden) flushOnExit(); else if (await pull()) refresh(); });
+setInterval(async () => { if (!document.hidden && await pull()) refresh(); }, 15000);
+
+let current = "community", byFilter = "all";
+let monday = (() => { const t = new Date(); t.setHours(0,0,0,0); return addDays(t, -((t.getDay() + 6) % 7)); })();
+function $(s){ return document.querySelector(s); }
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+function addDays(d, n){ const x = new Date(d); x.setDate(x.getDate() + n); return x; }
 const label = d => d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
 const week = () => DAYS.map((_, i) => addDays(monday, i));
 const momentsOn = key => MOMENTS.filter(m => m[0] === key).map(m => m[1]);
-const postsOn = (k, key) => slots[k][key] || [];
-const filled = (k, key) => postsOn(k, key).length > 0 || momentsOn(key).length > 0;
-const count = k => week().filter(d => filled(k, iso(d))).length;
-const newPost = (k, key, extra = {}) => { const p = {type: "", title: "", ref: "", film: "", edit: "", note: "", ...extra}; (slots[k][key] ||= []).push(p); return p; };
+const postsOn = (acct, key) => [...POSTS.values()].filter(p => p.acct === acct && p.day === key).sort((a, b) => (a.created || 0) - (b.created || 0));
+const filled = (acct, key) => postsOn(acct, key).length > 0 || momentsOn(key).length > 0;
+const count = acct => week().filter(d => filled(acct, iso(d))).length;
+const me = () => { try { return localStorage.getItem("ns2.me") || ""; } catch { return ""; } };
+const setMe = n => { try { localStorage.setItem("ns2.me", n); } catch {} };
+function newPost(acct, day, extra = {}){
+  const p = {id: uid(), acct, day, type: "", title: "", ref: "", film: "", edit: "", note: "", created: Date.now(), ...extra};
+  save("post", p); return p;
+}
 
 /* What a reference link can show: Instagram (cropped), TikTok, YouTube, Google Drive. Anything else is a plain link. */
 function normUrl(u){ u = String(u || "").trim(); if (!u) return ""; if (/^[a-z]+:/i.test(u)) return u; return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u; }
@@ -237,9 +312,10 @@ document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
 const closeMore = () => { $("#moreMenu").hidden = true; $("#moreBtn").setAttribute("aria-expanded", "false"); };
 $("#moreBtn").onclick = e => { e.stopPropagation(); const m = $("#moreMenu"); m.hidden = !m.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!m.hidden)); };
 document.addEventListener("click", e => { if (!e.target.closest("#moreMenu,#moreBtn")) closeMore(); });
-document.querySelectorAll("[data-more]").forEach(b => b.onclick = () => { closeMore(); showSoon(`<b>${b.dataset.more}</b> works as it does today; it just lives under More so the main tabs stay calm.`); });
-document.querySelectorAll("[data-soon]").forEach(b => b.onclick = () => showSoon(`<b>${b.dataset.soon}</b> view stays as today, for the selected account.`));
+document.querySelectorAll("[data-more]").forEach(b => b.onclick = () => { closeMore(); showSoon(`<b>${b.dataset.more}</b> is coming next. For now it's still on the current planner.`); });
+document.querySelectorAll("[data-soon]").forEach(b => b.onclick = () => showSoon(`<b>${b.dataset.soon}</b> view is coming next, for the selected account.`));
 function showSoon(html){ $("#soon").innerHTML = html; $("#soon").hidden = false; }
+function refresh(){ if ($("#sheet").hidden) renderPlan(); if (!$("#pipe").hidden && $("#sheet").hidden) renderPipe(); }
 
 /* ---------- plan grid ---------- */
 function renderPlan(){
@@ -254,14 +330,14 @@ function renderPlan(){
   days.forEach(d => {
     const key = iso(d), posts = postsOn(current, key), moms = momentsOn(key), tag = `<span class="d">${label(d)}</span>`;
     if (moms.length && !posts.some(p => p.moment)) tiles.push(`<div class="tile moment" data-moment="${key}" role="button" tabindex="0">${tag}<b>${esc(moms.join(" + "))}</b><small>Moment · tap to plan a post</small></div>`);
-    posts.forEach((p, j) => {
-      const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color;
-      const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
-      if (p.final) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}${p.final.type.startsWith("video")
-          ? `<video class="final-media" src="${p.final.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${p.final.url}" alt="">`}
-        <span class="badge-final">✓ Final</span><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
-      else if (md) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
-      else tiles.push(`<div class="tile" style="--c:${c}" data-key="${key}" data-j="${j}" role="button" tabindex="0">${tag}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
+    posts.forEach(p => {
+      const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color, f = finals.get(p.id);
+      const who = [p.film && "🎥 " + p.film, p.edit && "✂️ " + p.edit].filter(Boolean).join(" · ");
+      const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${who ? `<span>${esc(who)}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
+      if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
+        <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
     if (!posts.length && !moms.length) tiles.push(`<div class="tile empty" data-new="${key}" role="button" tabindex="0">${tag}<b>Post ${++n}</b><small>Open · tap to fill in</small></div>`);
     else n++;
@@ -269,10 +345,10 @@ function renderPlan(){
   tiles.push(`<button class="tile add" id="addTile" aria-label="Add a post"><span>+</span><small>Add post</small></button>`);
   $("#grid").innerHTML = tiles.join("");
   sizeEmbeds();
-  $("#grid").querySelectorAll("[data-new]").forEach(t => t.onclick = () => { const p = newPost(current, t.dataset.new); renderPlan(); openPost(current, t.dataset.new, postsOn(current, t.dataset.new).indexOf(p)); });
-  $("#grid").querySelectorAll("[data-moment]").forEach(t => t.onclick = () => { const k = t.dataset.moment; const p = newPost(current, k, {type: "Moment", title: momentsOn(k).join(" + "), moment: true}); renderPlan(); openPost(current, k, postsOn(current, k).indexOf(p)); });
-  $("#grid").querySelectorAll(".tile[data-key]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(current, t.dataset.key, +t.dataset.j); });
-  $("#addTile").onclick = () => pickDay(current, (k) => { const p = newPost(current, k); renderPlan(); openPost(current, k, postsOn(current, k).indexOf(p)); });
+  $("#grid").querySelectorAll("[data-new]").forEach(t => t.onclick = () => openPost(newPost(current, t.dataset.new).id));
+  $("#grid").querySelectorAll("[data-moment]").forEach(t => t.onclick = () => openPost(newPost(current, t.dataset.moment, {type: "Moment", title: momentsOn(t.dataset.moment).join(" + "), moment: true}).id));
+  $("#grid").querySelectorAll(".tile[data-id]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(t.dataset.id); });
+  $("#addTile").onclick = () => pickDay(current, k => openPost(newPost(current, k).id));
 }
 /* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
 function sizeEmbeds(){
@@ -284,7 +360,7 @@ function sizeEmbeds(){
   });
   $("#grid").querySelectorAll('iframe[data-kind="frame"]').forEach(f => Object.assign(f.style, {inset: "0", width: "100%", height: "100%"}));
 }
-window.addEventListener("resize", sizeEmbeds);
+addEventListener("resize", sizeEmbeds);
 $("#prevW").onclick = () => { monday = addDays(monday, -7); renderPlan(); };
 $("#nextW").onclick = () => { monday = addDays(monday, 7); renderPlan(); };
 $("#guide").innerHTML = TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${
@@ -292,12 +368,18 @@ $("#guide").innerHTML = TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</
 
 /* ---------- side panel ---------- */
 function openSheet(html){ $("#sheetIn").innerHTML = html; $("#sheet").hidden = false; $("#scrim").hidden = false; $("#sheet").scrollTop = 0; $("#sheetIn").querySelector(".x").onclick = closeSheet; }
-function closeSheet(){ $("#sheet").hidden = true; $("#scrim").hidden = true; renderPlan(); if (!$("#pipe").hidden) renderPipe(); }
+function closeSheet(){
+  // A brand-new post left completely empty isn't kept.
+  const p = openId && POSTS.get(openId);
+  if (p && !p.title && !p.ref && !p.type && !p.note && !p.film && !p.edit && !finals.has(p.id)) remove("post", p.id);
+  openId = null; $("#sheet").hidden = true; $("#scrim").hidden = true; renderPlan(); if (!$("#pipe").hidden) renderPipe();
+}
 $("#scrim").onclick = closeSheet;
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
 
 function pickDay(acct, then, title = "Add a post"){
   const a = ACCOUNTS[acct], days = week(), best = days.find(d => !filled(acct, iso(d)));
+  openId = null;
   openSheet(`<div class="sheet-h"><b>${esc(title)} · ${a.name}</b><button class="x" aria-label="Close">✕</button></div>
     <span class="lbl">Which day? ★ = suggested</span>
     <div class="days">${days.map(d => { const k = iso(d), c = postsOn(acct, k).length, star = best && k === iso(best);
@@ -305,24 +387,25 @@ function pickDay(acct, then, title = "Add a post"){
   document.querySelectorAll("#sheetIn [data-day]").forEach(b => b.onclick = () => then(b.dataset.day));
 }
 
-/* The post's edit panel: reference plays at the top, then the idea, topic, people and notes. */
-function openPost(acct, key, j){
-  const a = ACCOUNTS[acct], p = postsOn(acct, key)[j]; if (!p) return;
-  const md = p.ref && media(p.ref);
+/* A post's edit panel: reference plays at the top, then final edit, idea, topic, people and notes. */
+function openPost(id){
+  const p = POSTS.get(id); if (!p) return;
+  openId = id;
+  const a = ACCOUNTS[p.acct], md = p.ref && media(p.ref), f = finals.get(id);
   const opt = sel => `<option value="">Not assigned</option>` + Object.keys(TEAM).map(n => `<option ${n === sel ? "selected" : ""}>${n}</option>`).join("");
   openSheet(`
-    <div class="sheet-h"><b>${a.name} · ${label(new Date(key + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
+    <div class="sheet-h"><b>${a.name} · ${label(new Date(p.day + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
     <div class="final">
-      <div class="final-h"><b>Final edit</b><span>${p.final ? "✓ Uploaded" : "Not uploaded yet"}</span></div>
-      ${p.final ? `${p.final.type.startsWith("video") ? `<video src="${p.final.url}" controls playsinline></video>` : `<img src="${p.final.url}" alt="">`}
-        <div class="final-row"><a class="btn" href="${p.final.url}" download="${esc(p.final.name)}">⬇ Download original</a>
+      <div class="final-h"><b>Final edit</b><span>${f ? "✓ Uploaded" : "Not uploaded yet"}</span></div>
+      ${f ? `${f.type.startsWith("video") ? `<video src="${f.url}" controls playsinline></video>` : `<img src="${f.url}" alt="">`}
+        <div class="final-row"><a class="btn" href="${f.url}" download="${esc(f.name)}">⬇ Download original</a>
           <label class="btn ghost">Replace<input type="file" id="fFile" accept="video/*,image/*" hidden></label></div>
-        <small>${esc(p.final.name)} · ${(p.final.size / 1048576).toFixed(1)} MB · full quality</small>`
+        <small>${esc(f.name)} · ${(f.size / 1048576).toFixed(1)} MB · full quality</small>`
       : `<label class="btn up">⬆ Upload final edit<input type="file" id="fFile" accept="video/*,image/*" hidden></label>
         <small>Pick the finished video or image. It replaces the reference on the grid.</small>`}
-      <small class="pv">Preview only: the file stays in this browser. In the real version it saves to your Google Drive.</small>
+      <small class="pv">For now the file stays on this device. Once Google Drive is connected, uploads save there for the whole team.</small>
     </div>
     <label class="field"><span>Idea</span><input id="fTitle" value="${esc(p.title)}" placeholder="What's the post?"></label>
     <label class="field"><span>Reference link</span><input id="fRef" value="${esc(p.ref)}" placeholder="Paste a link: IG, TikTok, YouTube, Drive…" inputmode="url" autocomplete="off"></label>
@@ -334,57 +417,102 @@ function openPost(acct, key, j){
     <label class="field"><span>Notes</span><textarea id="fNote" placeholder="Script, audio, what to copy from the reference…">${esc(p.note)}</textarea></label>
     <div class="btnrow">
       <button class="btn" id="fDone">Done</button>
-      ${a.test && p.title ? `<button class="btn gold" id="fWin">🔥 Worked → Official</button>` : ""}
+      ${a.test && (p.title || p.ref) ? `<button class="btn gold" id="fWin">🔥 Worked → Official</button>` : ""}
       <button class="btn ghost" id="fDel">Delete post</button>
     </div>`);
+  const upd = patch => { Object.assign(p, patch); save("post", p); };
   $("#fFile").onchange = e => {
-    const f = e.target.files[0]; if (!f) return;
-    if (p.final) URL.revokeObjectURL(p.final.url);
-    p.final = {name: f.name, type: f.type || "video/mp4", size: f.size, url: URL.createObjectURL(f)};
-    openPost(acct, key, j);
+    const file = e.target.files[0]; if (!file) return;
+    if (f) URL.revokeObjectURL(f.url);
+    finals.set(id, {name: file.name, type: file.type || "video/mp4", size: file.size, url: URL.createObjectURL(file)});
+    openPost(id);
   };
-  $("#fTitle").oninput = e => p.title = e.target.value;
-  $("#fRef").onchange = e => { p.ref = normUrl(e.target.value); openPost(acct, key, j); };
-  $("#fNote").oninput = e => p.note = e.target.value;
-  $("#fFilm").onchange = e => p.film = e.target.value;
-  $("#fEdit").onchange = e => p.edit = e.target.value;
-  document.querySelectorAll("#sheetIn [data-type]").forEach(b => b.onclick = () => { p.type = b.dataset.type; document.querySelectorAll("#sheetIn [data-type]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  $("#fTitle").oninput = e => upd({title: e.target.value});
+  $("#fRef").onchange = e => { upd({ref: normUrl(e.target.value)}); openPost(id); };
+  $("#fNote").oninput = e => upd({note: e.target.value});
+  $("#fFilm").onchange = e => upd({film: e.target.value});
+  $("#fEdit").onchange = e => upd({edit: e.target.value});
+  document.querySelectorAll("#sheetIn [data-type]").forEach(b => b.onclick = () => { upd({type: b.dataset.type}); document.querySelectorAll("#sheetIn [data-type]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   $("#fDone").onclick = closeSheet;
-  $("#fDel").onclick = () => { slots[acct][key].splice(j, 1); closeSheet(); };
-  const win = $("#fWin"); if (win) win.onclick = () => { newPost("official", key, {...p, from: a.name}); current = "official"; closeSheet(); };
+  $("#fDel").onclick = () => { remove("post", id); openId = null; closeSheet(); };
+  const win = $("#fWin"); if (win) win.onclick = () => {
+    newPost("official", p.day, {type: p.type, title: p.title, ref: p.ref, note: p.note, from: a.name});
+    current = "official"; closeSheet();
+  };
 }
 
 /* ---------- pipeline ---------- */
 function renderPipe(){
-  const people = [...new Set(pipeline.map(p => p.by))];
+  $("#addBy").innerHTML = `<option value="">Added by…</option>` + Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("");
+  const cards = [...CARDS.values()].sort((a, b) => (a.created || 0) - (b.created || 0));
+  const people = Object.keys(TEAM).filter(n => cards.some(c => c.by === n));
   $("#byPills").innerHTML = `<button class="pill" data-by="all" style="--c:var(--text)" aria-pressed="${byFilter === "all"}">Everyone</button>` +
     people.map(n => `<button class="pill" data-by="${esc(n)}" style="--c:${TEAM[n]}" aria-pressed="${byFilter === n}"><i></i>${esc(n)}</button>`).join("");
   document.querySelectorAll("[data-by]").forEach(b => b.onclick = () => { byFilter = b.dataset.by; renderPipe(); });
-  const vis = pipeline.filter(p => byFilter === "all" || p.by === byFilter);
+  const vis = cards.filter(c => byFilter === "all" || c.by === byFilter);
   $("#board").innerHTML = STAGES.map((s, i) => {
-    const inCol = vis.filter(p => p.stage === i);
-    return `<div class="col"><h4><span>${s}</span><span>${inCol.length}</span></h4>${inCol.map(p => `
-      <div class="card" style="--pc:${TEAM[p.by]}"><span class="by">${esc(p.by)}${p.fromOld ? " · from old plan" : ""}</span><b>${esc(p.title)}</b>
-        ${p.ref ? `<a class="reflink2" href="${esc(p.ref)}" target="_blank" rel="noopener">▶ Open reference</a>` : ""}
-        ${(p.notes || []).map(([w, t]) => `<span class="sent">💬 ${esc(w)}: ${esc(t)}</span>`).join("")}
-        ${p.sent ? `<span class="sent">✓ On ${esc(p.sent)}</span>` : `<button class="sendbtn" data-send="${p.id}">Send to account →</button>`}</div>`).join("")}</div>`;
+    const inCol = vis.filter(c => c.stage === i);
+    return `<div class="col"><h4><span>${s}</span><span>${inCol.length}</span></h4>${inCol.map(c => `
+      <div class="card" data-card="${c.id}" style="--pc:${TEAM[c.by] || "#7A6D74"}"><span class="by">${esc(c.by || "No name")}</span><b>${esc(c.title)}</b>
+        ${c.ref ? `<a class="reflink2" href="${esc(normUrl(c.ref))}" target="_blank" rel="noopener">▶ Open reference</a>` : ""}
+        ${(c.notes || []).slice(-1).map(nt => `<span class="tnote"><b>${esc(nt.by)}:</b> ${esc(nt.text)}</span>`).join("")}
+        ${c.sent ? `<span class="sent">✓ On ${esc(c.sent)}</span>` : `<button class="sendbtn" data-send="${c.id}">Send to account →</button>`}
+        <div class="ctl"><button data-mv="-1" aria-label="Move back">←</button><button data-mv="1" aria-label="Move forward">→</button></div></div>`).join("")}</div>`;
   }).join("");
-  document.querySelectorAll("[data-send]").forEach(b => b.onclick = () => sendFlow(+b.dataset.send));
+  document.querySelectorAll("#board .card").forEach(el => {
+    const c = CARDS.get(el.dataset.card);
+    el.onclick = e => { if (e.target.closest("button, a")) return; openCard(c.id); };
+    el.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { c.stage = Math.max(0, Math.min(STAGES.length - 1, c.stage + +b.dataset.mv)); save("card", c); renderPipe(); });
+    const s = el.querySelector("[data-send]"); if (s) s.onclick = () => sendFlow(c.id);
+  });
+}
+$("#addCard").onsubmit = e => {
+  e.preventDefault();
+  const f = new FormData(e.target), by = f.get("by");
+  if (by) setMe(by);
+  save("card", {id: uid(), title: f.get("title").trim(), ref: normUrl(f.get("ref")), by, stage: f.get("ref") ? 1 : 0, notes: [], created: Date.now()});
+  e.target.reset(); renderPipe();
+};
+function openCard(id){
+  const c = CARDS.get(id); if (!c) return;
+  openId = null;
+  const md = c.ref && media(c.ref);
+  openSheet(`
+    <div class="sheet-h"><b>Pipeline · ${STAGES[c.stage]}</b><button class="x" aria-label="Close">✕</button></div>
+    ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
+      : c.ref ? `<a class="linkcard" href="${esc(normUrl(c.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(c.ref))} ↗</a>` : ""}
+    <label class="field"><span>Title</span><input id="cTitle" value="${esc(c.title)}"></label>
+    <label class="field"><span>Reference link</span><input id="cRef" value="${esc(c.ref)}" inputmode="url" autocomplete="off" placeholder="Paste any link"></label>
+    <label class="field"><span>Added by</span><select id="cBy"><option value="">No name</option>${Object.keys(TEAM).map(n => `<option ${n === c.by ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+    <div class="field"><span>Notes</span>${(c.notes || []).map(nt => `<span class="tnote"><b>${esc(nt.by)}:</b> ${esc(nt.text)}</span>`).join("") || `<span class="tnote">No notes yet.</span>`}
+      <textarea id="cNote" placeholder="Add a note…"></textarea>
+      <div class="btnrow"><select id="cNoteBy" class="field" aria-label="Note by">${Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("")}</select><button class="btn ghost" id="cAddNote">Add note</button></div></div>
+    <div class="btnrow"><button class="btn" id="cDone">Done</button>${c.sent ? "" : `<button class="btn gold" id="cSend">Send to account →</button>`}<button class="btn ghost" id="cDel">Delete card</button></div>`);
+  $("#cTitle").onchange = e => { if (e.target.value.trim()){ c.title = e.target.value.trim(); save("card", c); } };
+  $("#cRef").onchange = e => { c.ref = normUrl(e.target.value); save("card", c); openCard(id); };
+  $("#cBy").onchange = e => { c.by = e.target.value; save("card", c); };
+  $("#cAddNote").onclick = () => { const t = $("#cNote").value.trim(); if (!t) return; const by = $("#cNoteBy").value; setMe(by); c.notes = [...(c.notes || []), {by, text: t, at: Date.now()}]; save("card", c); openCard(id); };
+  $("#cDone").onclick = closeSheet;
+  $("#cDel").onclick = () => { remove("card", id); closeSheet(); };
+  const s = $("#cSend"); if (s) s.onclick = () => sendFlow(id);
 }
 function sendFlow(id){
-  const p = pipeline.find(x => x.id === id);
-  openSheet(`<div class="sheet-h"><b>Send "${esc(p.title)}"</b><button class="x" aria-label="Close">✕</button></div>
+  const c = CARDS.get(id);
+  openId = null;
+  openSheet(`<div class="sheet-h"><b>Send "${esc(c.title)}"</b><button class="x" aria-label="Close">✕</button></div>
     <span class="lbl">Which account?</span>
     <div class="pills">${Object.entries(ACCOUNTS).map(([k, x]) => `<button class="pill" data-acct="${k}" style="--c:${x.color}"><i></i>${x.name}</button>`).join("")}</div>`);
   document.querySelectorAll("#sheetIn [data-acct]").forEach(b => b.onclick = () => {
     const acct = b.dataset.acct;
     pickDay(acct, k => {
-      const post = newPost(acct, k, {title: p.title, ref: p.ref, type: "Outlier test"});
-      p.sent = `${ACCOUNTS[acct].name} · ${label(new Date(k + "T00:00"))}`; p.stage = Math.max(p.stage, 3);
-      current = acct; openPost(acct, k, postsOn(acct, k).indexOf(post));
-    }, `Send "${p.title}"`);
+      const post = newPost(acct, k, {title: c.title, ref: c.ref, type: "Outlier test"});
+      c.sent = `${ACCOUNTS[acct].name} · ${label(new Date(k + "T00:00"))}`; c.stage = Math.max(c.stage, 3); save("card", c);
+      current = acct; openPost(post.id);
+    }, `Send "${c.title}"`);
   });
 }
+
 renderPlan();
+pull().then(changed => { if (changed) refresh(); });
 </script>
 </body></html>
