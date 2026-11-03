@@ -14,7 +14,8 @@
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const HASH = "nancy-socials";
-const KEY_OK = /^ns\.(team|mnotes|cards|week3\.\d{4}-\d{2}-\d{2})$/;
+// ns.v2.post.<id> / ns.v2.card.<id>: the 5-account planner saves each post and Pipeline card on its own.
+const KEY_OK = /^ns\.(team|mnotes|cards|week3\.\d{4}-\d{2}-\d{2}|v2\.(post|card)\.[\w-]{4,40})$/;
 
 async function redis(cmd) {
   const r = await fetch(URL_, {
