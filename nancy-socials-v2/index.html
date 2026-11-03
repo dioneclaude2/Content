@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nancy Accounts Plan</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Instrument+Serif:ital@1&display=swap">
+<style>
+/* Layout: calm planner preview — 4 tabs, one account's Instagram grid at a time, a post's edit panel one tap away. Dark, like the live Nancy Socials site. */
+:root{
+  --bg:#0B0709; --surface:#151014; --surface2:#1E171C; --line:#2E242B;
+  --text:#F7EEF2; --muted:#B3A6AD; --dim:#7A6D74; --pink:#FF4F8B; --moment:#FF8A4C;
+  --community:#FFB547; --official:#FF4F8B; --sexed:#4FB3FF; --monsters:#3DDC97; --japan:#C9A7FF;
+  --display:'Archivo',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--display);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-right)) 80px max(16px,env(safe-area-inset-left));display:grid;gap:18px}
+.note{font-size:11.5px;color:var(--dim);letter-spacing:.06em}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:-.02em;margin-right:auto}
+.brand em{font-family:var(--serif);font-weight:400;text-transform:none;color:var(--pink);font-size:20px;letter-spacing:0}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;position:relative}
+.tab{border:0;background:none;padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--text);color:var(--bg)}
+.more{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;display:grid;min-width:170px;z-index:5;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.more button{border:0;background:none;text-align:left;padding:9px 10px;border-radius:9px;font-size:13.5px;font-weight:700;cursor:pointer}
+.more button:hover{background:var(--surface2)}
+.more small{display:block;font-size:11px;color:var(--dim);font-weight:500}
+.view{display:grid;gap:16px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 15px;font-weight:800;font-size:13.5px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.pill i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.pill .count{font-size:11px;background:var(--surface2);border-radius:999px;padding:2px 8px;color:var(--muted)}
+.pill[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#160b10}
+.pill[aria-pressed="true"] i{background:#160b10}
+.pill[aria-pressed="true"] .count{background:rgba(0,0,0,.18);color:#160b10}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wk{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:17px;cursor:pointer}
+.bar b{font-size:16px;font-weight:900;min-width:120px;text-align:center}
+.seg{margin-left:auto;display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface2);color:var(--text)}
+.acct-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.acct-h b{font-size:20px;font-weight:900;letter-spacing:-.02em}
+.acct-h span{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.tile{position:relative;aspect-ratio:3/4;max-width:100%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;color:#160b10;border:0;cursor:pointer;
+  background:radial-gradient(120% 90% at 30% 0%,color-mix(in srgb,var(--c) 80%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 55%,#000))}
+.tile b{font-size:clamp(11px,3.2vw,15px);font-weight:900;text-transform:uppercase;line-height:1.05}
+.tile small{font-size:10px;font-weight:700;opacity:.8;margin-top:4px;max-width:100%;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tile .d{position:absolute;top:6px;left:6px;z-index:2;font-size:9.5px;font-weight:800;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:2px 7px}
+.tile.empty{background:var(--surface);outline:1.5px dashed var(--line);outline-offset:-1.5px;color:var(--dim)}
+.tile.empty b{font-size:12px;font-weight:700;text-transform:none}
+.tile.empty .d{background:var(--surface2);color:var(--muted)}
+.tile.moment{--c:var(--moment)}
+.tile.add{background:none;outline:1.5px dashed var(--line);outline-offset:-1.5px;color:var(--dim)}
+.tile.add span{font-size:34px;font-weight:300;line-height:1}
+.tile.add:hover{outline-color:var(--pink);color:var(--text)}
+/* a reference plays in the tile */
+.tile.has-ref{padding:0;background:#000}
+.tile.has-ref iframe{position:absolute;border:0}
+.tile .bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff;text-align:left;display:grid;gap:2px;pointer-events:none}
+.tile .bottom em{font-style:normal;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.tile .bottom span{font-size:10.5px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tile .open{position:absolute;top:5px;right:5px;z-index:3;border:0;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;cursor:pointer}
+.tile .from{font-size:9.5px!important;color:#FFD84D}
+.hint{font-size:12px;color:var(--dim);text-align:center}
+details.guide{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+details.guide summary{cursor:pointer;font-weight:800;font-size:13.5px;list-style:none;display:flex;justify-content:space-between}
+details.guide summary::after{content:"Show";font-size:12px;color:var(--dim);font-weight:700}
+details.guide[open] summary::after{content:"Hide"}
+.types{display:grid;gap:12px;margin-top:12px}
+.tgroup{display:grid;gap:6px}
+.tgroup h3{margin:0;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:700;cursor:pointer}
+.chip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--tc)}
+.chip[aria-pressed="true"]{background:var(--tc);border-color:var(--tc);color:#160b10}
+.chip[aria-pressed="true"]::before{background:#160b10}
+.guide .chip{cursor:default}
+.guide .chip span{font-weight:500;color:var(--muted)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);gap:10px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;display:grid;gap:8px;align-content:start;min-height:220px}
+.col h4{margin:0;font-size:12px;font-weight:800;display:flex;justify-content:space-between;color:var(--muted)}
+.card{background:var(--surface2);border:1px solid var(--line);border-left:4px solid var(--pc);border-radius:12px;padding:10px;display:grid;gap:8px}
+.card b{font-size:13.5px}
+.by{justify-self:start;font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 9px;background:color-mix(in srgb,var(--pc) 22%,transparent)}
+.reflink2{justify-self:start;font-size:11.5px;font-weight:800;color:var(--pink);text-decoration:none}
+.sendbtn{justify-self:start;border:0;border-radius:999px;background:var(--pink);color:#fff;font-weight:800;font-size:11.5px;padding:6px 11px;cursor:pointer}
+.sent{font-size:11px;color:var(--muted)}
+/* side panel */
+.scrim{position:fixed;inset:0;background:rgba(6,3,5,.6);z-index:20}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);z-index:21;background:var(--bg);border-left:1px solid var(--line);overflow-y:auto;
+  padding:18px max(18px,env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) 18px}
+.sheet-in{display:grid;gap:14px}
+.sheet-h{display:flex;align-items:center;gap:10px}
+.sheet-h b{font-size:18px;font-weight:900;flex:1}
+.x{width:32px;height:32px;border-radius:50%;border:0;background:var(--surface2);cursor:pointer}
+.player{border-radius:14px;overflow:hidden;background:#000;height:520px}
+.player.wide{height:auto;aspect-ratio:16/9}
+.player iframe{width:100%;height:100%;border:0;display:block}
+.linkcard{display:block;padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:800}
+.field{display:grid;gap:6px}
+.field>span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:800}
+.field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;background:var(--pink);color:#fff;font-weight:800;font-size:13px;padding:10px 16px;cursor:pointer}
+.btn.ghost{background:var(--surface2);color:var(--text)}
+.btn.gold{background:#FFD84D;color:#160b10}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.day{border:1.5px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 10px;font-weight:700;font-size:12.5px;cursor:pointer;display:grid;justify-items:center;gap:2px;min-width:54px}
+.day small{font-size:9.5px;color:var(--dim)}
+.day.suggest{border-color:var(--c)}
+.day.suggest small{color:var(--c)}
+.day[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#160b10}
+.lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:800}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px;font-size:13.5px;color:var(--muted);line-height:1.5}
+.panel b{color:var(--text)}
+@media (max-width:520px){.two{grid-template-columns:1fr}.player{height:460px}}
+</style>
+</head><body>
+<div class="wrap">
+  <div class="note">PREVIEW FOR DISCUSSION · changes here aren't saved and don't touch your live planner</div>
+  <div class="top">
+    <div class="brand">Nancy <em>socials</em></div>
+    <nav class="tabs" role="tablist" aria-label="Main">
+      <button class="tab" role="tab" data-tab="plan" aria-selected="true">Plan</button>
+      <button class="tab" role="tab" data-tab="pipe" aria-selected="false">Pipeline</button>
+      <button class="tab" role="tab" data-tab="intel" aria-selected="false">Intel</button>
+      <button class="tab" id="moreBtn" aria-expanded="false">More ▾</button>
+      <div class="more" id="moreMenu" hidden>
+        <button data-more="Calendar">Calendar<small>Every moment, month by month</small></button>
+        <button data-more="Safety">Safety<small>Caption check · word swaps</small></button>
+        <button data-more="Team">Team<small>Add, rename, remove people</small></button>
+      </div>
+    </nav>
+  </div>
+
+  <section id="plan" class="view">
+    <div class="pills" id="pills" aria-label="Accounts"></div>
+    <div class="bar">
+      <button class="wk" id="prevW" aria-label="Previous week">‹</button><b id="wkTitle"></b><button class="wk" id="nextW" aria-label="Next week">›</button>
+      <div class="seg" aria-label="View"><button aria-pressed="true">Grid</button><button aria-pressed="false" data-soon="By person">By person</button><button aria-pressed="false" data-soon="Week">Week</button></div>
+    </div>
+    <div class="acct-h" id="acctH"></div>
+    <div class="grid" id="grid"></div>
+    <div class="hint">Tap a post to fill it in. Use the dashed + at the end to add more posts on any day.</div>
+    <details class="guide"><summary>Content types guide</summary><div class="types" id="guide"></div></details>
+  </section>
+
+  <section id="pipe" class="view" hidden>
+    <div class="pills" id="byPills"></div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section id="intel" class="view" hidden>
+    <div class="panel"><b>Intel stays as it is today.</b>Pill badges: Intimacy science · Pop culture · Trending now · CapCut · Trends · Competitors · Rules watch. Refreshed every Monday at 6 AM.</div>
+  </section>
+
+  <div class="panel" id="soon" hidden></div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" hidden role="dialog" aria-modal="true"><div class="sheet-in" id="sheetIn"></div></aside>
+
+<script>
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+// Real moments from the Nancy calendar: big single-day ones on their date, month-long ones on the day they start.
+const MOMENTS = [["2026-11-11","Singles Day (11.11)"],["2026-11-20","Trans Day of Remembrance"],["2026-11-26","Thanksgiving (US)"],["2026-11-27","Black Friday"],["2026-11-30","Cyber Monday"],["2026-12-01","World AIDS Day"],["2026-12-17","Holiday shipping cutoff"],["2026-12-24","Christmas Eve"],["2026-12-25","Christmas Day"],["2026-12-26","Boxing Day"],["2026-12-31","New Year's Eve"],["2026-11-01","No Nut November (all month)"],["2026-11-01","Movember (all month)"],["2027-01-01","Dry January (all month)"]];
+const ACCOUNTS = {
+  community: {name:"Community", color:"var(--community)", job:"Testing outliers", test:true},
+  official:  {name:"Official", color:"var(--official)", job:"Campaigns + what worked on the test accounts", test:false},
+  sexed:     {name:"Sex Ed", color:"var(--sexed)", job:"Educational posts", test:true},
+  monsters:  {name:"Nancy Monsters", color:"var(--monsters)", job:"Test account", test:true},
+  japan:     {name:"Hello Nancy Japan", color:"var(--japan)", job:"Test account", test:true},
+};
+// Content types are the topic you pick for a post: a guide, not a schedule.
+const TYPES = [
+  ["Your pillars", [["Friyay with Nancy","#FFB23F","Nancy games"],["Nancy hacks","#57E0A8","Tips + product push"],["Team content","#FFD84D","The team on camera"],["Outlier test","#FF4F8B","Recreate a proven viral post"],["Meme","#FFB547","Fast, no filming"],["Trending","#A77BFF","This week's trend"],["Evergreen","#3DDC97","Event footage recut"],["Campaign","#FF6B6B","Launches, drops, sales"],["Moment","#FF8A4C","Tied to a calendar moment"]]],
+  ["Education", [["Educational","#4FB3FF","Teach something"],["Carousel article","#6FC3FF","Visual or editorial"],["Mini Mic","#FF7EB6","Meet her"],["Myth vs fact","#8AB6FF","One myth, debunked"]]],
+  ["Teasers", [["Product teaser","#FF3D9A","Before a drop"],["Event teaser","#FFA23D","Before an event"],["Unboxing","#C9A7FF","Packaging + first look"]]],
+];
+const TYPE_COLOR = Object.fromEntries(TYPES.flatMap(g => g[1]).map(t => [t[0], t[1]]));
+const TEAM = {Dione:"#FF4F8B", Susan:"#4FB3FF", Crystal:"#FFB547"};
+const STAGES = ["Reference","Idea","Draft","Scheduled","Posted"];
+// Your real Pipeline cards and references, copied from the live site.
+let pipeline = [{"id": 1, "title": "Trending animation  - use moving lemons", "ref": "https://www.instagram.com/p/Dc_K2wxDzgc/?img_index=4&stkn=Yjg1ZndkbWZnbzRw", "by": "Crystal", "stage": 1, "notes": []}, {"id": 2, "title": "How would we react based on how many vibrators you have 😜", "ref": "https://www.instagram.com/reels/Ddzxb3TBeKP/", "by": "Dione", "stage": 0, "notes": [["Dione", "Outlier content almost all contents in this format are viral!"]]}, {"id": 3, "title": "Have you faked an Orgasam interview woman Vs. Men", "ref": "https://www.instagram.com/reels/DdOtNnQs0o2/", "by": "Dione", "stage": 0, "notes": [["Dione", "Interviewers asked women and men and the answers contrast says everything."]]}, {"id": 4, "title": "You ordered a v*brator from Nancy", "ref": "https://www.instagram.com/reels/Da6TaqsyCBh/", "by": "Dione", "stage": 0, "notes": [["Dione", "A delivery guy recording a CCTV video telling the recipient her order's been vibrating for awhile and its annoying him. If ever it dies, its not his doing."]]}, {"id": 5, "title": "OOO photo ideas", "ref": "https://www.instagram.com/p/DeY2OOIEazl/?cplk=MTN2czBxZGwwemc2NA==", "by": "Crystal", "stage": 0, "notes": []}, {"id": 6, "title": "Bad, Better, Best trend", "ref": "https://www.instagram.com/p/DeaFyHDknRJ/?img_index=3&srtk=ejBycmwzZ2Y5Z2Q5", "by": "Susan", "stage": 1, "notes": []}, {"id": 7, "title": "Fav toys", "ref": "https://www.instagram.com/reel/DeeMfISy47H/?vrfl=ZzFmcHk5NGRlMG1t", "by": "Susan", "stage": 1, "notes": []}, {"id": 8, "title": "Outlier", "ref": "https://www.instagram.com/reel/DajYvF4Sx90/?stkn=Njk4aDM3OTBxc2h5", "by": "Dione", "stage": 3, "notes": [], "fromOld": true}, {"id": 9, "title": "Reference and Script below", "ref": "https://www.instagram.com/reel/Dc9yVXUT392/?stkn=MWZrZWdzdm9tN3Y1aQ==", "by": "Dione", "stage": 3, "notes": [], "fromOld": true}];
+const slots = Object.fromEntries(Object.keys(ACCOUNTS).map(k => [k, {}]));
+// Posts with references from the old plan, on Official on their real dates (week of Oct 5).
+[{"day": "2026-10-05", "type": "Meme", "title": "\"Wait what? my lemon tastes weird\"\n\nchange the sound to lem vibrating sound", "ref": "https://www.instagram.com/reels/DcgPqDDNtuD/"}, {"day": "2026-10-07", "type": "Event teaser", "title": "RUSHITA PAINTING TEASER REEL", "ref": "https://app.shade.inc/publish/401eed3a-9d8f-4f44-a385-886e3c47163d"}, {"day": "2026-10-05", "type": "Outlier test", "title": "\"I feel hot.. I think\" outlier hook format with ACE and SMASH", "ref": "https://www.instagram.com/reels/DZYPWfJBIi8/"}].forEach(x => { (slots.official[x.day] ||= []).push({type: x.type, title: x.title, ref: x.ref, film: "", edit: "", note: ""}); });
+let current = "community", monday = new Date(2026, 10, 2), byFilter = "all";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const label = d => d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+const week = () => DAYS.map((_, i) => addDays(monday, i));
+const momentsOn = key => MOMENTS.filter(m => m[0] === key).map(m => m[1]);
+const postsOn = (k, key) => slots[k][key] || [];
+const filled = (k, key) => postsOn(k, key).length > 0 || momentsOn(key).length > 0;
+const count = k => week().filter(d => filled(k, iso(d))).length;
+const newPost = (k, key, extra = {}) => { const p = {type: "", title: "", ref: "", film: "", edit: "", note: "", ...extra}; (slots[k][key] ||= []).push(p); return p; };
+
+/* What a reference link can show: Instagram (cropped), TikTok, YouTube, Google Drive. Anything else is a plain link. */
+function normUrl(u){ u = String(u || "").trim(); if (!u) return ""; if (/^[a-z]+:/i.test(u)) return u; return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u; }
+function media(url){
+  const u = normUrl(url); let m;
+  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return {kind:"ig", reel: m[1] !== "p", src:`https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`};
+  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return {kind:"frame", src:`https://www.tiktok.com/embed/v2/${m[1]}`};
+  if ((m = u.match(/(?:youtu\.be\/|[?&]v=|shorts\/)([\w-]{11})/))) return {kind:"frame", wide:true, src:`https://www.youtube.com/embed/${m[1]}`};
+  if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/))) return {kind:"frame", src:`https://drive.google.com/file/d/${m[1]}/preview`};
+  return null;
+}
+const host = u => { try { return new URL(normUrl(u)).hostname.replace(/^www\./, ""); } catch { return "link"; } };
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
+  document.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === t));
+  ["plan","pipe","intel"].forEach(id => $("#" + id).hidden = id !== t.dataset.tab);
+  $("#soon").hidden = true; closeMore();
+  if (t.dataset.tab === "pipe") renderPipe();
+});
+const closeMore = () => { $("#moreMenu").hidden = true; $("#moreBtn").setAttribute("aria-expanded", "false"); };
+$("#moreBtn").onclick = e => { e.stopPropagation(); const m = $("#moreMenu"); m.hidden = !m.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!m.hidden)); };
+document.addEventListener("click", e => { if (!e.target.closest("#moreMenu,#moreBtn")) closeMore(); });
+document.querySelectorAll("[data-more]").forEach(b => b.onclick = () => { closeMore(); showSoon(`<b>${b.dataset.more}</b> works as it does today; it just lives under More so the main tabs stay calm.`); });
+document.querySelectorAll("[data-soon]").forEach(b => b.onclick = () => showSoon(`<b>${b.dataset.soon}</b> view stays as today, for the selected account.`));
+function showSoon(html){ $("#soon").innerHTML = html; $("#soon").hidden = false; }
+
+/* ---------- plan grid ---------- */
+function renderPlan(){
+  const a = ACCOUNTS[current], days = week();
+  $("#pills").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) =>
+    `<button class="pill" data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}<span class="count">${count(k)}/7</span></button>`).join("");
+  document.querySelectorAll("[data-a]").forEach(p => p.onclick = () => { current = p.dataset.a; renderPlan(); });
+  $("#wkTitle").textContent = `${days[0].toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${days[6].toLocaleDateString("en-US",{month:"short",day:"numeric"})}`;
+  $("#acctH").innerHTML = `<b>${a.name}</b><span>${a.job}</span>`;
+  let n = 0;
+  const tiles = [];
+  days.forEach(d => {
+    const key = iso(d), posts = postsOn(current, key), moms = momentsOn(key), tag = `<span class="d">${label(d)}</span>`;
+    if (moms.length && !posts.some(p => p.moment)) tiles.push(`<div class="tile moment" data-moment="${key}" role="button" tabindex="0">${tag}<b>${esc(moms.join(" + "))}</b><small>Moment · tap to plan a post</small></div>`);
+    posts.forEach((p, j) => {
+      const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color;
+      const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
+      if (md) tiles.push(`<div class="tile has-ref" data-key="${key}" data-j="${j}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-key="${key}" data-j="${j}">Edit</button>${bottom}</div>`);
+      else tiles.push(`<div class="tile" style="--c:${c}" data-key="${key}" data-j="${j}" role="button" tabindex="0">${tag}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
+    });
+    if (!posts.length && !moms.length) tiles.push(`<div class="tile empty" data-new="${key}" role="button" tabindex="0">${tag}<b>Post ${++n}</b><small>Open · tap to fill in</small></div>`);
+    else n++;
+  });
+  tiles.push(`<button class="tile add" id="addTile" aria-label="Add a post"><span>+</span><small>Add post</small></button>`);
+  $("#grid").innerHTML = tiles.join("");
+  sizeEmbeds();
+  $("#grid").querySelectorAll("[data-new]").forEach(t => t.onclick = () => { const p = newPost(current, t.dataset.new); renderPlan(); openPost(current, t.dataset.new, postsOn(current, t.dataset.new).indexOf(p)); });
+  $("#grid").querySelectorAll("[data-moment]").forEach(t => t.onclick = () => { const k = t.dataset.moment; const p = newPost(current, k, {type: "Moment", title: momentsOn(k).join(" + "), moment: true}); renderPlan(); openPost(current, k, postsOn(current, k).indexOf(p)); });
+  $("#grid").querySelectorAll(".tile[data-key]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(current, t.dataset.key, +t.dataset.j); });
+  $("#addTile").onclick = () => pickDay(current, (k) => { const p = newPost(current, k); renderPlan(); openPost(current, k, postsOn(current, k).indexOf(p)); });
+}
+/* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
+function sizeEmbeds(){
+  $("#grid").querySelectorAll('iframe[data-kind="ig"]').forEach(f => {
+    const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight;
+    if (!w) return;
+    if (f.dataset.reel){ const W = w / 0.70, vh = W * 0.70 * 16 / 9; Object.assign(f.style, {width: W + "px", height: (54 + vh + 300) + "px", left: -(W * 0.15) + "px", top: -(54 + Math.max(0, (vh - h) / 2)) + "px"}); }
+    else { const mh = w * 1.25; Object.assign(f.style, {width: w + "px", height: (mh + 260) + "px", left: "0", top: -(54 + Math.max(0, (mh - h) / 2)) + "px"}); }
+  });
+  $("#grid").querySelectorAll('iframe[data-kind="frame"]').forEach(f => Object.assign(f.style, {inset: "0", width: "100%", height: "100%"}));
+}
+window.addEventListener("resize", sizeEmbeds);
+$("#prevW").onclick = () => { monday = addDays(monday, -7); renderPlan(); };
+$("#nextW").onclick = () => { monday = addDays(monday, 7); renderPlan(); };
+$("#guide").innerHTML = TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${
+  list.map(([n, c, why]) => `<span class="chip" style="--tc:${c}">${esc(n)} <span>· ${esc(why)}</span></span>`).join("")}</div></div>`).join("");
+
+/* ---------- side panel ---------- */
+function openSheet(html){ $("#sheetIn").innerHTML = html; $("#sheet").hidden = false; $("#scrim").hidden = false; $("#sheet").scrollTop = 0; $("#sheetIn").querySelector(".x").onclick = closeSheet; }
+function closeSheet(){ $("#sheet").hidden = true; $("#scrim").hidden = true; renderPlan(); if (!$("#pipe").hidden) renderPipe(); }
+$("#scrim").onclick = closeSheet;
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
+
+function pickDay(acct, then, title = "Add a post"){
+  const a = ACCOUNTS[acct], days = week(), best = days.find(d => !filled(acct, iso(d)));
+  openSheet(`<div class="sheet-h"><b>${esc(title)} · ${a.name}</b><button class="x" aria-label="Close">✕</button></div>
+    <span class="lbl">Which day? ★ = suggested</span>
+    <div class="days">${days.map(d => { const k = iso(d), c = postsOn(acct, k).length, star = best && k === iso(best);
+      return `<button class="day ${star ? "suggest" : ""}" data-day="${k}" style="--c:${a.color}">${DAYS[(d.getDay() + 6) % 7]} ${d.getDate()}<small>${star ? "★ open" : c ? c + " planned" : momentsOn(k).length ? "moment" : "open"}</small></button>`; }).join("")}</div>`);
+  document.querySelectorAll("#sheetIn [data-day]").forEach(b => b.onclick = () => then(b.dataset.day));
+}
+
+/* The post's edit panel: reference plays at the top, then the idea, topic, people and notes. */
+function openPost(acct, key, j){
+  const a = ACCOUNTS[acct], p = postsOn(acct, key)[j]; if (!p) return;
+  const md = p.ref && media(p.ref);
+  const opt = sel => `<option value="">Not assigned</option>` + Object.keys(TEAM).map(n => `<option ${n === sel ? "selected" : ""}>${n}</option>`).join("");
+  openSheet(`
+    <div class="sheet-h"><b>${a.name} · ${label(new Date(key + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
+    ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
+      : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
+    <label class="field"><span>Idea</span><input id="fTitle" value="${esc(p.title)}" placeholder="What's the post?"></label>
+    <label class="field"><span>Reference link</span><input id="fRef" value="${esc(p.ref)}" placeholder="Paste a link: IG, TikTok, YouTube, Drive…" inputmode="url" autocomplete="off"></label>
+    <div class="field"><span>Content type</span>${TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${list.map(([n, c]) => `<button class="chip" data-type="${esc(n)}" style="--tc:${c}" aria-pressed="${p.type === n}">${esc(n)}</button>`).join("")}</div></div>`).join("")}</div>
+    <div class="two">
+      <label class="field"><span>🎥 Filming</span><select id="fFilm">${opt(p.film)}</select></label>
+      <label class="field"><span>✂️ Editing</span><select id="fEdit">${opt(p.edit)}</select></label>
+    </div>
+    <label class="field"><span>Notes</span><textarea id="fNote" placeholder="Script, audio, what to copy from the reference…">${esc(p.note)}</textarea></label>
+    <div class="btnrow">
+      <button class="btn" id="fDone">Done</button>
+      ${a.test && p.title ? `<button class="btn gold" id="fWin">🔥 Worked → Official</button>` : ""}
+      <button class="btn ghost" id="fDel">Delete post</button>
+    </div>`);
+  $("#fTitle").oninput = e => p.title = e.target.value;
+  $("#fRef").onchange = e => { p.ref = normUrl(e.target.value); openPost(acct, key, j); };
+  $("#fNote").oninput = e => p.note = e.target.value;
+  $("#fFilm").onchange = e => p.film = e.target.value;
+  $("#fEdit").onchange = e => p.edit = e.target.value;
+  document.querySelectorAll("#sheetIn [data-type]").forEach(b => b.onclick = () => { p.type = b.dataset.type; document.querySelectorAll("#sheetIn [data-type]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  $("#fDone").onclick = closeSheet;
+  $("#fDel").onclick = () => { slots[acct][key].splice(j, 1); closeSheet(); };
+  const win = $("#fWin"); if (win) win.onclick = () => { newPost("official", key, {...p, from: a.name}); current = "official"; closeSheet(); };
+}
+
+/* ---------- pipeline ---------- */
+function renderPipe(){
+  const people = [...new Set(pipeline.map(p => p.by))];
+  $("#byPills").innerHTML = `<button class="pill" data-by="all" style="--c:var(--text)" aria-pressed="${byFilter === "all"}">Everyone</button>` +
+    people.map(n => `<button class="pill" data-by="${esc(n)}" style="--c:${TEAM[n]}" aria-pressed="${byFilter === n}"><i></i>${esc(n)}</button>`).join("");
+  document.querySelectorAll("[data-by]").forEach(b => b.onclick = () => { byFilter = b.dataset.by; renderPipe(); });
+  const vis = pipeline.filter(p => byFilter === "all" || p.by === byFilter);
+  $("#board").innerHTML = STAGES.map((s, i) => {
+    const inCol = vis.filter(p => p.stage === i);
+    return `<div class="col"><h4><span>${s}</span><span>${inCol.length}</span></h4>${inCol.map(p => `
+      <div class="card" style="--pc:${TEAM[p.by]}"><span class="by">${esc(p.by)}${p.fromOld ? " · from old plan" : ""}</span><b>${esc(p.title)}</b>
+        ${p.ref ? `<a class="reflink2" href="${esc(p.ref)}" target="_blank" rel="noopener">▶ Open reference</a>` : ""}
+        ${(p.notes || []).map(([w, t]) => `<span class="sent">💬 ${esc(w)}: ${esc(t)}</span>`).join("")}
+        ${p.sent ? `<span class="sent">✓ On ${esc(p.sent)}</span>` : `<button class="sendbtn" data-send="${p.id}">Send to account →</button>`}</div>`).join("")}</div>`;
+  }).join("");
+  document.querySelectorAll("[data-send]").forEach(b => b.onclick = () => sendFlow(+b.dataset.send));
+}
+function sendFlow(id){
+  const p = pipeline.find(x => x.id === id);
+  openSheet(`<div class="sheet-h"><b>Send "${esc(p.title)}"</b><button class="x" aria-label="Close">✕</button></div>
+    <span class="lbl">Which account?</span>
+    <div class="pills">${Object.entries(ACCOUNTS).map(([k, x]) => `<button class="pill" data-acct="${k}" style="--c:${x.color}"><i></i>${x.name}</button>`).join("")}</div>`);
+  document.querySelectorAll("#sheetIn [data-acct]").forEach(b => b.onclick = () => {
+    const acct = b.dataset.acct;
+    pickDay(acct, k => {
+      const post = newPost(acct, k, {title: p.title, ref: p.ref, type: "Outlier test"});
+      p.sent = `${ACCOUNTS[acct].name} · ${label(new Date(k + "T00:00"))}`; p.stage = Math.max(p.stage, 3);
+      current = acct; openPost(acct, k, postsOn(acct, k).indexOf(post));
+    }, `Send "${p.title}"`);
+  });
+}
+renderPlan();
+</script>
+</body></html>
