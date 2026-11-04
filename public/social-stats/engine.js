@@ -660,7 +660,8 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     group("Total", contentRows),
   ];
   // a week built from more than one account's tab (Hello Nancy + Nancy Monsters): one row per account, shared links counted once in totals
-  const acctTags = [...new Set(contentRows.flatMap(r => (r.post?.tags || []).filter(t => t.startsWith("acct:"))))];
+  const acctTags = [...new Set(contentRows.flatMap(r => (r.post?.tags || []).filter(t => t.startsWith("acct:"))))]
+    .sort((a, b) => (b === "acct:Hello Nancy") - (a === "acct:Hello Nancy"));
   const tagsOf = r => (r.post?.tags || []).filter(t => acctTags.includes(t));
   const accounts = acctTags.length > 1 ? acctTags.map(t => {
     const list = contentRows.filter(r => tagsOf(r).includes(t));
