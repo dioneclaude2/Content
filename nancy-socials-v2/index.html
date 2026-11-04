@@ -126,6 +126,9 @@ details.guide[open] summary::after{content:"Hide"}
 .final-row{display:flex;gap:8px;flex-wrap:wrap}
 .final small{font-size:11.5px;color:var(--dim)}
 .final .pv{color:#FFD2BA}
+.final .player{margin:0}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:#3DDC97;transition:width .3s}
+.badge-final.up{background:#FFB547;color:#1a1208}
 .btn.up{justify-self:start}
 label.btn{display:inline-flex;align-items:center}
 a.btn{text-decoration:none;display:inline-flex;align-items:center}
@@ -220,7 +223,49 @@ const STAGES = ["Reference","Idea","Draft","Scheduled","Posted"];
 const API = "https://content-nine-topaz.vercel.app/api/socials";
 const POSTS = new Map(), CARDS = new Map();
 const dirty = new Map();          // key -> record waiting to upload (null = delete)
-const finals = new Map();         // post id -> uploaded file (this browser only until Google Drive is connected)
+const finals = new Map();         // post id -> picked file, only used while Drive isn't connected
+/* Final edits upload to Dione's Google Drive through her Apps Script web app
+   (scripts/nancy-drive-upload.gs). The post keeps the Drive file id, so the whole team sees it. */
+const DRIVE = "https://script.google.com/macros/s/AKfycbwOYrDqxiv1_PJo5T9Z4cv9_Y-JgbJ6ebCrWigr-FZVYvPhkCzNgfYRHGJiHVpGka1Z/exec";
+const CHUNK = 8 * 1024 * 1024;    // 8 MB pieces
+const uploads = new Map();        // post id -> {pct, name, error}
+const dPreview = id => `https://drive.google.com/file/d/${id}/preview`;
+const dView = id => `https://drive.google.com/file/d/${id}/view`;
+const dDown = id => `https://drive.google.com/uc?export=download&id=${id}`;
+async function drive(body){
+  const r = await fetch(DRIVE, {method: "POST", body: JSON.stringify(body)});
+  if (!r.ok) throw new Error("http " + r.status);
+  const j = await r.json(); if (j.error) throw new Error(j.error); return j;
+}
+const b64 = blob => new Promise((ok, no) => { const fr = new FileReader(); fr.onload = () => ok(String(fr.result).split(",")[1] || ""); fr.onerror = () => no(fr.error); fr.readAsDataURL(blob); });
+const wait = ms => new Promise(r => setTimeout(r, ms));
+async function uploadFinal(id, file){
+  const p = POSTS.get(id); if (!p || uploads.has(id) && !uploads.get(id).error) return;
+  const mime = file.type || (/\.mov$/i.test(file.name) ? "video/quicktime" : /\.(jpe?g|png|webp|heic)$/i.test(file.name) ? "image/jpeg" : "video/mp4");
+  const u = {pct: 0, name: file.name}; uploads.set(id, u); paintFinal(id);
+  try {
+    const label = `${ACCOUNTS[p.acct].name} · ${p.day}${p.title ? " · " + p.title.split("\n")[0] : ""}`;
+    const {upload} = await drive({action: "start", name: file.name, size: file.size, mime, label});
+    let start = 0, res = {};
+    while (!res.done){
+      const piece = file.slice(start, Math.min(start + CHUNK, file.size));
+      for (let tries = 0; ; tries++){
+        try { res = await drive({action: "chunk", upload, start, total: file.size, data: await b64(piece)}); break; }
+        catch (e){
+          if (tries >= 3) throw e;
+          await wait(2000 * (tries + 1));
+          try { res = await drive({action: "status", upload, total: file.size}); if (res.done || res.next !== start) break; } catch {}
+        }
+      }
+      if (!res.done){ if (typeof res.next !== "number") throw new Error("lost place"); start = res.next; }
+      u.pct = Math.round(100 * (res.done ? file.size : start) / file.size); paintFinal(id);
+    }
+    uploads.delete(id);
+    const cur = POSTS.get(id);
+    if (cur){ cur.final = {id: res.id, name: res.name || file.name, size: res.size || file.size, mime: res.mime || mime, shared: res.shared !== false, by: me()}; save("post", cur); }
+  } catch (e){ u.error = true; u.pct = 0; }
+  paintFinal(id); if ($("#sheet").hidden) renderPlan();
+}
 let openId = null, timer = null, lastOk = 0;
 const keyOf = (kind, id) => `ns.v2.${kind}.${id}`;
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -334,10 +379,13 @@ function renderPlan(){
       const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color, f = finals.get(p.id);
       const who = [p.film && "🎥 " + p.film, p.edit && "✂️ " + p.edit].filter(Boolean).join(" · ");
       const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${who ? `<span>${esc(who)}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
-      if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
+      const up = uploads.get(p.id), upBadge = up && !up.error ? `<span class="badge-final up" data-upb="${p.id}">⬆ ${up.pct}%</span>` : "";
+      if (p.final) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}<iframe data-kind="frame" src="${dPreview(p.final.id)}" loading="lazy" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        ${upBadge || `<span class="badge-final">✓ Final</span>`}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
         <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
-      else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
-      else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
+      else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}${upBadge}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
     if (!posts.length && !moms.length) tiles.push(`<div class="tile empty" data-new="${key}" role="button" tabindex="0">${tag}<b>Post ${++n}</b><small>Open · tap to fill in</small></div>`);
     else n++;
@@ -371,7 +419,7 @@ function openSheet(html){ $("#sheetIn").innerHTML = html; $("#sheet").hidden = f
 function closeSheet(){
   // A brand-new post left completely empty isn't kept.
   const p = openId && POSTS.get(openId);
-  if (p && !p.title && !p.ref && !p.type && !p.note && !p.film && !p.edit && !finals.has(p.id)) remove("post", p.id);
+  if (p && !p.title && !p.ref && !p.type && !p.note && !p.film && !p.edit && !p.final && !uploads.has(p.id) && !finals.has(p.id)) remove("post", p.id);
   openId = null; $("#sheet").hidden = true; $("#scrim").hidden = true; renderPlan(); if (!$("#pipe").hidden) renderPipe();
 }
 $("#scrim").onclick = closeSheet;
@@ -397,16 +445,7 @@ function openPost(id){
     <div class="sheet-h"><b>${a.name} · ${label(new Date(p.day + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
-    <div class="final">
-      <div class="final-h"><b>Final edit</b><span>${f ? "✓ Uploaded" : "Not uploaded yet"}</span></div>
-      ${f ? `${f.type.startsWith("video") ? `<video src="${f.url}" controls playsinline></video>` : `<img src="${f.url}" alt="">`}
-        <div class="final-row"><a class="btn" href="${f.url}" download="${esc(f.name)}">⬇ Download original</a>
-          <label class="btn ghost">Replace<input type="file" id="fFile" accept="video/*,image/*" hidden></label></div>
-        <small>${esc(f.name)} · ${(f.size / 1048576).toFixed(1)} MB · full quality</small>`
-      : `<label class="btn up">⬆ Upload final edit<input type="file" id="fFile" accept="video/*,image/*" hidden></label>
-        <small>Pick the finished video or image. It replaces the reference on the grid.</small>`}
-      <small class="pv">For now the file stays on this device. Once Google Drive is connected, uploads save there for the whole team.</small>
-    </div>
+    <div class="final" id="finalBox"></div>
     <label class="field"><span>Idea</span><input id="fTitle" value="${esc(p.title)}" placeholder="What's the post?"></label>
     <label class="field"><span>Reference link</span><input id="fRef" value="${esc(p.ref)}" placeholder="Paste a link: IG, TikTok, YouTube, Drive…" inputmode="url" autocomplete="off"></label>
     <div class="field"><span>Content type</span>${TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${list.map(([n, c]) => `<button class="chip" data-type="${esc(n)}" style="--tc:${c}" aria-pressed="${p.type === n}">${esc(n)}</button>`).join("")}</div></div>`).join("")}</div>
@@ -421,12 +460,7 @@ function openPost(id){
       <button class="btn ghost" id="fDel">Delete post</button>
     </div>`);
   const upd = patch => { Object.assign(p, patch); save("post", p); };
-  $("#fFile").onchange = e => {
-    const file = e.target.files[0]; if (!file) return;
-    if (f) URL.revokeObjectURL(f.url);
-    finals.set(id, {name: file.name, type: file.type || "video/mp4", size: file.size, url: URL.createObjectURL(file)});
-    openPost(id);
-  };
+  paintFinal(id);
   $("#fTitle").oninput = e => upd({title: e.target.value});
   $("#fRef").onchange = e => { upd({ref: normUrl(e.target.value)}); openPost(id); };
   $("#fNote").oninput = e => upd({note: e.target.value});
@@ -440,6 +474,38 @@ function openPost(id){
     current = "official"; closeSheet();
   };
 }
+
+/* The Final edit box in a post's panel: upload, progress, then the Drive player and download. */
+function paintFinal(id){
+  document.querySelectorAll(`[data-upb="${id}"]`).forEach(b => { const u = uploads.get(id); if (u) b.textContent = `⬆ ${u.pct}%`; });
+  const box = $("#finalBox"); if (!box || openId !== id) return;
+  const p = POSTS.get(id); if (!p) return;
+  const u = uploads.get(id), f = finals.get(id), d = p.final, mb = n => (n / 1048576).toFixed(1) + " MB";
+  const pick = label => `<label class="btn ${label === "Replace" ? "ghost" : "up"}">${label}<input type="file" id="fFile" accept="video/*,image/*" hidden></label>`;
+  let h = `<div class="final-h"><b>Final edit</b><span>${u && !u.error ? "Uploading…" : d ? "✓ In Google Drive" : f ? "✓ On this device" : "Not uploaded yet"}</span></div>`;
+  if (u && !u.error) h += `<div class="bar"><i style="width:${u.pct}%"></i></div><small>${esc(u.name)} · ${u.pct}% · you can close this panel, it keeps going while the site is open</small>`;
+  else if (d) h += `<div class="player"><iframe src="${dPreview(d.id)}" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+      <div class="final-row"><a class="btn" href="${dDown(d.id)}" target="_blank" rel="noopener">⬇ Download original</a><a class="btn ghost" href="${dView(d.id)}" target="_blank" rel="noopener">Open in Drive ↗</a>${pick("Replace")}</div>
+      <small>${esc(d.name)} · ${mb(d.size)} · full quality${d.by ? " · uploaded by " + esc(d.by) : ""}</small>
+      ${d.shared ? "" : `<small class="pv">Drive didn't allow link sharing, so only people with access to Dione's folder can play it.</small>`}`;
+  else if (DRIVE.startsWith("https://")) h += `${u && u.error ? `<small class="pv">${esc(u.name)}: upload didn't finish. Check your connection and try again.</small>` : ""}${pick("⬆ Upload final edit")}
+      <small>Saves the original file to Dione's Google Drive, full quality, for the whole team.</small>`;
+  else h += f ? `${f.type.startsWith("video") ? `<video src="${f.url}" controls playsinline></video>` : `<img src="${f.url}" alt="">`}
+        <div class="final-row"><a class="btn" href="${f.url}" download="${esc(f.name)}">⬇ Download original</a>${pick("Replace")}</div>
+        <small>${esc(f.name)} · ${mb(f.size)}</small><small class="pv">Google Drive isn't connected yet, so this file stays on this device.</small>`
+      : `${pick("⬆ Upload final edit")}<small class="pv">Google Drive isn't connected yet, so uploads stay on this device.</small>`;
+  box.innerHTML = h;
+  const inp = box.querySelector("#fFile");
+  if (inp) inp.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    if (DRIVE.startsWith("https://")) { uploadFinal(id, file); return; }
+    if (f) URL.revokeObjectURL(f.url);
+    finals.set(id, {name: file.name, type: file.type || "video/mp4", size: file.size, url: URL.createObjectURL(file)});
+    paintFinal(id);
+  };
+}
+// Don't lose an upload in progress by closing the tab.
+addEventListener("beforeunload", e => { if ([...uploads.values()].some(u => !u.error)) { e.preventDefault(); e.returnValue = ""; } });
 
 /* ---------- pipeline ---------- */
 function renderPipe(){
