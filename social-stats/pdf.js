@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=e54be50";
+import * as E from "./engine.js?v=96cc84d";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -255,6 +255,12 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   P.table(["", "Posts", "Views", "Share of views", "Eng. rate"],
     [R.breakdown[0], R.breakdown[1]].map(g => [g.name, g.posts, F.int(g.views), F.pct(T.postViews ? g.views / T.postViews : null), F.pct(g.er)]),
     { title: "Nancy vs collab", num: [1, 2, 3, 4] });
+  if (R.accounts) {
+    P.table(["Account", "Posts", "Views", "Share of post views", "Eng. rate"],
+      R.accounts.map(g => [g.name, g.posts, F.int(g.views), F.pct(T.postViews ? g.views / T.postViews : null), F.pct(g.er)]),
+      { title: "By account", num: [1, 2, 3, 4] });
+    if (R.sharedPosts) P.para(`${R.sharedPosts} post${R.sharedPosts > 1 ? "s were" : " was"} on both accounts (same link) — counted once in the week's ${T.posts} posts.`, { color: MUTED, size: 9 });
+  }
   topTables(P, R);
 
   if (full) {

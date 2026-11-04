@@ -198,7 +198,9 @@ export function mapPosts(table, { year } = {}) {
     if (!code && /^total/i.test(Object.values(r)[0] || "")) return;
     if (!code) { if (Object.values(r).some(Boolean)) errors.push(`Row ${i + 2}: no usable Instagram link.`); return; }
     const account = (r[c.account] || "").trim();
-    const collab = c.collab ? yes(r[c.collab]) : /collab/i.test(account) || (!!account && !NANCY.test(account));
+    // "Hello Nancy (collab w/ …)" / "nancymonsters (collab w/ …)" are Nancy's own posts; "nancymonsters collab" is a collab
+    const own = /^(hello\s*nancy|hellonancy|nancy\s*monsters)(?!\s*collab)\b/i.test(account);
+    const collab = c.collab ? yes(r[c.collab]) : !own && (/collab/i.test(account) || (!!account && !NANCY.test(account)));
     posts.push({
       id: code,
       link: (r[c.link] || "").trim() || `https://www.instagram.com/p/${code}/`,
@@ -657,6 +659,15 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     group("Organic posts", contentRows.filter(r => !r.boosted)),
     group("Total", contentRows),
   ];
+  // a week built from more than one account's tab (Hello Nancy + Nancy Monsters): one row per account, shared links counted once in totals
+  const acctTags = [...new Set(contentRows.flatMap(r => (r.post?.tags || []).filter(t => t.startsWith("acct:"))))];
+  const tagsOf = r => (r.post?.tags || []).filter(t => acctTags.includes(t));
+  const accounts = acctTags.length > 1 ? acctTags.map(t => {
+    const list = contentRows.filter(r => tagsOf(r).includes(t));
+    const best = [...list].filter(r => r.views != null).sort((a, b) => b.views - a.views)[0] || null;
+    return { ...group(t.slice(5), list), shared: list.filter(r => tagsOf(r).length > 1).length, best };
+  }) : null;
+  const sharedPosts = accounts ? contentRows.filter(r => tagsOf(r).length > 1).length : 0;
   const formats = [...new Set(contentRows.map(r => r.format || "Other"))]
     .map(f => group(f, contentRows.filter(r => (r.format || "Other") === f)));
 
@@ -738,7 +749,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const durationDays = rep.start && rep.end ? daysBetween(rep.start, rep.end) + 1 : null;
   return {
     rep, fx, dataDate, durationDays, rows, postRows, extraRows, looseRows, campRows, contentRows,
-    T, campaigns, breakdown, formats, rankings, dominant, withoutCollabs, shareability, score,
+    T, campaigns, breakdown, accounts, sharedPosts, formats, rankings, dominant, withoutCollabs, shareability, score,
     influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing, costFx: cfx,
     infLabel: costing?.influencerLabel || rep.influencerLabel || "Influencers",   // e.g. "Collab / production" for LFW
   };

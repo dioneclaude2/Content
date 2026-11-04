@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=e54be50">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=96cc84d">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=e54be50" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=96cc84d" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=e54be50";
+import * as E from "./engine.js?v=96cc84d";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=e54be50");
-    const logo = await svgToPng("logo-circle.svg?v=e54be50", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=96cc84d");
+    const logo = await svgToPng("logo-circle.svg?v=96cc84d", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -573,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=e54be50" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=96cc84d" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -994,6 +994,7 @@ function weeklyHTML(rep, R, P, D){
     ${topEmbedsHTML(R)}
     <div class="sec"><h2>Summary</h2>${tbl("t-sum", ["Metric", N("Value"), `vs target / ${esc(prevName)}`, "Status"], summary)}</div>
     <div class="sec"><h2>This week's posts</h2>${R.rows.length ? weeklyPostTable(R) : `<div class="empty">${miss(R.missing.posts || { need: "posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}</div>
+    ${accountsHTML(R)}
     <div class="sec grid g2">
       <div><h2>Nancy vs collab</h2>${tbl("t-nc", ["", N("Posts"), N("Views"), N("% of views"), N("Eng. rate")], nc.map(g => `<tr><td>${g.name}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.pct(T.postViews ? g.views / T.postViews : null)}</td><td class="n">${vsBench(g.er, R.bench)}</td></tr>`))}</div>
       <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
@@ -1253,6 +1254,7 @@ function eventSummaryHTML(rep, R, P){
       ], F.int)}
       <p class="small muted" style="margin-top:8px">${F.pct(R.score.pctViewsNancy)} of post views from Nancy's posts${R.score.erCollab != null && R.score.erNancy != null ? ` · collab eng. ${F.pct(R.score.erCollab)} vs Nancy ${F.pct(R.score.erNancy)}` : ""}</p></div>
     </div>
+    ${R.accounts ? `<div class="card" style="margin-top:14px"><h3>By account</h3>${accountsTable(R)}</div>` : ""}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
@@ -1260,6 +1262,14 @@ function eventSummaryHTML(rep, R, P){
     <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
+
+/* one row per account when the week mixes Hello Nancy + Nancy Monsters */
+function accountsTable(R){
+  const T = R.T;
+  return `${tbl("t-acct", ["Account", N("Posts"), N("Views"), N("% of post views"), N("Eng. rate"), "Top post"], R.accounts.map(g => `<tr><td><b>${esc(g.name)}</b></td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.pct(T.postViews ? g.views / T.postViews : null)}</td><td class="n">${vsBench(g.er, R.bench)}</td><td class="wrap">${g.best ? `${link(g.best, 50)} · ${F.int(g.best.views)}` : "—"}</td></tr>`))}
+    <p class="small muted" style="margin-top:8px">${R.sharedPosts ? `${R.sharedPosts} post${R.sharedPosts > 1 ? "s were" : " was"} on both accounts (same link) — counted once in the week's totals (${T.posts} posts), so the account rows add up to more.` : "No posts shared between the accounts."}</p>`;
+}
+const accountsHTML = R => R.accounts ? `<div class="sec"><h2>By account</h2>${accountsTable(R)}</div>` : "";
 
 function weeklySummaryHTML(rep, R, P){
   const T = R.T, A = R.account || {};
@@ -1295,6 +1305,7 @@ function weeklySummaryHTML(rep, R, P){
         { label: "Collab posts", value: R.breakdown[1].views },
       ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}</p></div>
     </div>
+    ${R.accounts ? `<div class="card" style="margin-top:14px"><h3>By account</h3>${accountsTable(R)}</div>` : ""}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
@@ -1797,7 +1808,7 @@ async function importSheet(url, repId, costs, extraAccount){
 }
 
 /* A weekly report tab's text (from a link or an uploaded file) → weekly report */
-function importWeeklyText(text, url, repId, extraAccount){
+function importWeeklyText(text, url, repId, extraAccount, acctLabel = "Hello Nancy"){
   const S = E.parseReportSheet(text);
   if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab — check the link points at the report tab.");
 
@@ -1809,7 +1820,7 @@ function importWeeklyText(text, url, repId, extraAccount){
       otherSpend: [], influencers: [], eventCosts: [], colour: type === "week" ? "" : "Pink", fx: { ...db().settings.fx } };
   }
   const pulled = S.pulled || rep.dataDate || today();
-  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.type === "event" ? rep.id : null);
+  const merged = E.mergePosts(db().posts, S.posts, pulled, rep.type === "event" ? rep.id : "acct:" + acctLabel);
   for (const p of Object.values(merged)) put("ss.post." + p.id, p);
 
   const patch = { sheetUrl: url, dataDate: rep.dataDate || pulled };
@@ -1841,6 +1852,15 @@ function importWeeklyText(text, url, repId, extraAccount){
   put("ss.report." + rep.id, { ...rep, ...patch, fresh: false });
   const acc = Object.keys(S.account).length;
   return { id: rep.id, msg: `Read ${S.posts.length} posts (pulled ${F.date(pulled)})${S.ads.length ? `, ${S.ads.length} boosted post${S.ads.length > 1 ? "s" : ""} with ad numbers` : ""}${acc ? `, ${acc} account numbers` : ""}.${S.notes.length ? ` <span class="down">${esc(S.notes.join(" "))}</span>` : ""}` };
+}
+
+/* Another account's tab for the same week (e.g. Nancy Monsters): its posts join that week's report — no report of its own.
+   Posts are keyed by link, so a post on both tabs counts once. */
+function importAccountTab(text, label){
+  const S = E.parseReportSheet(text);
+  if (!S.posts.length) throw new Error(S.notes[0] || "No posts found in that tab.");
+  const merged = E.mergePosts(db().posts, S.posts, S.pulled || today(), "acct:" + label);
+  for (const p of Object.values(merged)) put("ss.post." + p.id, p);
 }
 
 /* One event tab → event report (+ its ad numbers, + a costing report when the Total Spend tab gave costs). */
@@ -2428,7 +2448,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=e54be50", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=96cc84d", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
@@ -2440,6 +2460,9 @@ async function refreshFromSources(){
   for (const w of src.weekly || []) {
     const url = sheetLink(w.sheet, w.gid || "0");
     if (deletedFromSheet(url)) continue;
+    for (const o of w.otherAccounts || []) {
+      try { importAccountTab(await sheetCsv(w.sheet, o.gid), o.label); } catch (err) { failed++; console.warn("Account tab", o.label, err); }
+    }
     try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
   }
   for (const e of src.postEvents || []) {
