@@ -255,6 +255,12 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   P.table(["", "Posts", "Views", "Share of views", "Eng. rate"],
     [R.breakdown[0], R.breakdown[1]].map(g => [g.name, g.posts, F.int(g.views), F.pct(T.postViews ? g.views / T.postViews : null), F.pct(g.er)]),
     { title: "Nancy vs collab", num: [1, 2, 3, 4] });
+  if (R.accounts) {
+    P.table(["Account", "Posts", "Views", "Share of post views", "Eng. rate"],
+      R.accounts.map(g => [g.name, g.posts, F.int(g.views), F.pct(T.postViews ? g.views / T.postViews : null), F.pct(g.er)]),
+      { title: "By account", num: [1, 2, 3, 4] });
+    if (R.sharedPosts) P.para(`${R.sharedPosts} post${R.sharedPosts > 1 ? "s were" : " was"} on both accounts (same link) — counted once in the week's ${T.posts} posts.`, { color: MUTED, size: 9 });
+  }
   topTables(P, R);
 
   if (full) {
