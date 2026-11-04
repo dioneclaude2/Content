@@ -451,19 +451,19 @@
     }
   ],
   "account": {
-    "asOf": "2026-10-14",
-    "source": "Instagram Professional dashboard › Account insights",
+    "asOf": "2026-11-04",
+    "source": "Meta Business Suite › Insights › Instagram",
     "periods": [
       {
         "label": "Last 30 days",
-        "range": "14 Sep – 13 Oct",
-        "views": 8884147,
+        "range": "5 Oct – 3 Nov",
+        "views": 4067779,
         "days": 30
       },
       {
         "label": "Last 90 days",
-        "range": "16 Jul – 13 Oct",
-        "views": 42722744,
+        "range": "6 Aug – 3 Nov",
+        "views": 30833025,
         "days": 90
       },
       {
