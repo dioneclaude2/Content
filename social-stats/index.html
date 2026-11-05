@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=e7ee3ae">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=e472707">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=e7ee3ae" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=e472707" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=e7ee3ae";
+import * as E from "./engine.js?v=e472707";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=e7ee3ae");
-    const logo = await svgToPng("logo-circle.svg?v=e7ee3ae", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=e472707");
+    const logo = await svgToPng("logo-circle.svg?v=e472707", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -573,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=e7ee3ae" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=e472707" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -976,7 +976,7 @@ function weeklyHTML(rep, R, P, D){
     ["Paid views", F.int(T.paidViews), cmpCell(C["Paid views"]), C["Paid views"]?.status],
     ["Ad spend", F.usd(T.adSpend), cmpCell(C["Ad spend (USD)"]), C["Ad spend (USD)"]?.status],
     ["Ads CPM", or(T.adsCPM, F.usd, R.missing.ads), cmpCell(C["Ads CPM"]), C["Ads CPM"]?.status],
-    ["Blended CPM", or(T.blendedCPM, F.usd, R.missing.blended), `total ad spend ÷ all account views · goal under ${F.usd(T.cpmTarget)}`, T.cpmStatus],
+    ["Blended CPM", or(T.blendedCPM, F.usd), `${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : "ad spend ÷ this week's post views (organic + ads)"} · goal under ${F.usd(T.cpmTarget)}`, T.cpmStatus],
     ["Cost per follow (ads)", or(T.costPerFollow, F.usd, R.missing.adFollows || (T.adFollows === 0 ? { need: "ad follows (none recorded)", who: "Ads person" } : null)), cmpCell(C["Cost per follow"]), C["Cost per follow"]?.status],
   ].map(([m, v, vs, s]) => `<tr><td>${m}</td><td class="n">${v}</td><td class="wrap">${vs || ""}</td><td>${s || ""}</td></tr>`);
 
@@ -986,7 +986,7 @@ function weeklyHTML(rep, R, P, D){
       ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
       ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
       ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}`],
-      ["Blended CPM", T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`, T.blendedCPM == null ? "need the week's total ad spend" : `goal under ${F.usd(T.cpmTarget)}`],
+      ["Blended CPM", T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`, `goal under ${F.usd(T.cpmTarget)}`],
       ["Ad spend", F.usd(T.adSpend), `${F.int(T.paidViews)} paid views`],
       ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
     ])}</div>
@@ -1269,6 +1269,15 @@ function accountsTable(R){
   return `${tbl("t-acct", ["Account", N("Posts"), N("Views"), N("% of post views"), N("Eng. rate"), "Top post"], R.accounts.map(g => `<tr><td><b>${esc(g.name)}</b></td><td class="n">${g.posts}</td><td class="n">${F.int(g.views)}</td><td class="n">${F.pct(T.postViews ? g.views / T.postViews : null)}</td><td class="n">${vsBench(g.er, R.bench)}</td><td class="wrap">${g.best ? `${link(g.best, 50)} · ${F.int(g.best.views)}` : "—"}</td></tr>`))}
     <p class="small muted" style="margin-top:8px">${R.sharedPosts ? `${R.sharedPosts} post${R.sharedPosts > 1 ? "s were" : " was"} on both accounts (same link) — counted once in the week's totals (${T.posts} posts), so the account rows add up to more.` : "No posts shared between the accounts."}</p>`;
 }
+/* where the week's recorded ad spend went: each boosted post, collab or Nancy's own */
+function adSpendCard(R){
+  const list = R.rows.filter(r => r.spend || r.paid).sort((a, b) => b.spend - a.spend);
+  if (!list.length) return "";
+  const collabs = list.filter(r => r.collab);
+  return `<div class="card" style="margin-top:14px"><h3>Where the ad spend went</h3>
+    ${tbl("t-adsp", ["Post", "Account", N("Spend"), N("Ad views"), N("Organic views"), N("CPM")], list.map(r => `<tr><td class="wrap">${link(r, 50)}</td><td>${esc(r.account || "")}${r.collab ? ` <span class="pill">collab</span>` : ""}</td><td class="n">${F.usd(r.spend)}</td><td class="n">${F.int(r.paid)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${or(r.cpm, F.usd)}</td></tr>`))}
+    <p class="small muted" style="margin-top:8px">${collabs.length ? `${collabs.length === list.length ? "All" : collabs.length} of the ${list.length} boosted post${list.length > 1 ? "s" : ""} ${list.length === 1 ? "is a collab" : "are collabs"} — ${F.usd(collabs.reduce((s, r) => s + r.spend, 0))} of ad spend went on collab content. ` : ""}Only the boosts recorded in the sheet.</p></div>`;
+}
 const accountsHTML = R => R.accounts ? `<div class="sec"><h2>By account</h2>${accountsTable(R)}</div>` : "";
 
 function weeklySummaryHTML(rep, R, P){
@@ -1285,7 +1294,7 @@ function weeklySummaryHTML(rep, R, P){
         : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads<br>` : ""}${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
-      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedCPM == null ? `need the week's total ad spend from Ads Manager` : `total ad spend ÷ all account views`} · goal under ${F.usd(T.cpmTarget)}</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : `${F.usd(T.adSpend)} ad spend ÷ ${F.int(T.totalViews)} post views (organic + ads)`} · goal under ${F.usd(T.cpmTarget)}</div></div>
     </div>
     <div class="mini">
       <div><span>${A.adSpend != null ? "Ad spend (week)" : "Boost spend in sheet"}</span><b>${F.usd(T.adSpend)}</b></div>
@@ -1303,8 +1312,9 @@ function weeklySummaryHTML(rep, R, P){
       <div class="card"><h3>Nancy vs collab</h3>${splitBar([
         { label: "Nancy's posts", value: R.breakdown[0].views },
         { label: "Collab posts", value: R.breakdown[1].views },
-      ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}</p></div>
+      ], F.int)}<p class="small muted" style="margin-top:8px">Eng. rate: Nancy ${F.pct(R.breakdown[0].er)} · collab ${F.pct(R.breakdown[1].er)}${R.breakdown[1].paid ? ` · collab views include ${F.int(R.breakdown[1].paid)} from ads (${F.usd(R.breakdown[1].spend)})` : ""}${R.breakdown[0].paid ? ` · Nancy's include ${F.int(R.breakdown[0].paid)} from ads` : ""}</p></div>
     </div>
+    ${adSpendCard(R)}
     ${R.accounts ? `<div class="card" style="margin-top:14px"><h3>By account</h3>${accountsTable(R)}</div>` : ""}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
@@ -1823,7 +1833,7 @@ function importWeeklyText(text, url, repId, extraAccount, acctLabel = "Hello Nan
   const merged = E.mergePosts(db().posts, S.posts, pulled, rep.type === "event" ? rep.id : "acct:" + acctLabel);
   for (const p of Object.values(merged)) put("ss.post." + p.id, p);
 
-  const patch = { sheetUrl: url, dataDate: rep.dataDate || pulled };
+  const patch = { sheetUrl: url, dataDate: rep.dataDate || pulled, viewsExcludeAds: !!S.viewsExcludeAds };
   if (rep.type === "event") patch.postIds = [...new Set([...(rep.postIds || []), ...S.posts.map(p => p.id)])];
   if (S.range && (rep.fresh || !repId)) Object.assign(patch, { start: S.range.start, end: S.range.end });
   if (rep.type === "week") {
@@ -2448,7 +2458,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=e7ee3ae", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=e472707", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }

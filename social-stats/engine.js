@@ -528,6 +528,8 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const rows = [...postRows, ...extraRows, ...looseRows, ...campRows];
   for (const r of rows) {
     r.boosted = r.ads.length > 0;
+    // some sheets note "their views exclude ad plays": there the sheet's views are the organic views, and ad views come on top
+    if (rep.viewsExcludeAds && r.paid && r.views != null && !r.adOnly) { r.sheetViews = r.views; r.views += r.paid; }
     r.organic = r.views == null ? null : r.views - r.paid;
     r.cpm = r.paid && r.spend ? per1k(r.spend, r.paid) : null;     // no CPM when the spend sits in a campaign row
     r.er = r.interactions != null && r.views ? r.interactions / r.views : null;
@@ -746,12 +748,11 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
       pctTarget: a.views != null ? a.views / tgt : null,
       er: div(a.interactions, a.views), erPrev: div(a.interactionsPrev, a.viewsPrev),
     };
-    // weekly blended CPM = the week's total ad spend (Ads Manager) ÷ all account views (organic + ads).
-    // The sheet's boost spend is only part of the week's ads, so without the total there's no CPM — not a misleading tiny one.
+    // weekly blended CPM: with the week's total ad spend (Ads Manager) → ÷ all account views (organic + ads);
+    // otherwise the sheet's boost spend ÷ this week's post views (organic + ad views), so spend and views cover the same posts
     T.sheetAdSpend = T.adSpend;
-    T.blendedCPM = a.adSpend != null && a.views ? per1k(a.adSpend, a.views) : null;
-    if (a.adSpend != null) T.adSpend = a.adSpend;
-    if (T.blendedCPM == null) missing.blended = M("the week's total ad spend (Ads Manager, Sun–Sat)", "Ads person");
+    if (a.adSpend != null && a.views) { T.adSpend = a.adSpend; T.blendedCPM = per1k(a.adSpend, a.views); T.blendedBasis = "account"; }
+    else { T.blendedCPM = T.totalViews ? per1k(T.adSpend, T.totalViews) : null; T.blendedBasis = "posts"; }
   }
   T.cpmTarget = settings.cpmTarget ?? 5;
   T.cpmStatus = T.blendedCPM == null ? null : T.blendedCPM < T.cpmTarget ? "🟢" : "🔴";
@@ -1252,6 +1253,7 @@ export function parseReportSheet(text, opts = {}) {
   // the week's dates are in the other parts; a title without a year borrows the data date's
   out.range = rangeFrom(parts.filter(x => x !== dataPart).join(" · "), out.pulled ? out.pulled.slice(0, 4) : null);
   out.type = /weekly/i.test(out.title) ? "week" : /event/i.test(out.title) ? "event" : null;
+  out.viewsExcludeAds = /views exclude ad (plays|views)/i.test(text);
 
   /* the post table */
   const hi = rows.findIndex(r => r.some(c => /^link$/i.test(c)) && r.some(c => /^views$/i.test(c)));
