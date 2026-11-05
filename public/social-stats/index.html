@@ -976,7 +976,7 @@ function weeklyHTML(rep, R, P, D){
     ["Paid views", F.int(T.paidViews), cmpCell(C["Paid views"]), C["Paid views"]?.status],
     ["Ad spend", F.usd(T.adSpend), cmpCell(C["Ad spend (USD)"]), C["Ad spend (USD)"]?.status],
     ["Ads CPM", or(T.adsCPM, F.usd, R.missing.ads), cmpCell(C["Ads CPM"]), C["Ads CPM"]?.status],
-    ["Blended CPM", or(T.blendedCPM, F.usd), (R.withoutCollabs ? `without collab posts: ${F.usd(R.withoutCollabs.blendedCPM)} · ` : "") + cmpCell(C["Blended CPM"]), C["Blended CPM"]?.status],
+    ["Blended CPM", or(T.blendedCPM, F.usd, R.missing.blended), `total ad spend ÷ all account views · goal under ${F.usd(T.cpmTarget)}`, T.cpmStatus],
     ["Cost per follow (ads)", or(T.costPerFollow, F.usd, R.missing.adFollows || (T.adFollows === 0 ? { need: "ad follows (none recorded)", who: "Ads person" } : null)), cmpCell(C["Cost per follow"]), C["Cost per follow"]?.status],
   ].map(([m, v, vs, s]) => `<tr><td>${m}</td><td class="n">${v}</td><td class="wrap">${vs || ""}</td><td>${s || ""}</td></tr>`);
 
@@ -986,7 +986,7 @@ function weeklyHTML(rep, R, P, D){
       ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
       ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
       ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}`],
-      ["Blended CPM", F.usd(T.blendedCPM), `ads CPM ${F.usd(T.adsCPM)}`],
+      ["Blended CPM", T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`, T.blendedCPM == null ? "need the week's total ad spend" : `goal under ${F.usd(T.cpmTarget)}`],
       ["Ad spend", F.usd(T.adSpend), `${F.int(T.paidViews)} paid views`],
       ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
     ])}</div>
@@ -1276,7 +1276,7 @@ function weeklySummaryHTML(rep, R, P){
   const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
   const ch = c => !c || c.change == null ? "" : ` · ${c.status} ${c.rate ? F.pp(c.change) : F.chg(c.change)}`;
   const head = rundownHeadline(rep.rundown)
-    || (R.contentRows.length ? `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${F.chg(C["Post views"].change)} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.` : "Add the week's posts to see how it went.");
+    || (R.contentRows.length ? `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${F.chg(C["Post views"].change)} on the week before)` : ""}, ${F.pct(T.er)} engagement${T.blendedCPM != null ? `, ${F.usd(T.blendedCPM)} blended CPM` : ""}.` : "Add the week's posts to see how it went.");
   return `
     <p class="headline">${esc(head)}</p>
     <div class="tiles big">
@@ -1285,11 +1285,11 @@ function weeklySummaryHTML(rep, R, P){
         : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads<br>` : ""}${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
-      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views${ch(C["Blended CPM"])}</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedCPM == null ? `need the week's total ad spend from Ads Manager` : `total ad spend ÷ all account views`} · goal under ${F.usd(T.cpmTarget)}</div></div>
     </div>
     <div class="mini">
-      <div><span>Ad spend</span><b>${F.usd(T.adSpend)}</b></div>
-      <div><span>Ads CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
+      <div><span>${A.adSpend != null ? "Ad spend (week)" : "Boost spend in sheet"}</span><b>${F.usd(T.adSpend)}</b></div>
+      <div><span>Boosted posts CPM</span><b>${or(T.adsCPM, F.usd)}</b></div>
       <div><span>Net followers</span><b>${A.netFollowers == null ? "—" : F.int(A.netFollowers)}</b></div>
       <div><span>Follows from posts</span><b>${F.int(T.postFollows)}</b></div>
       <div><span>Profile visits</span><b>${F.int(T.visits)}</b></div>
