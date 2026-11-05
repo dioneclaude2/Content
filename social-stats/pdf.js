@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=26d8f9d";
+import * as E from "./engine.js?v=e7ee3ae";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -235,7 +235,7 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   const ch = n => (C[n] && C[n].change != null ? ` · ${chg(C[n])} vs last week` : "");
   P.header("Weekly social report" + (full ? "" : " · summary"), rep.name,
     `${F.date(rep.start)} – ${F.date(rep.end)} · ${settings.account} · ${T.posts} posts · Instagram data pulled ${F.date(R.dataDate)}`);
-  const head = rundownHeadline(rep.rundown) || `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${chg(C["Post views"])} on the week before)` : ""}, ${F.pct(T.er)} engagement, ${F.usd(T.blendedCPM)} blended CPM.`;
+  const head = rundownHeadline(rep.rundown) || `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${chg(C["Post views"])} on the week before)` : ""}, ${F.pct(T.er)} engagement${T.blendedCPM != null ? `, ${F.usd(T.blendedCPM)} blended CPM` : ""}.`;
   P.para(head, { size: 12, style: "italic", gap: 10 });
   P.kpis([
     A.views == null
@@ -243,7 +243,7 @@ function weekly(rep, R, Pv, mode, settings, logo) {
       : ["Account views", F.big(A.views), A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads${ch("Account views")}` : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
-    ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views", true],
+    ["Blended CPM", T.blendedCPM == null ? "—" : F.usd(T.blendedCPM), T.blendedCPM == null ? "need the week's total ad spend" : `${T.cpmStatus === "🟢" ? "under" : "over"} the ${F.usd(T.cpmTarget)} goal`, true],
   ]);
   P.strip([["Ad spend", F.usd(T.adSpend)], ["Ads CPM", F.usd(T.adsCPM)], ["Net followers", A.netFollowers == null ? "—" : F.int(A.netFollowers)], ["Follows from posts", F.int(T.postFollows)], ["Profile visits", F.int(T.visits)]]);
   if (R.dominant) P.note("Heads up", `One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}`);

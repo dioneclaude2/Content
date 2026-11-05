@@ -15,6 +15,7 @@ export const DEFAULT_SETTINGS = {
   target: { views: 40_000_000, period: "month" },
   benchmark: 0.019,
   cpmRange: [4, 17],
+  cpmTarget: 5,                 // blended CPM goal: under $5 is good
   account: "@hellonancy_official",
 };
 
@@ -745,7 +746,15 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
       pctTarget: a.views != null ? a.views / tgt : null,
       er: div(a.interactions, a.views), erPrev: div(a.interactionsPrev, a.viewsPrev),
     };
+    // weekly blended CPM = the week's total ad spend (Ads Manager) ÷ all account views (organic + ads).
+    // The sheet's boost spend is only part of the week's ads, so without the total there's no CPM — not a misleading tiny one.
+    T.sheetAdSpend = T.adSpend;
+    T.blendedCPM = a.adSpend != null && a.views ? per1k(a.adSpend, a.views) : null;
+    if (a.adSpend != null) T.adSpend = a.adSpend;
+    if (T.blendedCPM == null) missing.blended = M("the week's total ad spend (Ads Manager, Sun–Sat)", "Ads person");
   }
+  T.cpmTarget = settings.cpmTarget ?? 5;
+  T.cpmStatus = T.blendedCPM == null ? null : T.blendedCPM < T.cpmTarget ? "🟢" : "🔴";
 
   const durationDays = rep.start && rep.end ? daysBetween(rep.start, rep.end) + 1 : null;
   return {
@@ -761,7 +770,13 @@ const label = r => (r.content ? `“${r.content.slice(0, 40)}${r.content.length 
 /* ───────── comparisons (§3.3) ───────── */
 
 /** Status: 🟢 better · 🟡 within ±5% · 🔴 worse. Rates change in percentage points. */
-export function compare(cur, prev, { rate = false, lowerBetter = false } = {}) {
+export function compare(cur, prev, { rate = false, lowerBetter = false, target = null } = {}) {
+  // a metric with a goal (blended CPM under $5) is judged against the goal, not against last week
+  if (target != null) {
+    const status = cur == null ? null : cur < target ? "🟢" : "🔴";
+    const change = cur == null || prev == null || !prev ? null : (cur - prev) / Math.abs(prev);
+    return { cur, prev, change, rate, status, target };
+  }
   if (cur == null || prev == null) return { cur, prev, change: null, rate, status: null };
   const rel = prev ? (cur - prev) / Math.abs(prev) : cur ? Infinity : 0;
   const change = rate ? (cur - prev) * 100 : rel;            // pp for rates, fraction for counts
@@ -791,7 +806,7 @@ export function compareReports(A, B) {
     ["Organic views", a.organicViews, b.organicViews, {}],
     ["Ad spend (USD)", a.adSpend, b.adSpend, { lowerBetter: true, money: true }],
     ["Ads CPM", a.adsCPM, b.adsCPM, { lowerBetter: true, money: true }],
-    ["Blended CPM", a.blendedCPM, b.blendedCPM, { lowerBetter: true, money: true }],
+    ["Blended CPM", a.blendedCPM, b.blendedCPM, { lowerBetter: true, money: true, target: a.cpmTarget ?? 5 }],
     ["Cost per follow", a.costPerFollow, b.costPerFollow, { lowerBetter: true, money: true }],
     ["Number of posts", a.posts, b.posts, {}],
   ];
