@@ -87,6 +87,16 @@ details.guide[open] summary::after{content:"Hide"}
 .gsend{position:absolute;right:5px;bottom:5px;z-index:3;border:0;border-radius:999px;background:var(--pink);color:#160b10;font-size:10px;font-weight:900;padding:4px 9px;cursor:pointer}
 .gallery .bottom{padding-right:60px}
 .empty-note{grid-column:1/-1;color:var(--dim);text-align:center;padding:30px 0}
+.scoreb{position:absolute;top:30px;left:6px;z-index:3;font-size:11px;font-weight:900;border-radius:999px;padding:3px 9px;background:rgba(0,0,0,.72);color:#fff;box-shadow:0 1px 6px rgba(0,0,0,.4)}
+.scoreb.hot{background:#FFD84D;color:#1a1208}.scoreb.warm{background:#FF8A4C;color:#1a1208}
+.sorts{display:flex;gap:6px;margin-top:-8px}
+.sortb{border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer}
+.sortb[aria-pressed="true"]{background:var(--surface2);color:var(--text);border-color:var(--text)}
+.stats{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.bigscore{font-size:28px;font-weight:900;display:flex;align-items:baseline;gap:8px}.bigscore small{font-size:12px;font-weight:700;color:var(--muted)}
+.bigscore.hot{color:#FFD84D}.bigscore.warm{color:#FF8A4C}
+.stats .two{grid-template-columns:1fr 1fr}
+.pv2{font-size:11.5px;color:var(--dim)}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);gap:10px;overflow-x:auto;padding-bottom:8px}
 .col{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;display:grid;gap:8px;align-content:start;min-height:220px}
 .col h4{margin:0;font-size:12px;font-weight:800;display:flex;justify-content:space-between;color:var(--muted)}
@@ -190,6 +200,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
       <button class="btn" type="submit">Add</button>
     </form>
     <div class="pills" id="byPills"></div>
+    <div class="sorts" id="sortPills"></div>
     <div class="grid gallery" id="gallery"></div>
   </section>
 
@@ -515,24 +526,36 @@ addEventListener("beforeunload", e => { if ([...uploads.values()].some(u => !u.e
 /* ---------- pipeline ---------- */
 /* Pipeline gallery: every reference plays right on the page, newest first,
    with a colour badge for who added it. Tap Edit for notes, stage and Send. */
-let pipeSig = "";
+let pipeSig = "", pipeSort = "new";
+/* Outlier score: how far a post beat the creator's usual (median of their last-90-day posts).
+   Reels use views; photo and carousel posts use likes. */
+const fmtN = n => n == null || n === "" ? "–" : n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "") + "K" : String(Math.round(n));
+const scoreOf = st => st && st.n && st.normal ? st.n / st.normal : null;
+const fscoreOf = st => st && st.n && st.followers && st.metric !== "likes" ? st.n / st.followers : null;
+const fmtX = x => x == null ? "" : (x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, "")) + "×";
+const tier = x => x == null ? "" : x >= 10 ? "hot" : x >= 3 ? "warm" : "cool";
+const fmtDay = d => d ? new Date(d + "T00:00").toLocaleDateString("en-US", {month: "short", day: "numeric", year: d.slice(0, 4) === String(new Date().getFullYear()) ? undefined : "numeric"}) : "";
 function renderPipe(force){
   $("#addBy").innerHTML = `<option value="">Added by…</option>` + Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("");
-  const cards = [...CARDS.values()].sort((a, b) => (b.created || 0) - (a.created || 0));
+  const cards = [...CARDS.values()].sort((a, b) => pipeSort === "score" ? (scoreOf(b.stats) ?? -1) - (scoreOf(a.stats) ?? -1) || (b.created || 0) - (a.created || 0) : (b.created || 0) - (a.created || 0));
   const count = n => cards.filter(c => c.by === n).length;
   $("#byPills").innerHTML = `<button class="pill" data-by="all" style="--c:var(--text)" aria-pressed="${byFilter === "all"}">Everyone <span class="count">${cards.length}</span></button>` +
     Object.keys(TEAM).map(n => `<button class="pill" data-by="${esc(n)}" style="--c:${TEAM[n]}" aria-pressed="${byFilter === n}"><i></i>${esc(n)} <span class="count">${count(n)}</span></button>`).join("");
+  $("#sortPills").innerHTML = [["new", "Newest"], ["score", "🔥 Highest score"]].map(([k, t]) => `<button class="sortb" data-sort="${k}" aria-pressed="${pipeSort === k}">${t}</button>`).join("");
   document.querySelectorAll("[data-by]").forEach(b => b.onclick = () => { byFilter = b.dataset.by; renderPipe(true); });
+  document.querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { pipeSort = b.dataset.sort; renderPipe(true); });
   const vis = cards.filter(c => byFilter === "all" || c.by === byFilter);
   // Don't reload every video when nothing changed (the team sync checks every 15 s).
-  const sig = byFilter + JSON.stringify(vis);
+  const sig = byFilter + pipeSort + JSON.stringify(vis);
   if (!force && sig === pipeSig) return;
   pipeSig = sig;
   $("#gallery").innerHTML = vis.length ? vis.map(c => {
     const md = c.ref && media(c.ref), pc = TEAM[c.by] || "#7A6D74";
     const note = (c.notes || []).slice(-1)[0];
-    const badge = `<span class="whob" style="--pc:${pc}">${esc(c.by || "No name")}</span>`;
-    const bottom = `<div class="bottom" style="--c:${pc}"><em>${esc(STAGES[c.stage] || "Reference")}</em>${c.title ? `<span>${esc(c.title)}</span>` : ""}${note ? `<span>💬 ${esc(note.by)}: ${esc(note.text)}</span>` : ""}${c.sent ? `<span class="from">✓ On ${esc(c.sent)}</span>` : ""}</div>`;
+    const sc = scoreOf(c.stats), st = c.stats || {};
+    const badge = `<span class="whob" style="--pc:${pc}">${esc(c.by || "No name")}</span>${sc != null ? `<span class="scoreb ${tier(sc)}" title="${fmtN(st.n)} ${st.metric || "views"} vs usual ${fmtN(st.normal)}">🔥 ${fmtX(sc)}</span>` : ""}`;
+    const meta = st.user || st.posted ? `<span>${st.user ? "@" + esc(st.user) : ""}${st.posted ? " · " + fmtDay(st.posted) : ""}${st.n ? " · " + fmtN(st.n) + " " + (st.metric === "likes" ? "likes" : "views") : ""}</span>` : "";
+    const bottom = `<div class="bottom" style="--c:${pc}"><em>${esc(STAGES[c.stage] || "Reference")}</em>${meta}${c.title ? `<span>${esc(c.title)}</span>` : ""}${note ? `<span>💬 ${esc(note.by)}: ${esc(note.text)}</span>` : ""}${c.sent ? `<span class="from">✓ On ${esc(c.sent)}</span>` : ""}</div>`;
     const send = c.sent ? "" : `<button class="gsend" data-send="${c.id}">Send →</button>`;
     if (md) return `<div class="tile has-ref" data-card="${c.id}">${badge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-edit="${c.id}">Edit</button>${send}${bottom}</div>`;
     return `<div class="tile" style="--c:${pc}" data-card="${c.id}" data-edit="${c.id}" role="button" tabindex="0">${badge}<b>${esc(c.title || "Pipeline card")}</b>${c.ref ? `<small>🔗 ${esc(host(c.ref))}</small>` : ""}${note ? `<small>💬 ${esc(note.text)}</small>` : ""}${send}</div>`;
@@ -558,6 +581,19 @@ function openCard(id){
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : c.ref ? `<a class="linkcard" href="${esc(normUrl(c.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(c.ref))} ↗</a>` : ""}
     <label class="field"><span>Title</span><input id="cTitle" value="${esc(c.title)}" placeholder="What's the idea?"></label>
+    <div class="field"><span>Outlier score</span>
+      <div class="stats">
+        <div class="bigscore ${tier(scoreOf(c.stats))}" id="cScore">${scoreOf(c.stats) != null ? "🔥 " + fmtX(scoreOf(c.stats)) + "<small>vs their usual</small>" : "<small>Add the numbers to get a score</small>"}</div>
+        <div class="two">
+          <label class="field"><span>Posted</span><input type="date" id="sPosted" value="${esc((c.stats || {}).posted || "")}"></label>
+          <label class="field"><span>Creator</span><input id="sUser" value="${esc((c.stats || {}).user || "")}" placeholder="@handle"></label>
+          <label class="field"><span id="sNLbl">${(c.stats || {}).metric === "likes" ? "Likes" : "Views"}</span><input id="sN" inputmode="numeric" value="${(c.stats || {}).n || ""}"></label>
+          <label class="field"><span>Followers</span><input id="sF" inputmode="numeric" value="${(c.stats || {}).followers || ""}"></label>
+          <label class="field"><span>Their usual (last 90 days)</span><input id="sNorm" inputmode="numeric" value="${(c.stats || {}).normal || ""}"></label>
+          <label class="field"><span>Views ÷ followers</span><input id="sFx" value="${fmtX(fscoreOf(c.stats))}" disabled></label>
+        </div>
+        ${(c.stats || {}).checked ? `<small class="pv2">Numbers from Instagram on ${fmtDay(c.stats.checked)}${c.stats.sample ? ` · usual = median of ${c.stats.sample} posts` : ""}.</small>` : ""}
+      </div></div>
     <div class="field"><span>Stage</span><div class="chips">${STAGES.map((s, i) => `<button class="chip" data-stage="${i}" style="--tc:${TEAM[c.by] || "#FF4F8B"}" aria-pressed="${c.stage === i}">${s}</button>`).join("")}</div></div>
     <label class="field"><span>Reference link</span><input id="cRef" value="${esc(c.ref)}" inputmode="url" autocomplete="off" placeholder="Paste any link"></label>
     <label class="field"><span>Added by</span><select id="cBy"><option value="">No name</option>${Object.keys(TEAM).map(n => `<option ${n === c.by ? "selected" : ""}>${n}</option>`).join("")}</select></label>
@@ -569,6 +605,15 @@ function openCard(id){
   document.querySelectorAll("#sheetIn [data-stage]").forEach(b => b.onclick = () => { c.stage = +b.dataset.stage; save("card", c); document.querySelectorAll("#sheetIn [data-stage]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   $("#cRef").onchange = e => { c.ref = normUrl(e.target.value); save("card", c); openCard(id); };
   $("#cBy").onchange = e => { c.by = e.target.value; save("card", c); };
+  const num = v => { const t = String(v).trim().toLowerCase().replace(/,/g, ""); const m = t.match(/^([\d.]+)\s*([km]?)$/); return m ? Math.round(+m[1] * (m[2] === "m" ? 1e6 : m[2] === "k" ? 1e3 : 1)) : null; };
+  const updStats = () => {
+    const st = c.stats = {...(c.stats || {}), metric: (c.stats || {}).metric || "views", posted: $("#sPosted").value, user: $("#sUser").value.replace(/^@/, "").trim(), n: num($("#sN").value), followers: num($("#sF").value), normal: num($("#sNorm").value)};
+    save("card", c);
+    const x = scoreOf(st); $("#cScore").className = "bigscore " + tier(x);
+    $("#cScore").innerHTML = x != null ? "🔥 " + fmtX(x) + "<small>vs their usual</small>" : "<small>Add the numbers to get a score</small>";
+    $("#sFx").value = fmtX(fscoreOf(st));
+  };
+  ["#sPosted", "#sUser", "#sN", "#sF", "#sNorm"].forEach(k => $(k).onchange = updStats);
   $("#cAddNote").onclick = () => { const t = $("#cNote").value.trim(); if (!t) return; const by = $("#cNoteBy").value; setMe(by); c.notes = [...(c.notes || []), {by, text: t, at: Date.now()}]; save("card", c); openCard(id); };
   $("#cDone").onclick = closeSheet;
   $("#cDel").onclick = () => { remove("card", id); closeSheet(); };
