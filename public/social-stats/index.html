@@ -1275,7 +1275,7 @@ function adSpendCard(R){
   if (!list.length) return "";
   const collabs = list.filter(r => r.collab);
   return `<div class="card" style="margin-top:14px"><h3>Where the ad spend went</h3>
-    ${tbl("t-adsp", ["Post", "Account", N("Spend"), N("Ad views"), N("Organic views"), N("CPM")], list.map(r => `<tr><td class="wrap">${link(r, 50)}</td><td>${esc(r.account || "")}${r.collab ? ` <span class="pill">collab</span>` : ""}</td><td class="n">${F.usd(r.spend)}</td><td class="n">${F.int(r.paid)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${or(r.cpm, F.usd)}</td></tr>`))}
+    ${tbl("t-adsp", ["Post", "Account", N("Spend"), N("Ad views"), N("Organic views"), N("CPM")], list.map(r => `<tr><td class="wrap">${link(r, 50)}</td><td>${esc(r.account || "")}${r.collab && !/collab/i.test(r.account || "") ? ` <span class="pill">collab</span>` : ""}</td><td class="n">${F.usd(r.spend)}</td><td class="n">${F.int(r.paid)}</td><td class="n">${F.int(r.organic)}</td><td class="n">${or(r.cpm, F.usd)}</td></tr>`))}
     <p class="small muted" style="margin-top:8px">${collabs.length ? `${collabs.length === list.length ? "All" : collabs.length} of the ${list.length} boosted post${list.length > 1 ? "s" : ""} ${list.length === 1 ? "is a collab" : "are collabs"} — ${F.usd(collabs.reduce((s, r) => s + r.spend, 0))} of ad spend went on collab content. ` : ""}Only the boosts recorded in the sheet.</p></div>`;
 }
 const accountsHTML = R => R.accounts ? `<div class="sec"><h2>By account</h2>${accountsTable(R)}</div>` : "";
