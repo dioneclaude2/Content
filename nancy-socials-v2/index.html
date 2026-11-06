@@ -379,7 +379,8 @@ const rangeOf = m => { const d = week(m); return `${d[0].toLocaleDateString("en-
 const momentsOn = key => MOMENTS.filter(m => m[0] === key).map(m => m[1]);
 const postsOn = (acct, key) => [...POSTS.values()].filter(p => p.acct === acct && p.day === key).sort((a, b) => (a.created || 0) - (b.created || 0));
 const filled = (acct, key) => postsOn(acct, key).length > 0 || momentsOn(key).length > 0;
-const count = acct => week().filter(d => filled(acct, iso(d))).length;
+// Posts planned from this week on (calendar moments not counted).
+const count = acct => { const from = iso(mondayOf(new Date())); return [...POSTS.values()].filter(p => p.acct === acct && p.day >= from).length; };
 const me = () => { try { return localStorage.getItem("ns2.me") || ""; } catch { return ""; } };
 const setMe = n => { try { localStorage.setItem("ns2.me", n); } catch {} };
 function newPost(acct, day, extra = {}){
@@ -418,7 +419,7 @@ function refresh(){ if ($("#sheet").hidden) renderPlan(); if (!$("#pipe").hidden
 function renderPlan(){
   const a = ACCOUNTS[current], days = week();
   $("#pills").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) =>
-    `<button class="pill" data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}<span class="count">${count(k)}/7</span></button>`).join("");
+    `<button class="pill" data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}<span class="count" title="Posts planned">${count(k)}</span></button>`).join("");
   document.querySelectorAll("[data-a]").forEach(p => p.onclick = () => { current = p.dataset.a; renderPlan(); });
   $("#wkTitle").innerHTML = `<span class="wkword">${weekWord(monday)}</span>${rangeOf(monday)}`;
   $("#todayW").hidden = +monday === +mondayOf(new Date());
