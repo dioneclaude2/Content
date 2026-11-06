@@ -73,6 +73,16 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--text);o
 .tile .open{position:absolute;top:5px;right:5px;z-index:3;border:0;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;cursor:pointer}
 .tile .from{font-size:9.5px!important;color:#FFD84D}
 .hint{font-size:12px;color:var(--dim);text-align:center}
+details.rules{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--community);border-radius:16px;padding:12px 14px}
+details.rules summary{cursor:pointer;font-weight:800;font-size:13.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.rules summary::-webkit-details-marker{display:none}
+details.rules summary::after{content:"Show";font-size:12px;color:var(--dim);font-weight:700}
+details.rules[open] summary::after{content:"Hide"}
+.rules-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+.rules-in h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.rules-in ul{margin:0;padding-left:18px;font-size:13px;line-height:1.5}
+.rules-in li{margin-bottom:3px}
+.rules .test{margin-top:12px;font-size:13px;background:var(--surface2);border-radius:10px;padding:9px 11px}
 details.guide{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
 details.guide summary{cursor:pointer;font-weight:800;font-size:13.5px;list-style:none;display:flex;justify-content:space-between}
 details.guide summary::after{content:"Show";font-size:12px;color:var(--dim);font-weight:700}
@@ -191,6 +201,14 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
       <div class="seg" aria-label="View"><button aria-pressed="true">Grid</button><button aria-pressed="false" data-soon="By person">By person</button><button aria-pressed="false" data-soon="Week">Week</button></div>
     </div>
     <div class="acct-h" id="acctH"></div>
+    <details class="rules" id="rules" hidden><summary>Community rules · keep us recommended to non-followers</summary>
+      <div class="rules-in">
+        <div><h4>✅ Do</h4><ul><li>Relatable humour, friendship, dating, self-care, POV memes, trends</li><li>Start with no toys or very minimal ones</li><li>Toys only in the background, still, not moving</li><li>Clean cover frame (people fill the screen)</li><li>Wink-wink puns (like "good vibes")</li><li>Follow Official</li></ul></div>
+        <div><h4>🚫 Don't</h4><ul><li>Toys held up, moving, or centre of frame</li><li>Sexual words in caption, on-screen text or audio</li><li>Hashtags like #vibrator or #sextoy</li><li>Shop or product links</li><li>Reposting Official product posts or Sex Ed posts</li><li>Collabs with Sex Ed</li></ul></div>
+        <div><h4>🔁 Check</h4><ul><li>Settings → Account Status → "Can your content be recommended?" the evening of posting and the next day</li><li>If it says no: archive that post</li><li>Hidden Words on for comments</li><li>Borderline (like Medusa costume)? Post on Official, share to Community story</li></ul></div>
+      </div>
+      <div class="test"><b>Quick test:</b> on mute with no caption, would a stranger know we're a sex brand? If yes → Official or Sex Ed, not Community.</div>
+    </details>
     <div class="grid" id="grid"></div>
     <div class="hint">Tap a post to fill it in. Use the dashed + at the end to add more posts on any day.</div>
     <details class="guide"><summary>Content types guide</summary><div class="types" id="guide"></div></details>
@@ -393,6 +411,7 @@ function renderPlan(){
   document.querySelectorAll("[data-a]").forEach(p => p.onclick = () => { current = p.dataset.a; renderPlan(); });
   $("#wkTitle").innerHTML = `<span class="wkword">${weekWord(monday)}</span>${rangeOf(monday)}`;
   $("#todayW").hidden = +monday === +mondayOf(new Date());
+  $("#rules").hidden = current !== "community";
   $("#acctH").innerHTML = `<b>${a.name}</b><span>${a.job}</span>`;
   let n = 0;
   const tiles = [];
@@ -436,6 +455,8 @@ function sizeEmbeds(root = $("#grid")){
 addEventListener("resize", () => { sizeEmbeds(); if (!$("#pipe").hidden) sizeEmbeds($("#gallery")); });
 $("#prevW").onclick = () => { monday = addDays(monday, -7); renderPlan(); };
 $("#nextW").onclick = () => { monday = addDays(monday, 7); renderPlan(); };
+try { if (localStorage.getItem("ns.v2.rulesClosed") !== "1") $("#rules").open = true; } catch (e) { $("#rules").open = true; }
+$("#rules").addEventListener("toggle", () => { try { localStorage.setItem("ns.v2.rulesClosed", $("#rules").open ? "0" : "1"); } catch (e) {} });
 $("#todayW").onclick = () => { monday = mondayOf(new Date()); renderPlan(); };
 $("#guide").innerHTML = TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${
   list.map(([n, c, why]) => `<span class="chip" style="--tc:${c}">${esc(n)} <span>· ${esc(why)}</span></span>`).join("")}</div></div>`).join("");
