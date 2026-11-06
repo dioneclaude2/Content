@@ -129,6 +129,7 @@ function render(){
     const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
     const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span></div>`;
     if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
     if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
     return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
   });
@@ -160,10 +161,11 @@ function openPost(id){
   const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
   const title = (p.title || p.type || "Post").split("\n")[0];
   const box = p.final ? `<iframe src="https://drive.google.com/file/d/${p.final.id}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+    : p.cover ? `<img src="${esc(p.cover)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
     : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
   $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>
-    <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md ? "Reference" : "Planned"}</div>
+    <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md || p.cover ? "Reference" : "Planned"}</div>
     ${!p.final && p.ref ? `<a href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">Open the reference ↗</a>` : ""}</div>`;
   $("#lb").hidden = false;
 }

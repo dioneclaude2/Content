@@ -438,6 +438,7 @@ function renderPlan(){
         ${upBadge || `<span class="badge-final">✓ Final</span>`}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
         <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<img class="final-media" src="${esc(p.cover)}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}${upBadge}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
