@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=48b462a">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=99d11a5">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=48b462a" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=99d11a5" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=48b462a";
+import * as E from "./engine.js?v=99d11a5";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -399,7 +399,7 @@ const F = {
   date: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }); },
   dateY: d => { if (!d) return "—"; const x = new Date(d + "T12:00:00Z"); return x.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); },
 };
-const miss = m => `<span class="miss">Missing — need ${esc(m.need)}, from ${esc(m.who)}</span>`;
+const miss = m => `<span class="miss">To add: ${esc(m.need)}, from ${esc(m.who)}</span>`;
 const or = (v, fmt, m) => (v == null ? (m ? miss(m) : "—") : fmt(v));
 const vsBench = (er, bench) => er == null ? "—" : `<span class="${er >= bench ? "bench-good" : "bench-bad"}">${F.pct(er)}</span>`;
 const chip = b => b ? '<span class="chip yes">Yes</span>' : '<span class="chip no">No</span>';
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=48b462a");
-    const logo = await svgToPng("logo-circle.svg?v=48b462a", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=99d11a5");
+    const logo = await svgToPng("logo-circle.svg?v=99d11a5", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -573,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=48b462a" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=99d11a5" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -855,7 +855,7 @@ function flagsHTML(R, limit){
 function renderChecks(body, R){
   const missing = Object.values(R.missing);
   body.innerHTML = `<div class="sec"><h2>Checks before reporting</h2>${flagsHTML(R)}</div>
-    ${missing.length ? `<div class="sec"><h2>Missing data</h2><div class="flags">${missing.map(m => `<div class="flag warn"><b>Need</b><span>${esc(m.need)} — from ${esc(m.who)}</span></div>`).join("")}</div></div>` : ""}
+    ${missing.length ? `<div class="sec"><h2>Data to add</h2><div class="flags">${missing.map(m => `<div class="flag info"><b>To add</b><span>${esc(m.need)} — from ${esc(m.who)}</span></div>`).join("")}</div></div>` : ""}
     <div class="sec"><h2>What's checked</h2><p class="sub">Total = organic + paid on every row · no negative organic views · no post twice in a report or across events · spend in the rows equals spend in the exports (after FX) · every export has a Views column and covers the date range · every post has views and one pull date · ads matched by name, separate ad versions and unmatched ads are flagged · ads CPM within $${D0().settings.cpmRange[0]}–$${D0().settings.cpmRange[1]} · Organic CPM left blank without event cost · influencer and event costs kept separate.</p></div>`;
 }
 const D0 = () => db();
@@ -952,7 +952,7 @@ function notesHTML(rep, R, D){
     <div><b>Engagement rate</b> = (likes + comments + saves + shares) ÷ views. Instagram views include ad views; organic = views − ad views. Paid views are ad Views, never impressions.</div>
     <div><b>Time zones:</b> post dates in New York time; Instagram account insights count days in Pacific time.</div>
     ${rep.type === "week" ? `<div><b>Ads on older posts</b> count toward spend and paid views as their own rows; their posts' Instagram views stay with the week they were posted.</div>` : ""}
-    ${missing.length ? `<div><b>Missing:</b> ${missing.map(m => `${esc(m.need)} (${esc(m.who)})`).join(" · ")}</div>` : ""}
+    ${missing.length ? `<div><b>To add:</b> ${missing.map(m => `${esc(m.need)} (${esc(m.who)})`).join(" · ")}</div>` : ""}
     ${(rep.sheetNotes || []).map(n => `<div><b>About the data:</b> ${esc(n)}</div>`).join("")}
   </div></div>`;
 }
@@ -990,7 +990,7 @@ function weeklyHTML(rep, R, P, D){
       ["Ad spend", F.usd(T.adSpend), `${F.int(T.paidViews)} paid views`],
       ["Follows", F.int(T.postFollows), `net followers ${F.int(A.netFollowers)}`],
     ])}</div>
-    ${R.dominant ? `<div class="sec"><div class="flag warn"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post — ${link(R.dominant, 60)} — drove ${F.pct(R.dominant.views / T.postViews)} of this week's post views.${R.withoutCollabs ? ` Without collab posts: ${F.int(R.withoutCollabs.views)} views, blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div></div>` : ""}
+    ${R.dominant ? `<div class="sec"><div class="flag warn"><b>Note</b><span>One ${R.dominant.collab ? "collab " : ""}post — ${link(R.dominant, 60)} — drove ${F.pct(R.dominant.views / T.postViews)} of this week's post views.${R.withoutCollabs ? ` Without collab posts: ${F.int(R.withoutCollabs.views)} views, blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div></div>` : ""}
     ${topEmbedsHTML(R)}
     <div class="sec"><h2>Summary</h2>${tbl("t-sum", ["Metric", N("Value"), `vs target / ${esc(prevName)}`, "Status"], summary)}</div>
     <div class="sec"><h2>This week's posts</h2>${R.rows.length ? weeklyPostTable(R) : `<div class="empty">${miss(R.missing.posts || { need: "posts", who: "Organic person" })}<br><br><a class="btn" href="#/r/${rep.id}/data">Add data</a></div>`}</div>
@@ -1192,7 +1192,7 @@ function topPosts(R, by = "views", n = 3){
 
 function issuesLine(rep, R){
   const n = R.flags.filter(f => f.level !== "info").length + Object.keys(R.missing).length;
-  return n ? `<p class="small" style="margin-top:12px"><a class="down" href="#/r/${rep.id}/checks">${n} thing${n > 1 ? "s" : ""} missing or to check →</a></p>` : "";
+  return n ? `<p class="small" style="margin-top:12px"><a href="#/r/${rep.id}/checks">${n} item${n > 1 ? "s" : ""} to review →</a></p>` : "";
 }
 
 /* Every cost line by group, so it's clear where the money came from (skipped while only sheet totals exist) */
@@ -1304,7 +1304,7 @@ function weeklySummaryHTML(rep, R, P){
       <div><span>Profile visits</span><b>${F.int(T.visits)}</b></div>
     </div>
     ${adSpendCard(R)}
-    ${R.dominant ? `<div class="flag warn" style="margin-top:14px"><b>Heads up</b><span>One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div>` : ""}
+    ${R.dominant ? `<div class="flag warn" style="margin-top:14px"><b>Note</b><span>One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div>` : ""}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h3>Where the views came from</h3>${splitBar([
         { label: "Organic", value: T.organicViews },
@@ -2458,7 +2458,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=48b462a", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=99d11a5", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
