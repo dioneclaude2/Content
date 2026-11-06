@@ -145,7 +145,7 @@ details.guide[open] summary::after{content:"Hide"}
 .final small{font-size:11.5px;color:var(--dim)}
 .final .pv{color:#FFD2BA}
 .final .player{margin:0}
-.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:#3DDC97;transition:width .3s}
+.upbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.upbar i{display:block;height:100%;background:#3DDC97;transition:width .3s}
 .badge-final.up{background:#FFB547;color:#1a1208}
 .btn.up{justify-self:start}
 label.btn{display:inline-flex;align-items:center}
@@ -520,7 +520,7 @@ function paintFinal(id){
   const u = uploads.get(id), f = finals.get(id), d = p.final, mb = n => (n / 1048576).toFixed(1) + " MB";
   const pick = label => `<label class="btn ${label === "Replace" ? "ghost" : "up"}">${label}<input type="file" id="fFile" accept="video/*,image/*" hidden></label>`;
   let h = `<div class="final-h"><b>Final edit</b><span>${u && !u.error ? "Uploading…" : d ? "✓ In Google Drive" : f ? "✓ On this device" : "Not uploaded yet"}</span></div>`;
-  if (u && !u.error) h += `<div class="bar"><i style="width:${u.pct}%"></i></div><small>${esc(u.name)} · ${u.pct}% · you can close this panel, it keeps going while the site is open</small>`;
+  if (u && !u.error) h += `<div class="upbar"><i style="width:${u.pct}%"></i></div><small>${esc(u.name)} · ${u.pct}% · you can close this panel, it keeps going while the site is open</small>`;
   else if (d) h += `<div class="player"><iframe src="${dPreview(d.id)}" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
       <div class="final-row"><a class="btn" href="${dDown(d.id)}" target="_blank" rel="noopener">⬇ Download original</a><a class="btn ghost" href="${dView(d.id)}" target="_blank" rel="noopener">Open in Drive ↗</a>${pick("Replace")}</div>
       <small>${esc(d.name)} · ${mb(d.size)} · full quality${d.by ? " · uploaded by " + esc(d.by) : ""}</small>
