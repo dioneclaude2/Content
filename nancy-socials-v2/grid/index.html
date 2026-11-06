@@ -54,6 +54,9 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 .tile .ic{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:6px;background:rgba(0,0,0,.45);display:grid;place-items:center}
 .tile .ic svg{width:12px;height:12px;fill:#fff}
 .tile .badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;border-radius:999px;padding:3px 7px}
+.tile .scoreb{position:absolute;top:28px;left:6px;font-size:10.5px;font-weight:900;border-radius:999px;padding:3px 8px;background:rgba(0,0,0,.72);color:#fff}
+.tile .scoreb.hot{background:#FFD84D;color:#1a1208}.tile .scoreb.warm{background:#FF8A4C;color:#1a1208}
+.tile .cap .statl{color:#FFD84D;text-transform:none}
 .tile .badge.ok{background:#3DDC97;color:#0b1a12}
 .empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}
 .foot{max-width:640px;margin:0 auto;padding:14px 16px 60px;font-size:12px;color:var(--muted);text-align:center}
@@ -133,9 +136,9 @@ function render(){
   const done = list.filter(p => p.final).length;
   const tiles = list.map(p => {
     const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
-    const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span></div>`;
+    const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span>${p.stats ? `<span class="statl">${statLine(p.stats)}</span>` : ""}</div>`;
     if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
-    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span><span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
+    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span>${statBadge(p.stats)}<span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
     if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
     return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
   });
@@ -162,6 +165,8 @@ function sizeEmbeds(){
 }
 addEventListener("resize", sizeEmbeds);
 
+function statBadge(st){ const x = st && st.n && st.normal ? st.n / st.normal : null; if (x == null) return ""; const t = x >= 10 ? "hot" : x >= 3 ? "warm" : "cool"; return `<span class="scoreb ${t}">🔥 ${(x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, ""))}×</span>`; }
+function statLine(st){ const k = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "") + "K" : String(n); return `${st.metric === "likes" ? "♥" : "👁"} ${k(st.n)} ${st.metric} · usual ${k(st.normal)}`; }
 function openPost(id){
   const p = POSTS.find(x => x.id === id); if (!p) return;
   const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
@@ -173,6 +178,7 @@ function openPost(id){
     : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
   $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>
+    ${p.stats ? `<div class="meta">${statLine(p.stats)} · score ${statBadge(p.stats).replace(/<[^>]+>/g, "").replace("🔥 ", "")} · first posted ${esc(p.stats.posted)} by @${esc(p.stats.user)}</div>` : ""}
     <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md || p.cover ? "Reference" : "Planned"}</div>
     ${p.caption ? `<pre>${esc(p.caption)}</pre>` : ""}
     ${!p.final && p.ref ? `<a href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">Open the reference ↗</a>` : ""}</div>`;

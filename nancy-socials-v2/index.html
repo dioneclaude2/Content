@@ -71,6 +71,7 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--text);o
 .tile .bottom em{font-style:normal;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
 .tile .bottom span{font-size:10.5px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .tile .open{position:absolute;top:5px;right:5px;z-index:3;border:0;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;cursor:pointer}
+.tile .statl{font-size:9.5px!important;color:#FFD84D;font-weight:800!important}
 .tile .from{font-size:9.5px!important;color:#FFD84D}
 .hint{font-size:12px;color:var(--dim);text-align:center}
 details.rules{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--community);border-radius:16px;padding:12px 14px}
@@ -440,14 +441,15 @@ function renderPlan(){
     posts.forEach(p => {
       const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color, f = finals.get(p.id);
       const who = [p.film && "🎥 " + p.film, p.edit && "✂️ " + p.edit].filter(Boolean).join(" · ");
-      const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${who ? `<span>${esc(who)}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}</div>`;
+      const bottom = `<div class="bottom" style="--c:${c}"><em>${esc(p.type || "No type yet")}</em>${p.title ? `<span>${esc(p.title.split("\n")[0])}</span>` : ""}${who ? `<span>${esc(who)}</span>` : ""}${p.from ? `<span class="from">🔥 Worked on ${esc(p.from)}</span>` : ""}${p.stats ? `<span class="statl">${statLine(p.stats)}</span>` : ""}</div>`;
+      const sb = statBadge(p.stats);
       const up = uploads.get(p.id), upBadge = up && !up.error ? `<span class="badge-final up" data-upb="${p.id}">⬆ ${up.pct}%</span>` : "";
       if (p.final) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}<iframe data-kind="frame" src="${dPreview(p.final.id)}" loading="lazy" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         ${upBadge || `<span class="badge-final">✓ Final</span>`}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
         <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
-      else if (p.clip || p.slides) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${ownMedia(p)}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
-      else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<img class="final-media" src="${esc(p.cover)}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (p.clip || p.slides) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${sb}${ownMedia(p)}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${sb}<img class="final-media" src="${esc(p.cover)}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}${upBadge}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
@@ -462,6 +464,9 @@ function renderPlan(){
   $("#grid").querySelectorAll(".tile[data-id]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(t.dataset.id); });
   $("#addTile").onclick = () => pickDay(current, k => openPost(newPost(current, k).id));
 }
+/* Views + outlier score on a planned post that reuses an older post. */
+function statBadge(st){ const x = st && st.n && st.normal ? st.n / st.normal : null; if (x == null) return ""; const t = x >= 10 ? "hot" : x >= 3 ? "warm" : "cool"; const f = (x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, "")) + "×"; return `<span class="scoreb ${t}" title="${st.n} ${st.metric} vs usual ${st.normal}">🔥 ${f}</span>`; }
+function statLine(st){ const k = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "") + "K" : String(n); return `${st.metric === "likes" ? "♥" : "👁"} ${k(st.n)} ${st.metric} · usual ${k(st.normal)}`; }
 /* Our own copy of a reference (video file or carousel slides), for posts Instagram won't embed. */
 function ownMedia(p, big){
   if (p.clip) return `<video class="${big ? "" : "final-media"}" src="${esc(p.clip)}" ${p.cover ? `poster="${esc(p.cover)}"` : ""} controls playsinline preload="${big ? "auto" : "none"}"></video>`;
