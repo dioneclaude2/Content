@@ -86,6 +86,11 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true"><button class="lb-x" id="lbX" aria-label="Close">×</button><div class="lb-in" id="lbIn"></div></div>
 <script>
 const API = "https://content-nine-topaz.vercel.app/api/socials";
+/* Media files live on both hosts; use the copy on whichever site is open (faster for everyone). */
+const GH = "https://dioneclaude2.github.io/Content/nancy-socials-v2/";
+const HERE = location.hostname.endsWith("vercel.app") ? location.origin + "/nancy-socials-v2/" : GH;
+const own = u => String(u || "").replace(GH, HERE);
+
 const ACCOUNTS = {
   community: {name:"Community", color:"var(--community)", bio:"Your extra dose of Nancy\nGood vibes comes from here"},
   official:  {name:"Official", color:"var(--official)", bio:""},
@@ -138,7 +143,7 @@ function render(){
     const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
     const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span>${p.stats ? `<span class="statl">${statLine(p.stats)}</span>` : ""}</div>`;
     if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
-    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span>${statBadge(p.stats)}<span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
+    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(own(p.cover))}" alt="" loading="lazy"><span class="badge">Ref</span>${statBadge(p.stats)}<span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
     if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
     return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
   });
@@ -172,9 +177,9 @@ function openPost(id){
   const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
   const title = (p.title || p.type || "Post").split("\n")[0];
   const box = p.final ? `<iframe src="https://drive.google.com/file/d/${p.final.id}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
-    : p.clip ? `<video src="${esc(p.clip)}" ${p.cover ? `poster="${esc(p.cover)}"` : ""} controls autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`
-    : p.slides ? `<div class="slides">${p.slides.map(u => `<img src="${esc(u)}" alt="">`).join("")}</div><span class="scount">${p.slides.length} slides · swipe →</span>`
-    : p.cover ? `<img src="${esc(p.cover)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
+    : p.clip ? `<video src="${esc(own(p.clip))}" ${p.cover ? `poster="${esc(own(p.cover))}"` : ""} controls autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`
+    : p.slides ? `<div class="slides">${p.slides.map(u => `<img src="${esc(own(u))}" alt="">`).join("")}</div><span class="scount">${p.slides.length} slides · swipe →</span>`
+    : p.cover ? `<img src="${esc(own(p.cover))}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
     : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
   $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>

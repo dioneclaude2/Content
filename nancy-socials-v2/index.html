@@ -449,7 +449,7 @@ function renderPlan(){
       else if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
         <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (p.clip || p.slides) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${sb}${ownMedia(p)}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
-      else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${sb}<img class="final-media" src="${esc(p.cover)}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${sb}<img class="final-media" src="${esc(own(p.cover))}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}${upBadge}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
     });
@@ -467,10 +467,14 @@ function renderPlan(){
 /* Views + outlier score on a planned post that reuses an older post. */
 function statBadge(st){ const x = st && st.n && st.normal ? st.n / st.normal : null; if (x == null) return ""; const t = x >= 10 ? "hot" : x >= 3 ? "warm" : "cool"; const f = (x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, "")) + "×"; return `<span class="scoreb ${t}" title="${st.n} ${st.metric} vs usual ${st.normal}">🔥 ${f}</span>`; }
 function statLine(st){ const k = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "") + "K" : String(n); return `${st.metric === "likes" ? "♥" : "👁"} ${k(st.n)} ${st.metric} · usual ${k(st.normal)}`; }
+/* Media files live on both hosts; use the copy on whichever site is open (faster for everyone). */
+const GH = "https://dioneclaude2.github.io/Content/nancy-socials-v2/";
+const HERE = location.hostname.endsWith("vercel.app") ? location.origin + "/nancy-socials-v2/" : GH;
+const own = u => String(u || "").replace(GH, HERE);
 /* Our own copy of a reference (video file or carousel slides), for posts Instagram won't embed. */
 function ownMedia(p, big){
-  if (p.clip) return `<video class="${big ? "" : "final-media"}" src="${esc(p.clip)}" ${p.cover ? `poster="${esc(p.cover)}"` : ""} controls playsinline preload="${big ? "auto" : "none"}"></video>`;
-  return `<div class="slides${big ? " big" : ""}">${p.slides.map(u => `<img src="${esc(u)}" alt="" loading="lazy">`).join("")}</div><span class="slidecount">${p.slides.length} slides · swipe</span>`;
+  if (p.clip) return `<video class="${big ? "" : "final-media"}" src="${esc(own(p.clip))}" ${p.cover ? `poster="${esc(own(p.cover))}"` : ""} controls playsinline preload="${big ? "auto" : "none"}"></video>`;
+  return `<div class="slides${big ? " big" : ""}">${p.slides.map(u => `<img src="${esc(own(u))}" alt="" loading="lazy">`).join("")}</div><span class="slidecount">${p.slides.length} slides · swipe</span>`;
 }
 /* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
 function sizeEmbeds(root = $("#grid")){
