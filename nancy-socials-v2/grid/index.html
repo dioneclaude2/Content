@@ -104,8 +104,8 @@ function media(url){
   if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/))) return {kind:"frame", src:`https://drive.google.com/file/d/${m[1]}/preview`};
   return null;
 }
-// A post is worth showing once it has something in it.
-const real = p => p && (p.final || p.ref || p.title || p.type);
+// Only posts with a final edit or a reference link go on the shared grid.
+const real = p => p && (p.final || String(p.ref || "").trim());
 
 async function pull(){
   try {
