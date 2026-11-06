@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nancy Grid</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Read-only share view: each account laid out the way it will look on the Instagram profile. */
+:root{
+  --bg:#0B0709; --card:#151014; --surface2:#1E171C; --ink:#F7EEF2; --muted:#B3A6AD; --dim:#7A6D74; --line:#2E242B; --pink:#FF4F8B;
+  --community:#FFB547; --official:#FF4F8B; --sexed:#4FB3FF; --monsters:#3DDC97; --japan:#C9A7FF;
+  --sans:'Archivo',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px max(16px,env(safe-area-inset-left)) 12px;border-bottom:1px solid var(--line)}
+.top-in{max-width:640px;margin:0 auto;display:grid;gap:12px}
+.brand{font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:-.02em}
+.brand em{font-family:var(--serif);font-weight:400;text-transform:none;color:var(--pink);font-size:20px;letter-spacing:0}
+.brand small{font-size:11px;font-weight:700;text-transform:none;letter-spacing:.06em;color:var(--dim);margin-left:8px}
+.accts{display:flex;gap:8px;flex-wrap:wrap}
+.accts button{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:9px 15px;font-weight:800;font-size:13.5px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.accts button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.accts button[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#160b10}
+.accts button[aria-pressed=true] i{background:#160b10}
+.phone{max-width:640px;margin:16px auto 0;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:70vh}
+.prof{padding:18px 16px 12px;display:grid;gap:12px}
+.prof-h{display:flex;align-items:center;gap:18px}
+.ava{width:84px;height:84px;flex:none;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75)}
+.ava span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--c);border:3px solid var(--card);font-family:var(--serif);font-style:italic;font-size:22px;color:#1a1014}
+.prof-h h1{margin:0 0 6px;font-size:17px;font-weight:800}
+.stats{display:flex;gap:22px;font-size:13px;color:var(--muted)}
+.stats b{display:block;font-size:17px;color:var(--ink)}
+.bio{font-size:14px;line-height:1.45;white-space:pre-line}
+.tabsbar{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:8px 12px}
+.order{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.order button{border:0;background:none;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer}
+.order button[aria-pressed=true]{background:var(--ink);color:#160b10}
+.tabsbar svg{width:22px;height:22px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.tile{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--c);cursor:pointer;border:0;padding:0;display:block;width:100%}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+.tile iframe{position:absolute;border:0;pointer-events:none}
+.tile .txt{position:absolute;inset:0;display:grid;place-items:center;padding:12px;text-align:center;font-family:var(--serif);font-size:clamp(14px,3.6vw,20px);line-height:1.1;color:#1a1014}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;text-align:left;display:grid;gap:2px}
+.tile .cap b{font-size:11px;font-weight:800;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .cap span{font-size:9.5px;font-weight:700;letter-spacing:.04em;opacity:.85;text-transform:uppercase}
+.tile.txtonly .cap{background:none;color:#1a1014}
+.tile.txtonly .cap b{display:none}
+.tile .ic{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:6px;background:rgba(0,0,0,.45);display:grid;place-items:center}
+.tile .ic svg{width:12px;height:12px;fill:#fff}
+.tile .badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;border-radius:999px;padding:3px 7px}
+.tile .scoreb{position:absolute;top:28px;left:6px;font-size:10.5px;font-weight:900;border-radius:999px;padding:3px 8px;background:rgba(0,0,0,.72);color:#fff}
+.tile .scoreb.hot{background:#FFD84D;color:#1a1208}.tile .scoreb.warm{background:#FF8A4C;color:#1a1208}
+.tile .cap .statl{color:#FFD84D;text-transform:none}
+.tile .badge.ok{background:#3DDC97;color:#0b1a12}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}
+.foot{max-width:640px;margin:0 auto;padding:14px 16px 60px;font-size:12px;color:var(--muted);text-align:center}
+.lb{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.8);display:grid;place-items:center;padding:16px}
+.lb-in{background:var(--card);border:1px solid var(--line);border-radius:18px;width:min(420px,100%);max-height:92vh;overflow:auto;display:grid}
+.lb-media{position:relative;aspect-ratio:9/16;max-height:68vh;background:#000;overflow:hidden}
+.lb-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb-media .txt{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-family:var(--serif);font-size:28px;line-height:1.1;background:var(--c);color:#1a1014}
+.lb-body{padding:14px 16px 16px;display:grid;gap:6px}
+.lb-body h2{margin:0;font-size:17px;font-weight:800;line-height:1.25}
+.lb-body .meta{font-size:12.5px;color:var(--muted)}
+.lb-body a{color:var(--pink);font-weight:800;font-size:13px}
+.slides{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.slides::-webkit-scrollbar{display:none}
+.slides img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;background:#000;scroll-snap-align:start}
+.scount{position:absolute;top:10px;right:10px;font-size:11px;font-weight:800;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:3px 9px}
+.lb-body pre{white-space:pre-wrap;font:inherit;font-size:13px;line-height:1.45;margin:6px 0 0;color:var(--ink)}
+.lb-x{position:fixed;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:20px;cursor:pointer}
+</style>
+</head><body>
+<header class="top"><div class="top-in">
+  <div class="brand">Nancy <em>socials</em><small>Grid preview</small></div>
+  <nav class="accts" id="accts" aria-label="Accounts"></nav>
+</div></header>
+<main class="phone" id="phone"></main>
+<div class="foot" id="foot">Loading the plan…</div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true"><button class="lb-x" id="lbX" aria-label="Close">×</button><div class="lb-in" id="lbIn"></div></div>
+<script>
+const API = "https://content-nine-topaz.vercel.app/api/socials";
+/* Media files live on both hosts; use the copy on whichever site is open (faster for everyone). */
+const GH = "https://dioneclaude2.github.io/Content/nancy-socials-v2/";
+const HERE = location.hostname.endsWith("vercel.app") ? location.origin + "/nancy-socials-v2/" : GH;
+const own = u => String(u || "").replace(GH, HERE);
+
+const ACCOUNTS = {
+  community: {name:"Community", color:"var(--community)", bio:"Your extra dose of Nancy\nGood vibes comes from here"},
+  official:  {name:"Official", color:"var(--official)", bio:""},
+  sexed:     {name:"Sex Ed", color:"var(--sexed)", bio:""},
+  monsters:  {name:"Nancy Monsters", color:"var(--monsters)", bio:"Lemmy, Medusa & Jack moved in 🗝️"},
+  japan:     {name:"Hello Nancy Japan", color:"var(--japan)", bio:""},
+};
+const TYPE_COLOR = {"Friyay with Nancy":"#FFB23F","Nancy hacks":"#57E0A8","Team content":"#FFD84D","Outlier test":"#FF4F8B","Meme":"#FFB547","Trending":"#A77BFF","Evergreen":"#3DDC97","Campaign":"#FF6B6B","Moment":"#FF8A4C","Educational":"#4FB3FF","Carousel article":"#6FC3FF","Mini Mic":"#FF7EB6","Myth vs fact":"#8AB6FF","Product teaser":"#FF3D9A","Event teaser":"#FFA23D","Unboxing":"#C9A7FF"};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = k => new Date(k + "T00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+const CAR = '<svg viewBox="0 0 24 24"><path d="M4 6h12v14H4zM8 2h12v14h-2V4H8z"/></svg>';
+let POSTS = [], sig = "";
+let order = (new URLSearchParams(location.search).get("o") === "ig") ? "ig" : "first";
+let current = (new URLSearchParams(location.search).get("a") || "community");
+if (!ACCOUNTS[current]) current = "community";
+
+function normUrl(u){ u = String(u || "").trim(); if (!u) return ""; if (/^[a-z]+:/i.test(u)) return u; return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u; }
+function media(url){
+  const u = normUrl(url); let m;
+  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return {kind:"ig", reel: m[1] !== "p", src:`https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`};
+  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return {kind:"frame", src:`https://www.tiktok.com/embed/v2/${m[1]}`};
+  if ((m = u.match(/(?:youtu\.be\/|[?&]v=|shorts\/)([\w-]{11})/))) return {kind:"frame", src:`https://www.youtube.com/embed/${m[1]}`};
+  if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/))) return {kind:"frame", src:`https://drive.google.com/file/d/${m[1]}/preview`};
+  return null;
+}
+// Only posts with a final edit or a reference link go on the shared grid.
+const real = p => p && (p.final || String(p.ref || "").trim());
+
+async function pull(){
+  try {
+    const r = await fetch(API, {cache: "no-store"}); if (!r.ok) throw 0;
+    const docs = (await r.json()).docs || {};
+    POSTS = Object.entries(docs).filter(([k, v]) => /^ns\.v2\.post\./.test(k) && real(v)).map(([, v]) => v);
+    const s = JSON.stringify(POSTS.map(p => [p.id, p.at]));
+    if (s !== sig){ sig = s; render(); }
+    $("#foot").textContent = "Live plan · updates on its own";
+  } catch { $("#foot").textContent = "Couldn't load the plan. Check your connection and refresh."; }
+}
+
+function render(){
+  const a = ACCOUNTS[current];
+  $("#accts").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) => `<button data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}</button>`).join("");
+  document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { current = b.dataset.a; history.replaceState(null, "", "?a=" + current + (order === "ig" ? "&o=ig" : "")); render(); scrollTo(0, 0); });
+  const list = POSTS.filter(p => p.acct === current).sort((x, y) => (x.day || "").localeCompare(y.day || "") || (x.created || 0) - (y.created || 0));
+  if (order === "ig") list.reverse();
+  const done = list.filter(p => p.final).length;
+  const tiles = list.map(p => {
+    const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
+    const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span>${p.stats ? `<span class="statl">${statLine(p.stats)}</span>` : ""}</div>`;
+    if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(own(p.cover))}" alt="" loading="lazy"><span class="badge">Ref</span>${statBadge(p.stats)}<span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
+    if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
+  });
+  $("#phone").innerHTML = `
+    <section class="prof" style="--c:${a.color}">
+      <div class="prof-h"><div class="ava"><span>Nancy</span></div>
+        <div><h1>${esc(a.name)}</h1><div class="stats"><div><b>${list.length}</b>posts</div><div><b>${done}</b>final</div><div><b>${list.length - done}</b>in progress</div></div></div></div>
+      ${a.bio ? `<div class="bio">${esc(a.bio)}</div>` : ""}
+    </section>
+    <div class="tabsbar"><div class="order" role="group" aria-label="Order"><button data-o="first" aria-pressed="${order === "first"}">First post on top</button><button data-o="ig" aria-pressed="${order === "ig"}">Instagram order</button></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
+    ${tiles.length ? `<div class="grid" id="grid">${tiles.join("")}</div>` : `<div class="empty">Nothing planned for ${esc(a.name)} yet.</div>`}`;
+  document.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { order = b.dataset.o; history.replaceState(null, "", "?a=" + current + (order === "ig" ? "&o=ig" : "")); render(); });
+  sizeEmbeds();
+  document.querySelectorAll(".tile[data-id]").forEach(t => t.onclick = () => openPost(t.dataset.id));
+}
+/* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
+function sizeEmbeds(){
+  document.querySelectorAll('#grid iframe[data-kind="ig"]').forEach(f => {
+    const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight; if (!w) return;
+    if (f.dataset.reel){ const W = w / 0.70, vh = W * 0.70 * 16 / 9; Object.assign(f.style, {width: W + "px", height: (54 + vh + 300) + "px", left: -(W * 0.15) + "px", top: -(54 + Math.max(0, (vh - h) / 2)) + "px"}); }
+    else { const mh = w * 1.25; Object.assign(f.style, {width: w + "px", height: (mh + 260) + "px", left: "0", top: -(54 + Math.max(0, (mh - h) / 2)) + "px"}); }
+  });
+  document.querySelectorAll('#grid iframe[data-kind="frame"]').forEach(f => Object.assign(f.style, {inset: "0", width: "100%", height: "100%"}));
+}
+addEventListener("resize", sizeEmbeds);
+
+function statBadge(st){ const x = st && st.n && st.normal ? st.n / st.normal : null; if (x == null) return ""; const t = x >= 10 ? "hot" : x >= 3 ? "warm" : "cool"; return `<span class="scoreb ${t}">🔥 ${(x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, ""))}×</span>`; }
+function statLine(st){ const k = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "") + "K" : String(n); return `${st.metric === "likes" ? "♥" : "👁"} ${k(st.n)} ${st.metric} · usual ${k(st.normal)}`; }
+function openPost(id){
+  const p = POSTS.find(x => x.id === id); if (!p) return;
+  const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
+  const title = (p.title || p.type || "Post").split("\n")[0];
+  const box = p.final ? `<iframe src="https://drive.google.com/file/d/${p.final.id}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+    : p.clip ? `<video src="${esc(own(p.clip))}" ${p.cover ? `poster="${esc(own(p.cover))}"` : ""} controls autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`
+    : p.slides ? `<div class="slides">${p.slides.map(u => `<img src="${esc(own(u))}" alt="">`).join("")}</div><span class="scount">${p.slides.length} slides · swipe →</span>`
+    : p.cover ? `<img src="${esc(own(p.cover))}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
+    : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+    : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
+  $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>
+    ${p.stats ? `<div class="meta">${statLine(p.stats)} · score ${statBadge(p.stats).replace(/<[^>]+>/g, "").replace("🔥 ", "")} · first posted ${esc(p.stats.posted)} by @${esc(p.stats.user)}</div>` : ""}
+    <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md || p.cover ? "Reference" : "Planned"}</div>
+    ${p.caption ? `<pre>${esc(p.caption)}</pre>` : ""}
+    ${!p.final && p.ref ? `<a href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">Open the reference ↗</a>` : ""}</div>`;
+  $("#lb").hidden = false;
+}
+const closeLb = () => { $("#lb").hidden = true; $("#lbIn").innerHTML = ""; };
+$("#lbX").onclick = closeLb;
+$("#lb").onclick = e => { if (e.target.id === "lb") closeLb(); };
+addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+
+render(); pull();
+setInterval(() => { if (!document.hidden && $("#lb").hidden) pull(); }, 30000);
+</script>
+</body></html>
