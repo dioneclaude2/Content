@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nancy Grid</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Read-only share view: each account laid out the way it will look on the Instagram profile. */
+:root{
+  --bg:#F3EFE8; --card:#FFFFFF; --ink:#141014; --muted:#6E676B; --line:#E2DCD4; --pink:#E8308C;
+  --community:#FFB547; --official:#FF4F8B; --sexed:#4FB3FF; --monsters:#3DDC97; --japan:#C9A7FF;
+  --sans:'Archivo',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px max(16px,env(safe-area-inset-left)) 12px;border-bottom:1px solid var(--line)}
+.top-in{max-width:640px;margin:0 auto;display:grid;gap:12px}
+.brand{font-family:var(--serif);font-size:30px;line-height:1;letter-spacing:-.01em}
+.brand em{color:var(--pink)}
+.accts{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;overflow-x:auto;scrollbar-width:none}
+.accts::-webkit-scrollbar{display:none}
+.accts button{flex:1 0 auto;border:0;background:none;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer;white-space:nowrap}
+.accts button[aria-pressed=true]{background:var(--ink);color:#fff}
+.phone{max-width:640px;margin:0 auto;background:var(--card);min-height:70vh}
+.prof{padding:18px 16px 12px;display:grid;gap:12px}
+.prof-h{display:flex;align-items:center;gap:18px}
+.ava{width:84px;height:84px;flex:none;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75)}
+.ava span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--c);border:3px solid #fff;font-family:var(--serif);font-style:italic;font-size:22px;color:#1a1014}
+.prof-h h1{margin:0 0 6px;font-size:17px;font-weight:800}
+.stats{display:flex;gap:22px;font-size:13px;color:var(--muted)}
+.stats b{display:block;font-size:17px;color:var(--ink)}
+.bio{font-size:14px;line-height:1.45;white-space:pre-line}
+.tabsbar{display:flex;justify-content:center;border-top:1px solid var(--line);padding:10px 0}
+.tabsbar svg{width:22px;height:22px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.tile{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--c);cursor:pointer;border:0;padding:0;display:block;width:100%}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}
+.tile iframe{position:absolute;border:0;pointer-events:none}
+.tile .txt{position:absolute;inset:0;display:grid;place-items:center;padding:12px;text-align:center;font-family:var(--serif);font-size:clamp(14px,3.6vw,20px);line-height:1.1;color:#1a1014}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;text-align:left;display:grid;gap:2px}
+.tile .cap b{font-size:11px;font-weight:800;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .cap span{font-size:9.5px;font-weight:700;letter-spacing:.04em;opacity:.85;text-transform:uppercase}
+.tile.txtonly .cap{background:none;color:#1a1014}
+.tile.txtonly .cap b{display:none}
+.tile .ic{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:6px;background:rgba(0,0,0,.45);display:grid;place-items:center}
+.tile .ic svg{width:12px;height:12px;fill:#fff}
+.tile .badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;border-radius:999px;padding:3px 7px}
+.tile .badge.ok{background:#1F9D63}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}
+.foot{max-width:640px;margin:0 auto;padding:14px 16px 60px;font-size:12px;color:var(--muted);text-align:center}
+.lb{position:fixed;inset:0;z-index:10;background:rgba(20,16,20,.75);display:grid;place-items:center;padding:16px}
+.lb-in{background:var(--card);border-radius:18px;width:min(420px,100%);max-height:92vh;overflow:auto;display:grid}
+.lb-media{position:relative;aspect-ratio:9/16;max-height:68vh;background:#000;overflow:hidden}
+.lb-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb-media .txt{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-family:var(--serif);font-size:28px;line-height:1.1;background:var(--c);color:#1a1014}
+.lb-body{padding:14px 16px 16px;display:grid;gap:6px}
+.lb-body h2{margin:0;font-size:17px;font-weight:800;line-height:1.25}
+.lb-body .meta{font-size:12.5px;color:var(--muted)}
+.lb-body a{color:var(--pink);font-weight:800;font-size:13px}
+.lb-x{position:fixed;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;font-size:20px;cursor:pointer}
+</style>
+</head><body>
+<header class="top"><div class="top-in">
+  <div class="brand">Nancy <em>grid</em></div>
+  <nav class="accts" id="accts" aria-label="Accounts"></nav>
+</div></header>
+<main class="phone" id="phone"></main>
+<div class="foot" id="foot">Loading the plan…</div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true"><button class="lb-x" id="lbX" aria-label="Close">×</button><div class="lb-in" id="lbIn"></div></div>
+<script>
+const API = "https://content-nine-topaz.vercel.app/api/socials";
+const ACCOUNTS = {
+  community: {name:"Community", color:"var(--community)", bio:"Your extra dose of Nancy\nGood vibes comes from here"},
+  official:  {name:"Official", color:"var(--official)", bio:""},
+  sexed:     {name:"Sex Ed", color:"var(--sexed)", bio:""},
+  monsters:  {name:"Nancy Monsters", color:"var(--monsters)", bio:"Lemmy, Medusa & Jack moved in 🗝️"},
+  japan:     {name:"Hello Nancy Japan", color:"var(--japan)", bio:""},
+};
+const TYPE_COLOR = {"Friyay with Nancy":"#FFB23F","Nancy hacks":"#57E0A8","Team content":"#FFD84D","Outlier test":"#FF4F8B","Meme":"#FFB547","Trending":"#A77BFF","Evergreen":"#3DDC97","Campaign":"#FF6B6B","Moment":"#FF8A4C","Educational":"#4FB3FF","Carousel article":"#6FC3FF","Mini Mic":"#FF7EB6","Myth vs fact":"#8AB6FF","Product teaser":"#FF3D9A","Event teaser":"#FFA23D","Unboxing":"#C9A7FF"};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = k => new Date(k + "T00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+let POSTS = [], sig = "";
+let current = (new URLSearchParams(location.search).get("a") || "community");
+if (!ACCOUNTS[current]) current = "community";
+
+function normUrl(u){ u = String(u || "").trim(); if (!u) return ""; if (/^[a-z]+:/i.test(u)) return u; return /^[\w-]+(\.[\w-]+)+/.test(u) ? "https://" + u : u; }
+function media(url){
+  const u = normUrl(url); let m;
+  if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return {kind:"ig", reel: m[1] !== "p", src:`https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`};
+  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return {kind:"frame", src:`https://www.tiktok.com/embed/v2/${m[1]}`};
+  if ((m = u.match(/(?:youtu\.be\/|[?&]v=|shorts\/)([\w-]{11})/))) return {kind:"frame", src:`https://www.youtube.com/embed/${m[1]}`};
+  if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/))) return {kind:"frame", src:`https://drive.google.com/file/d/${m[1]}/preview`};
+  return null;
+}
+// A post is worth showing once it has something in it.
+const real = p => p && (p.final || p.ref || p.title || p.type);
+
+async function pull(){
+  try {
+    const r = await fetch(API, {cache: "no-store"}); if (!r.ok) throw 0;
+    const docs = (await r.json()).docs || {};
+    POSTS = Object.entries(docs).filter(([k, v]) => /^ns\.v2\.post\./.test(k) && real(v)).map(([, v]) => v);
+    const s = JSON.stringify(POSTS.map(p => [p.id, p.at]));
+    if (s !== sig){ sig = s; render(); }
+    $("#foot").textContent = "Live plan · updates on its own · newest posts at the top";
+  } catch { $("#foot").textContent = "Couldn't load the plan. Check your connection and refresh."; }
+}
+
+function render(){
+  const a = ACCOUNTS[current];
+  $("#accts").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) => `<button data-a="${k}" aria-pressed="${k === current}">${x.name}</button>`).join("");
+  document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { current = b.dataset.a; history.replaceState(null, "", "?a=" + current); render(); scrollTo(0, 0); });
+  const list = POSTS.filter(p => p.acct === current).sort((x, y) => (y.day || "").localeCompare(x.day || "") || (y.created || 0) - (x.created || 0));
+  const done = list.filter(p => p.final).length;
+  const tiles = list.map(p => {
+    const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
+    const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span></div>`;
+    if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
+  });
+  $("#phone").innerHTML = `
+    <section class="prof" style="--c:${a.color}">
+      <div class="prof-h"><div class="ava"><span>Nancy</span></div>
+        <div><h1>${esc(a.name)}</h1><div class="stats"><div><b>${list.length}</b>posts</div><div><b>${done}</b>final</div><div><b>${list.length - done}</b>in progress</div></div></div></div>
+      ${a.bio ? `<div class="bio">${esc(a.bio)}</div>` : ""}
+    </section>
+    <div class="tabsbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
+    ${tiles.length ? `<div class="grid" id="grid">${tiles.join("")}</div>` : `<div class="empty">Nothing planned for ${esc(a.name)} yet.</div>`}`;
+  sizeEmbeds();
+  document.querySelectorAll(".tile[data-id]").forEach(t => t.onclick = () => openPost(t.dataset.id));
+}
+/* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
+function sizeEmbeds(){
+  document.querySelectorAll('#grid iframe[data-kind="ig"]').forEach(f => {
+    const w = f.parentElement.clientWidth, h = f.parentElement.clientHeight; if (!w) return;
+    if (f.dataset.reel){ const W = w / 0.70, vh = W * 0.70 * 16 / 9; Object.assign(f.style, {width: W + "px", height: (54 + vh + 300) + "px", left: -(W * 0.15) + "px", top: -(54 + Math.max(0, (vh - h) / 2)) + "px"}); }
+    else { const mh = w * 1.25; Object.assign(f.style, {width: w + "px", height: (mh + 260) + "px", left: "0", top: -(54 + Math.max(0, (mh - h) / 2)) + "px"}); }
+  });
+  document.querySelectorAll('#grid iframe[data-kind="frame"]').forEach(f => Object.assign(f.style, {inset: "0", width: "100%", height: "100%"}));
+}
+addEventListener("resize", sizeEmbeds);
+
+function openPost(id){
+  const p = POSTS.find(x => x.id === id); if (!p) return;
+  const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
+  const title = (p.title || p.type || "Post").split("\n")[0];
+  const box = p.final ? `<iframe src="https://drive.google.com/file/d/${p.final.id}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+    : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+    : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
+  $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>
+    <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md ? "Reference" : "Planned"}</div>
+    ${!p.final && p.ref ? `<a href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">Open the reference ↗</a>` : ""}</div>`;
+  $("#lb").hidden = false;
+}
+const closeLb = () => { $("#lb").hidden = true; $("#lbIn").innerHTML = ""; };
+$("#lbX").onclick = closeLb;
+$("#lb").onclick = e => { if (e.target.id === "lb") closeLb(); };
+addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+
+render(); pull();
+setInterval(() => { if (!document.hidden && $("#lb").hidden) pull(); }, 30000);
+</script>
+</body></html>
