@@ -7,10 +7,10 @@
 <style>
 /* Read-only share view: each account laid out the way it will look on the Instagram profile. */
 :root{
-  --bg:#F3EFE8; --card:#FFFFFF; --ink:#141014; --muted:#6E676B; --line:#E2DCD4; --pink:#E8308C;
+  --bg:#0B0709; --card:#151014; --surface2:#1E171C; --ink:#F7EEF2; --muted:#B3A6AD; --dim:#7A6D74; --line:#2E242B; --pink:#FF4F8B;
   --community:#FFB547; --official:#FF4F8B; --sexed:#4FB3FF; --monsters:#3DDC97; --japan:#C9A7FF;
   --sans:'Archivo',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif;
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -19,17 +19,19 @@ button{font:inherit;color:inherit}
 button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .top{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px max(16px,env(safe-area-inset-left)) 12px;border-bottom:1px solid var(--line)}
 .top-in{max-width:640px;margin:0 auto;display:grid;gap:12px}
-.brand{font-family:var(--serif);font-size:30px;line-height:1;letter-spacing:-.01em}
-.brand em{color:var(--pink)}
-.accts{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;overflow-x:auto;scrollbar-width:none}
-.accts::-webkit-scrollbar{display:none}
-.accts button{flex:1 0 auto;border:0;background:none;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer;white-space:nowrap}
-.accts button[aria-pressed=true]{background:var(--ink);color:#fff}
-.phone{max-width:640px;margin:0 auto;background:var(--card);min-height:70vh}
+.brand{font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:-.02em}
+.brand em{font-family:var(--serif);font-weight:400;text-transform:none;color:var(--pink);font-size:20px;letter-spacing:0}
+.brand small{font-size:11px;font-weight:700;text-transform:none;letter-spacing:.06em;color:var(--dim);margin-left:8px}
+.accts{display:flex;gap:8px;flex-wrap:wrap}
+.accts button{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:9px 15px;font-weight:800;font-size:13.5px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.accts button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.accts button[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#160b10}
+.accts button[aria-pressed=true] i{background:#160b10}
+.phone{max-width:640px;margin:16px auto 0;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:70vh}
 .prof{padding:18px 16px 12px;display:grid;gap:12px}
 .prof-h{display:flex;align-items:center;gap:18px}
 .ava{width:84px;height:84px;flex:none;border-radius:50%;padding:3px;background:conic-gradient(from 200deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75)}
-.ava span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--c);border:3px solid #fff;font-family:var(--serif);font-style:italic;font-size:22px;color:#1a1014}
+.ava span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--c);border:3px solid var(--card);font-family:var(--serif);font-style:italic;font-size:22px;color:#1a1014}
 .prof-h h1{margin:0 0 6px;font-size:17px;font-weight:800}
 .stats{display:flex;gap:22px;font-size:13px;color:var(--muted)}
 .stats b{display:block;font-size:17px;color:var(--ink)}
@@ -49,11 +51,11 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 .tile .ic{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:6px;background:rgba(0,0,0,.45);display:grid;place-items:center}
 .tile .ic svg{width:12px;height:12px;fill:#fff}
 .tile .badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;border-radius:999px;padding:3px 7px}
-.tile .badge.ok{background:#1F9D63}
+.tile .badge.ok{background:#3DDC97;color:#0b1a12}
 .empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}
 .foot{max-width:640px;margin:0 auto;padding:14px 16px 60px;font-size:12px;color:var(--muted);text-align:center}
-.lb{position:fixed;inset:0;z-index:10;background:rgba(20,16,20,.75);display:grid;place-items:center;padding:16px}
-.lb-in{background:var(--card);border-radius:18px;width:min(420px,100%);max-height:92vh;overflow:auto;display:grid}
+.lb{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.8);display:grid;place-items:center;padding:16px}
+.lb-in{background:var(--card);border:1px solid var(--line);border-radius:18px;width:min(420px,100%);max-height:92vh;overflow:auto;display:grid}
 .lb-media{position:relative;aspect-ratio:9/16;max-height:68vh;background:#000;overflow:hidden}
 .lb-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .lb-media .txt{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-family:var(--serif);font-size:28px;line-height:1.1;background:var(--c);color:#1a1014}
@@ -61,11 +63,11 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 .lb-body h2{margin:0;font-size:17px;font-weight:800;line-height:1.25}
 .lb-body .meta{font-size:12.5px;color:var(--muted)}
 .lb-body a{color:var(--pink);font-weight:800;font-size:13px}
-.lb-x{position:fixed;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;font-size:20px;cursor:pointer}
+.lb-x{position:fixed;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:20px;cursor:pointer}
 </style>
 </head><body>
 <header class="top"><div class="top-in">
-  <div class="brand">Nancy <em>grid</em></div>
+  <div class="brand">Nancy <em>socials</em><small>Grid preview</small></div>
   <nav class="accts" id="accts" aria-label="Accounts"></nav>
 </div></header>
 <main class="phone" id="phone"></main>
@@ -114,7 +116,7 @@ async function pull(){
 
 function render(){
   const a = ACCOUNTS[current];
-  $("#accts").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) => `<button data-a="${k}" aria-pressed="${k === current}">${x.name}</button>`).join("");
+  $("#accts").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) => `<button data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}</button>`).join("");
   document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { current = b.dataset.a; history.replaceState(null, "", "?a=" + current); render(); scrollTo(0, 0); });
   const list = POSTS.filter(p => p.acct === current).sort((x, y) => (y.day || "").localeCompare(x.day || "") || (y.created || 0) - (x.created || 0));
   const done = list.filter(p => p.final).length;
