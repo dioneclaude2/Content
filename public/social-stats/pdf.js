@@ -215,7 +215,7 @@ function compareTable(P, R, Pv, names, title) {
 }
 function notes(P, R) {
   const items = [
-    ...Object.values(R.missing).map(m => `Missing — need ${m.need}, from ${m.who}.`),
+    ...Object.values(R.missing).map(m => `To add: ${m.need}, from ${m.who}.`),
     ...R.flags.filter(f => f.level !== "info").map(f => f.text),
   ];
   P.h2("Data notes");
@@ -247,7 +247,7 @@ function weekly(rep, R, Pv, mode, settings, logo) {
     ["Blended CPM", T.blendedCPM == null ? "—" : F.usd(T.blendedCPM), T.blendedCPM == null ? "" : `${T.cpmStatus === "🟢" ? "under" : "over"} the ${F.usd(T.cpmTarget)} goal`, true],
   ]);
   P.strip([["Ad spend", F.usd(T.adSpend)], ["Ads CPM", F.usd(T.adsCPM)], ["Net followers", A.netFollowers == null ? "—" : F.int(A.netFollowers)], ["Follows from posts", F.int(T.postFollows)], ["Profile visits", F.int(T.visits)]]);
-  if (R.dominant) P.note("Heads up", `One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}`);
+  if (R.dominant) P.note("Note", `One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}`);
 
   compareTable(P, R, Pv, full ? null : ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"], "This week vs last week");
   const tot = T.totalViews || 1;

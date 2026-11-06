@@ -773,7 +773,7 @@ const label = r => (r.content ? `“${r.content.slice(0, 40)}${r.content.length 
 /** Status: 🟢 better · 🟡 within ±10% · 🔴 worse. Rates change in percentage points.
  *  Dione moved the band from the context file's ±5% to ±10% (2026-11-06) so normal weekly wobble stays yellow. */
 export const STATUS_BAND = 0.10;
-export const STATUS_NOTE = `How the colours work: 🟢 more than ${STATUS_BAND * 100}% better than the one before · 🟡 within ±${STATUS_BAND * 100}% (about the same) · 🔴 more than ${STATUS_BAND * 100}% worse. Each number is compared with its own value last time (eng. rate by how much the rate itself moved). For costs — ad spend, ads CPM, cost per follow — lower counts as better. Blended CPM is judged on the goal instead: 🟢 under $5, 🔴 $5 or over.`;
+export const STATUS_NOTE = `Colour guide: 🟢 an improvement of more than ${STATUS_BAND * 100}% on the previous period · 🟡 within ${STATUS_BAND * 100}% either way · 🔴 a decline of more than ${STATUS_BAND * 100}%, flagged for review. Each metric is compared with its own previous value; for costs (ad spend, ads CPM, cost per follow) a lower figure is the improvement. Blended CPM is measured against the $5 goal: 🟢 under $5, 🔴 $5 or above.`;
 export function compare(cur, prev, { rate = false, lowerBetter = false, target = null } = {}) {
   // a metric with a goal (blended CPM under $5) is judged against the goal, not against last week
   if (target != null) {
