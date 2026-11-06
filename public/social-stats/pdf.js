@@ -211,6 +211,7 @@ function compareTable(P, R, Pv, names, title) {
   P.table(["Metric", clean(R.rep.name), clean(Pv.rep.name), "Change", "Status"],
     list.map(c => [c.name, f(c)(c.cur), f(c)(c.prev), chg(c), c.status ? STATUS[c.status][0] : "—"]),
     { title, num: [1, 2, 3], status: 4 });
+  P.para(E.STATUS_NOTE.replace(/🟢/g, "green").replace(/🟡/g, "yellow").replace(/🔴/g, "red"), { color: MUTED, size: 8 });
 }
 function notes(P, R) {
   const items = [

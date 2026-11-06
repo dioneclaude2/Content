@@ -1000,7 +1000,7 @@ function weeklyHTML(rep, R, P, D){
       <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
     </div>
     <div class="sec"><h2>This week vs ${P ? esc(prevName) : "last week"}</h2>
-      ${P ? cmpTable("t-wow", R, P, rep.name, prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
+      ${P ? cmpTable("t-wow", R, P, rep.name, prevName) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
       <div class="row noprint small" style="margin-top:10px"><span class="muted">Compare with</span><select id="prevPick"><option value="">Automatic (week before)</option>${Object.values(D.reports).filter(r => r.type === "week" && r.id !== rep.id).sort((a, b) => a.start < b.start ? 1 : -1).map(r => `<option value="${r.id}" ${rep.prevId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
     </div>
     <div class="sec"><h2>Rankings</h2>${rankHTML(R)}</div>
@@ -1259,7 +1259,7 @@ function eventSummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
@@ -1320,7 +1320,7 @@ function weeklySummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
