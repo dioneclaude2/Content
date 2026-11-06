@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=f49e4e5">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=48b462a">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=f49e4e5" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=48b462a" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=f49e4e5";
+import * as E from "./engine.js?v=48b462a";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=f49e4e5");
-    const logo = await svgToPng("logo-circle.svg?v=f49e4e5", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=48b462a");
+    const logo = await svgToPng("logo-circle.svg?v=48b462a", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -573,7 +573,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=f49e4e5" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=48b462a" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1000,7 +1000,7 @@ function weeklyHTML(rep, R, P, D){
       <div><h2>Format split</h2>${tbl("t-fmt", ["Format", N("Posts"), N("Avg views"), N("Avg eng. rate")], R.formats.map(g => `<tr><td>${esc(g.name)}</td><td class="n">${g.posts}</td><td class="n">${F.int(g.avgViews)}</td><td class="n">${vsBench(g.avgER, R.bench)}</td></tr>`))}<p class="small dim">Averages are per post (mean of each post's rate).</p></div>
     </div>
     <div class="sec"><h2>This week vs ${P ? esc(prevName) : "last week"}</h2>
-      ${P ? cmpTable("t-wow", R, P, rep.name, prevName) : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
+      ${P ? cmpTable("t-wow", R, P, rep.name, prevName) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<div class="empty">No earlier weekly report to compare with yet. Create last week's report (or pick one below) and it will show here.</div>`}
       <div class="row noprint small" style="margin-top:10px"><span class="muted">Compare with</span><select id="prevPick"><option value="">Automatic (week before)</option>${Object.values(D.reports).filter(r => r.type === "week" && r.id !== rep.id).sort((a, b) => a.start < b.start ? 1 : -1).map(r => `<option value="${r.id}" ${rep.prevId === r.id ? "selected" : ""}>${esc(r.name)}</option>`).join("")}</select></div>
     </div>
     <div class="sec"><h2>Rankings</h2>${rankHTML(R)}</div>
@@ -1259,7 +1259,7 @@ function eventSummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
@@ -1320,7 +1320,7 @@ function weeklySummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
@@ -2458,7 +2458,7 @@ async function importPostsEvent(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=f49e4e5", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=48b462a", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
