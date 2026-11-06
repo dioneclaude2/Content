@@ -39,6 +39,10 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--text);o
 .pill[aria-pressed="true"] i{background:#160b10}
 .pill[aria-pressed="true"] .count{background:rgba(0,0,0,.18);color:#160b10}
 .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wkword{display:block;font-size:11px;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:.05em}
+.today{border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:800;cursor:pointer}
+.pickwk{display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:center}
+.moverow{display:flex;gap:8px}.moverow input{flex:1}
 .wk{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:17px;cursor:pointer}
 .bar b{font-size:16px;font-weight:900;min-width:120px;text-align:center}
 .seg{margin-left:auto;display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
@@ -183,7 +187,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
   <section id="plan" class="view">
     <div class="pills" id="pills" aria-label="Accounts"></div>
     <div class="bar">
-      <button class="wk" id="prevW" aria-label="Previous week">‹</button><b id="wkTitle"></b><button class="wk" id="nextW" aria-label="Next week">›</button>
+      <button class="wk" id="prevW" aria-label="Previous week">‹</button><b id="wkTitle"></b><button class="wk" id="nextW" aria-label="Next week">›</button><button class="today" id="todayW" hidden>Back to this week</button>
       <div class="seg" aria-label="View"><button aria-pressed="true">Grid</button><button aria-pressed="false" data-soon="By person">By person</button><button aria-pressed="false" data-soon="Week">Week</button></div>
     </div>
     <div class="acct-h" id="acctH"></div>
@@ -338,7 +342,11 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 function addDays(d, n){ const x = new Date(d); x.setDate(x.getDate() + n); return x; }
 const label = d => d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
-const week = () => DAYS.map((_, i) => addDays(monday, i));
+const mondayOf = d => { const t = new Date(typeof d === "string" ? d + "T00:00" : d); t.setHours(0,0,0,0); return addDays(t, -((t.getDay() + 6) % 7)); };
+const week = (m = monday) => DAYS.map((_, i) => addDays(m, i));
+// "This week", "Next week", "In 3 weeks", "2 weeks ago"
+const weekWord = m => { const n = Math.round((mondayOf(new Date()) - m) / -604800000); return n === 0 ? "This week" : n === 1 ? "Next week" : n === -1 ? "Last week" : n > 1 ? `In ${n} weeks` : `${-n} weeks ago`; };
+const rangeOf = m => { const d = week(m); return `${d[0].toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${d[6].toLocaleDateString("en-US",{month:"short",day:"numeric"})}`; };
 const momentsOn = key => MOMENTS.filter(m => m[0] === key).map(m => m[1]);
 const postsOn = (acct, key) => [...POSTS.values()].filter(p => p.acct === acct && p.day === key).sort((a, b) => (a.created || 0) - (b.created || 0));
 const filled = (acct, key) => postsOn(acct, key).length > 0 || momentsOn(key).length > 0;
@@ -383,7 +391,8 @@ function renderPlan(){
   $("#pills").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) =>
     `<button class="pill" data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}<span class="count">${count(k)}/7</span></button>`).join("");
   document.querySelectorAll("[data-a]").forEach(p => p.onclick = () => { current = p.dataset.a; renderPlan(); });
-  $("#wkTitle").textContent = `${days[0].toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${days[6].toLocaleDateString("en-US",{month:"short",day:"numeric"})}`;
+  $("#wkTitle").innerHTML = `<span class="wkword">${weekWord(monday)}</span>${rangeOf(monday)}`;
+  $("#todayW").hidden = +monday === +mondayOf(new Date());
   $("#acctH").innerHTML = `<b>${a.name}</b><span>${a.job}</span>`;
   let n = 0;
   const tiles = [];
@@ -427,6 +436,7 @@ function sizeEmbeds(root = $("#grid")){
 addEventListener("resize", () => { sizeEmbeds(); if (!$("#pipe").hidden) sizeEmbeds($("#gallery")); });
 $("#prevW").onclick = () => { monday = addDays(monday, -7); renderPlan(); };
 $("#nextW").onclick = () => { monday = addDays(monday, 7); renderPlan(); };
+$("#todayW").onclick = () => { monday = mondayOf(new Date()); renderPlan(); };
 $("#guide").innerHTML = TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${
   list.map(([n, c, why]) => `<span class="chip" style="--tc:${c}">${esc(n)} <span>· ${esc(why)}</span></span>`).join("")}</div></div>`).join("");
 
@@ -441,14 +451,21 @@ function closeSheet(){
 $("#scrim").onclick = closeSheet;
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
 
-function pickDay(acct, then, title = "Add a post"){
-  const a = ACCOUNTS[acct], days = week(), best = days.find(d => !filled(acct, iso(d)));
+function pickDay(acct, then, title = "Add a post", wk = monday){
+  const a = ACCOUNTS[acct], days = week(wk), best = days.find(d => !filled(acct, iso(d)) && d >= mondayOf(new Date()));
   openId = null;
+  // Picking a day also shows that week on the grid, so the new post is right there.
+  const go = k => { monday = mondayOf(k); then(k); };
   openSheet(`<div class="sheet-h"><b>${esc(title)} · ${a.name}</b><button class="x" aria-label="Close">✕</button></div>
+    <div class="pickwk"><button class="wk" id="pwPrev" aria-label="Earlier week">‹</button><b><span class="wkword">${weekWord(wk)}</span>${rangeOf(wk)}</b><button class="wk" id="pwNext" aria-label="Later week">›</button></div>
     <span class="lbl">Which day? ★ = suggested</span>
     <div class="days">${days.map(d => { const k = iso(d), c = postsOn(acct, k).length, star = best && k === iso(best);
-      return `<button class="day ${star ? "suggest" : ""}" data-day="${k}" style="--c:${a.color}">${DAYS[(d.getDay() + 6) % 7]} ${d.getDate()}<small>${star ? "★ open" : c ? c + " planned" : momentsOn(k).length ? "moment" : "open"}</small></button>`; }).join("")}</div>`);
-  document.querySelectorAll("#sheetIn [data-day]").forEach(b => b.onclick = () => then(b.dataset.day));
+      return `<button class="day ${star ? "suggest" : ""}" data-day="${k}" style="--c:${a.color}">${DAYS[(d.getDay() + 6) % 7]} ${d.getDate()}<small>${star ? "★ open" : c ? c + " planned" : momentsOn(k).length ? "moment" : "open"}</small></button>`; }).join("")}</div>
+    <label class="field"><span>Or any date</span><input type="date" id="pwAny"></label>`);
+  document.querySelectorAll("#sheetIn [data-day]").forEach(b => b.onclick = () => go(b.dataset.day));
+  $("#pwPrev").onclick = () => pickDay(acct, then, title, addDays(wk, -7));
+  $("#pwNext").onclick = () => pickDay(acct, then, title, addDays(wk, 7));
+  $("#pwAny").onchange = e => { if (e.target.value) go(e.target.value); };
 }
 
 /* A post's edit panel: reference plays at the top, then final edit, idea, topic, people and notes. */
@@ -462,6 +479,7 @@ function openPost(id){
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
     <div class="final" id="finalBox"></div>
+    <div class="field"><span>📅 Day</span><div class="moverow"><input type="date" id="fDay" value="${esc(p.day)}"><button class="btn ghost" id="fMove" hidden>Move here</button></div></div>
     <label class="field"><span>Idea</span><input id="fTitle" value="${esc(p.title)}" placeholder="What's the post?"></label>
     <label class="field"><span>Reference link</span><input id="fRef" value="${esc(p.ref)}" placeholder="Paste a link: IG, TikTok, YouTube, Drive…" inputmode="url" autocomplete="off"></label>
     <div class="field"><span>Content type</span>${TYPES.map(([g, list]) => `<div class="tgroup"><h3>${g}</h3><div class="chips">${list.map(([n, c]) => `<button class="chip" data-type="${esc(n)}" style="--tc:${c}" aria-pressed="${p.type === n}">${esc(n)}</button>`).join("")}</div></div>`).join("")}</div>
@@ -477,6 +495,9 @@ function openPost(id){
     </div>`);
   const upd = patch => { Object.assign(p, patch); save("post", p); };
   paintFinal(id);
+  // Only moves when "Move here" is tapped, never while typing a date.
+  $("#fDay").oninput = e => { $("#fMove").hidden = !e.target.value || e.target.value === p.day; };
+  $("#fMove").onclick = () => { const d = $("#fDay").value; if (!d || d === p.day) return; upd({day: d}); monday = mondayOf(d); renderPlan(); openPost(id); };
   $("#fTitle").oninput = e => upd({title: e.target.value});
   $("#fRef").onchange = e => { upd({ref: normUrl(e.target.value)}); openPost(id); };
   $("#fNote").oninput = e => upd({note: e.target.value});
