@@ -66,6 +66,11 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 .lb-body h2{margin:0;font-size:17px;font-weight:800;line-height:1.25}
 .lb-body .meta{font-size:12.5px;color:var(--muted)}
 .lb-body a{color:var(--pink);font-weight:800;font-size:13px}
+.slides{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.slides::-webkit-scrollbar{display:none}
+.slides img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;background:#000;scroll-snap-align:start}
+.scount{position:absolute;top:10px;right:10px;font-size:11px;font-weight:800;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:3px 9px}
+.lb-body pre{white-space:pre-wrap;font:inherit;font-size:13px;line-height:1.45;margin:6px 0 0;color:var(--ink)}
 .lb-x{position:fixed;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:20px;cursor:pointer}
 </style>
 </head><body>
@@ -90,6 +95,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt = k => new Date(k + "T00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
 const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
+const CAR = '<svg viewBox="0 0 24 24"><path d="M4 6h12v14H4zM8 2h12v14h-2V4H8z"/></svg>';
 let POSTS = [], sig = "";
 let order = (new URLSearchParams(location.search).get("o") === "ig") ? "ig" : "first";
 let current = (new URLSearchParams(location.search).get("a") || "community");
@@ -129,7 +135,7 @@ function render(){
     const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
     const cap = `<div class="cap"><b>${esc(title)}</b><span>${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""}</span></div>`;
     if (p.final) return `<button class="tile" data-id="${p.id}" style="--c:${c}"><img src="https://drive.google.com/thumbnail?id=${p.final.id}&sz=w600" alt="" loading="lazy"><span class="badge ok">Final</span><span class="ic">${PLAY}</span>${cap}</button>`;
-    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
+    if (p.cover) return `<button class="tile" data-id="${p.id}" style="--c:#000"><img src="${esc(p.cover)}" alt="" loading="lazy"><span class="badge">Ref</span><span class="ic">${p.slides ? CAR : PLAY}</span>${cap}</button>`;
     if (md) return `<button class="tile" data-id="${p.id}" style="--c:#000"><iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" tabindex="-1"></iframe><span class="badge">Ref</span><span class="ic">${PLAY}</span>${cap}</button>`;
     return `<button class="tile txtonly" data-id="${p.id}" style="--c:${c}"><div class="txt">${esc(title)}</div>${cap}</button>`;
   });
@@ -161,11 +167,14 @@ function openPost(id){
   const a = ACCOUNTS[p.acct], c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref);
   const title = (p.title || p.type || "Post").split("\n")[0];
   const box = p.final ? `<iframe src="https://drive.google.com/file/d/${p.final.id}/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+    : p.clip ? `<video src="${esc(p.clip)}" ${p.cover ? `poster="${esc(p.cover)}"` : ""} controls autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`
+    : p.slides ? `<div class="slides">${p.slides.map(u => `<img src="${esc(u)}" alt="">`).join("")}</div><span class="scount">${p.slides.length} slides · swipe →</span>`
     : p.cover ? `<img src="${esc(p.cover)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
     : md ? `<iframe src="${md.src}" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<div class="txt" style="--c:${c}">${esc(title)}</div>`;
   $("#lbIn").innerHTML = `<div class="lb-media">${box}</div><div class="lb-body"><h2>${esc(p.title || p.type || "Post")}</h2>
     <div class="meta">${esc(a.name)} · ${esc(fmt(p.day))}${p.type ? " · " + esc(p.type) : ""} · ${p.final ? "Final edit" : md || p.cover ? "Reference" : "Planned"}</div>
+    ${p.caption ? `<pre>${esc(p.caption)}</pre>` : ""}
     ${!p.final && p.ref ? `<a href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">Open the reference ↗</a>` : ""}</div>`;
   $("#lb").hidden = false;
 }

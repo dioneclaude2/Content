@@ -138,6 +138,13 @@ details.guide[open] summary::after{content:"Hide"}
 .sheet-h{display:flex;align-items:center;gap:10px}
 .sheet-h b{font-size:18px;font-weight:900;flex:1}
 .x{width:32px;height:32px;border-radius:50%;border:0;background:var(--surface2);cursor:pointer}
+.slides{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;background:#000}
+.slides::-webkit-scrollbar{display:none}
+.slides img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.slides.big img{object-fit:contain}
+.slidecount{position:absolute;top:30px;right:6px;z-index:2;font-size:9.5px;font-weight:800;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:2px 7px;pointer-events:none}
+.player{position:relative}
+.player video{width:100%;height:100%;display:block;background:#000;object-fit:contain}
 .player{border-radius:14px;overflow:hidden;background:#000;height:520px}
 .player.wide{height:auto;aspect-ratio:16/9}
 .player iframe{width:100%;height:100%;border:0;display:block}
@@ -251,7 +258,7 @@ const MOMENTS = [["2026-11-11","Singles Day (11.11)"],["2026-11-20","Trans Day o
 const ACCOUNTS = {
   community: {name:"Community", color:"var(--community)", job:"Testing outliers", test:true},
   official:  {name:"Official", color:"var(--official)", job:"Campaigns + what worked on the test accounts", test:false},
-  sexed:     {name:"Sex Ed", color:"var(--sexed)", job:"Educational posts", test:true},
+  sexed:     {name:"Sex Ed", color:"var(--sexed)", job:"Educational posts", test:true, noMoments:true},
   monsters:  {name:"Nancy Monsters", color:"var(--monsters)", job:"Test account", test:true},
   japan:     {name:"Hello Nancy Japan", color:"var(--japan)", job:"Test account", test:true},
 };
@@ -428,7 +435,7 @@ function renderPlan(){
   let n = 0;
   const tiles = [];
   days.forEach(d => {
-    const key = iso(d), posts = postsOn(current, key), moms = momentsOn(key), tag = `<span class="d">${label(d)}</span>`;
+    const key = iso(d), posts = postsOn(current, key), moms = a.noMoments ? [] : momentsOn(key), tag = `<span class="d">${label(d)}</span>`;
     if (moms.length && !posts.some(p => p.moment)) tiles.push(`<div class="tile moment" data-moment="${key}" role="button" tabindex="0">${tag}<b>${esc(moms.join(" + "))}</b><small>Moment · tap to plan a post</small></div>`);
     posts.forEach(p => {
       const md = p.ref && media(p.ref), c = TYPE_COLOR[p.type] || a.color, f = finals.get(p.id);
@@ -439,6 +446,7 @@ function renderPlan(){
         ${upBadge || `<span class="badge-final">✓ Final</span>`}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (f) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${f.type.startsWith("video") ? `<video class="final-media" src="${f.url}" muted playsinline loop controls></video>` : `<img class="final-media" src="${f.url}" alt="">`}
         <span class="badge-final">✓ Final</span><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
+      else if (p.clip || p.slides) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}${ownMedia(p)}<button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (p.cover) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<img class="final-media" src="${esc(p.cover)}" alt=""><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else if (md) tiles.push(`<div class="tile has-ref" data-id="${p.id}">${tag}${upBadge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-id="${p.id}">Edit</button>${bottom}</div>`);
       else tiles.push(`<div class="tile" style="--c:${c}" data-id="${p.id}" role="button" tabindex="0">${tag}${upBadge}<b>${esc(p.type || "Post")}</b>${p.title ? `<small>${esc(p.title)}</small>` : `<small>Tap to fill in</small>`}${who ? `<small>${esc(who)}</small>` : ""}${p.from ? `<small class="from">🔥 Worked on ${esc(p.from)}</small>` : ""}</div>`);
@@ -453,6 +461,11 @@ function renderPlan(){
   $("#grid").querySelectorAll("[data-moment]").forEach(t => t.onclick = () => openPost(newPost(current, t.dataset.moment, {type: "Moment", title: momentsOn(t.dataset.moment).join(" + "), moment: true}).id));
   $("#grid").querySelectorAll(".tile[data-id]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(t.dataset.id); });
   $("#addTile").onclick = () => pickDay(current, k => openPost(newPost(current, k).id));
+}
+/* Our own copy of a reference (video file or carousel slides), for posts Instagram won't embed. */
+function ownMedia(p, big){
+  if (p.clip) return `<video class="${big ? "" : "final-media"}" src="${esc(p.clip)}" ${p.cover ? `poster="${esc(p.cover)}"` : ""} controls playsinline preload="${big ? "auto" : "none"}"></video>`;
+  return `<div class="slides${big ? " big" : ""}">${p.slides.map(u => `<img src="${esc(u)}" alt="" loading="lazy">`).join("")}</div><span class="slidecount">${p.slides.length} slides · swipe</span>`;
 }
 /* Instagram embeds carry a header and footer; size them so the media fills the 3:4 tile. */
 function sizeEmbeds(root = $("#grid")){
@@ -519,7 +532,8 @@ function openPost(id){
   const opt = sel => `<option value="">Not assigned</option>` + Object.keys(TEAM).map(n => `<option ${n === sel ? "selected" : ""}>${n}</option>`).join("");
   openSheet(`
     <div class="sheet-h"><b>${a.name} · ${label(new Date(p.day + "T00:00"))}</b><button class="x" aria-label="Close">✕</button></div>
-    ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
+    ${p.clip || p.slides ? `<div class="player">${ownMedia(p, true)}</div>`
+      : md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : p.ref ? `<a class="linkcard" href="${esc(normUrl(p.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(p.ref))} ↗</a>` : ""}
     <div class="final" id="finalBox"></div>
     <div class="field"><span>📅 Day</span><div class="moverow"><input type="date" id="fDay" value="${esc(p.day)}"><button class="btn ghost" id="fMove" hidden>Move here</button></div></div>
@@ -530,6 +544,8 @@ function openPost(id){
       <label class="field"><span>🎥 Filming</span><select id="fFilm">${opt(p.film)}</select></label>
       <label class="field"><span>✂️ Editing</span><select id="fEdit">${opt(p.edit)}</select></label>
     </div>
+    <label class="field"><span>Caption</span><textarea id="fCap" placeholder="Caption + hashtags, ready to paste">${esc(p.caption || "")}</textarea></label>
+    ${p.caption ? `<button class="btn ghost" id="fCopy" style="justify-self:start">Copy caption</button>` : ""}
     <label class="field"><span>Notes</span><textarea id="fNote" placeholder="Script, audio, what to copy from the reference…">${esc(p.note)}</textarea></label>
     <div class="btnrow">
       <button class="btn" id="fDone">Done</button>
@@ -544,6 +560,8 @@ function openPost(id){
   $("#fTitle").oninput = e => upd({title: e.target.value});
   $("#fRef").onchange = e => { upd({ref: normUrl(e.target.value)}); openPost(id); };
   $("#fNote").oninput = e => upd({note: e.target.value});
+  $("#fCap").oninput = e => upd({caption: e.target.value});
+  if ($("#fCopy")) $("#fCopy").onclick = async () => { try { await navigator.clipboard.writeText($("#fCap").value); } catch { $("#fCap").select(); document.execCommand("copy"); } $("#fCopy").textContent = "Copied ✓"; };
   $("#fFilm").onchange = e => upd({film: e.target.value});
   $("#fEdit").onchange = e => upd({edit: e.target.value});
   document.querySelectorAll("#sheetIn [data-type]").forEach(b => b.onclick = () => { upd({type: b.dataset.type}); document.querySelectorAll("#sheetIn [data-type]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
