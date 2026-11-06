@@ -36,7 +36,10 @@ button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--ink);ou
 .stats{display:flex;gap:22px;font-size:13px;color:var(--muted)}
 .stats b{display:block;font-size:17px;color:var(--ink)}
 .bio{font-size:14px;line-height:1.45;white-space:pre-line}
-.tabsbar{display:flex;justify-content:center;border-top:1px solid var(--line);padding:10px 0}
+.tabsbar{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:8px 12px}
+.order{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.order button{border:0;background:none;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer}
+.order button[aria-pressed=true]{background:var(--ink);color:#160b10}
 .tabsbar svg{width:22px;height:22px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .tile{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--c);cursor:pointer;border:0;padding:0;display:block;width:100%}
@@ -88,6 +91,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 const fmt = k => new Date(k + "T00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
 const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
 let POSTS = [], sig = "";
+let order = (new URLSearchParams(location.search).get("o") === "ig") ? "ig" : "first";
 let current = (new URLSearchParams(location.search).get("a") || "community");
 if (!ACCOUNTS[current]) current = "community";
 
@@ -110,15 +114,16 @@ async function pull(){
     POSTS = Object.entries(docs).filter(([k, v]) => /^ns\.v2\.post\./.test(k) && real(v)).map(([, v]) => v);
     const s = JSON.stringify(POSTS.map(p => [p.id, p.at]));
     if (s !== sig){ sig = s; render(); }
-    $("#foot").textContent = "Live plan · updates on its own · newest posts at the top";
+    $("#foot").textContent = "Live plan · updates on its own";
   } catch { $("#foot").textContent = "Couldn't load the plan. Check your connection and refresh."; }
 }
 
 function render(){
   const a = ACCOUNTS[current];
   $("#accts").innerHTML = Object.entries(ACCOUNTS).map(([k, x]) => `<button data-a="${k}" style="--c:${x.color}" aria-pressed="${k === current}"><i></i>${x.name}</button>`).join("");
-  document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { current = b.dataset.a; history.replaceState(null, "", "?a=" + current); render(); scrollTo(0, 0); });
-  const list = POSTS.filter(p => p.acct === current).sort((x, y) => (y.day || "").localeCompare(x.day || "") || (y.created || 0) - (x.created || 0));
+  document.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { current = b.dataset.a; history.replaceState(null, "", "?a=" + current + (order === "ig" ? "&o=ig" : "")); render(); scrollTo(0, 0); });
+  const list = POSTS.filter(p => p.acct === current).sort((x, y) => (x.day || "").localeCompare(y.day || "") || (x.created || 0) - (y.created || 0));
+  if (order === "ig") list.reverse();
   const done = list.filter(p => p.final).length;
   const tiles = list.map(p => {
     const c = TYPE_COLOR[p.type] || a.color, md = p.ref && media(p.ref), title = (p.title || p.type || "Post").split("\n")[0];
@@ -133,8 +138,9 @@ function render(){
         <div><h1>${esc(a.name)}</h1><div class="stats"><div><b>${list.length}</b>posts</div><div><b>${done}</b>final</div><div><b>${list.length - done}</b>in progress</div></div></div></div>
       ${a.bio ? `<div class="bio">${esc(a.bio)}</div>` : ""}
     </section>
-    <div class="tabsbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
+    <div class="tabsbar"><div class="order" role="group" aria-label="Order"><button data-o="first" aria-pressed="${order === "first"}">First post on top</button><button data-o="ig" aria-pressed="${order === "ig"}">Instagram order</button></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
     ${tiles.length ? `<div class="grid" id="grid">${tiles.join("")}</div>` : `<div class="empty">Nothing planned for ${esc(a.name)} yet.</div>`}`;
+  document.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { order = b.dataset.o; history.replaceState(null, "", "?a=" + current + (order === "ig" ? "&o=ig" : "")); render(); });
   sizeEmbeds();
   document.querySelectorAll(".tile[data-id]").forEach(t => t.onclick = () => openPost(t.dataset.id));
 }
