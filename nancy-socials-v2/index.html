@@ -417,7 +417,17 @@ document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
   ["plan","pipe"].forEach(id => $("#" + id).hidden = id !== t.dataset.tab);
   $("#soon").hidden = true; closeMore();
   if (t.dataset.tab === "pipe") renderPipe(true);
+  history.replaceState(null, "", location.pathname + location.search + (t.dataset.tab === "pipe" ? (pipeMode === "campaign" ? "#pipeline/bfcm" : "#pipeline") : ""));
 });
+/* Direct links: #pipeline opens the Pipeline, #pipeline/bfcm opens its BFCM campaign view. */
+function openFromHash(){
+  const h = location.hash.toLowerCase();
+  if (!h.startsWith("#pipeline")) return;
+  pipeMode = /bfcm|campaign/.test(h) ? "campaign" : "refs";
+  document.querySelector('[data-tab="pipe"]').click();
+}
+addEventListener("hashchange", openFromHash);
+setTimeout(openFromHash, 0);
 const closeMore = () => { $("#moreMenu").hidden = true; $("#moreBtn").setAttribute("aria-expanded", "false"); };
 $("#moreBtn").onclick = e => { e.stopPropagation(); const m = $("#moreMenu"); m.hidden = !m.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!m.hidden)); };
 document.addEventListener("click", e => { if (!e.target.closest("#moreMenu,#moreBtn")) closeMore(); });
@@ -632,7 +642,7 @@ const fmtDay = d => d ? new Date(d + "T00:00").toLocaleDateString("en-US", {mont
 let pipeMode = "refs", prodFilter = null;
 function renderPipe(force){
   $("#pipeMode").innerHTML = [["refs", "References"], ["campaign", "Campaign · BFCM references"]].map(([k, t]) => `<button data-pmode="${k}" aria-pressed="${pipeMode === k}">${t}</button>`).join("");
-  document.querySelectorAll("[data-pmode]").forEach(b => b.onclick = () => { pipeMode = b.dataset.pmode; renderPipe(true); });
+  document.querySelectorAll("[data-pmode]").forEach(b => b.onclick = () => { pipeMode = b.dataset.pmode; history.replaceState(null, "", location.pathname + location.search + (pipeMode === "campaign" ? "#pipeline/bfcm" : "#pipeline")); renderPipe(true); });
   $("#addCard").hidden = pipeMode === "campaign";
   $("#addBy").innerHTML = `<option value="">Added by…</option>` + Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("");
   const cards = [...CARDS.values()].filter(c => pipeMode === "campaign" ? c.campaign === "BFCM" : !c.campaign).sort((a, b) => pipeSort === "score" ? (scoreOf(b.stats) ?? -1) - (scoreOf(a.stats) ?? -1) || (b.created || 0) - (a.created || 0) : (b.created || 0) - (a.created || 0));
