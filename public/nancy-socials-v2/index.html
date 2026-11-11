@@ -157,6 +157,10 @@ details.guide[open] summary::after{content:"Hide"}
 .player{border-radius:14px;overflow:hidden;background:#000;height:520px}
 .player.wide{height:auto;aspect-ratio:16/9}
 .player iframe{width:100%;height:100%;border:0;display:block}
+.ttcard{background:linear-gradient(160deg,#1b1b1f,#0d0d10);color:#fff;justify-content:center;gap:4px;text-align:center}
+.ttcard .ttmark{font-size:11px;font-weight:800;letter-spacing:.06em;color:#25F4EE;text-shadow:1px 1px 0 #FE2C55;margin-bottom:6px}
+.ttcard b{text-transform:none;font-size:clamp(12px,3.2vw,15px);line-height:1.2;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.ttlink{margin-top:10px;font-size:12px;font-weight:800;color:#fff;background:#FE2C55;border-radius:999px;padding:7px 12px;text-decoration:none}
 .linkcard{display:block;padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:800}
 .field{display:grid;gap:6px}
 .field>span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:800}
@@ -423,7 +427,7 @@ function normUrl(u){ u = String(u || "").trim(); if (!u) return ""; if (/^[a-z]+
 function media(url){
   const u = normUrl(url); let m;
   if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\/([\w-]+)/))) return {kind:"ig", reel: m[1] !== "p", src:`https://www.instagram.com/${m[1] === "reels" ? "reel" : m[1]}/${m[2]}/embed/`};
-  if ((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return {kind:"frame", src:`https://www.tiktok.com/embed/v2/${m[1]}`};
+  // TikTok refuses its embedded player on the team's network ("Access Denied"), so TikTok links show as link cards instead.
   if ((m = u.match(/(?:youtu\.be\/|[?&]v=|shorts\/)([\w-]{11})/))) return {kind:"frame", wide:true, src:`https://www.youtube.com/embed/${m[1]}`};
   if ((m = u.match(/drive\.google\.com\/file\/d\/([\w-]{10,})/))) return {kind:"frame", src:`https://drive.google.com/file/d/${m[1]}/preview`};
   return null;
@@ -690,6 +694,7 @@ function renderPipe(force){
     const bottom = `<div class="bottom" style="--c:${pc}"><em>${esc(STAGES[c.stage] || "Reference")}</em>${meta}${c.title ? `<span>${esc(c.title)}</span>` : ""}${note ? `<span>💬 ${esc(note.by)}: ${esc(note.text)}</span>` : ""}${c.sent ? `<span class="from">✓ On ${esc(c.sent)}</span>` : ""}</div>`;
     const send = c.sent ? "" : `<button class="gsend" data-send="${c.id}">Send →</button>`;
     if (md) return `<div class="tile has-ref" data-card="${c.id}">${badge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-edit="${c.id}">Edit</button>${send}${bottom}</div>`;
+    if (/tiktok\.com/.test(c.ref || "")) return `<div class="tile ttcard" style="--c:${pc}" data-card="${c.id}" data-edit="${c.id}" role="button" tabindex="0">${badge}<span class="ttmark">♪ TikTok</span><b>${esc(c.title || "TikTok reference")}</b>${st.user ? `<small>@${esc(st.user)}${st.n ? " · " + fmtN(st.n) + " views" : ""}</small>` : ""}<a class="ttlink" href="${esc(normUrl(c.ref))}" target="_blank" rel="noopener">▶ Watch on TikTok ↗</a>${send}</div>`;
     return `<div class="tile" style="--c:${pc}" data-card="${c.id}" data-edit="${c.id}" role="button" tabindex="0">${badge}<b>${esc(c.title || "Pipeline card")}</b>${c.ref ? `<small>🔗 ${esc(host(c.ref))}</small>` : ""}${note ? `<small>💬 ${esc(note.text)}</small>` : ""}${send}</div>`;
   };
   $("#gallery").innerHTML = ttHold(!vis.length ? `<p class="empty-note">${pipeMode === "bank" ? "No references here yet. Paste one above." : "Nothing in the Pipeline yet. Paste a reference above, or move one in from the Reference bank."}</p>`
@@ -698,6 +703,7 @@ function renderPipe(force){
   sizeEmbeds($("#gallery")); ttWatch($("#gallery"));
   $("#gallery").querySelectorAll("[data-edit]").forEach(el => el.onclick = e => { e.stopPropagation(); openCard(el.dataset.edit); });
   $("#gallery").querySelectorAll("[data-send]").forEach(el => el.onclick = e => { e.stopPropagation(); sendFlow(el.dataset.send); });
+  $("#gallery").querySelectorAll(".ttlink").forEach(el => el.onclick = e => e.stopPropagation());
 }
 $("#addCard").onsubmit = e => {
   e.preventDefault();
