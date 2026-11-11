@@ -116,6 +116,12 @@ details.guide[open] summary::after{content:"Hide"}
 .scoreb.hot{background:#FFD84D;color:#1a1208}.scoreb.warm{background:#FF8A4C;color:#1a1208}
 .pmode{margin-left:0;justify-self:start;width:max-content;max-width:100%;overflow-x:auto}
 .pmode button[aria-pressed="true"]{background:var(--pink);color:#fff}
+.pmode button{padding:7px 14px;font-size:13px}
+.pmode .count{opacity:.7;font-weight:600;margin-left:3px}
+.ghead{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:14px 0 2px;font-size:14px;font-weight:800;color:var(--text)}
+.ghead:first-child{margin-top:0}
+.ghead i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.ghead .count{color:var(--muted);font-weight:600}
 .sorts{display:flex;gap:6px;margin-top:-8px}
 .sortb{border:1px solid var(--line);background:none;color:var(--muted);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer}
 .sortb[aria-pressed="true"]{background:var(--surface2);color:var(--text);border-color:var(--text)}
@@ -417,13 +423,13 @@ document.querySelectorAll("[data-tab]").forEach(t => t.onclick = () => {
   ["plan","pipe"].forEach(id => $("#" + id).hidden = id !== t.dataset.tab);
   $("#soon").hidden = true; closeMore();
   if (t.dataset.tab === "pipe") renderPipe(true);
-  history.replaceState(null, "", location.pathname + location.search + (t.dataset.tab === "pipe" ? (pipeMode === "campaign" ? "#pipeline/bfcm" : "#pipeline") : ""));
+  history.replaceState(null, "", location.pathname + location.search + (t.dataset.tab === "pipe" ? (pipeMode === "bank" ? "#pipeline/bank" : "#pipeline") : ""));
 });
-/* Direct links: #pipeline opens the Pipeline, #pipeline/bfcm opens its BFCM campaign view. */
+/* Direct links: #pipeline opens the Pipeline, #pipeline/bank opens the Reference bank. */
 function openFromHash(){
   const h = location.hash.toLowerCase();
   if (!h.startsWith("#pipeline")) return;
-  pipeMode = /bfcm|campaign/.test(h) ? "campaign" : "refs";
+  pipeMode = /bank|bfcm|campaign/.test(h) ? "bank" : "pipe";
   document.querySelector('[data-tab="pipe"]').click();
 }
 addEventListener("hashchange", openFromHash);
@@ -639,42 +645,43 @@ const fscoreOf = st => st && st.n && st.followers && st.metric !== "likes" ? st.
 const fmtX = x => x == null ? "" : (x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, "")) + "×";
 const tier = x => x == null ? "" : x >= 10 ? "hot" : x >= 3 ? "warm" : "cool";
 const fmtDay = d => d ? new Date(d + "T00:00").toLocaleDateString("en-US", {month: "short", day: "numeric", year: d.slice(0, 4) === String(new Date().getFullYear()) ? undefined : "numeric"}) : "";
-let pipeMode = "refs", prodFilter = null;
+/* Two shelves: the Pipeline holds the ideas the team picked to make; the Reference bank holds
+   every other researched outlier (c.bank = true), grouped by who added it. */
+let pipeMode = "pipe";
 function renderPipe(force){
-  $("#pipeMode").innerHTML = [["refs", "References"], ["campaign", "Campaign · BFCM references"]].map(([k, t]) => `<button data-pmode="${k}" aria-pressed="${pipeMode === k}">${t}</button>`).join("");
-  document.querySelectorAll("[data-pmode]").forEach(b => b.onclick = () => { pipeMode = b.dataset.pmode; history.replaceState(null, "", location.pathname + location.search + (pipeMode === "campaign" ? "#pipeline/bfcm" : "#pipeline")); renderPipe(true); });
-  $("#addCard").hidden = pipeMode === "campaign";
+  $("#pipeMode").innerHTML = [["pipe", "Pipeline"], ["bank", "Reference bank"]].map(([k, t]) => `<button data-pmode="${k}" aria-pressed="${pipeMode === k}">${t} <span class="count">${[...CARDS.values()].filter(c => !!c.bank === (k === "bank")).length}</span></button>`).join("");
+  document.querySelectorAll("[data-pmode]").forEach(b => b.onclick = () => { pipeMode = b.dataset.pmode; history.replaceState(null, "", location.pathname + location.search + (pipeMode === "bank" ? "#pipeline/bank" : "#pipeline")); renderPipe(true); });
   $("#addBy").innerHTML = `<option value="">Added by…</option>` + Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("");
-  const cards = [...CARDS.values()].filter(c => pipeMode === "campaign" ? c.campaign === "BFCM" : !c.campaign).sort((a, b) => pipeSort === "score" ? (scoreOf(b.stats) ?? -1) - (scoreOf(a.stats) ?? -1) || (b.created || 0) - (a.created || 0) : (b.created || 0) - (a.created || 0));
+  $("#addCard").querySelector("[type=submit]").textContent = pipeMode === "bank" ? "Add to bank" : "Add";
+  const cards = [...CARDS.values()].filter(c => !!c.bank === (pipeMode === "bank")).sort((a, b) => pipeSort === "score" ? (scoreOf(b.stats) ?? -1) - (scoreOf(a.stats) ?? -1) || (b.created || 0) - (a.created || 0) : (b.created || 0) - (a.created || 0));
   const count = n => cards.filter(c => c.by === n).length;
   $("#byPills").innerHTML = `<button class="pill" data-by="all" style="--c:var(--text)" aria-pressed="${byFilter === "all"}">Everyone <span class="count">${cards.length}</span></button>` +
     Object.keys(TEAM).map(n => `<button class="pill" data-by="${esc(n)}" style="--c:${TEAM[n]}" aria-pressed="${byFilter === n}"><i></i>${esc(n)} <span class="count">${count(n)}</span></button>`).join("");
   $("#sortPills").innerHTML = [["new", "Newest"], ["score", "🔥 Highest score"]].map(([k, t]) => `<button class="sortb" data-sort="${k}" aria-pressed="${pipeSort === k}">${t}</button>`).join("");
-  const prods = [...new Set(cards.map(c => c.product).filter(Boolean))].sort();
-  if (pipeMode === "campaign"){
-    if (!prods.includes(prodFilter) && prodFilter !== "all") prodFilter = prods[0] || "all";
-    $("#byPills").innerHTML = `<button class="pill" data-prod="all" style="--c:var(--text)" aria-pressed="${prodFilter === "all"}">All products <span class="count">${cards.length}</span></button>` +
-      prods.map(p => `<button class="pill" data-prod="${esc(p)}" style="--c:var(--pink)" aria-pressed="${prodFilter === p}"><i></i>${esc(p.replace(/^[A-Z] /, ""))} <span class="count">${cards.filter(c => c.product === p).length}</span></button>`).join("");
-    document.querySelectorAll("[data-prod]").forEach(b => b.onclick = () => { prodFilter = b.dataset.prod; renderPipe(true); });
-  }
   document.querySelectorAll("[data-by]").forEach(b => b.onclick = () => { byFilter = b.dataset.by; renderPipe(true); });
   document.querySelectorAll("[data-sort]").forEach(b => b.onclick = () => { pipeSort = b.dataset.sort; renderPipe(true); });
-  const vis = pipeMode === "campaign" ? cards.filter(c => prodFilter === "all" || c.product === prodFilter) : cards.filter(c => byFilter === "all" || c.by === byFilter);
+  let vis = cards.filter(c => byFilter === "all" || c.by === byFilter);
+  // In the Reference bank, show each person's references together under their name.
+  const groups = pipeMode === "bank" && byFilter === "all" ? [...Object.keys(TEAM), ""].map(n => [n, vis.filter(c => (TEAM[c.by] ? c.by : "") === n)]).filter(g => g[1].length) : null;
+  if (groups) vis = groups.flatMap(g => g[1]);
   // Don't reload every video when nothing changed (the team sync checks every 15 s).
-  const sig = pipeMode + prodFilter + byFilter + pipeSort + JSON.stringify(vis);
+  const sig = pipeMode + byFilter + pipeSort + JSON.stringify(vis);
   if (!force && sig === pipeSig) return;
   pipeSig = sig;
-  $("#gallery").innerHTML = vis.length ? vis.map(c => {
+  const tileOf = c => {
     const md = c.ref && media(c.ref), pc = TEAM[c.by] || "#7A6D74";
     const note = (c.notes || []).slice(-1)[0];
     const sc = scoreOf(c.stats), st = c.stats || {};
-    const badge = `<span class="whob" style="--pc:${c.campaign ? "#FF4F8B" : pc}">${esc(c.campaign ? (c.product || "BFCM").replace(/^[A-Z] /, "") : (c.by || "No name"))}</span>${sc != null ? `<span class="scoreb ${tier(sc)}" title="${fmtN(st.n)} ${st.metric || "views"} vs usual ${fmtN(st.normal)}">🔥 ${fmtX(sc)}</span>` : ""}`;
-    const meta = st.user || st.posted || c.campaign ? `<span>${st.user ? "@" + esc(st.user) : ""}${st.posted ? " · " + fmtDay(st.posted) : ""}${st.n ? " · " + fmtN(st.n) + " " + (st.metric === "likes" ? "likes" : "views") : ""}${c.bestAcct ? " · for " + esc(c.bestAcct) : ""}</span>` : "";
+    const badge = `<span class="whob" style="--pc:${pc}">${esc(c.by || "No name")}</span>${sc != null ? `<span class="scoreb ${tier(sc)}" title="${fmtN(st.n)} ${st.metric || "views"} vs usual ${fmtN(st.normal)}">🔥 ${fmtX(sc)}</span>` : ""}`;
+    const meta = st.user || st.posted || c.bestAcct ? `<span>${st.user ? "@" + esc(st.user) : ""}${st.posted ? " · " + fmtDay(st.posted) : ""}${st.n ? " · " + fmtN(st.n) + " " + (st.metric === "likes" ? "likes" : "views") : ""}${c.bestAcct ? " · for " + esc(c.bestAcct) : ""}</span>` : "";
     const bottom = `<div class="bottom" style="--c:${pc}"><em>${esc(STAGES[c.stage] || "Reference")}</em>${meta}${c.title ? `<span>${esc(c.title)}</span>` : ""}${note ? `<span>💬 ${esc(note.by)}: ${esc(note.text)}</span>` : ""}${c.sent ? `<span class="from">✓ On ${esc(c.sent)}</span>` : ""}</div>`;
     const send = c.sent ? "" : `<button class="gsend" data-send="${c.id}">Send →</button>`;
     if (md) return `<div class="tile has-ref" data-card="${c.id}">${badge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-edit="${c.id}">Edit</button>${send}${bottom}</div>`;
     return `<div class="tile" style="--c:${pc}" data-card="${c.id}" data-edit="${c.id}" role="button" tabindex="0">${badge}<b>${esc(c.title || "Pipeline card")}</b>${c.ref ? `<small>🔗 ${esc(host(c.ref))}</small>` : ""}${note ? `<small>💬 ${esc(note.text)}</small>` : ""}${send}</div>`;
-  }).join("") : `<p class="empty-note">Nothing here yet. Paste a reference above.</p>`;
+  };
+  $("#gallery").innerHTML = !vis.length ? `<p class="empty-note">${pipeMode === "bank" ? "No references here yet. Paste one above." : "Nothing in the Pipeline yet. Paste a reference above, or move one in from the Reference bank."}</p>`
+    : groups ? groups.map(([n, list]) => `<h3 class="ghead" style="--c:${TEAM[n] || "#7A6D74"}"><i></i>Added by ${esc(n || "no name")} <span class="count">${list.length}</span></h3>` + list.map(tileOf).join("")).join("")
+    : vis.map(tileOf).join("");
   sizeEmbeds($("#gallery"));
   $("#gallery").querySelectorAll("[data-edit]").forEach(el => el.onclick = e => { e.stopPropagation(); openCard(el.dataset.edit); });
   $("#gallery").querySelectorAll("[data-send]").forEach(el => el.onclick = e => { e.stopPropagation(); sendFlow(el.dataset.send); });
@@ -684,7 +691,7 @@ $("#addCard").onsubmit = e => {
   const f = new FormData(e.target), by = f.get("by"), title = f.get("title").trim(), ref = normUrl(f.get("ref"));
   if (!title && !ref) return;
   if (by) setMe(by);
-  save("card", {id: uid(), title, ref, by, stage: 0, notes: [], created: Date.now()});
+  save("card", {id: uid(), title, ref, by, stage: 0, notes: [], created: Date.now(), ...(pipeMode === "bank" ? {bank: true} : {})});
   e.target.reset(); renderPipe(true);
 };
 function openCard(id){
@@ -692,7 +699,7 @@ function openCard(id){
   openId = null;
   const md = c.ref && media(c.ref);
   openSheet(`
-    <div class="sheet-h"><b>Pipeline · ${STAGES[c.stage]}</b><button class="x" aria-label="Close">✕</button></div>
+    <div class="sheet-h"><b>${c.bank ? "Reference bank" : "Pipeline"} · ${STAGES[c.stage]}</b><button class="x" aria-label="Close">✕</button></div>
     ${md ? `<div class="player ${md.wide ? "wide" : ""}"><iframe src="${md.src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
       : c.ref ? `<a class="linkcard" href="${esc(normUrl(c.ref))}" target="_blank" rel="noopener">🔗 Open reference on ${esc(host(c.ref))} ↗</a>` : ""}
     <label class="field"><span>Title</span><input id="cTitle" value="${esc(c.title)}" placeholder="What's the idea?"></label>
@@ -715,7 +722,8 @@ function openCard(id){
     <div class="field"><span>Notes</span>${(c.notes || []).map(nt => `<span class="tnote"><b>${esc(nt.by)}:</b> ${esc(nt.text)}</span>`).join("") || `<span class="tnote">No notes yet.</span>`}
       <textarea id="cNote" placeholder="Add a note…"></textarea>
       <div class="btnrow"><select id="cNoteBy" class="field" aria-label="Note by">${Object.keys(TEAM).map(n => `<option ${n === me() ? "selected" : ""}>${n}</option>`).join("")}</select><button class="btn ghost" id="cAddNote">Add note</button></div></div>
-    <div class="btnrow"><button class="btn" id="cDone">Done</button>${c.sent ? "" : `<button class="btn gold" id="cSend">Send to account →</button>`}<button class="btn ghost" id="cDel">Delete card</button></div>`);
+    <div class="btnrow"><button class="btn" id="cDone">Done</button>${c.sent ? "" : `<button class="btn gold" id="cSend">Send to account →</button>`}<button class="btn ghost" id="cMove">${c.bank ? "Move to Pipeline" : "Move to Reference bank"}</button><button class="btn ghost" id="cDel">Delete card</button></div>`);
+  $("#cMove").onclick = () => { if (c.bank) delete c.bank; else c.bank = true; save("card", c); closeSheet(); };
   $("#cTitle").onchange = e => { c.title = e.target.value.trim(); save("card", c); };
   document.querySelectorAll("#sheetIn [data-stage]").forEach(b => b.onclick = () => { c.stage = +b.dataset.stage; save("card", c); document.querySelectorAll("#sheetIn [data-stage]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
   $("#cRef").onchange = e => { c.ref = normUrl(e.target.value); save("card", c); openCard(id); };
