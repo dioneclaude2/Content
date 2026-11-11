@@ -286,6 +286,19 @@ const STAGES = ["Reference","Idea","Draft","Scheduled","Posted"];
    Every post and Pipeline card is saved as its own record (ns.v2.post.<id>, ns.v2.card.<id>)
    in the shared store, so two people editing different things never overwrite each other. */
 const API = "https://content-nine-topaz.vercel.app/api/socials";
+/* TikTok blocks a page that opens many of its players at once (they show "Access Denied").
+   So TikTok embeds wait until they scroll into view, then load one at a time. */
+const ttHold = html => html.replace(/ src="(https:\/\/www\.tiktok\.com\/embed[^"]*)"/g, ' data-tt="$1"');
+const ttQueue = []; let ttBusy = false;
+const ttObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ ttObs.unobserve(e.target); ttQueue.push(e.target); ttPump(); } }), {rootMargin: "150px"});
+function ttPump(){
+  if (ttBusy) return;
+  let f; while ((f = ttQueue.shift()) && !f.isConnected);
+  if (!f) return;
+  ttBusy = true; f.src = f.dataset.tt;
+  setTimeout(() => { ttBusy = false; ttPump(); }, 1200);
+}
+const ttWatch = root => root.querySelectorAll("iframe[data-tt]").forEach(f => ttObs.observe(f));
 const POSTS = new Map(), CARDS = new Map();
 const dirty = new Map();          // key -> record waiting to upload (null = delete)
 const finals = new Map();         // post id -> picked file, only used while Drive isn't connected
@@ -476,8 +489,8 @@ function renderPlan(){
     else n++;
   });
   tiles.push(`<button class="tile add" id="addTile" aria-label="Add a post"><span>+</span><small>Add post</small></button>`);
-  $("#grid").innerHTML = tiles.join("");
-  sizeEmbeds();
+  $("#grid").innerHTML = ttHold(tiles.join(""));
+  sizeEmbeds(); ttWatch($("#grid"));
   $("#grid").querySelectorAll("[data-new]").forEach(t => t.onclick = () => openPost(newPost(current, t.dataset.new).id));
   $("#grid").querySelectorAll("[data-moment]").forEach(t => t.onclick = () => openPost(newPost(current, t.dataset.moment, {type: "Moment", title: momentsOn(t.dataset.moment).join(" + "), moment: true}).id));
   $("#grid").querySelectorAll(".tile[data-id]:not(.has-ref), .open").forEach(t => t.onclick = e => { e.stopPropagation(); openPost(t.dataset.id); });
@@ -679,10 +692,10 @@ function renderPipe(force){
     if (md) return `<div class="tile has-ref" data-card="${c.id}">${badge}<iframe data-kind="${md.kind}" data-reel="${md.reel ? 1 : ""}" src="${md.src}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe><button class="open" data-edit="${c.id}">Edit</button>${send}${bottom}</div>`;
     return `<div class="tile" style="--c:${pc}" data-card="${c.id}" data-edit="${c.id}" role="button" tabindex="0">${badge}<b>${esc(c.title || "Pipeline card")}</b>${c.ref ? `<small>🔗 ${esc(host(c.ref))}</small>` : ""}${note ? `<small>💬 ${esc(note.text)}</small>` : ""}${send}</div>`;
   };
-  $("#gallery").innerHTML = !vis.length ? `<p class="empty-note">${pipeMode === "bank" ? "No references here yet. Paste one above." : "Nothing in the Pipeline yet. Paste a reference above, or move one in from the Reference bank."}</p>`
+  $("#gallery").innerHTML = ttHold(!vis.length ? `<p class="empty-note">${pipeMode === "bank" ? "No references here yet. Paste one above." : "Nothing in the Pipeline yet. Paste a reference above, or move one in from the Reference bank."}</p>`
     : groups ? groups.map(([n, list]) => `<h3 class="ghead" style="--c:${TEAM[n] || "#7A6D74"}"><i></i>Added by ${esc(n || "no name")} <span class="count">${list.length}</span></h3>` + list.map(tileOf).join("")).join("")
-    : vis.map(tileOf).join("");
-  sizeEmbeds($("#gallery"));
+    : vis.map(tileOf).join(""));
+  sizeEmbeds($("#gallery")); ttWatch($("#gallery"));
   $("#gallery").querySelectorAll("[data-edit]").forEach(el => el.onclick = e => { e.stopPropagation(); openCard(el.dataset.edit); });
   $("#gallery").querySelectorAll("[data-send]").forEach(el => el.onclick = e => { e.stopPropagation(); sendFlow(el.dataset.send); });
 }
