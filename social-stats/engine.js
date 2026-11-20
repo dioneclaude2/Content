@@ -1250,7 +1250,7 @@ export function parseReportSheet(text, opts = {}) {
   out.title = (rows.find(r => r[0]) || [""])[0];
   // the part that says when the data was taken: "… data pulled 6 Oct 2026" / "… scraped via Apify 21 Oct 2026"
   const parts = out.title.split("·").map(x => x.trim());
-  const dataPart = parts.find(x => /pulled|scraped|exported|as of|data (?:from|on)/i.test(x)) || "";
+  const dataPart = parts.find(x => /pulled|scraped|exported|as of|data (?:from|on)|apify|insights/i.test(x)) || "";
   const dm = dataPart.match(/(\d{1,2}\s+[A-Za-z]{3,9}\.?,?\s+\d{4}|[A-Za-z]{3,9}\.?\s+\d{1,2},?\s+\d{4}|\d{4}-\d{2}-\d{2})\s*$/);
   out.pulled = dm ? toDate(dm[1]) : null;
   // the week's dates are in the other parts; a title without a year borrows the data date's
