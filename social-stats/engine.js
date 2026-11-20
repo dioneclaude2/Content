@@ -752,7 +752,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     // otherwise the sheet's boost spend ÷ this week's post views (organic + ad views), so spend and views cover the same posts
     T.sheetAdSpend = T.adSpend;
     if (a.adSpend != null && a.views) { T.adSpend = a.adSpend; T.blendedCPM = per1k(a.adSpend, a.views); T.blendedBasis = "account"; }
-    else { T.blendedCPM = T.totalViews ? per1k(T.adSpend, T.totalViews) : null; T.blendedBasis = "posts"; }
+    else { T.blendedCPM = T.totalViews && T.adSpend ? per1k(T.adSpend, T.totalViews) : null; T.blendedBasis = T.adSpend ? "posts" : "none"; }
   }
   T.cpmTarget = settings.cpmTarget ?? 5;
   T.cpmStatus = T.blendedCPM == null ? null : T.blendedCPM < T.cpmTarget ? "🟢" : "🔴";
