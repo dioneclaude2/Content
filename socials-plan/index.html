@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
+<title>Nancy Socials Roles and Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=Fraunces:ital,wght@1,700&display=swap">
+<style>
+/* Layout: 12 full-screen sections, scroll-snapped, with a fixed counter and dot nav. One brand look (lime, pink, black on cream). */
+:root{
+  --black:#141414; --cream:#F3F1EA; --paper:#FBFAF6; --lime:#D4F53C; --pink:#F5A6EB; --pinkline:#E68ADB; --pinkdeep:#A3168F; --soft:#4A4A46;
+  --display:'Unbounded', Verdana, sans-serif; --body:'Space Grotesk', Arial, sans-serif; --accent:'Fraunces', Georgia, serif;
+  color-scheme:light;
+}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .rise{animation:none!important;opacity:1!important;transform:none!important} }
+body{background:var(--cream);color:var(--black);font-family:var(--body);font-size:clamp(17px,1.6vw,22px);line-height:1.45;margin:0}
+section{scroll-snap-align:start;min-height:100vh;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,2.6vh,32px);padding-block:clamp(56px,9vh,96px) clamp(48px,7vh,80px);padding-left:max(16px, env(safe-area-inset-left, 0px), 5vw);padding-right:max(16px, env(safe-area-inset-right, 0px), 7vw);position:relative;overflow:hidden}
+.dark{background:var(--black);color:var(--cream)}
+.pink{background:var(--pink)}
+.lime{background:var(--lime)}
+.grid-bg{background-color:var(--pink);background-image:linear-gradient(var(--pinkline) 2px,transparent 2px),linear-gradient(90deg,var(--pinkline) 2px,transparent 2px);background-size:72px 72px}
+.inner{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(16px,2.4vh,28px);position:relative}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(40px,7vw,96px);line-height:1.02;letter-spacing:-.02em;text-transform:uppercase}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(28px,4.2vw,56px);line-height:1.08;letter-spacing:-.01em}
+h3{font-family:var(--display);font-weight:600;font-size:clamp(18px,1.9vw,26px);line-height:1.2}
+p{margin:0;max-width:62ch}
+.it{font-family:var(--accent);font-style:italic;font-weight:700;text-transform:none;letter-spacing:0;color:var(--pinkdeep)}
+.dark .it{color:var(--pink)}
+.eyebrow{font-weight:700;font-size:clamp(13px,1.1vw,16px);letter-spacing:.18em;text-transform:uppercase}
+.dark .eyebrow{color:var(--lime)}
+.lede{font-size:clamp(19px,1.9vw,26px);color:var(--soft)}
+.dark .lede{color:#D9D6CC}
+.row{display:grid;gap:clamp(14px,1.8vw,24px);grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.row2{display:grid;gap:clamp(14px,1.8vw,24px);grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.card{background:var(--paper);color:var(--black);border:3px solid var(--black);border-radius:32px;padding:clamp(18px,2vw,28px);box-shadow:7px 7px 0 var(--black);display:flex;flex-direction:column;gap:10px;min-width:0}
+.card ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.card.k{background:var(--black);color:var(--cream)}
+.card.p{background:var(--pink)}
+.card.l{background:var(--lime)}
+.tag{font-family:var(--accent);font-style:italic;font-weight:700;font-size:clamp(24px,2.4vw,34px);line-height:1.05}
+.who{font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase;opacity:.75}
+.band{width:96px;height:18px;border-radius:9px;border:3px solid var(--black);box-sizing:border-box}
+.pill{display:inline-block;align-self:flex-start;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:6px 16px;border-radius:999px;border:3px solid var(--black);background:var(--lime);color:var(--black);box-shadow:3px 3px 0 var(--black)}
+.pill.pk{background:var(--pink)} .pill.bk{background:var(--black);color:var(--lime)}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(64px,10vw,140px);line-height:1;color:var(--lime)}
+.tbl{color:var(--black);background:var(--paper);border:3px solid var(--black);border-radius:28px;box-shadow:7px 7px 0 var(--black);overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:clamp(15px,1.4vw,19px)}
+th,td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1.5px solid #DDD8CB}
+th{background:var(--black);color:var(--lime);font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.todo{color:var(--soft);font-style:italic;font-weight:400}
+.tile{border:3px solid var(--black);border-radius:36px;box-shadow:8px 8px 0 var(--black);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.dark .tile{border-color:var(--cream);box-shadow:8px 8px 0 var(--cream)}
+.tile img{max-width:78%;max-height:84%;object-fit:contain}
+.cover-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(20px,3vw,48px);align-items:center}
+.posts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.4vw,18px);align-items:start}
+.post{display:flex;flex-direction:column;gap:10px;min-width:0}
+.post img{width:100%;aspect-ratio:9/16;object-fit:cover;border:3px solid var(--black);border-radius:22px;box-shadow:6px 6px 0 var(--black);background:#222}
+.dark .post img{border-color:var(--cream);box-shadow:6px 6px 0 var(--cream)}
+.post span{font-weight:700;font-size:clamp(12px,1.05vw,15px);letter-spacing:.02em;overflow-wrap:anywhere}
+.post:nth-child(2){margin-top:28px}
+.card .thumb{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center 30%;border:3px solid var(--black);border-radius:20px}
+.row4{display:grid;gap:clamp(12px,1.4vw,20px);grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:860px){ .row4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .row4{grid-template-columns:1fr} }
+.handle{font-weight:700;font-size:14px;opacity:.8}
+.collage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:180px 150px 170px;gap:16px}
+.ticker{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;background:var(--lime);color:var(--black);border:3px solid var(--black);border-radius:999px;padding:12px 24px;font-family:var(--display);font-weight:700;font-size:clamp(13px,1.3vw,18px);letter-spacing:.04em}
+.star{position:absolute;width:clamp(60px,8vw,110px);height:auto}
+.spin{animation:pop 800ms cubic-bezier(.2,.8,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.6) rotate(-25deg)}to{opacity:1;transform:none}}
+.rise{opacity:0;transform:translateY(24px)}
+.on .rise{animation:rise 600ms cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0) * 90ms)}
+@keyframes rise{to{opacity:1;transform:none}}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.flow .card{flex:1 1 200px}
+.arrow{font-family:var(--display);font-size:28px}
+/* nav */
+.hud{position:fixed;z-index:20;top:calc(env(safe-area-inset-top, 0px) + 16px);right:calc(env(safe-area-inset-right, 0px) + 16px);background:var(--black);color:var(--lime);font-family:var(--display);font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px;border:2px solid var(--cream);font-variant-numeric:tabular-nums}
+.dots{position:fixed;z-index:20;right:calc(env(safe-area-inset-right, 0px) + 18px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px}
+.dots a{width:14px;height:14px;border-radius:50%;border:2px solid var(--black);background:var(--cream);display:block}
+.dots a[aria-current="true"]{background:var(--pinkdeep);border-color:var(--black);transform:scale(1.25)}
+.dots a:focus-visible{outline:3px solid var(--pinkdeep);outline-offset:2px}
+.hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:14px;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+@media (max-width:760px){
+  .cover-grid{grid-template-columns:1fr}
+  .collage{grid-template-rows:130px 110px 120px}
+  .dots{display:none}
+  section{justify-content:flex-start}
+}
+.steps{display:grid;gap:clamp(12px,1.6vw,20px);grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));counter-reset:step}
+.step{position:relative}
+.steps .num{font-family:var(--display);font-weight:700;font-size:clamp(28px,3vw,40px);line-height:1}
+.note{background:var(--black);color:var(--lime);border-radius:20px;padding:14px 20px;font-weight:700;align-self:flex-start}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(14px,1.8vw,24px)}
+.bar{display:flex;height:64px;border:3px solid var(--black);border-radius:999px;overflow:hidden;box-shadow:6px 6px 0 var(--black);font-family:var(--display);font-weight:700}
+.bar div{display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.4vw,18px)}
+.badge{display:inline-block;align-self:flex-start;font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:999px;background:var(--black);color:var(--lime)}
+</style>
+
+<div class="hud" id="hud" aria-live="polite">01 / 12</div>
+<nav class="dots" id="dots" aria-label="Sections"></nav>
+
+<main>
+<!-- 1 cover -->
+<section class="dark" id="s1" data-title="Cover">
+  <div class="inner">
+    <div class="cover-grid">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <p class="eyebrow rise">Nancy socials · Dione + Susan · Nov 26, 2026</p>
+        <h1 class="rise" style="--i:1"><span class="it">who does what,</span> and how we grow</h1>
+        <p class="lede rise" style="--i:2">Roles · How we pick content · Approvals · KPIs · Next steps</p>
+      </div>
+      <div class="posts rise" style="--i:2">
+        <div class="post"><img src="img/official.webp" alt="Official post: How I’m keeping things hot this winter"><span>@hellonancy_official</span></div>
+        <div class="post"><img src="img/club.webp" alt="Club post: hiding in a gift box"><span>@hellonancyclub</span></div>
+        <div class="post"><img src="img/edu.webp" alt="101 post: Sara Tang on solo play"><span>@hellonancy101</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">Scroll ↓</p>
+</section>
+
+<!-- 2 brief -->
+<section class="lime" id="s2" data-title="Crystal’s brief">
+  <svg class="star spin" style="right:8vw;top:10vh" viewBox="0 0 160 160" aria-hidden="true"><path d="M80 0C85 58 102 75 160 80 102 85 85 102 80 160 75 102 58 85 0 80 58 75 75 58 80 0Z" fill="#F5A6EB" stroke="#141414" stroke-width="4"/></svg>
+  <div class="inner">
+    <p class="eyebrow rise">From Crystal’s brief</p>
+    <h1 class="rise" style="--i:1">“You guide the how, <span class="it">she brings the what.</span>”</h1>
+    <p class="lede rise" style="--i:2;color:#141414">Susan owns content creation and viral ideas. Dione sets up the process, timelines and check-ins, and walks Susan through what makes an outlier.</p>
+  </div>
+</section>
+
+<!-- 3 roles -->
+<section id="s3" data-title="Roles">
+  <div class="inner">
+    <p class="eyebrow rise">Part 1 · Roles</p>
+    <h2 class="rise" style="--i:1">Who does what</h2>
+    <div class="row">
+      <div class="card rise" style="--i:2"><div class="band" style="background:var(--lime)"></div><p class="who">Susan</p><p class="tag">The what</p><ul><li>Concepts and viral ideas</li><li>Finds inspos and sends them to Dione</li><li>Plans her own content across the week</li><li>Films, stars in and edits most content</li><li>Submits on time</li><li>Loops Dione in</li></ul></div>
+      <div class="card rise" style="--i:3"><div class="band" style="background:var(--pink)"></div><p class="who">Dione</p><p class="tag">The how</p><ul><li>Strategy and account roles</li><li>Scores inspos, sends outliers</li><li>Calendar, scheduling, publishing</li><li>Captions, covers, tags</li><li>Sends Friday plan to Crystal + Ivan</li><li>Checks Account Status daily</li><li>Owns all logins, fixes account issues</li><li>Connects with social contacts</li><li>KPIs, Sunday scorecard, reports</li><li>Asset management</li></ul></div>
+      <div class="card rise" style="--i:4;border-style:dashed"><div class="band" style="background:var(--cream)"></div><p class="who">Platform manager · proposed</p><p class="tag">The doing</p><ul><li>Comments and DMs</li><li>Owns Stories: polls, reposts</li><li>Accepts collabs when Dione is off or on EST time</li><li>Researches trends and news</li><li>Safe-marketing research to stay recommendable</li><li>Filming and editing help</li></ul><span class="badge">Not hired yet</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 side by side -->
+<section class="grid-bg" id="s4" data-title="Side by side">
+  <div class="inner">
+    <p class="eyebrow rise">Part 1 · Roles</p>
+    <h2 class="rise" style="--i:1">Susan and Dione, side by side</h2>
+    <div class="tbl rise" style="--i:2"><table>
+      <tr><th style="width:16%">Area</th><th style="width:42%">Susan</th><th style="width:42%">Dione</th></tr>
+      <tr><td><b>Ideas</b></td><td>Concepts and viral ideas; finds inspos on IG and sends them to Dione</td><td>Sends outlier references; scores Susan’s inspos</td></tr>
+      <tr><td><b>Planning</b></td><td>Plans her own content and spreads it across the days</td><td>Suggests: “this would be great, want to try it?” Doesn’t assign days</td></tr>
+      <tr><td><b>Making</b></td><td>Films, stars in and edits most of the content</td><td>Carousels, statics, AI pieces, recuts; hand-only filming (limited props)</td></tr>
+      <tr><td><b>Ownership</b></td><td>Owns what she makes; submits on time; loops Dione in</td><td>Assists so it happens</td></tr>
+      <tr><td><b>Approvals</b></td><td>Every Friday: next week’s content and captions</td><td>Shares it with Crystal and Ivan, who give final approval</td></tr>
+      <tr><td><b>Results</b></td><td>Makes more of what wins</td><td>Sunday scorecard; reports to Crystal</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- 5 how we pick content -->
+<section id="s5" data-title="How we pick content">
+  <div class="inner">
+    <p class="eyebrow rise">Part 2 · How we pick content</p>
+    <h2 class="rise" style="--i:1">Every content week: 80% viral, 20% tests</h2>
+    <div class="bar rise" style="--i:2"><div style="width:80%;background:var(--lime)">8 viral or outlier inspos</div><div style="width:20%;background:var(--pink)">2 tests</div></div>
+    <div class="steps">
+      <div class="card rise" style="--i:3"><p class="num">1</p><h3>Susan finds inspos</h3><p>Formats from IG she wants to make.</p></div>
+      <div class="card rise" style="--i:4"><p class="num">2</p><h3>Dione scores them</h3><p>Is it a proven viral or outlier format?</p></div>
+      <div class="card rise" style="--i:5"><p class="num">3</p><h3>Not viral?</h3><p>Susan explains why she wants it and what it will cost. Low cost: we do it.</p></div>
+      <div class="card rise" style="--i:6"><p class="num">4</p><h3>Susan plans the week</h3><p>Spreads posts across the days with captions, by Friday, and loops Dione in.</p></div>
+    </div>
+    <p class="note rise" style="--i:7">Our focus now is going viral, so we replicate proven formats.</p>
+  </div>
+</section>
+
+<!-- 6 platform manager scope -->
+<section class="grid-bg" id="s6" data-title="Platform manager">
+  <div class="inner">
+    <p class="eyebrow rise">Roles · Platform manager (if approved)</p>
+    <h2 class="rise" style="--i:1">What the role would cover</h2>
+    <div class="split">
+      <div class="card l rise" style="--i:2"><h3>Platform manager</h3><ul><li>Replies to comments</li><li>Replies to DMs</li><li>Owns Stories: polls, reposts</li><li>Accepts collabs on days Dione is off or on EST time</li><li>Researches what’s trending: on IG, in marketing, in the news</li><li>Researches safe marketing: how to keep us eligible for recommendations</li><li>Filming and editing help</li></ul></div>
+      <div class="card rise" style="--i:3"><h3>Stays with Dione</h3><ul><li>Account Status on all four accounts, checked daily</li><li>All logins, and fixing account issues</li><li>Connecting with people in our social network</li><li>Captions, covers, tags</li><li>Scheduling and publishing</li><li>Content calendar</li><li>Outlier research and scoring</li><li>Reporting to Crystal</li><li>Asset management</li></ul></div>
+    </div>
+    <span class="badge rise" style="--i:4">Not hired yet · needs approval</span>
+  </div>
+</section>
+
+<!-- 7 accounts -->
+<section id="s7" data-title="Four accounts">
+  <div class="inner">
+    <p class="eyebrow rise">Part 3 · The plan</p>
+    <h2 class="rise" style="--i:1">Four accounts, four jobs</h2>
+    <div class="row4">
+      <div class="card k rise" style="--i:2"><img class="thumb" src="img/official.webp" alt="Official post"><h3>Official</h3><span class="handle">@hellonancy_official</span><span class="pill">4 / week</span><p>Shop window: product, vibe tests, campaigns, testimonials</p></div>
+      <div class="card p rise" style="--i:3"><img class="thumb" src="img/club.webp" alt="Club post"><h3>Club</h3><span class="handle">@hellonancyclub</span><span class="pill">4 / week</span><p>Playground: trends, friendship dynamics, outliers</p></div>
+      <div class="card l rise" style="--i:4"><img class="thumb" src="img/edu.webp" alt="101 post"><h3>101</h3><span class="handle">@hellonancy101</span><span class="pill bk">3 / week</span><p>Classroom: doctors, myth busters, mini mics</p></div>
+      <div class="card rise" style="--i:5"><img class="thumb" src="img/vip.webp" alt="VIP post"><h3>VIP</h3><span class="handle">@hellonancyvip</span><span class="pill pk">Launches only</span><p>Launch party: insider access, perks, UGC, influencers</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 grid + shoot proposal -->
+<section class="grid-bg" id="s8" data-title="Grid and shoot proposal">
+  <div class="inner">
+    <p class="eyebrow rise">Part 3 · Susan’s proposal</p>
+    <h2 class="rise" style="--i:1">Weekly grid and a monthly shoot</h2>
+    <span class="badge rise" style="--i:1">Proposal · not approved yet</span>
+    <div class="tbl rise" style="--i:2"><table>
+      <tr><th style="width:12%">Day</th><th>Official</th><th>Club</th><th>101</th></tr>
+      <tr><td><b>Mon</b></td><td>Campaign carousel</td><td>Friendship / couple reel</td><td>Myth busters carousel</td></tr>
+      <tr><td><b>Tue</b></td><td>DIY cocktail vibe test</td><td>Trend adaptation with Lem</td><td>–</td></tr>
+      <tr><td><b>Wed</b></td><td>–</td><td>Challenge with product</td><td>Cozy with Nancy interview</td></tr>
+      <tr><td><b>Thu</b></td><td>Winning Club or 101 reel</td><td>Outlier concept</td><td>–</td></tr>
+      <tr><td><b>Fri</b></td><td>ASMR bells vibe test</td><td>–</td><td>Doctor clip or quote</td></tr>
+    </table></div>
+    <div class="card rise" style="--i:3"><p><b>Monthly shoot:</b> one content day to batch a month of content. Needs approval first (next section).</p></div>
+  </div>
+</section>
+
+<!-- 9 approvals -->
+<section class="dark" id="s9" data-title="How approvals work">
+  <div class="inner">
+    <p class="eyebrow rise">Part 3 · How approvals work</p>
+    <h2 class="rise" style="--i:1">Approve once a week, then film and post</h2>
+    <p class="eyebrow rise" style="--i:2">Weekly content · no approval needed per post</p>
+    <div class="steps">
+      <div class="card l rise" style="--i:2"><p class="num">Fri</p><h3>Susan sends next week</h3><p>Content plan plus captions, through Dione.</p></div>
+      <div class="card p rise" style="--i:3"><p class="num">Fri</p><h3>Crystal + Ivan approve</h3><p>Final approval sits with the marketing team, before we film.</p></div>
+      <div class="card rise" style="--i:4"><p class="num">Mon–Sun</p><h3>We film and post</h3><p>No more sign-offs needed; marketing already knows what’s coming.</p></div>
+    </div>
+    <p class="eyebrow rise" style="--i:5;margin-top:8px">Bigger proposals · new formats, shoots, spend</p>
+    <p class="lede rise" style="--i:5">Susan brings it to Crystal, Ivan and Dione first. Once marketing is aligned, we pitch it to the founders together, with the team backing it.</p>
+  </div>
+</section>
+
+<!-- 10 where we are -->
+<section id="s10" data-title="Where we are">
+  <div class="inner">
+    <p class="eyebrow rise">Part 4 · KPIs</p>
+    <h2 class="rise" style="--i:1">Where we are now</h2>
+    <div class="tbl rise" style="--i:2"><table>
+      <tr><th style="width:24%">KPI</th><th>Official</th><th>Club</th><th>101</th><th>VIP</th></tr>
+      <tr><td><b>Followers</b></td><td class="n">37.9K</td><td class="n">12</td><td class="n">6</td><td class="n">88</td></tr>
+      <tr><td><b>Views</b></td><td class="n">956K / week</td><td class="n">251 per reel</td><td class="n">139–362 per reel</td><td class="n">2.5K–5.7K per reel*</td></tr>
+      <tr><td><b>Engagement / view</b></td><td class="n">0.89%</td><td class="n">~1%</td><td class="n">under 1%</td><td class="n">~1%</td></tr>
+      <tr><td><b>Organic vs ads</b></td><td class="n">40% / 60%</td><td>No ads</td><td>No ads</td><td>No ads</td></tr>
+      <tr><td><b>Posting</b></td><td>Regular</td><td>5 posts so far</td><td>Last post Nov 9</td><td>Collabs with Official</td></tr>
+    </table></div>
+    <p class="rise" style="--i:3;font-size:16px;color:var(--soft)">Official: October weekly average from Social Stats (382K organic, 574K from ads). Others: profiles on Nov 25. *VIP views are shared collabs with Official.</p>
+  </div>
+</section>
+
+<!-- 11 targets -->
+<section class="grid-bg" id="s11" data-title="Targets">
+  <div class="inner">
+    <p class="eyebrow rise">Part 4 · KPIs · Official</p>
+    <h2 class="rise" style="--i:1">Targets and where each number comes from</h2>
+    <div class="tbl rise" style="--i:2"><table>
+      <tr><th style="width:18%">KPI</th><th>Now</th><th>Dec</th><th>Jan</th><th>Feb</th><th style="width:34%">Basis</th></tr>
+      <tr><td><b>Views / week</b></td><td class="n">956K</td><td class="n">956K</td><td colspan="2" class="todo">Reset from Aug–Nov average</td><td>Hold our own average first; standard practice is a 3–6 month baseline</td></tr>
+      <tr><td><b>Engagement / view</b></td><td class="n">0.89%</td><td class="n">1.15%</td><td class="n">1.4%</td><td class="n">1.65%</td><td>Close the gap to 1.9%, the Dash Social 2026 brand benchmark already in our report rules</td></tr>
+      <tr><td><b>New followers / week</b></td><td class="n todo">To add</td><td class="n">80</td><td class="n">80</td><td class="n">80</td><td>0.9% a month median growth (Virev 2026, 126K accounts)</td></tr>
+      <tr><td><b>Blended CPM</b></td><td class="n todo">To add</td><td class="n">Under $5</td><td class="n">Under $5</td><td class="n">Under $5</td><td>Our weekly report rule; Reels average $4.29–6.20</td></tr>
+    </table></div>
+    <div class="split">
+      <div class="card rise" style="--i:3"><h3>When we revisit</h3><ul><li><b>Every Sunday:</b> track against target</li><li><b>Monthly:</b> hit 3 of 4 weeks, raise 10%; miss 2+, keep it and find why</li><li><b>End of February:</b> full reset with the founders</li></ul></div>
+      <div class="card rise" style="--i:4"><h3>Club, 101, VIP</h3><p>Same engagement and CPM targets. Views and followers are set after their first 4 weeks of posting. One viral spike is not a new normal.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 next steps -->
+<section class="lime" id="s12" data-title="Next steps">
+  <div class="inner">
+    <p class="eyebrow rise">Part 5 · Next steps</p>
+    <h2 class="rise" style="--i:1">Who does what next</h2>
+    <div class="tbl rise" style="--i:2"><table>
+      <tr><th style="width:56%">What</th><th>Who</th><th>When</th></tr>
+      <tr><td>Agree the roles, the 80/20 rule and the approval process</td><td>Dione + Susan</td><td>Today, Nov 26</td></tr>
+      <tr><td>Plan the first content week and send inspos for scoring</td><td>Susan</td><td>This week</td></tr>
+      <tr><td>Pull Aug–Nov numbers to set the real baseline</td><td>Dione</td><td>By Dec 2</td></tr>
+      <tr><td>Restart 101 at 3 posts a week</td><td>Susan</td><td>From Dec 1</td></tr>
+      <tr><td>Bring the grid and monthly shoot proposal to Crystal and Ivan</td><td>Susan</td><td>When ready</td></tr>
+      <tr><td>Send next week’s content and captions to Crystal and Ivan</td><td>Susan + Dione</td><td>Every Friday, from Nov 27</td></tr>
+      <tr><td>Platform manager role to Crystal for approval</td><td>Crystal</td><td>After review</td></tr>
+    </table></div>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+  const secs = [...document.querySelectorAll('main section')];
+  const hud = document.getElementById('hud'), dots = document.getElementById('dots');
+  const total = String(secs.length).padStart(2, '0');
+  secs.forEach((s, i) => {
+    const a = document.createElement('a'); a.href = '#' + s.id; a.setAttribute('aria-label', (i + 1) + ': ' + s.dataset.title); a.title = s.dataset.title; dots.appendChild(a);
+  });
+  const links = [...dots.children];
+  const set = i => { hud.textContent = String(i + 1).padStart(2, '0') + ' / ' + total; links.forEach((l, j) => l.setAttribute('aria-current', j === i)); };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio > 0.5) { e.target.classList.add('on'); set(secs.indexOf(e.target)); }
+  }), {threshold: [0.5, 0.6]});
+  secs.forEach(s => io.observe(s));
+  secs[0].classList.add('on'); set(0);
+  addEventListener('keydown', e => {
+    const cur = links.findIndex(l => l.getAttribute('aria-current') === 'true');
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); secs[Math.min(secs.length - 1, cur + 1)].scrollIntoView(); }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); secs[Math.max(0, cur - 1)].scrollIntoView(); }
+  });
+})();
+</script>
+
+</html>
