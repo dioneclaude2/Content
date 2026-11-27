@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=f9de92e">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=98e49f3">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=f9de92e" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=98e49f3" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=f9de92e";
+import * as E from "./engine.js?v=98e49f3";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=f9de92e");
-    const logo = await svgToPng("logo-circle.svg?v=f9de92e", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=98e49f3");
+    const logo = await svgToPng("logo-circle.svg?v=98e49f3", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -544,8 +544,11 @@ function render(){
 function renderDashboard(D){
   const reps = Object.values(D.reports);
   const weeks = reps.filter(r => r.type === "week").sort((a, b) => (a.start < b.start ? 1 : -1));
-  const events = reps.filter(r => r.type === "event").sort((a, b) => ((a.end || "") < (b.end || "") ? 1 : -1));
+  const byEnd = (a, b) => ((a.end || "") < (b.end || "") ? 1 : -1);
+  const events = reps.filter(r => r.type === "event" && !r.campaign).sort(byEnd);
+  const campaigns = reps.filter(r => r.type === "event" && r.campaign).sort(byEnd);
   const q = route().q;
+  const cp = D.reports[q.get("c")] || campaigns[0];
   // latest week that has posts, unless one was picked
   const wk = D.reports[q.get("w")] || weeks.find(r => E.buildReport(r, D, D.settings).contentRows.length) || weeks[0];
   // latest event that has posts (an empty draft doesn't take over the home page)
@@ -573,13 +576,14 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=f9de92e" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=98e49f3" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
     </div>
     ${EVENTS_ONLY ? "" : accountPanel(D)}
     ${EVENTS_ONLY ? "" : block("Weekly report", wk, weeks, "w", `No weekly report yet. <a href="#/new">Create one</a> each Monday for the week before.`)}
+    ${EVENTS_ONLY || !campaigns.length ? "" : block("Campaign report", cp, campaigns, "c", "")}
     ${block("Event report", ev, events, "e", `No event report yet. <a href="#/new">Create one</a> for any event, launch or ad push.`)}
     ${EVENTS_ONLY && events.length > 1 ? `<section class="sec"><h2>All events</h2><div class="rcards">${events.map(r => { const R = E.buildReport(r, D, D.settings); const [c1] = evColours(r);
       return `<a class="rcard" href="#/r/${r.id}" style="--ev:${c1}"><div class="band"></div><div class="small muted">Event · ${F.dateY(r.start)}</div><div class="t">${esc(r.name)}</div>
@@ -2456,9 +2460,33 @@ async function importPostsEvent(cfg){
   return rep.id;
 }
 
+/* A campaign tab (e.g. Monster Mansion): every campaign post across both accounts + the ads team's spend per post.
+   Shown on home as its own block, between the weekly and event reports. */
+async function importCampaignTab(cfg){
+  const url = sheetLink(cfg.sheet, cfg.gid);
+  const S = E.parseReportSheet(await sheetCsv(cfg.sheet, cfg.gid), { year: cfg.start.slice(0, 4), organicCol: true });
+  if (!S.posts.length) throw new Error("no posts");
+  const D = db();
+  let rep = Object.values(D.reports).find(r => r.type === "event" && sameSheet(r.sheetUrl, url));
+  if (!rep) rep = { id: uid(), type: "event", postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
+  const dataDate = cfg.dataDate || S.pulled || today();
+  for (const p of Object.values(E.mergePosts(db().posts, S.posts, dataDate, rep.id))) put("ss.post." + p.id, p);
+  const patch = { name: cfg.name, campaign: true, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate, sheetUrl: url,
+    postIds: [...new Set(S.posts.map(p => p.id))], sheetNotes: cfg.notes || [], fresh: false };
+  if (S.ads.length) {
+    const id = (rep.importIds || []).find(i => db().imports[i]?.fromSheet) || uid();
+    put("ss.import." + id, { id, name: `${cfg.name} — ad spend per post (ads team)`, fromSheet: true, level: "ad", hasViews: true, hasFollows: false, hasPostIds: true,
+      rows: S.ads.map((a, i) => ({ ...a, i })), rangeStart: cfg.start, rangeEnd: dataDate, uploaded: today(),
+      warnings: ["From the ads team's columns in the campaign tab."] });
+    patch.importIds = [id];
+  }
+  put("ss.report." + rep.id, { ...rep, ...patch });
+  return rep.id;
+}
+
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=f9de92e", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=98e49f3", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
@@ -2474,6 +2502,10 @@ async function refreshFromSources(){
       try { importAccountTab(await sheetCsv(w.sheet, o.gid), o.label); } catch (err) { failed++; console.warn("Account tab", o.label, err); }
     }
     try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+  }
+  for (const c of src.campaigns || []) {
+    try { if (!deletedFromSheet(sheetLink(c.sheet, c.gid))) { await importCampaignTab(c); n++; } }
+    catch (err) { failed++; console.warn("Campaign", c.name, err); }
   }
   for (const e of src.postEvents || []) {
     try { if (!deletedFromSheet(sheetLink(e.posts.sheet, e.posts.gid))) { await importPostsEvent(e); n++; } }

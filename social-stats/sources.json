@@ -663,5 +663,20 @@
         "Costs from the London expenses tab (£193,715.59). Venue & rental £102,880 is marked to be refunded; microSD cards (£4,478.92), sofas and Deliveroo items are listed but not in the tab's subtotals."
       ]
     }
+  ],
+  "campaigns": [
+    {
+      "name": "Monster Mansion Vol. I",
+      "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
+      "gid": "1342182824",
+      "start": "2026-10-15",
+      "end": "2026-11-08",
+      "dataDate": "2026-11-27",
+      "colour": "Pink",
+      "notes": [
+        "Both accounts: @hellonancy_official + @nancymonsters. A post on both grids counts once.",
+        "Ad spend and paid views per post from the ads team. Other campaign costs (production, gifting, creator fees) not added yet."
+      ]
+    }
   ]
 }

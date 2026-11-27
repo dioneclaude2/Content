@@ -414,7 +414,9 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   /* 1 · which posts belong to this report */
   let mainIds;
   if (rep.type === "week") {
-    mainIds = allPosts.filter(p => p.date && p.date >= rep.start && p.date <= rep.end).map(p => p.id);
+    // a week read from the sheet only takes posts from the weekly tabs (tagged by account), not campaign/event posts in the same dates
+    mainIds = allPosts.filter(p => p.date && p.date >= rep.start && p.date <= rep.end
+      && (!rep.sheetUrl || (p.tags || []).some(t => t.startsWith("acct:")))).map(p => p.id);
     for (const id of rep.include || []) if (!mainIds.includes(id)) mainIds.push(id);
     mainIds = mainIds.filter(id => !(rep.exclude || []).includes(id));
   } else {
@@ -1268,6 +1270,14 @@ export function parseReportSheet(text, opts = {}) {
   const mapped = mapPosts(table, { year: opts.year || (out.pulled || out.range?.start || "").slice(0, 4) || null });
   out.posts = mapped.posts;
   out.notes.push(...mapped.errors);
+  // campaign tabs keep the ads team's own split: total views = the "Organic views" column + paid views
+  if (opts.organicCol) {
+    const cOrg = col(header, /^organic views/), cPd = col(header, /^paid views/), cLk = col(header, /^link/);
+    if (cOrg) for (const r of table.rows) {
+      const p = out.posts.find(x => x.id === shortcode(r[cLk])), org = num(r[cOrg]);
+      if (p && org != null) p.snap.views = org + (num(r[cPd]) || 0);
+    }
+  }
 
   /* ad numbers already worked out per post in the sheet (no Meta export behind them) */
   const cSpend = col(header, /^ad spend/, /amount spent/), cPaid = col(header, /^paid views/), cCamp = col(header, /^ad campaign/, /^campaign/);
