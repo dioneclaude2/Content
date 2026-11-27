@@ -1237,7 +1237,7 @@ const adsOnly = (rep, T) => !!rep.campaign && T.eventCost == null && (rep.noInfl
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
-    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this ${rep.campaign ? "campaign" : "event"} did.");
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : `Add posts and ad exports to see how this ${rep.campaign ? "campaign" : "event"} did.`);
   const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
   return `
     <p class="headline">${esc(head)}</p>
