@@ -1234,13 +1234,13 @@ const adsNoteHTML = rep => rep.adsNote ? `<div class="flag info adsnote"><b>Ads<
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
-    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this event did.");
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this ${rep.campaign ? "campaign" : "event"} did.");
   const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
   return `
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
     <div class="tiles big">
-      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">ads, influencers and event costs</div></div>
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.campaign ? "ads and social post costs · influencer fees not included" : "ads, influencers and event costs"}</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
@@ -1253,11 +1253,14 @@ function eventSummaryHTML(rep, R, P){
       <div><span>Cost per engagement</span><b>${or(T.costPerEngagement, F.usd)}</b></div>
     </div>
     <div class="grid g2" style="margin-top:14px">
-      <div class="card"><h3>Where the money went</h3>${splitBar([
+      <div class="card"><h3>Where the money went</h3>${splitBar(rep.campaign ? [
+        { label: "Ads", value: T.adSpend },
+        { label: "Social posts", value: T.eventCost, missing: "to add" },
+      ] : [
         { label: R.infLabel, value: T.influencerCost, missing: "no costing yet" },
         { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
         { label: "Ads", value: T.adSpend },
-      ], F.usd)}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
+      ], F.usd)}${rep.campaign ? `<p class="small muted" style="margin-top:8px">Blended CPM counts ads and social post costs only. Influencer fees are left out.</p>` : ""}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
       <div class="card"><h3>Where the views came from</h3>${T.paidUnknown ? `<p class="small muted">Organic vs paid can't be split: the ad data has spend and impressions, but no ad views. ${F.int(T.totalViews)} views in total.</p>` : splitBar([
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
@@ -1270,7 +1273,7 @@ function eventSummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>${P ? "Against the event before" : "Against another event"}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's an earlier event report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>${P ? `Against the ${rep.campaign ? "campaign" : "event"} before` : `Against another ${rep.campaign ? "campaign" : "event"}`}</h3>${P ? miniCmp(R, P, ["Total spend (USD)", "Total views", "Blended CPM", "Eng. rate (per view)", "Cost per follow"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's an earlier ${rep.campaign ? "campaign" : "event"} report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 

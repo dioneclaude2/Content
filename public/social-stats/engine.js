@@ -581,7 +581,9 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const byCategory = categoriesIn(costs).map(k => ({ category: k, usd: sum(costs.filter(l => (l.category || "Other") === k), l => l.usd), lines: costs.filter(l => (l.category || "Other") === k).length }))
     .filter(x => x.lines);
   const otherSpend = other.length ? sum(other, l => l.usd) : null;
-  const nonAd = rep.type === "event"
+  // a campaign (a launch) counts ads + social post costs only — influencer fees stay out of its spend and CPM
+  const nonAd = rep.type === "event" && rep.campaign ? eventCost
+    : rep.type === "event"
     ? (influencerCost == null && eventCost == null ? null : (influencerCost || 0) + (eventCost || 0))
     : otherSpend;
   const adSpend = rowSpend;
@@ -743,8 +745,8 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const missing = {};
   if (!ads.length) missing.ads = M("ad exports (ad level, with Views)", "Ads person");
   const costWho = costing ? `Event costing person (costing report “${costing.name}”)` : "Event costing person — link a costing report";
-  if (rep.type === "event" && !infl.length) missing.influencers = M("influencer costs", costWho);
-  if (rep.type === "event" && !costs.length) missing.eventCosts = M("event costs", costWho);
+  if (rep.type === "event" && !rep.campaign && !infl.length) missing.influencers = M("influencer costs", costWho);
+  if (rep.type === "event" && !costs.length) missing.eventCosts = M(rep.campaign ? "social post costs" : "event costs", rep.campaign ? "Campaign owner" : costWho);
   if (ads.length && !anyFollowCol) missing.adFollows = M("“Instagram follows” column in the ad export", "Ads person");
   if (!contentRows.length) missing.posts = M("the post table", "Organic person");
   else if (interactions == null) missing.engagement = M("likes, comments, saves and shares per post", "Organic person");
@@ -1172,7 +1174,7 @@ export function buildCosting(rep, db, settings = DEFAULT_SETTINGS) {
 
 /** The event report just before this one (for founders: "vs last event"). */
 export function previousEvent(rep, reports) {
-  return Object.values(reports).filter(r => !r.deleted && r.type === "event" && r.id !== rep.id && (r.end || "") < (rep.start || ""))
+  return Object.values(reports).filter(r => !r.deleted && r.type === "event" && !r.campaign === !rep.campaign && r.id !== rep.id && (r.end || "") < (rep.start || ""))
     .sort((a, b) => ((a.end || "") < (b.end || "") ? 1 : -1))[0] || null;
 }
 
