@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=f99992b">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=ddd7422">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -247,7 +247,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=f99992b" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=ddd7422" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -262,7 +262,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=f99992b";
+import * as E from "./engine.js?v=ddd7422";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -445,8 +445,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=f99992b");
-    const logo = await svgToPng("logo-circle.svg?v=f99992b", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=ddd7422");
+    const logo = await svgToPng("logo-circle.svg?v=ddd7422", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -577,7 +577,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=f99992b" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=ddd7422" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1237,7 +1237,7 @@ const adsOnly = (rep, T) => !!rep.campaign && T.eventCost == null && (rep.noInfl
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
-    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : "Add posts and ad exports to see how this ${rep.campaign ? "campaign" : "event"} did.");
+    || (T.totalViews ? `${rep.name} reached ${F.int(T.totalViews)} views for ${F.usd(T.totalSpend)} — ${F.usd(T.blendedCPM)} per 1,000 views${T.er == null ? "" : `, with ${F.pct(T.er)} engagement`}.` : `Add posts and ad exports to see how this ${rep.campaign ? "campaign" : "event"} did.`);
   const erNote = T.er == null ? "" : T.er >= R.bench ? `▲ above the ${F.pct(R.bench)} brand benchmark` : `▼ below the ${F.pct(R.bench)} brand benchmark`;
   return `
     <p class="headline">${esc(head)}</p>
@@ -2509,7 +2509,7 @@ async function importCampaignTab(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=f99992b", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=ddd7422", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
