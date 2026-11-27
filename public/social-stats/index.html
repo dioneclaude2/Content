@@ -185,6 +185,7 @@ details summary{cursor:pointer;font-weight:700;font-size:12.5px}
 .tiles.big{grid-template-columns:repeat(2,1fr)}
 @media (min-width:900px){.tiles.big{grid-template-columns:repeat(4,1fr)}}
 .tiles.big .v{font-size:32px}
+@media (min-width:1100px){.tiles.big.t5{grid-template-columns:repeat(5,1fr)}}
 .tile.hero{background:var(--ink);color:#fff;border-color:var(--ink)}
 .tile.hero .k,.tile.hero .s{color:rgba(255,255,255,.7)}
 .mini{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:12px;padding:12px 16px;background:var(--tint);border-radius:14px;font-size:12.5px}
@@ -969,15 +970,17 @@ function weeklyHTML(rep, R, P, D){
   const tgtNote = `${F.big(D.settings.target.views)} per ${D.settings.target.period}, prorated to ${F.big(A.weekTarget)} for ${A.days} days`;
   const nc = [R.breakdown[0], R.breakdown[1]];
   const summary = [
-    ["Views (account)", or(A.views, F.int, accMiss), A.views != null ? `${F.pct(A.pctTarget)} of target (${tgtNote}) · ${cmpCell(C["Account views"])}` : "", C["Account views"]?.status],
+    ["Organic views (account, no ads)", or(A.viewsOrganic, F.int, accMiss), cmpCell(C["Organic account views"]), C["Organic account views"]?.status],
+    ["Ads views (account)", or(A.viewsAds, F.int, accMiss), extAds(A, T) ? `${F.int(extAds(A, T))} from ads run in Ads Manager, not boosts of this week's posts` : "", ""],
+    ["Views (account, incl. ads)", or(A.views, F.int, accMiss), A.views != null ? `${F.pct(A.pctTarget)} of target (${tgtNote}) · ${cmpCell(C["Account views (incl. ads)"])}` : "", C["Account views (incl. ads)"]?.status],
     ["Account interactions", or(A.interactions, F.int, accMiss), cmpCell(C["Account interactions"]), C["Account interactions"]?.status],
     ["Account eng. rate", or(A.er, F.pct), cmpCell(C["Account eng. rate"]), C["Account eng. rate"]?.status],
     ["Post eng. rate (per view)", vsBench(T.er, R.bench), `benchmark ${F.pct(R.bench)} · ${cmpCell(C["Eng. rate (per view)"])}`, C["Eng. rate (per view)"]?.status],
     ["Male / Female", A.malePct != null || A.femalePct != null ? `${F.pct(A.malePct)} / ${F.pct(A.femalePct)}` : miss(accMiss), "", ""],
     ["Followers increase (net)", or(A.netFollowers, F.int, accMiss), `follows from this week's posts: ${F.int(T.postFollows)}`, ""],
     ["% views followers / non-followers", A.followersPct != null || A.nonFollowersPct != null ? `${F.pct(A.followersPct)} / ${F.pct(A.nonFollowersPct)}` : miss(accMiss), "", ""],
-    ["Organic views", F.int(T.organicViews), cmpCell(C["Organic views"]), C["Organic views"]?.status],
-    ["Paid views", F.int(T.paidViews), cmpCell(C["Paid views"]), C["Paid views"]?.status],
+    ["Organic views (this week's posts)", F.int(T.organicViews), cmpCell(C["Organic views (posts)"]), C["Organic views (posts)"]?.status],
+    ["Paid views (this week's posts)", F.int(T.paidViews), cmpCell(C["Paid views (posts)"]), C["Paid views (posts)"]?.status],
     ["Ad spend", F.usd(T.adSpend), cmpCell(C["Ad spend (USD)"]), C["Ad spend (USD)"]?.status],
     ["Ads CPM", or(T.adsCPM, F.usd, R.missing.ads), cmpCell(C["Ads CPM"]), C["Ads CPM"]?.status],
     ["Blended CPM", or(T.blendedCPM, F.usd), `${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : "ad spend ÷ this week's post views (organic + ads)"} · goal under ${F.usd(T.cpmTarget)}`, T.cpmStatus],
@@ -988,7 +991,8 @@ function weeklyHTML(rep, R, P, D){
     <div class="sec noprint">${flagsHTML(R, 4)}</div>
     ${rep.adsNote ? `<div class="sec">${adsNoteHTML(rep)}</div>` : ""}
     <div class="sec">${tiles([
-      ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
+      ...(A.viewsOrganic != null ? [["Organic views · account", F.big(A.viewsOrganic), "no ads — the social posting number"]] : []),
+      ["Account views · incl. ads", or(A.views, F.big, null) , A.views != null ? `${A.viewsAds != null ? `${F.big(A.viewsAds)} from ads · ` : ""}${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
       ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
       ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}`],
       ["Blended CPM", T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`, `goal under ${F.usd(T.cpmTarget)}`],
@@ -1292,6 +1296,9 @@ function gridsTable(R){
 }
 const accountsHTML = R => R.accounts ? `<div class="sec"><h2>By account</h2>${accountsTable(R)}</div>` : "";
 
+/* ads views on the account that don't come from boosting this week's posts (ads run straight from Ads Manager) */
+const extAds = (A, T) => A.viewsAds != null ? Math.max(0, A.viewsAds - (T.paidViews || 0)) : 0;
+
 function weeklySummaryHTML(rep, R, P){
   const T = R.T, A = R.account || {};
   const C = P ? Object.fromEntries(E.compareReports(R, P).map(c => [c.name, c])) : {};
@@ -1301,10 +1308,10 @@ function weeklySummaryHTML(rep, R, P){
   return `
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
-    <div class="tiles big">
+    <div class="tiles big${A.views != null && A.viewsOrganic != null ? " t5" : ""}">
       ${A.views == null
         ? `<div class="tile"><div class="k">Views · this week's posts</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads · account total not entered</div></div>`
-        : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads<br>` : ""}${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
+        : `${A.viewsOrganic != null ? `<div class="tile"><div class="k">Organic views · account</div><div class="v">${F.big(A.viewsOrganic)}</div><div class="s">all organic views on the account, no ads — the social posting number${ch(C["Organic account views"])}</div></div>` : ""}<div class="tile"><div class="k">Account views · incl. ads</div><div class="v">${F.big(A.views)}</div><div class="s">${A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic + ${F.big(A.viewsAds)} from ads${extAds(A, T) ? ` (${F.big(extAds(A, T))} from ads run in Ads Manager, not this week's posts)` : ""}<br>` : ""}${F.pct(A.pctTarget)} of weekly target${ch(C["Account views (incl. ads)"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : T.blendedBasis === "none" ? "no ad spend recorded for this week yet" : T.blendedBasis === "pending" ? "ads side still to be filled" : `${F.usd(T.adSpend)} ad spend ÷ ${F.int(T.totalViews)} post views (organic + ads)`} · goal under ${F.usd(T.cpmTarget)}</div></div>
@@ -1319,7 +1326,7 @@ function weeklySummaryHTML(rep, R, P){
     ${adSpendCard(R)}
     ${R.dominant ? `<div class="flag warn" style="margin-top:14px"><b>Note</b><span>One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}</span></div>` : ""}
     <div class="grid g2" style="margin-top:14px">
-      <div class="card"><h3>Where the views came from</h3>${splitBar([
+      <div class="card"><h3>Where this week's post views came from</h3>${splitBar([
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
       ], F.int)}</div>
@@ -1333,7 +1340,7 @@ function weeklySummaryHTML(rep, R, P){
       <div class="card"><h3>Top 3 by views</h3>${topPosts(R, "views")}</div>
       <div class="card"><h3>Top 3 by eng. rate</h3>${topPosts(R, "er")}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
+    <div class="card" style="margin-top:14px"><h3>Against the week before</h3>${P ? miniCmp(R, P, ["Organic account views", "Account views (incl. ads)", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"]) + `<p class="small muted" style="margin-top:8px">${esc(E.STATUS_NOTE)}</p>` : `<p class="small muted">Shows once there's last week's report.</p>`}</div>
     ${issuesLine(rep, R)}`;
 }
 
