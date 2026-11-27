@@ -621,6 +621,8 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     posts: postRows.length, extra: extraRows.length,
     nancyPosts: postRows.filter(r => !r.collab).length, collabPosts: postRows.filter(r => r.collab).length,
   };
+  // a week whose ad numbers are still with the ads team: spend and the paid split are unknown, not $0 / 100% organic
+  if (rep.type === "week" && rep.adsNote && !ads.length) Object.assign(T, { adSpend: null, adsPending: true, paidViews: null, organicViews: null, pctOrganic: null, pctPaid: null });
   if (paidUnknown) Object.assign(T, { paidViews: null, organicViews: null, pctOrganic: null, pctPaid: null, organicCPM: null, organicOnly: null });
   const collabViews = sum(contentRows.filter(r => r.collab), r => r.views);
   T.collabViews = collabViews;
@@ -764,7 +766,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
     // otherwise the sheet's boost spend ÷ this week's post views (organic + ad views), so spend and views cover the same posts
     T.sheetAdSpend = T.adSpend;
     if (a.adSpend != null && a.views) { T.adSpend = a.adSpend; T.blendedCPM = per1k(a.adSpend, a.views); T.blendedBasis = "account"; }
-    else { T.blendedCPM = T.totalViews && T.adSpend ? per1k(T.adSpend, T.totalViews) : null; T.blendedBasis = T.adSpend ? "posts" : "none"; }
+    else { T.blendedCPM = T.totalViews && T.adSpend ? per1k(T.adSpend, T.totalViews) : null; T.blendedBasis = T.adSpend ? "posts" : T.adsPending ? "pending" : "none"; }
   }
   T.cpmTarget = settings.cpmTarget ?? 5;
   T.cpmStatus = T.blendedCPM == null ? null : T.blendedCPM < T.cpmTarget ? "🟢" : "🔴";
