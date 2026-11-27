@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=b04af08";
+import * as E from "./engine.js?v=8b23acc";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -241,7 +241,9 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   P.kpis([
     A.views == null
       ? ["Views · this week's posts", F.big(T.totalViews), `${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads`]
-      : ["Account views", F.big(A.views), A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads${ch("Account views")}` : `${F.pct(A.pctTarget)} of weekly target${ch("Account views")}`],
+      : A.viewsOrganic != null
+        ? ["Organic views · account", F.big(A.viewsOrganic), `no ads${ch("Organic account views")} · incl. ads ${F.big(A.views)} (${F.big(A.viewsAds)} from ads)`]
+        : ["Account views · incl. ads", F.big(A.views), `${F.pct(A.pctTarget)} of weekly target${ch("Account views (incl. ads)")}`],
     ["Post views", F.big(T.postViews), `${T.posts} posts${ch("Post views")}`],
     ["Eng. rate", F.pct(T.er), `brand benchmark ${F.pct(R.bench)}${ch("Eng. rate (per view)")}`],
     ["Blended CPM", T.blendedCPM == null ? "—" : F.usd(T.blendedCPM), T.blendedCPM == null ? "" : `${T.cpmStatus === "🟢" ? "under" : "over"} the ${F.usd(T.cpmTarget)} goal`, true],
@@ -250,10 +252,10 @@ function weekly(rep, R, Pv, mode, settings, logo) {
   if (rep.adsNote) P.note("Ads", rep.adsNote, MUTED);
   if (R.dominant) P.note("Note", `One ${R.dominant.collab ? "collab " : ""}post drove ${F.pct(R.dominant.views / T.postViews)} of the week's post views.${R.withoutCollabs ? ` Without collab posts: blended CPM ${F.usd(R.withoutCollabs.blendedCPM)}, eng. rate ${F.pct(R.withoutCollabs.er)}.` : ""}`);
 
-  compareTable(P, R, Pv, full ? null : ["Account views", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"], "This week vs last week");
+  compareTable(P, R, Pv, full ? null : ["Organic account views", "Account views (incl. ads)", "Post views", "Eng. rate (per view)", "Blended CPM", "Ad spend (USD)", "Follows (from posts)"], "This week vs last week");
   const tot = T.totalViews || 1;
   P.table(["Views", "Count", "Share"], [["Organic", F.int(T.organicViews), F.pct(T.organicViews / tot)], ["Paid (ads)", F.int(T.paidViews), F.pct(T.paidViews / tot)], { total: true, cells: ["Total", F.int(T.totalViews), "100%"] }],
-    { title: "Where the views came from", num: [1, 2] });
+    { title: "Where this week's post views came from", num: [1, 2] });
   P.table(["", "Posts", "Views", "Share of views", "Eng. rate"],
     [R.breakdown[0], R.breakdown[1]].map(g => [g.name, g.posts, F.int(g.views), F.pct(T.postViews ? g.views / T.postViews : null), F.pct(g.er)]),
     { title: "Nancy vs collab", num: [1, 2, 3, 4] });

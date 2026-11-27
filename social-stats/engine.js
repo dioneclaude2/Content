@@ -811,7 +811,8 @@ export function compareReports(A, B) {
   const acc = (R, k) => R.account?.[k] ?? null;
   const prevAcc = k => (A.account?.[k + "Prev"] ?? acc(B, k));
   const rows = [
-    ["Account views", acc(A, "views"), A.account ? prevAcc("views") : null, {}],
+    ["Organic account views", acc(A, "viewsOrganic"), A.account ? prevAcc("viewsOrganic") : null, {}],
+    ["Account views (incl. ads)", acc(A, "views"), A.account ? prevAcc("views") : null, {}],
     ["Account interactions", acc(A, "interactions"), A.account ? prevAcc("interactions") : null, {}],
     ["Account eng. rate", A.account?.er ?? null, A.account ? (A.account.erPrev ?? B.account?.er ?? null) : null, { rate: true }],
     ["Post views", a.postViews, b.postViews, {}],
@@ -820,8 +821,8 @@ export function compareReports(A, B) {
     ["Eng. rate (per view)", a.er, b.er, { rate: true }],
     ["Follows (from posts)", a.postFollows, b.postFollows, {}],
     ["Profile visits", a.visits, b.visits, {}],
-    ["Paid views", a.paidViews, b.paidViews, {}],
-    ["Organic views", a.organicViews, b.organicViews, {}],
+    ["Paid views (posts)", a.paidViews, b.paidViews, {}],
+    ["Organic views (posts)", a.organicViews, b.organicViews, {}],
     ["Ad spend (USD)", a.adSpend, b.adSpend, { lowerBetter: true, money: true }],
     ["Ads CPM", a.adsCPM, b.adsCPM, { lowerBetter: true, money: true }],
     ["Blended CPM", a.blendedCPM, b.blendedCPM, { lowerBetter: true, money: true, target: a.cpmTarget ?? 5 }],
