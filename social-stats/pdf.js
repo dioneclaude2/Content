@@ -3,7 +3,7 @@
  *   weekly / event  · mode "summary" (portrait, the founder version) or "full" (landscape, every table)
  *   costing         · totals, categories, influencers and every cost line
  */
-import * as E from "./engine.js?v=5ef43d7";
+import * as E from "./engine.js?v=f99992b";
 
 const INK = [20, 13, 17], MUTED = [110, 97, 104], DIM = [163, 150, 156], LINE = [234, 225, 218], TINT = [247, 241, 236];
 const PINK = [255, 0, 209], GOOD = [17, 115, 75], BAD = [177, 2, 2], WARN = [138, 90, 0];
@@ -300,7 +300,9 @@ function event(rep, R, Pv, mode, logo) {
   P.kpis([
     ["Total spend", F.usd(T.totalSpend), rep.noInfluencers ? "ads and social post costs" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"],
     ["Total views", F.big(T.totalViews), T.paidUnknown ? "organic / paid split unknown" : `${F.pct(T.pctOrganic)} organic`],
-    ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views, all spend", true],
+    rep.campaign && T.eventCost == null && (rep.noInfluencers || T.influencerCost == null)
+      ? ["Blended CPM", T.blendedCPM == null ? "—" : "≈ " + F.usd(T.blendedCPM), "approximate · ad spend only for now", true]
+      : ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views, all spend", true],
     ["Eng. rate", F.pct(T.er), T.er == null ? "needs likes, comments, saves, shares" : `brand benchmark ${F.pct(R.bench)}`],
   ]);
   P.strip([["Ads CPM", F.usd(T.adsCPM)], ["Organic CPM", T.organicCPM == null ? "—" : F.usd(T.organicCPM)], ["Cost per follow", F.usd(T.costPerFollow)], ["Follows", T.adFollows == null && T.postFollows == null ? "—" : F.int((T.adFollows || 0) + (T.postFollows || 0))], ["Cost per engagement", F.usd(T.costPerEngagement)]]);

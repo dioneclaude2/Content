@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=5ef43d7">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=f99992b">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -247,7 +247,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=5ef43d7" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=f99992b" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -262,7 +262,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=5ef43d7";
+import * as E from "./engine.js?v=f99992b";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -445,8 +445,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=5ef43d7");
-    const logo = await svgToPng("logo-circle.svg?v=5ef43d7", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=f99992b");
+    const logo = await svgToPng("logo-circle.svg?v=f99992b", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -577,7 +577,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=5ef43d7" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=f99992b" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1231,6 +1231,9 @@ function costBreakdownHTML(R){
 
 const adsNoteHTML = rep => rep.adsNote ? `<div class="flag info adsnote"><b>Ads</b><span>${esc(rep.adsNote)}</span></div>` : "";
 
+/* a campaign whose influencer / social post costs aren't in yet: blended CPM is ad spend only, so it's approximate */
+const adsOnly = (rep, T) => !!rep.campaign && T.eventCost == null && (rep.noInfluencers || T.influencerCost == null);
+
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
@@ -1240,9 +1243,9 @@ function eventSummaryHTML(rep, R, P){
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
     <div class="tiles big">
-      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${adsOnly(rep, T) ? "ad spend only so far · influencer and social post costs to add" : rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
-      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${adsOnly(rep, T) && T.blendedCPM != null ? "≈ " : ""}${F.usd(T.blendedCPM)}</div><div class="s">${adsOnly(rep, T) ? "approximate · ad spend only for now — influencer and social post costs to add" : "cost per 1,000 views, all spend"}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
     </div>
     <div class="mini">
@@ -2506,7 +2509,7 @@ async function importCampaignTab(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=5ef43d7", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=f99992b", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }

@@ -705,8 +705,7 @@
       "notes": [
         "Both accounts: @hellonancy_official + @nancymonsters. A post on both grids counts once.",
         "Ad spend and paid views per post from the ads team. Other campaign costs (production, gifting, creator fees) not added yet."
-      ],
-      "excludeInfluencers": true
+      ]
     }
   ]
 }
