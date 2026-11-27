@@ -1231,6 +1231,9 @@ function costBreakdownHTML(R){
 
 const adsNoteHTML = rep => rep.adsNote ? `<div class="flag info adsnote"><b>Ads</b><span>${esc(rep.adsNote)}</span></div>` : "";
 
+/* a campaign whose influencer / social post costs aren't in yet: blended CPM is ad spend only, so it's approximate */
+const adsOnly = (rep, T) => !!rep.campaign && T.eventCost == null && (rep.noInfluencers || T.influencerCost == null);
+
 function eventSummaryHTML(rep, R, P){
   const T = R.T;
   const head = rundownHeadline(rep.rundown)
@@ -1240,9 +1243,9 @@ function eventSummaryHTML(rep, R, P){
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
     <div class="tiles big">
-      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${adsOnly(rep, T) ? "ad spend only so far · influencer and social post costs to add" : rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
-      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${adsOnly(rep, T) && T.blendedCPM != null ? "≈ " : ""}${F.usd(T.blendedCPM)}</div><div class="s">${adsOnly(rep, T) ? "approximate · ad spend only for now — influencer and social post costs to add" : "cost per 1,000 views, all spend"}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
     </div>
     <div class="mini">
