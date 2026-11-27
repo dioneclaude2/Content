@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=3379a12">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=5ef43d7">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -247,7 +247,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=3379a12" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=5ef43d7" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -262,7 +262,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=3379a12";
+import * as E from "./engine.js?v=5ef43d7";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -445,8 +445,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=3379a12");
-    const logo = await svgToPng("logo-circle.svg?v=3379a12", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=5ef43d7");
+    const logo = await svgToPng("logo-circle.svg?v=5ef43d7", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -577,7 +577,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=3379a12" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=5ef43d7" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -1240,7 +1240,7 @@ function eventSummaryHTML(rep, R, P){
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
     <div class="tiles big">
-      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.campaign ? "ads and social post costs · influencer fees not included" : "ads, influencers and event costs"}</div></div>
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
@@ -1256,11 +1256,12 @@ function eventSummaryHTML(rep, R, P){
       <div class="card"><h3>Where the money went</h3>${splitBar(rep.campaign ? [
         { label: "Ads", value: T.adSpend },
         { label: "Social posts", value: T.eventCost, missing: "to add" },
+        ...(rep.noInfluencers ? [] : [{ label: R.infLabel, value: T.influencerCost, missing: "to add" }]),
       ] : [
         { label: R.infLabel, value: T.influencerCost, missing: "no costing yet" },
         { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
         { label: "Ads", value: T.adSpend },
-      ], F.usd)}${rep.campaign ? `<p class="small muted" style="margin-top:8px">Blended CPM counts ads and social post costs only. Influencer fees are left out.</p>` : ""}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
+      ], F.usd)}${rep.noInfluencers ? `<p class="small muted" style="margin-top:8px">Blended CPM counts ads and social post costs only. Influencer fees are left out for this campaign.</p>` : ""}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
       <div class="card"><h3>Where the views came from</h3>${T.paidUnknown ? `<p class="small muted">Organic vs paid can't be split: the ad data has spend and impressions, but no ad views. ${F.int(T.totalViews)} views in total.</p>` : splitBar([
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
@@ -2490,7 +2491,7 @@ async function importCampaignTab(cfg){
   if (!rep) rep = { id: uid(), type: "event", postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
   const dataDate = cfg.dataDate || S.pulled || today();
   for (const p of Object.values(E.mergePosts(db().posts, S.posts, dataDate, rep.id))) put("ss.post." + p.id, p);
-  const patch = { name: cfg.name, campaign: true, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate, sheetUrl: url,
+  const patch = { name: cfg.name, campaign: true, noInfluencers: !!cfg.excludeInfluencers, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate, sheetUrl: url,
     postIds: [...new Set(S.posts.map(p => p.id))], sheetNotes: cfg.notes || [], fresh: false };
   if (S.ads.length) {
     const id = (rep.importIds || []).find(i => db().imports[i]?.fromSheet) || uid();
@@ -2505,7 +2506,7 @@ async function importCampaignTab(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=3379a12", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=5ef43d7", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
