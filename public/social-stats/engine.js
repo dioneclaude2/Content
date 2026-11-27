@@ -189,6 +189,7 @@ export function mapPosts(table, { year } = {}) {
     follows: col(H, /^follows?/, /follow/),
     boosted: col(H, /boost/, /ran as (an )?ad/, /^ad\??$/, /paid/),
     collab: col(H, /^collab/),
+    grid: col(H, /on which grid/, /^grid/),
   };
   const errors = [];
   if (!c.link) errors.push("No Link column — every post needs its Instagram link.");
@@ -212,6 +213,7 @@ export function mapPosts(table, { year } = {}) {
       content: (r[c.content] || "").trim(),
       date: toDate(r[c.date]) || (year && r[c.date] ? toDate(`${String(r[c.date]).trim()} ${year}`) : null),
       boosted: c.boosted ? yes(r[c.boosted]) : null,
+      grid: c.grid ? (r[c.grid] || "").trim() : "",
       snap: {
         views: num(r[c.views]), reach: num(r[c.reach]), likes: num(r[c.likes]), comments: num(r[c.comments]),
         saves: num(r[c.saves]), shares: num(r[c.shares]), visits: num(r[c.visits]), follows: num(r[c.follows]),
@@ -232,7 +234,7 @@ export function mergePosts(existing, incoming, pulledOn, tag) {
       ...old,
       link: keep(p.link, old.link), igId: keep(p.igId, old.igId), account: keep(p.account, old.account),
       collab: p.collab, format: keep(p.format, old.format), content: keep(p.content, old.content),
-      date: keep(p.date, old.date), boosted: p.boosted ?? old.boosted ?? false,
+      date: keep(p.date, old.date), boosted: p.boosted ?? old.boosted ?? false, grid: keep(p.grid, old.grid),
       snaps: { ...old.snaps, [pulledOn]: p.snap },
       tags: tag && !(old.tags || []).includes(tag) ? [...(old.tags || []), tag] : old.tags || [],
     };
@@ -668,12 +670,20 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const acctTags = [...new Set(contentRows.flatMap(r => (r.post?.tags || []).filter(t => t.startsWith("acct:"))))]
     .sort((a, b) => (b === "acct:Hello Nancy") - (a === "acct:Hello Nancy"));
   const tagsOf = r => (r.post?.tags || []).filter(t => acctTags.includes(t));
-  const accounts = acctTags.length > 1 ? acctTags.map(t => {
+  const accounts = rep.type === "week" && acctTags.length > 1 ? acctTags.map(t => {
     const list = contentRows.filter(r => tagsOf(r).includes(t));
     const best = [...list].filter(r => r.views != null).sort((a, b) => b.views - a.views)[0] || null;
     return { ...group(t.slice(5), list), shared: list.filter(r => tagsOf(r).length > 1).length, best };
   }) : null;
   const sharedPosts = accounts ? contentRows.filter(r => tagsOf(r).length > 1).length : 0;
+  // campaign tabs say which grid each post sits on (Both / Official only / Monsters only)
+  const gridNames = [...new Set(contentRows.map(r => r.post?.grid).filter(Boolean))];
+  const gridLabel = g => /^both/i.test(g) ? "On both accounts" : g;
+  const grids = rep.type === "event" && gridNames.length > 1 ? gridNames.sort((a, b) => (/^both/i.test(b) - /^both/i.test(a))).map(g => {
+    const list = contentRows.filter(r => r.post?.grid === g);
+    const best = [...list].filter(r => r.views != null).sort((a, b) => b.views - a.views)[0] || null;
+    return { ...group(gridLabel(g), list), best };
+  }) : null;
   const formats = [...new Set(contentRows.map(r => r.format || "Other"))]
     .map(f => group(f, contentRows.filter(r => (r.format || "Other") === f)));
 
@@ -762,7 +772,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const durationDays = rep.start && rep.end ? daysBetween(rep.start, rep.end) + 1 : null;
   return {
     rep, fx, dataDate, durationDays, rows, postRows, extraRows, looseRows, campRows, contentRows,
-    T, campaigns, breakdown, accounts, sharedPosts, formats, rankings, dominant, withoutCollabs, shareability, score,
+    T, campaigns, breakdown, accounts, sharedPosts, grids, formats, rankings, dominant, withoutCollabs, shareability, score,
     influencers: infl, eventCosts: costs, byCategory, other, account, missing, flags, matchLog, bench, costing, costFx: cfx,
     infLabel: costing?.influencerLabel || rep.influencerLabel || "Influencers",   // e.g. "Collab / production" for LFW
   };
