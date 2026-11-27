@@ -298,7 +298,7 @@ function event(rep, R, Pv, mode, logo) {
   P.para(head, { size: 12, style: "italic", gap: 10 });
   if (rep.adsNote) P.note("Ads", rep.adsNote, MUTED);
   P.kpis([
-    ["Total spend", F.usd(T.totalSpend), rep.campaign ? "ads and social post costs" : "ads, influencers and event costs"],
+    ["Total spend", F.usd(T.totalSpend), rep.noInfluencers ? "ads and social post costs" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"],
     ["Total views", F.big(T.totalViews), T.paidUnknown ? "organic / paid split unknown" : `${F.pct(T.pctOrganic)} organic`],
     ["Blended CPM", F.usd(T.blendedCPM), "cost per 1,000 views, all spend", true],
     ["Eng. rate", F.pct(T.er), T.er == null ? "needs likes, comments, saves, shares" : `brand benchmark ${F.pct(R.bench)}`],
@@ -309,8 +309,9 @@ function event(rep, R, Pv, mode, logo) {
   if (rep.campaign) P.table(["", "USD", "Share"], [
     ["Ads", F.usd(T.adSpend), F.pct(T.adSpend / spend)],
     ["Social posts", T.eventCost == null ? "To add" : F.usd(T.eventCost), T.eventCost == null ? "—" : F.pct(T.eventCost / spend)],
+    ...(rep.noInfluencers ? [] : [[R.infLabel, T.influencerCost == null ? "To add" : F.usd(T.influencerCost), T.influencerCost == null ? "—" : F.pct(T.influencerCost / spend)]]),
     { total: true, cells: ["Total spend", F.usd(T.totalSpend), "100%"] },
-  ], { title: "Where the money went (influencer fees not included)", num: [1, 2] });
+  ], { title: rep.noInfluencers ? "Where the money went (influencer fees not included)" : "Where the money went", num: [1, 2] });
   else P.table(["", "USD", "Share"], [
     [R.infLabel, T.influencerCost == null ? "Missing" : F.usd(T.influencerCost), T.influencerCost == null ? "—" : F.pct(T.influencerCost / spend)],
     ["Event costs", T.eventCost == null ? "Missing" : F.usd(T.eventCost), T.eventCost == null ? "—" : F.pct(T.eventCost / spend)],

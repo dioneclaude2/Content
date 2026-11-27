@@ -581,8 +581,8 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const byCategory = categoriesIn(costs).map(k => ({ category: k, usd: sum(costs.filter(l => (l.category || "Other") === k), l => l.usd), lines: costs.filter(l => (l.category || "Other") === k).length }))
     .filter(x => x.lines);
   const otherSpend = other.length ? sum(other, l => l.usd) : null;
-  // a campaign (a launch) counts ads + social post costs only — influencer fees stay out of its spend and CPM
-  const nonAd = rep.type === "event" && rep.campaign ? eventCost
+  // a campaign set to leave influencers out (e.g. Monster Mansion) counts ads + social post costs only
+  const nonAd = rep.type === "event" && rep.noInfluencers ? eventCost
     : rep.type === "event"
     ? (influencerCost == null && eventCost == null ? null : (influencerCost || 0) + (eventCost || 0))
     : otherSpend;
@@ -745,7 +745,7 @@ export function buildReport(rep, db, settings = DEFAULT_SETTINGS) {
   const missing = {};
   if (!ads.length) missing.ads = M("ad exports (ad level, with Views)", "Ads person");
   const costWho = costing ? `Event costing person (costing report “${costing.name}”)` : "Event costing person — link a costing report";
-  if (rep.type === "event" && !rep.campaign && !infl.length) missing.influencers = M("influencer costs", costWho);
+  if (rep.type === "event" && !rep.noInfluencers && !infl.length) missing.influencers = M("influencer costs", costWho);
   if (rep.type === "event" && !costs.length) missing.eventCosts = M(rep.campaign ? "social post costs" : "event costs", rep.campaign ? "Campaign owner" : costWho);
   if (ads.length && !anyFollowCol) missing.adFollows = M("“Instagram follows” column in the ad export", "Ads person");
   if (!contentRows.length) missing.posts = M("the post table", "Organic person");

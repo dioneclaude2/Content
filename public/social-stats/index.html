@@ -1240,7 +1240,7 @@ function eventSummaryHTML(rep, R, P){
     <p class="headline">${esc(head)}</p>
     ${adsNoteHTML(rep)}
     <div class="tiles big">
-      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.campaign ? "ads and social post costs · influencer fees not included" : "ads, influencers and event costs"}</div></div>
+      <div class="tile"><div class="k">Total spend</div><div class="v">${F.usd(T.totalSpend)}</div><div class="s">${rep.noInfluencers ? "ads and social post costs · influencer fees not included" : rep.campaign ? "ads, influencers and social post costs" : "ads, influencers and event costs"}</div></div>
       <div class="tile"><div class="k">Total views</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${T.paidUnknown ? "organic / paid split unknown — no ad views" : `${F.pct(T.pctOrganic)} organic`}</div></div>
       <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${F.usd(T.blendedCPM)}</div><div class="s">cost per 1,000 views, all spend</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">${T.er == null ? "needs likes, comments, saves, shares" : erNote}</div></div>
@@ -1256,11 +1256,12 @@ function eventSummaryHTML(rep, R, P){
       <div class="card"><h3>Where the money went</h3>${splitBar(rep.campaign ? [
         { label: "Ads", value: T.adSpend },
         { label: "Social posts", value: T.eventCost, missing: "to add" },
+        ...(rep.noInfluencers ? [] : [{ label: R.infLabel, value: T.influencerCost, missing: "to add" }]),
       ] : [
         { label: R.infLabel, value: T.influencerCost, missing: "no costing yet" },
         { label: "Event costs", value: T.eventCost, missing: "no costing yet" },
         { label: "Ads", value: T.adSpend },
-      ], F.usd)}${rep.campaign ? `<p class="small muted" style="margin-top:8px">Blended CPM counts ads and social post costs only. Influencer fees are left out.</p>` : ""}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
+      ], F.usd)}${rep.noInfluencers ? `<p class="small muted" style="margin-top:8px">Blended CPM counts ads and social post costs only. Influencer fees are left out for this campaign.</p>` : ""}${R.costing ? `<p class="small muted" style="margin-top:8px">From <a href="#/r/${R.costing.id}">${esc(R.costing.name)}</a></p>` : ""}</div>
       <div class="card"><h3>Where the views came from</h3>${T.paidUnknown ? `<p class="small muted">Organic vs paid can't be split: the ad data has spend and impressions, but no ad views. ${F.int(T.totalViews)} views in total.</p>` : splitBar([
         { label: "Organic", value: T.organicViews },
         { label: "Paid (ads)", value: T.paidViews },
@@ -2490,7 +2491,7 @@ async function importCampaignTab(cfg){
   if (!rep) rep = { id: uid(), type: "event", postIds: [], importIds: [], influencers: [], eventCosts: [], fx: { ...D.settings.fx } };
   const dataDate = cfg.dataDate || S.pulled || today();
   for (const p of Object.values(E.mergePosts(db().posts, S.posts, dataDate, rep.id))) put("ss.post." + p.id, p);
-  const patch = { name: cfg.name, campaign: true, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate, sheetUrl: url,
+  const patch = { name: cfg.name, campaign: true, noInfluencers: !!cfg.excludeInfluencers, colour: cfg.colour || "Pink", start: cfg.start, end: cfg.end, dataDate, sheetUrl: url,
     postIds: [...new Set(S.posts.map(p => p.id))], sheetNotes: cfg.notes || [], fresh: false };
   if (S.ads.length) {
     const id = (rep.importIds || []).find(i => db().imports[i]?.fromSheet) || uid();
