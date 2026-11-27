@@ -69,17 +69,36 @@
           "gid": "395225550",
           "label": "Nancy Monsters"
         }
-      ]
+      ],
+      "account": {
+        "views": 1633521,
+        "viewsOrganic": 474977,
+        "viewsAds": 1158544,
+        "interactions": 8600,
+        "note": "Meta Business Suite · Instagram · Nov 1–7 (interactions shown rounded: 8.6K)"
+      }
     },
     {
       "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
       "gid": "162200035",
-      "adsNote": "Ads side still to be filled by the ads team — ad spend and paid views for this week aren't in yet, so CPM and the organic vs paid split will update once they are."
+      "account": {
+        "views": 1293575,
+        "viewsOrganic": 229599,
+        "viewsAds": 1063976,
+        "interactions": 4700,
+        "note": "Meta Business Suite · Instagram · Nov 8–14 (interactions shown rounded: 4.7K)"
+      }
     },
     {
       "sheet": "1fgA7LgN1jk8KaliOHjcnycV94vSn_CPiXGPj9uX4_NA",
       "gid": "1887550894",
-      "adsNote": "Ads side still to be filled by the ads team — ad spend and paid views for this week aren't in yet, so CPM and the organic vs paid split will update once they are."
+      "account": {
+        "views": 887587,
+        "viewsOrganic": 210340,
+        "viewsAds": 677247,
+        "interactions": 4200,
+        "note": "Meta Business Suite · Instagram · Nov 15–21 (interactions shown rounded: 4.2K)"
+      }
     }
   ],
   "events": [
