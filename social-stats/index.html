@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=ad614f4">
+<link rel="icon" type="image/svg+xml" href="logo-circle.svg?v=20c6dce">
 <style>
 :root{
   --bg:#FCF6EB; --paper:#FFFFFF; --ink:#140D11; --muted:#6E6168; --dim:#A3969C;
@@ -246,7 +246,7 @@ ol.top li .chip{margin-top:4px}
 </style>
 
 <header class="top"><div class="top-in">
-  <a class="brand" href="#/"><img src="logo-circle.svg?v=ad614f4" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
+  <a class="brand" href="#/"><img src="logo-circle.svg?v=20c6dce" alt="Nancy"><b>Nancy</b><span>Social Stats</span></a>
   <nav class="nav" id="nav">
     <a href="#/" data-r="home">Home</a>
     <a href="#/reports" data-r="reports">Reports</a>
@@ -261,7 +261,7 @@ ol.top li .chip{margin-top:4px}
 <div class="toast" id="toast" hidden></div>
 
 <script type="module">
-import * as E from "./engine.js?v=ad614f4";
+import * as E from "./engine.js?v=20c6dce";
 
 /* ───────── where the shared data lives ─────────
    Served from Vercel (content-nine-topaz.vercel.app/social-stats) and from GitHub
@@ -444,8 +444,8 @@ async function exportPDF(id, mode){
       const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js";
       sc.onload = ok; sc.onerror = () => no(new Error("Couldn't load the PDF tables")); document.head.append(sc);
     });
-    const { buildPdf } = await import("./pdf.js?v=ad614f4");
-    const logo = await svgToPng("logo-circle.svg?v=ad614f4", 192).catch(() => null);
+    const { buildPdf } = await import("./pdf.js?v=20c6dce");
+    const logo = await svgToPng("logo-circle.svg?v=20c6dce", 192).catch(() => null);
     let args;
     if (rep.type === "costing") args = { rep, CR: E.buildCosting(rep, D, D.settings), mode };
     else {
@@ -576,7 +576,7 @@ function renderDashboard(D){
 
   app.innerHTML = `
     <div class="banner">
-      <img class="wm" src="logo-wordmark-cream.svg?v=ad614f4" alt="Nancy">
+      <img class="wm" src="logo-wordmark-cream.svg?v=20c6dce" alt="Nancy">
       <div class="grow"><div class="ttl">Social Stats</div>
       <p>What we posted, what it reached, and what it cost per 1,000 views.</p></div>
       <a class="btn pink big" href="#/new">+ Create a report</a>
@@ -986,6 +986,7 @@ function weeklyHTML(rep, R, P, D){
 
   return `
     <div class="sec noprint">${flagsHTML(R, 4)}</div>
+    ${rep.adsNote ? `<div class="sec">${adsNoteHTML(rep)}</div>` : ""}
     <div class="sec">${tiles([
       ["Account views", or(A.views, F.big, null) , A.views != null ? `${F.pct(A.pctTarget)} of weekly target` : "add from IG dashboard"],
       ["Post views", F.big(T.postViews), `${T.posts} posts · ${C["Post views"] ? F.chg(C["Post views"].change) + " vs last week" : ""}`],
@@ -1164,7 +1165,7 @@ function splitBar(parts, fmt){
   const total = shown.reduce((s, p) => s + (p.value || 0), 0);
   if (!total) return `<p class="small muted">No numbers yet.</p>`;
   return `<div class="splitbar">${parts.map((p, i) => p.value ? `<i style="flex:${p.value};background:${SERIES[i]}" data-tip="${esc(p.label)}: ${esc(fmt(p.value))} (${F.pct(p.value / total)})"></i>` : "").join("")}</div>
-    <div class="legend">${parts.map((p, i) => `<div><span class="sw" style="background:${SERIES[i]}"></span><span class="lk">${esc(p.label)}</span><b>${p.value == null ? `<span class="miss">${esc(p.missing || "missing")}</span>` : esc(fmt(p.value))}</b><span class="muted">${p.value == null ? "" : F.pct(p.value / total)}</span></div>`).join("")}</div>`;
+    <div class="legend">${parts.map((p, i) => `<div><span class="sw" style="background:${SERIES[i]}"></span><span class="lk">${esc(p.label)}</span><b>${p.value == null ? `<span class="miss">${esc(p.missing || "to add")}</span>` : esc(fmt(p.value))}</b><span class="muted">${p.value == null ? "" : F.pct(p.value / total)}</span></div>`).join("")}</div>`;
 }
 
 /* The rundown's headline, if Claude's rundown has been pasted in. */
@@ -1299,13 +1300,14 @@ function weeklySummaryHTML(rep, R, P){
     || (R.contentRows.length ? `${T.posts} posts, ${F.int(T.postViews)} post views${C["Post views"]?.change != null ? ` (${F.chg(C["Post views"].change)} on the week before)` : ""}, ${F.pct(T.er)} engagement${T.blendedCPM != null ? `, ${F.usd(T.blendedCPM)} blended CPM` : ""}.` : "Add the week's posts to see how it went.");
   return `
     <p class="headline">${esc(head)}</p>
+    ${adsNoteHTML(rep)}
     <div class="tiles big">
       ${A.views == null
         ? `<div class="tile"><div class="k">Views · this week's posts</div><div class="v">${F.big(T.totalViews)}</div><div class="s">${F.int(T.organicViews)} organic + ${F.int(T.paidViews)} from ads · account total not entered</div></div>`
         : `<div class="tile"><div class="k">Account views</div><div class="v">${F.big(A.views)}</div><div class="s">${A.viewsOrganic != null ? `${F.big(A.viewsOrganic)} organic · ${F.big(A.viewsAds)} from ads<br>` : ""}${F.pct(A.pctTarget)} of weekly target${ch(C["Account views"])}${A.note ? `<br><i>${esc(A.note)}</i>` : ""}</div></div>`}
       <div class="tile"><div class="k">Post views</div><div class="v">${F.big(T.postViews)}</div><div class="s">${T.posts} posts${ch(C["Post views"])}</div></div>
       <div class="tile"><div class="k">Eng. rate</div><div class="v">${F.pct(T.er)}</div><div class="s">benchmark ${F.pct(R.bench)}${ch(C["Eng. rate (per view)"])}</div></div>
-      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : T.blendedBasis === "none" ? "no ad spend recorded for this week yet" : `${F.usd(T.adSpend)} ad spend ÷ ${F.int(T.totalViews)} post views (organic + ads)`} · goal under ${F.usd(T.cpmTarget)}</div></div>
+      <div class="tile hero"><div class="k">Blended CPM</div><div class="v">${T.blendedCPM == null ? "—" : `${T.cpmStatus} ${F.usd(T.blendedCPM)}`}</div><div class="s">${T.blendedBasis === "account" ? "total ad spend ÷ all account views" : T.blendedBasis === "none" ? "no ad spend recorded for this week yet" : T.blendedBasis === "pending" ? "ads side still to be filled" : `${F.usd(T.adSpend)} ad spend ÷ ${F.int(T.totalViews)} post views (organic + ads)`} · goal under ${F.usd(T.cpmTarget)}</div></div>
     </div>
     <div class="mini">
       <div><span>${A.adSpend != null ? "Ad spend (week)" : "Boost spend in sheet"}</span><b>${F.usd(T.adSpend)}</b></div>
@@ -2493,7 +2495,7 @@ async function importCampaignTab(cfg){
 
 async function refreshFromSources(){
   let src;
-  try { src = await (await fetch("sources.json?v=ad614f4", { cache: "no-cache" })).json(); } catch { return; }
+  try { src = await (await fetch("sources.json?v=20c6dce", { cache: "no-cache" })).json(); } catch { return; }
   if (src.account) {
     const had = localStorage.getItem("ss.accountPublished"), now = JSON.stringify(src.account);
     if (had !== now) { localStorage.setItem("ss.accountPublished", now); if (route().name === "home") render(); }
@@ -2508,7 +2510,11 @@ async function refreshFromSources(){
     for (const o of w.otherAccounts || []) {
       try { importAccountTab(await sheetCsv(w.sheet, o.gid), o.label); } catch (err) { failed++; console.warn("Account tab", o.label, err); }
     }
-    try { await importSheet(url, null, null, w.account); n++; } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
+    try {
+      const res = await importSheet(url, null, null, w.account); n++;
+      const r = db().reports[res.id];                      // a note for the week, e.g. "ads side still to be filled"
+      if (r && (r.adsNote || null) !== (w.adsNote || null)) put("ss.report." + r.id, { ...r, adsNote: w.adsNote || null });
+    } catch (err) { failed++; console.warn("Weekly sheet", url, err); }
   }
   for (const c of src.campaigns || []) {
     try { if (!deletedFromSheet(sheetLink(c.sheet, c.gid))) { await importCampaignTab(c); n++; } }
